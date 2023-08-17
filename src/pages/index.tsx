@@ -11,9 +11,9 @@ const NavBar = () => {
       <div id="nav-profile-image" className="flex gap-3 items-center"> 
         <div>
           <img 
-            src="/test.png" 
-            alt="Profile Image" 
-            className="h-10 w-10 rounded-full"
+            src="/logo_128x128.png" 
+            alt="Riple logo" 
+            className="h-10 w-10"
           />
         </div>
         
