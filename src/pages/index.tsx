@@ -7,8 +7,8 @@ const NavBar = () => {
   const {user} = useUser()
 
   return ( 
-    <div id="global-nav" className="border-b border-slate-700 p-2 flex justify-between items-center">
-      <div id="nav-profile-image" className="flex gap-3 items-center"> 
+    <div id="global-nav" className="flex justify-center w-full">
+      <div id="global-nav-left" className="flex w-1/4 p-4 gap-3 border border-slate-700">
         <div>
           <img 
             src="/logo_128x128.png" 
@@ -18,7 +18,7 @@ const NavBar = () => {
         </div>
         
         <input 
-          className="outline-none grow-0 grey-background" 
+          className="outline-none grow grey-background" 
           placeholder="Search" 
           role="combobox" 
           aria-autocomplete="list" 
@@ -27,34 +27,48 @@ const NavBar = () => {
           aria-expanded="false" 
           type="text"
         />
+      </div>
 
+      <div id="global-nav-mid" className="flex w-1/2 p-4  gap-3 border border-slate-700">
+      </div>
+        
+      <div id="global-nav-right" className="flex w-1/4 p-4 gap-3 border border-slate-700">
         {user?.imageUrl && 
-          <img 
-              src={user.imageUrl} 
-              alt="Profile Image" 
-              className="h-10 w-10 rounded-full"
-            />
-        }
+            <img 
+                src={user.imageUrl} 
+                alt="Profile Image" 
+                className="h-10 w-10 rounded-full"
+              />
+          }
+        <div className="flex items-center">
+            {!user && <SignInButton />}
+            {user && <SignOutButton />}
+        </div>
       </div>
-      <div className="flex items-center">
-          {!user && <SignInButton />}
-          {user && <SignOutButton />}
-      </div>
-  </div>
+    </div>
   )
 } 
 
-export default function Home() {
+const Feed = () => {
   const { data, isLoading } = api.projects.getAll.useQuery();
 
   if (isLoading ) return(<div> Loading ... </div>)
 
   if (!data) return(<div> Something went wrong</div>)
 
+  return ( 
+    <div>
+    {/* proj get all data */}
+    {data?.map((project) => (
+      <div className="border-b border-slate-700 p-4" key={project.id}>
+        {project.title}
+      </div>
+    ))}
+  </div>
+  )
+} 
 
-  const { user } = useUser();
-
-
+export default function Home() {
   return (
     <>
       <Head>
@@ -65,22 +79,27 @@ export default function Home() {
           <meta name="author" content="Riples Team" />
           <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex justify-center">
-        <div className="w-full h-full">
-          <div>
-            <NavBar></NavBar>
-          </div>
-          <div className="w-full border-x justify-center border-slate-700 md:max-w-2xl flex flex-col">
-            {/* proj get all data */}
-            {data?.map((project) => (
-                <div className="border-b border-slate-700 p-4" key={project.id}>
-                  {project.title} 
-                </div>
-                
-              ) )}
-          </div>
+      
+      <main className="flex flex-col items-center w-full h-screen">
+    <div className="w-full">
+        <NavBar></NavBar>
+    </div>
+
+    <div className="flex justify-center w-full">
+        <div id="quick-links" className="flex flex-col w-1/4 p-4 border border-slate-700">
+            <h1>Quick Links</h1>
         </div>
-      </main>
+        
+        <div id="feed" className="flex flex-col w-1/2 p-4 border border-slate-700">
+            <Feed></Feed>
+        </div>
+        
+        <div id="future-content" className="flex flex-col w-1/4 p-4 border border-slate-700">
+            <h1>Future Content</h1>
+        </div>
+    </div>
+</main>
+
     </>
   );
 }
