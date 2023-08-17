@@ -63,10 +63,9 @@ const Feed = () => {
 
   return ( 
     <div>
-    {/* proj get all data */}
-    {data?.map((fullProject) => (
-      <ProjectView {...fullProject}></ProjectView>
-    ))}
+      {data?.map((fullProject) => (
+        <ProjectView key={fullProject.projects.id} {...fullProject}></ProjectView>
+      ))}
   </div>
   )
 } 
