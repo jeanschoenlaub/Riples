@@ -17,6 +17,7 @@ model Project {
   summary          String             @db.VarChar(255)
   authorID         String           
   createdAt        DateTime           @default(now())
+  ripleType        String             @db.VarChar(5)@default("solo")
 
   @@index([authorID])
 }
