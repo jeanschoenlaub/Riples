@@ -28,7 +28,7 @@ export const projRouter = createTRPCRouter({
     return projects.map((projects) => {
       const author = user.find((user) => user.id === projects.authorID)
 
-      if(!author) throw new TRPCError ({code:"INTERNAL_SERVER_ERROR", message?:"Riple author not found"})
+      if(!author) throw new TRPCError ({code:"INTERNAL_SERVER_ERROR", message:"Riple author not found"})
       return{
         projects,
         author,
