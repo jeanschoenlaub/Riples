@@ -5,3 +5,11 @@
 body {
     @apply bg-white text-slate-800
 }
+
+.grey-background {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 20px;
+}
