@@ -1,12 +1,14 @@
 import Head from "next/head";
 import Link from "next/link";
+import Image from 'next/image'
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
 
-import { RouterOutputs, api } from "~/utils/api";
-import { SignInButton, SignOutButton, auth, useUser } from "@clerk/nextjs";
+import { api } from "~/utils/api";
+import type {RouterOutputs} from "~/utils/api";
+import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 
 const NavBar = () => {
   const {user} = useUser()
@@ -16,21 +18,17 @@ const NavBar = () => {
     <div id="global-nav" className="flex justify-center w-full">
       <div id="global-nav-left" className="flex w-1/4 p-4 gap-3 border border-slate-700">
         <div>
-          <img 
+          <Image 
             src="/logo_128x128.png" 
             alt="Riple logo" 
-            className="h-10 w-10"
+            width={40}
+            height={40}
           />
         </div>
         
         <input 
           className="outline-none grow grey-background hidden md:flex" 
           placeholder="Search" 
-          role="combobox" 
-          aria-autocomplete="list" 
-          aria-label="Search" 
-          aria-activedescendant="" 
-          aria-expanded="false" 
           type="text"
         />
       </div>
@@ -39,10 +37,12 @@ const NavBar = () => {
         
       <div id="global-nav-right" className="flex w-1/4 p-4 gap-3 border border-slate-700">
         {user?.imageUrl && 
-            <img 
+            <Image 
                 src={user.imageUrl} 
                 alt="Profile Image" 
-                className="h-10 w-10 rounded-full"
+                className="rounded-full"
+                width={40}
+                height={40}
               />
           }
         <div className="flex items-center">
@@ -91,10 +91,12 @@ const ProjectView = (props: ProjectWithUser) => {
     <div id="riple-card" className="border-b border-slate-700 p-4" key={projects.id}>
       <div id="riple-card-metadata"  className="flex gap-3 items-center border-b border-e border-t border-l border-slate-300 p-2 g-4 justify-between rounded-full  bg-white ">
         <div id="riple-card-metadata-auth-profile-image" className="flex gap-2">
-          <img 
+          <Image 
             src={author?.imageUrl} 
             alt="Profile Image" 
-            className="h-10 w-10 rounded-full"
+            className="rounded-full"
+            width={40}
+            height={40}
           />
           <div id="riple-card-metadata-auth-name-and-created-date">
             <div className="font-bold text-gray-800"> {author?.firstName} {author?.lastName} </div>
@@ -104,10 +106,12 @@ const ProjectView = (props: ProjectWithUser) => {
 
         <div className="flex-shrink-0">
           <div id="riple-card-riple-type">
-            <img 
+            <Image 
               src={getImagePath(projects.ripleType)} 
               alt="Riple Type"
-              className="h-10 w-10 rounded-full"
+              className="rounded-full"
+              width={40}
+              height={40}
             />
           </div>
         </div>
