@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from 'next/image';
+import { useState } from "react";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
@@ -11,15 +12,32 @@ import type {RouterOutputs} from "~/utils/api";
 import { useUser } from "@clerk/nextjs";
 
 //My components
-import { LoadingPage } from "~/components/loading";
+import { LoadingPage, LoadingSpinner } from "~/components/loading";
 import { GlobalNavBar } from "~/components/navbar";
-import { useState } from "react";
+import toast from "react-hot-toast";
+
 
 const Feed = () => {
   const { data, isLoading } = api.projects.getAll.useQuery();
-  const {mutate}  = api.projects.create.useMutation();
   const [input, setInput] = useState("")
+  const ctx = api.useContext();
+  
+  //We had a mutation for creating a post (with on success)
+  const {mutate, isLoading: isPosting}  = api.projects.create.useMutation({
+    onSuccess: () => {
+      setInput("");
+      void ctx.projects.getAll.invalidate;
+    },
+    onError: (e) => {
+      const errorMessage = e.data?.zodError?.fieldErrors.content
+      if (errorMessage && errorMessage[0]){
+        toast.error(errorMessage[0])
+      }
+      else {toast.error("Post failed ! Please try again later")}
 
+    }
+  });
+  
   if (isLoading ) return(<LoadingPage></LoadingPage>)
 
   if (!data) return(<div> Something went wrong</div>)
@@ -28,12 +46,24 @@ const Feed = () => {
     <div>
       <input 
         placeholder="Create a Riple"
+        className="grow "
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        disabled = {isPosting}
       >
       </input> 
-      <button onClick={() => mutate({content:input})}> Post</button>
+      { input !== "" && !isPosting && (
+          <button  disabled = {isPosting} onClick={() => mutate({content:input})}> 
+            Post
+          </button>
+        )
+      }
+      {isPosting && (
+        <div className="flex items-left justify-left">
+           <LoadingSpinner size={20}></LoadingSpinner>
+        </div>
+      )}
       {data?.map((fullProject) => (
         <ProjectCard key={fullProject.projects.id} {...fullProject}></ProjectCard>
       ))}
