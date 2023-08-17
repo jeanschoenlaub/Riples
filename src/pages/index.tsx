@@ -1,5 +1,10 @@
 import Head from "next/head";
 import Link from "next/link";
+
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime"
+dayjs.extend(relativeTime);
+
 import { RouterOutputs, api } from "~/utils/api";
 import { SignInButton, SignOutButton, auth, useUser } from "@clerk/nextjs";
 
@@ -19,7 +24,7 @@ const NavBar = () => {
         </div>
         
         <input 
-          className="outline-none grow grey-background" 
+          className="outline-none grow grey-background hidden md:flex" 
           placeholder="Search" 
           role="combobox" 
           aria-autocomplete="list" 
@@ -85,7 +90,7 @@ const ProjectView = (props: ProjectWithUser) => {
 
   return (
     <div id="riple-card" className="border-b border-slate-700 p-4" key={projects.id}>
-      <div id="riple-card-metadata"  className="flex items-center border-b border-e border-t border-l border-slate-300 p-2 g-4 justify-between rounded-full  bg-white ">
+      <div id="riple-card-metadata"  className="flex gap-3 items-center border-b border-e border-t border-l border-slate-300 p-2 g-4 justify-between rounded-full  bg-white ">
         <div id="riple-card-metadata-auth-profile-image" className="flex gap-2">
           <img 
             src={author?.imageUrl} 
@@ -94,7 +99,7 @@ const ProjectView = (props: ProjectWithUser) => {
           />
           <div id="riple-card-metadata-auth-name-and-created-date">
             <div className="font-bold text-gray-800"> {author?.firstName} {author?.lastName} </div>
-            <div className="text-sm text-gray-400">{projects.createdAt.toDateString()}</div>
+            <div className="text-sm text-gray-400">{dayjs(projects.createdAt).fromNow()}</div>
           </div>
         </div>
 
@@ -109,7 +114,7 @@ const ProjectView = (props: ProjectWithUser) => {
         </div>
       </div>
 
-      <div id="riple-card-body" className="p-4  bg-white border-b border-e border-t border-l border-slate-300 rounded-lg">
+      <div id="riple-card-body" className="p-4 bg-white border-b border-e border-t border-l border-slate-300 rounded-lg">
         {projects.title}
       </div>
     </div>
@@ -130,24 +135,24 @@ export default function Home() {
       </Head>
       
       <main className="flex flex-col items-center w-full h-screen">
-    <div className="w-full">
-        <NavBar></NavBar>
-    </div>
+        <div id="nav-container" className="w-full">
+          <NavBar></NavBar>
+        </div>
 
-    <div className="flex justify-center w-full bg-sky-50">
-        <div id="quick-links" className="flex flex-col w-1/4 p-4 border border-slate-700">
-            <h1>Quick Links</h1>
+        <div className="flex justify-center w-full bg-sky-50">
+          <div id="quick-links" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
+              <h1>Quick Links</h1>
+          </div>
+          
+          <div id="feed" className="flex flex-col w-full md:w-1/2 p-4 border border-slate-700">
+              <Feed></Feed>
+          </div>
+          
+          <div id="future-content" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
+              <h1>Future Content</h1>
+          </div>
         </div>
-        
-        <div id="feed" className="flex flex-col w-1/2 p-4 border border-slate-700">
-            <Feed></Feed>
-        </div>
-        
-        <div id="future-content" className="flex flex-col w-1/4 p-4 border border-slate-700">
-            <h1>Future Content</h1>
-        </div>
-    </div>
-</main>
+      </main>
 
     </>
   );
