@@ -13,9 +13,12 @@ import { useUser } from "@clerk/nextjs";
 //My components
 import { LoadingPage } from "~/components/loading";
 import { GlobalNavBar } from "~/components/navbar";
+import { useState } from "react";
 
 const Feed = () => {
   const { data, isLoading } = api.projects.getAll.useQuery();
+  const {mutate}  = api.projects.create.useMutation();
+  const [input, setInput] = useState("")
 
   if (isLoading ) return(<LoadingPage></LoadingPage>)
 
@@ -23,22 +26,30 @@ const Feed = () => {
 
   return ( 
     <div>
+      <input 
+        placeholder="Create a Riple"
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      >
+      </input> 
+      <button onClick={() => mutate({content:input})}> Post</button>
       {data?.map((fullProject) => (
-        <ProjectView key={fullProject.projects.id} {...fullProject}></ProjectView>
+        <ProjectCard key={fullProject.projects.id} {...fullProject}></ProjectCard>
       ))}
   </div>
   )
 } 
 
 type ProjectWithUser = RouterOutputs["projects"]["getAll"][number]
-const ProjectView = (props: ProjectWithUser) => {
+const ProjectCard = (props: ProjectWithUser) => {
   const {projects, author} = props;
 
   const getImagePath = (ripleType: string) => {
     if (ripleType === 'solo') {
-      return '/solo_riple.png';
+      return '/images/solo_riple.png';
     } else {
-      return '/multi_riple.png';
+      return '/images/multi_riple.png';
     }
   };
 
@@ -85,8 +96,6 @@ export default function Home() {
   const {user} = useUser()
   api.projects.getAll.useQuery();
   
-
-
   return (
     <>
       <Head>
@@ -95,7 +104,7 @@ export default function Home() {
           <meta name="description" content="Riples is a social platform where creators share projects, inviting others to join their collaborative circles. Dive into a ripple and make waves together!" />
           <meta name="keywords" content="Riples, collaboration, projects, social app, create, join, collaborate, bubbles, ripples, community" />
           <meta name="author" content="Riples Team" />
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" href="/images/favicon.ico" />
       </Head>
       
       <main className="flex flex-col items-center w-full h-screen">

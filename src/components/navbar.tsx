@@ -13,7 +13,7 @@ export const GlobalNavBar = () => {
       <div id="global-nav-left" className="flex w-1/4 p-4 gap-3 border border-slate-700">
         <div>
           <Image 
-            src="/logo_128x128.png" 
+            src="/images/logo_128x128.png" 
             alt="Riple logo" 
             width={40}
             height={40}

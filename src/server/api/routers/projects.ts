@@ -2,7 +2,7 @@ import { clerkClient} from "@clerk/nextjs";
 import type { User } from "@clerk/nextjs/dist/types/server";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, privateProcedure, publicProcedure } from "~/server/api/trpc";
 
 const filterUserForClient = (user: User) => {
     return {
@@ -18,6 +18,9 @@ export const projRouter = createTRPCRouter({
   getAll: publicProcedure.query( async ({ ctx }) => {
     const projects = await ctx.prisma.project.findMany({
       take:100,
+      orderBy: [{
+        createdAt: "desc",
+     }]
     });
 
     const user = (await clerkClient.users.getUserList({
@@ -35,4 +38,24 @@ export const projRouter = createTRPCRouter({
       }
     });
   }),
+
+  create: privateProcedure
+    .input(
+      z.object({
+        content: z.string().min(5, { message: "Must be 5 or more characters long" }),
+      })
+    )
+    .mutation(async ({ ctx, input}) => {
+      const authorID = ctx.currentUserId;
+
+      const project = await ctx.prisma.project.create({
+        data:{
+          authorID,
+          title: input.content,
+          summary: input.content,
+        },
+      });
+
+      return project
+    }),
 });
