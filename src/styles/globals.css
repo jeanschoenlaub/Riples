@@ -3,10 +3,6 @@
 @tailwind utilities;
 
 
-body {
-    @apply bg-white text-slate-800
-}
-
 .grey-background {
     background-color: #f0f0f0;
     border: 1px solid #ccc;
@@ -14,3 +10,4 @@ body {
     font-size: 14px;
     border-radius: 20px;
 }
+
