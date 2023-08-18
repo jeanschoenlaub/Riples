@@ -1,15 +1,5 @@
 import Head from "next/head";
-
-
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime"
-dayjs.extend(relativeTime);
-
 import { api } from "~/utils/api";
-import { useUser } from "@clerk/nextjs";
-
-//My components
-import { LoadingPage, LoadingSpinner } from "~/components/loading";
 import { GlobalNavBar } from "~/components/navbar";
 import { Feed } from "~/components/feed";
 import { ProjectNav } from "~/components/sidebar";

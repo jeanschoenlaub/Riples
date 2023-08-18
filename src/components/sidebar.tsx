@@ -8,7 +8,7 @@ import type {RouterOutputs} from "~/utils/api";
 
 
 //My components
-import { LoadingPage, LoadingSpinner } from "~/components/loading";
+import { LoadingPage} from "~/components/loading";
 
 export const ProjectNav = () => {
   const { data, isLoading } = api.projects.getAll.useQuery();
@@ -34,7 +34,7 @@ export const ProjectNav = () => {
 
 type fakeData = RouterOutputs["projects"]["getAll"][number]
 const ProjectSideBar = (props: fakeData) => {
-  const {projects, author} = props;
+  const {projects} = props;
   const getImagePath = (ripleType: string) => {
     if (ripleType === 'solo') {
       return '/images/solo_riple.png';

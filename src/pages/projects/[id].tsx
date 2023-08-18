@@ -4,7 +4,7 @@ import { GlobalNavBar } from "~/components/navbar";
 import { ProjectNav } from "~/components/sidebar";
 //From https://trpc.io/docs/client/nextjs/server-side-helpers
 import { createServerSideHelpers } from '@trpc/react-query/server';
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
@@ -20,7 +20,8 @@ export async function getServerSideProps(
     },
     transformer: superjson,
   });
-  const projectId = context.params?.id as string;
+  const projectId = context.params!.id;
+
   /*
    * Prefetching the `getProjectByProjectId` query.
    * `prefetch` does not return the result and never throws - if you need that behavior, use `fetch` instead.

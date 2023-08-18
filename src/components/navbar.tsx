@@ -4,9 +4,7 @@ import Link from "next/link";
 
 export const GlobalNavBar = () => {
   
-  const {user, isLoaded} = useUser()
-
-  console.log(user)
+  const {user} = useUser()
 
   return ( 
     <div id="global-nav-container" className="flex justify-center w-full">
