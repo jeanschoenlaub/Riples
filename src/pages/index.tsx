@@ -37,15 +37,15 @@ export default function Home() {
         </div>
 
         <div className="flex justify-center w-full bg-sky-50">
-          <div id="quick-links" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
+          <div id="quick-links" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
               <ProjectNav></ProjectNav>
           </div>
           
-          <div id="feed" className="flex flex-col w-full md:w-1/2 p-4 border border-slate-700">
+          <div id="feed" className="flex flex-col w-full md:w-3/5 p-4 border border-slate-700">
               <Feed></Feed>
           </div>
           
-          <div id="future-content" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
+          <div id="future-content" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
               <h1>Future Content</h1>
           </div>
         </div>

@@ -49,6 +49,24 @@ export const projRouter = createTRPCRouter({
     });
   }),
 
+  getProjectByProjectId: publicProcedure
+  .input(z.object({projectId: z.string()}))
+  .query( async ({ ctx, input }) => {
+    // Find the project by its unique ID
+    const project = await ctx.prisma.project.findUnique({
+      where: {
+        id: input.projectId
+      }
+    });
+
+    if (!project) {
+      throw new TRPCError({code: "NOT_FOUND", message: "Project not found"});
+    }
+
+    return { project };
+  }),
+  
+
   create: privateProcedure
     .input(
       z.object({
