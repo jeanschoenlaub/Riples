@@ -9,7 +9,7 @@ export const GlobalNavBar = () => {
   console.log(user)
 
   return ( 
-    <div id="global-nav" className="flex justify-center w-full">
+    <div id="global-nav-container" className="flex justify-center w-full">
       <div id="global-nav-left" className="flex w-1/4 p-4 gap-3 border border-slate-700">
         <div>
           <Image 

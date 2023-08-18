@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from 'next/image';
+import toast from "react-hot-toast";
 import { useState } from "react";
 
 import dayjs from "dayjs";
@@ -14,67 +15,33 @@ import { useUser } from "@clerk/nextjs";
 //My components
 import { LoadingPage, LoadingSpinner } from "~/components/loading";
 import { GlobalNavBar } from "~/components/navbar";
-import toast from "react-hot-toast";
+import { Feed } from "~/components/feed";
 
-
-const Feed = () => {
+const ProjectNav = () => {
   const { data, isLoading } = api.projects.getAll.useQuery();
-  const [input, setInput] = useState("")
-  const ctx = api.useContext();
-  
-  //We had a mutation for creating a post (with on success)
-  const {mutate, isLoading: isPosting}  = api.projects.create.useMutation({
-    onSuccess: () => {
-      setInput("");
-      void ctx.projects.getAll.invalidate;
-    },
-    onError: (e) => {
-      const errorMessage = e.data?.zodError?.fieldErrors.content
-      if (errorMessage && errorMessage[0]){
-        toast.error(errorMessage[0])
-      }
-      else {toast.error("Post failed ! Please try again later")}
-
-    }
-  });
-  
   if (isLoading ) return(<LoadingPage></LoadingPage>)
-
   if (!data) return(<div> Something went wrong</div>)
 
-  return ( 
-    <div>
-      <input 
-        placeholder="Create a Riple"
-        className="grow "
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        disabled = {isPosting}
-      >
-      </input> 
-      { input !== "" && !isPosting && (
-          <button  disabled = {isPosting} onClick={() => mutate({content:input})}> 
-            Post
-          </button>
-        )
-      }
-      {isPosting && (
-        <div className="flex items-left justify-left">
-           <LoadingSpinner size={20}></LoadingSpinner>
+  return(
+    <div id="project-side-bar-container" className="border-b border-slate-700 p-4">
+      <div id="project-side-bar-container-2" className="flex flex-col gap-3 items-center border-b border-e border-t border-l border-slate-300 p-2 g-4 justify-between rounded-2xl  bg-white ">
+        <div id="project-side-bar-header" className="flex gap-2">
+          <h1> Your Projects </h1>
         </div>
-      )}
-      {data?.map((fullProject) => (
-        <ProjectCard key={fullProject.projects.id} {...fullProject}></ProjectCard>
-      ))}
-  </div>
+        <div id="project-side-bar-project-card-container" style={{maxHeight: "80vh", overflowY: "auto"}}>
+          {data.map((fullProject) => (
+              <ProjectSideBar key={fullProject.projects.id} {...fullProject}></ProjectSideBar>
+          ))}
+        </div>
+      </div>
+    </div>
   )
-} 
+  
+}
 
-type ProjectWithUser = RouterOutputs["projects"]["getAll"][number]
-const ProjectCard = (props: ProjectWithUser) => {
+type fakeData = RouterOutputs["projects"]["getAll"][number]
+const ProjectSideBar = (props: fakeData) => {
   const {projects, author} = props;
-
   const getImagePath = (ripleType: string) => {
     if (ripleType === 'solo') {
       return '/images/solo_riple.png';
@@ -83,43 +50,22 @@ const ProjectCard = (props: ProjectWithUser) => {
     }
   };
 
-  return (
-    <div id="riple-card" className="border-b border-slate-700 p-4" key={projects.id}>
-      <div id="riple-card-metadata"  className="flex gap-3 items-center border-b border-e border-t border-l border-slate-300 p-2 g-4 justify-between rounded-full  bg-white ">
-        <div id="riple-card-metadata-auth-profile-image" className="flex gap-2">
+  return(
+    <div id="project-side-bar-project-card" className="flex p-4 bg-white border-b border-e border-t border-l border-slate-300 justify-between rounded-lg">
+        <div id="project-side-bar-project-title">
+          {projects.title}
+        </div>
+        
           <Image 
-            src={author?.imageUrl} 
-            alt="Profile Image" 
+            src={getImagePath(projects.ripleType)} 
+            alt="Riple Type"
             className="rounded-full"
             width={40}
             height={40}
           />
-          <div id="riple-card-metadata-auth-name-and-created-date">
-            <div className="font-bold text-gray-800"> {author?.firstName} {author?.lastName} </div>
-            <div className="text-sm text-gray-400">{dayjs(projects.createdAt).fromNow()}</div>
-          </div>
-        </div>
-
-        <div className="flex-shrink-0">
-          <div id="riple-card-riple-type">
-            <Image 
-              src={getImagePath(projects.ripleType)} 
-              alt="Riple Type"
-              className="rounded-full"
-              width={40}
-              height={40}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div id="riple-card-body" className="p-4 bg-white border-b border-e border-t border-l border-slate-300 rounded-lg">
-        {projects.title}
-      </div>
     </div>
-  );
+  )
 }
-
 
 export default function Home() {
   //Start this query asap
@@ -144,7 +90,7 @@ export default function Home() {
 
         <div className="flex justify-center w-full bg-sky-50">
           <div id="quick-links" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
-              <h1>Quick Links</h1>
+              <ProjectNav></ProjectNav>
           </div>
           
           <div id="feed" className="flex flex-col w-full md:w-1/2 p-4 border border-slate-700">
