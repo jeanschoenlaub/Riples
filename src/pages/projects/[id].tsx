@@ -1,33 +1,50 @@
 import Head from "next/head";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime"
-dayjs.extend(relativeTime);
-
-import { RouterOutputs, api } from "~/utils/api";
-import { useUser } from "@clerk/nextjs";
-
-//My components
-import { LoadingPage, LoadingSpinner } from "~/components/loading";
+import { api } from "~/utils/api";
 import { GlobalNavBar } from "~/components/navbar";
-import { Feed } from "~/components/feed";
 import { ProjectNav } from "~/components/sidebar";
+//From https://trpc.io/docs/client/nextjs/server-side-helpers
+import { createServerSideHelpers } from '@trpc/react-query/server';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import { prisma } from "~/server/db";
+import { appRouter } from "~/server/api/root";
+import superjson from 'superjson';
 
-type ProjectWithUser = RouterOutputs["projects"]["getProjectByProjectId"]
-export default function Home(props: ProjectWithUser) {
-  // You could potentially use the props.project somewhere else if needed.
-  const {data, isLoading} = api.projects.getProjectByProjectId.useQuery({projectId: "cllf3m4560000o7slczuy0tb6",});
-  const project = data?.project;
-  const propsProject = props.project;
+export async function getServerSideProps(
+  context: GetServerSidePropsContext<{ id: string }>,
+) {
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: {
+        prisma,
+        currentUserId: null
+    },
+    transformer: superjson,
+  });
+  const projectId = context.params?.id as string;
+  /*
+   * Prefetching the `getProjectByProjectId` query.
+   * `prefetch` does not return the result and never throws - if you need that behavior, use `fetch` instead.
+   */
+  await helpers.projects.getProjectByProjectId.prefetch({ projectId });
+  // Make sure to return { props: { trpcState: helpers.dehydrate() } }
+  return {
+    props: {
+      trpcState: helpers.dehydrate(),
+      projectId,
+    },
+  };
+}
+export default function Home(
+  props: InferGetServerSidePropsType<typeof getServerSideProps>,
+) {
+  const { projectId } = props;
+  const projQuery = api.projects.getProjectByProjectId.useQuery({ projectId });
 
- 
-  if (isLoading) return (<LoadingPage></LoadingPage>);
-  
-  if (!data) return(<div> Something went wrong</div>);
-  
+  const { data } = projQuery;
   return (
     <>
       <Head>
-        <title>{data.project.title}</title>*/
+        <title>{data?.project.title}</title>*/
       </Head>
       <main className="flex flex-col items-center w-full h-screen">
         <div id="nav-container" className="w-full">
@@ -39,13 +56,17 @@ export default function Home(props: ProjectWithUser) {
               <ProjectNav></ProjectNav>
           </div>
           
-          <div id="feed" className="flex flex-col w-full md:w-4/5 p-4 border border-slate-700">
-              <div className="text-size-6xl text-font-bold">  </div>
+          <div id="project-info" className="flex flex-col w-full md:w-4/5 p-4 border border-slate-700">
+             
+                <h1>{data?.project.title}</h1>
+                <em>Created {data?.project.createdAt.toLocaleDateString()}</em>
+                <h2>Raw data:</h2>
+                <pre>{JSON.stringify(data, null, 4)}</pre>
           </div>
-
         </div>
       </main>
-
     </>
   );
 }
+
+
