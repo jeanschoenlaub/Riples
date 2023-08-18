@@ -1,6 +1,5 @@
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import Image from 'next/image';
-import { LoadingPage } from "./loading";
 
 export const GlobalNavBar = () => {
   
