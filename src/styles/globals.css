@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    overscroll-behavior: none;
+}
 
 .grey-background {
     background-color: #f0f0f0;

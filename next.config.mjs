@@ -8,7 +8,7 @@ await import("./src/env.mjs");
 const config = {
   reactStrictMode: true,
   images: {
-    domains: ['img.clerk.com'],
+    domains: ['img.clerk.com','t3-portofolio.s3.us-east-2.amazonaws.com']
   },
 
   /**

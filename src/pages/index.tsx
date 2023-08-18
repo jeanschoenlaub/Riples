@@ -27,7 +27,7 @@ export default function Home() {
         </div>
 
         <div className="flex justify-center w-full bg-sky-50">
-          <div id="quick-links" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
+          <div id="project-nav-container" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
               <ProjectNav></ProjectNav>
           </div>
           

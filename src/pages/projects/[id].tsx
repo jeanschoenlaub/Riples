@@ -4,10 +4,12 @@ import { GlobalNavBar } from "~/components/navbar";
 import { ProjectNav } from "~/components/sidebar";
 //From https://trpc.io/docs/client/nextjs/server-side-helpers
 import { createServerSideHelpers } from '@trpc/react-query/server';
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import type{ GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
+import Image from 'next/image';
+import { Feed } from "~/components/feed";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -42,10 +44,13 @@ export default function Home(
   const projQuery = api.projects.getProjectByProjectId.useQuery({ projectId });
 
   const { data } = projQuery;
+
+  if (!data){ return(<div>Error</div>)}
+
   return (
     <>
       <Head>
-        <title>{data?.project.title}</title>*/
+        <title>{data.project.title}</title>*/
       </Head>
       <main className="flex flex-col items-center w-full h-screen">
         <div id="nav-container" className="w-full">
@@ -53,17 +58,37 @@ export default function Home(
         </div>
 
         <div className="flex justify-center w-full bg-sky-50">
-          <div id="quick-links" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
+            <div id="project-nav-container" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
               <ProjectNav></ProjectNav>
-          </div>
+            </div>
           
-          <div id="project-info" className="flex flex-col w-full md:w-4/5 p-4 border border-slate-700">
-             
-                <h1>{data?.project.title}</h1>
-                <em>Created {data?.project.createdAt.toLocaleDateString()}</em>
-                <h2>Raw data:</h2>
-                <pre>{JSON.stringify(data, null, 4)}</pre>
-          </div>
+            <div id="project-main" className="relative flex flex-col w-full md:w-4/5 border border-slate-700">
+
+
+            <div id="project-main-cover-image" className="relative w-full h-[50vh] overflow-hidden">
+                <Image 
+                    src={data?.project.coverImageUrl} 
+                    alt="Project cover image" 
+                    layout="fill" 
+                    objectFit="cover"
+                />
+            </div>
+            <div id="project-main-metadata" className="mt-4 ml-16">
+                <h1 className="text-2xl font-bold">{data?.project.title}</h1>
+                <p className="italic mt-2 text-sm text-gray-600">Created {data?.project.createdAt.toLocaleDateString()}</p>
+                <div className="mt-4 space-y-2">
+                    <div className="font text-gray-800"> 
+                        {data?.project.summary}
+                    </div>
+                </div>
+            </div>
+
+            <div id="project-main-feed" className="mt-4 ml-16">
+                <Feed></Feed>
+            </div>
+
+        </div>
+
         </div>
       </main>
     </>
