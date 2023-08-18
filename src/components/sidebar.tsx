@@ -44,18 +44,20 @@ const ProjectSideBar = (props: fakeData) => {
   };
 
   return(
-    <div id="project-side-bar-project-card" className="flex p-4 bg-white border-b border-e border-t border-l border-slate-300 justify-between rounded-lg">
+    <div id="project-side-bar-project-card" className="flex items-center p-4 bg-white border-b border-e border-t border-l border-slate-300 justify-between rounded-lg">
         <div id="project-side-bar-project-title">
-          {projects.title}
+            {projects.title}
         </div>
         
-          <Image 
+        <Image 
             src={getImagePath(projects.ripleType)} 
             alt="Riple Type"
             className="rounded-full"
             width={40}
             height={40}
-          />
+            objectFit="cover"
+            objectPosition="center"
+        />
     </div>
   )
 }
