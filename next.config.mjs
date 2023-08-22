@@ -20,6 +20,16 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+
+  //We disable some CI stuff on Vercel as we do it on github
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  swcMinify:true,
+
 };
 
 export default config;
