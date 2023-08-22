@@ -6,7 +6,7 @@ dayjs.extend(relativeTime);
 
 import { api } from "~/utils/api";
 import { useState } from "react";
-import type {RouterOutputs} from "~/utils/api";
+import type { RouterOutputs } from "~/utils/api";
 
 //My components
 import { LoadingPage, LoadingSpinner } from "~/components/loading";
@@ -14,7 +14,7 @@ import Link from 'next/link';
 
 
 export const Feed = () => {
-    const { data, isLoading } = api.projects.getAll.useQuery();
+    const { data, isLoading } = api.riples.getAll.useQuery();
     // TO-DO Far from ideal - rerenders on server every key @1:52
     const [input, setInput] = useState("")
     const ctx = api.useContext();
@@ -61,13 +61,14 @@ export const Feed = () => {
              <LoadingSpinner size={20}></LoadingSpinner>
           </div>
         )}
-        {data?.map((fullProject) => (
-          <ProjectCardMeta key={fullProject.projects.id} {...fullProject}></ProjectCardMeta>
+        {data?.map((fullRiple) => (
+          <RipleCardMeta key={fullRiple.riples.id} {...fullRiple}></RipleCardMeta>
         ))}
     </div>
     )
   } 
   
+  //Not using for now but might use on a user profile a list of project 
   type ProjectWithUser = RouterOutputs["projects"]["getAll"][number]
   const ProjectCardMeta = (props: ProjectWithUser) => {
     const {projects, author} = props;
@@ -116,6 +117,51 @@ export const Feed = () => {
                         width={40}
                         height={40}
                     />
+                </div>
+            </div>
+        </div>
+      </div>
+    );
+  }
+
+
+  //Not using for now but might use on a user profile a list of riple 
+  type RipleWithUser = RouterOutputs["riples"]["getAll"][number]
+  const RipleCardMeta = (props: RipleWithUser) => {
+    const {riples, author} = props;
+  
+    const getImagePath = (ripleType: string) => {
+      if (ripleType === 'solo') {
+        return '/images/solo_riple.png';
+      } else {
+        return '/images/multi_riple.png';
+      }
+    };
+  
+    return (
+      <div id="riple-card" className="border-b border-slate-700 p-4" key={riples.id}>
+        <div id="riple-card-metadata"  className="flex gap-3 items-center border-b border-e border-t border-l border-slate-300 p-2 g-4 justify-between rounded-2xl bg-white">
+            <div id="riple-card-metadata-auth-profile-image" className="flex gap-2 items-center">
+                <Image 
+                    src={author?.imageUrl} 
+                    alt="Profile Image" 
+                    className="rounded-full"
+                    width={40}
+                    height={40}
+                    objectFit="cover"
+                    objectPosition="center"
+                />
+                <div id="riple-card-metadata-auth-name-and-created-date">
+                    <div className="font-bold text-gray-800"> 
+                      <Link href={`/riples/${riples.id}`}>
+                        {riples.title}
+                      </Link>
+                    </div>
+                    <span className="text-sm text-gray-400"> 
+                        {` by `}
+                        <span className="font-bold text-gray-400">{`${author?.firstName} ${author?.lastName}`}</span>
+                        <span>{` ${dayjs(riples.createdAt).fromNow()} `}</span>
+                    </span>
                 </div>
             </div>
         </div>

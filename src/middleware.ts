@@ -4,8 +4,10 @@ export default authMiddleware({
     publicRoutes: [
         "/",
         "/api/trpc/projects.getAll",
+        "/api/trpc/riples.getAll",
         "/api/trpc/projects.getProjectByProjectId",
-        "/api/trpc/projects.getAll,projects.getProjectByProjectId", // Include this line
+        "/api/trpc/projects.getAll,projects.getProjectByProjectId", 
+        "/api/trpc/projects.getAll,riples.getAll",
         /^\/projects\//
     ]
 });
