@@ -37,7 +37,7 @@ export const Feed = () => {
 
 
 type RipleWithUser = RouterOutputs["riples"]["getAll"][number]
-const RipleCardMeta = (props: RipleWithUser) => {
+export const RipleCardMeta = (props: RipleWithUser) => {
   const {riple, author} = props;
 
   return (

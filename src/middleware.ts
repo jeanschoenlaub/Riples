@@ -8,6 +8,7 @@ export default authMiddleware({
         "/api/trpc/projects.getProjectByProjectId",
         "/api/trpc/projects.getAll,projects.getProjectByProjectId", 
         "/api/trpc/projects.getAll,riples.getAll",
+        "/api/trpc/projects.getProjectByProjectId,riples.getRiplebyProjectId",
         /^\/projects\//
     ]
 });
