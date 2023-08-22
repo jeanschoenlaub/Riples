@@ -1,4 +1,4 @@
-import { RouterOutputs } from "~/utils/api"
+import type { RouterOutputs } from "~/utils/api"
 
 type fakeData = RouterOutputs["projects"]["getProjectByProjectId"]
 export const NotionEmbed = (props: fakeData) => {
