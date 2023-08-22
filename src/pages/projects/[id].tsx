@@ -8,6 +8,7 @@ import type{ GetServerSidePropsContext, InferGetServerSidePropsType } from 'next
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
+import dayjs from 'dayjs';
 import Image from 'next/image';
 import { Feed } from "~/components/feed";
 import { NotionEmbed } from "~/components/notionembed";
@@ -76,7 +77,7 @@ export default function Home(
             </div>
             <div id="project-main-metadata" className="mt-4 ml-16">
                 <h1 className="text-2xl font-bold">{data?.project.title}</h1>
-                <p className="italic mt-2 text-sm text-gray-600">Created {data?.project.createdAt.toLocaleDateString()}</p>
+                <p className="italic mt-2 text-sm text-gray-600">Created {dayjs(data?.project.createdAt).format('DD/MM/YYYY')}</p>
                 <div className="mt-4 space-y-2">
                     <div className="font text-gray-800"> 
                         {data?.project.summary}

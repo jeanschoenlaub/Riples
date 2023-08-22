@@ -1,10 +1,13 @@
 import { authMiddleware } from "@clerk/nextjs";
 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/nextjs/middleware for more information about configuring your middleware
 export default authMiddleware({
-    publicRoutes: ["/","/api/trpc/projects.getAll",/^\/projects\//]
+    publicRoutes: [
+        "/",
+        "/api/trpc/projects.getAll",
+        "/api/trpc/projects.getProjectByProjectId",
+        "/api/trpc/projects.getAll,projects.getProjectByProjectId", // Include this line
+        /^\/projects\//
+    ]
 });
 
 export const config = {
