@@ -24,9 +24,9 @@ model Project {
 
 model Riple {
   id        String  @id @default(cuid())
-  title     String   @db.VarChar(255)
-  content   String  // You can add any other fields you need for the Riple model here
-  createdAt       DateTime @default(now())
+  title     String  @db.VarChar(255)
+  content   String  @db.Text
+  createdAt DateTime @default(now())
 
   projectId String
   project   Project @relation(fields: [projectId], references: [id])

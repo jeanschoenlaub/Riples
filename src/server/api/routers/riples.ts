@@ -25,72 +25,74 @@ export const ratelimit = new Ratelimit({
 })
 
 export const ripleRouter = createTRPCRouter({
-  getAll: publicProcedure.query( async ({ ctx }) => {
-    const riples = await ctx.prisma.riple.findMany({
-      take:100,
-      orderBy: [{
-        createdAt: "desc",
-     }]
-    });
-
-    const user = (await clerkClient.users.getUserList({
-      userId: riples.map((riple) => riple.authorID),
-      limit: 100,
-    })).map(filterUserForClient);
-
-    return riples.map((riples) => {
-      const author = user.find((user) => user.id === riples.authorID)
-
-      if(!author) throw new TRPCError ({code:"INTERNAL_SERVER_ERROR", message:"Riple author not found"})
-      return{
-        riples,
-        author,
-      }
-    });
-  }),
-
-  getRipleByRipleId: publicProcedure
-  .input(z.object({ripleId: z.string()}))
-  .query( async ({ ctx, input }) => {
-    // Find the riple by its unique ID
-    const riple = await ctx.prisma.riple.findUnique({
-      where: {
-        id: input.ripleId
-      }
-    });
-
-    if (!riple) {
-      throw new TRPCError({code: "NOT_FOUND", message: "riple not found"});
-    }
-
-    return { riple };
-  }),
-  
-
-  create: privateProcedure
-    .input(
-        z.object({
-            title: z.string().min(5, { message: "Must be 5 or more characters long" }).max(280, { message: "Must be less than 280 characters long" }),
-            content: z.string().min(5, { message: "Must be 5 or more characters long" }).max(50000, { message: "Must be less than 50'000 characters long" }),
-            projectId: z.string(),  // Add this
-        })
-    )
-    .mutation(async ({ ctx, input}) => {
-      const authorID = ctx.currentUserId;
-
-      const { success } = await ratelimit.limit(authorID)
-
-      if (!success) throw new TRPCError({code:"TOO_MANY_REQUESTS"})
-
-      const riple = await ctx.prisma.riple.create({
-        data:{
-          authorID,
-          title: input.title,
-          content: input.content,
-          projectId: input.projectId,
-        },
-      });
-
-      return riple
+    getAll: publicProcedure.query( async ({ ctx }) => {
+        const riples = await ctx.prisma.riple.findMany({
+          take: 100,
+          orderBy: [{ createdAt: "desc" }],
+          include: { project: true }  // Include the related project details.
+        });
+    
+        const user = (await clerkClient.users.getUserList({
+          userId: riples.map((riple) => riple.authorID),
+          limit: 100,
+        })).map(filterUserForClient);
+    
+        return riples.map((riple) => {
+          const author = user.find((user) => user.id === riple.authorID)
+    
+          if (!author) throw new TRPCError ({code: "INTERNAL_SERVER_ERROR", message: "Riple author not found"})
+          
+          return {
+            riple,
+            author,
+            project: riple.project
+          }
+        });
     }),
+
+
+    getRipleByRipleId: publicProcedure
+    .input(z.object({ripleId: z.string()}))
+    .query( async ({ ctx, input }) => {
+        // Find the riple by its unique ID
+        const riple = await ctx.prisma.riple.findUnique({
+        where: {
+            id: input.ripleId
+        }
+        });
+
+        if (!riple) {
+        throw new TRPCError({code: "NOT_FOUND", message: "riple not found"});
+        }
+
+        return { riple };
+    }),
+    
+
+    create: privateProcedure
+        .input(
+            z.object({
+                title: z.string().min(5, { message: "Must be 5 or more characters long" }).max(255, { message: "Must be less than 255 characters long" }),
+                content: z.string().min(5, { message: "Must be 5 or more characters long" }).max(50000, { message: "Must be less than 50'000 characters long" }),
+                projectId: z.string(),  // Add this
+            })
+        )
+        .mutation(async ({ ctx, input}) => {
+        const authorID = ctx.currentUserId;
+
+        const { success } = await ratelimit.limit(authorID)
+
+        if (!success) throw new TRPCError({code:"TOO_MANY_REQUESTS"})
+
+        const riple = await ctx.prisma.riple.create({
+            data:{
+            authorID,
+            title: input.title,
+            content: input.content,
+            projectId: input.projectId,
+            },
+        });
+
+        return riple
+        }),
 });
