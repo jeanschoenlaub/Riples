@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
      env:
-      MY_JOB_ENV_VAR: my_job_value
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     strategy:
       matrix:
