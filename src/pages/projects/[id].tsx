@@ -10,6 +10,7 @@ import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
 import Image from 'next/image';
 import { Feed } from "~/components/feed";
+import { NotionEmbed } from "~/components/notionembed";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -83,9 +84,15 @@ export default function Home(
                 </div>
             </div>
 
+            <div>
+              <NotionEmbed project={data.project}></NotionEmbed>
+            </div>
+
             <div id="project-main-feed" className="mt-4 ml-16">
                 <Feed></Feed>
             </div>
+
+            
 
         </div>
 

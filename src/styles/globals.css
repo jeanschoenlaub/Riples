@@ -6,6 +6,8 @@ body {
     overscroll-behavior: none;
 }
 
+iframe { width: 90%; height: 500px; border: 2px solid #ccc; border-radius: 10px; padding: none; }
+
 .grey-background {
     background-color: #f0f0f0;
     border: 1px solid #ccc;

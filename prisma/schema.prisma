@@ -19,6 +19,7 @@ model Project {
   createdAt        DateTime           @default(now())
   ripleType        String             @db.VarChar(5)@default("solo")
   coverImageUrl    String             @default("") @db.VarChar(255)
+  notionEmbedUrl   String             @default("") @db.VarChar(255)
 
   @@index([authorID])
 }
