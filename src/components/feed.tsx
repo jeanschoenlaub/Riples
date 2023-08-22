@@ -22,7 +22,7 @@ export const Feed = () => {
       <div>
 
         <div>
-          <CreateRipleWizard></CreateRipleWizard>
+          {/*<CreateRipleWizard></CreateRipleWizard>*/}
         </div>
 
         <div>
@@ -41,7 +41,7 @@ const RipleCardMeta = (props: RipleWithUser) => {
   const {riple, author} = props;
 
   return (
-    <div id="riple-card" className="bg-white border border-slate-300 rounded-lg p-4 mb-4 shadow-md" key={riple.id}>
+    <div id="riple-card" className="bg-white border border-slate-300 rounded-lg mx-5 p-4 mt-4 mb-4 shadow-md" key={riple.id}>
       <div id="riple-card-metadata" className="flex items-start space-x-3 mb-4">
           {/* Author's Profile Image */}
           <div id="riple-card-metadata-auth-profile-image">
@@ -62,7 +62,7 @@ const RipleCardMeta = (props: RipleWithUser) => {
                   {riple.title}
               </div>
               <span className="text-sm text-gray-500">
-                  {`Update on Project `}
+                  {`Update on `}
                   <span className="font-medium text-sky-500">
                       <Link href={`/projects/${riple.projectId}`}>
                           {riple.project.title}

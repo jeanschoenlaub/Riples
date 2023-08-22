@@ -31,7 +31,7 @@ export default function Home() {
               <ProjectNav></ProjectNav>
           </div>
           
-          <div id="feed" className="flex flex-col w-full md:w-3/5 p-4 border border-slate-700">
+          <div id="feed" className="flex flex-col w-full md:w-3/5 g-4 p-4 border border-slate-700">
               <Feed></Feed>
           </div>
           
