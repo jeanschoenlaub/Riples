@@ -14,9 +14,10 @@ model Project {
   summary         String   @db.VarChar(255)
   authorID        String
   createdAt       DateTime @default(now())
-  ripleType       String   @db.VarChar(5) @default("solo")
+  projectType     String   @db.VarChar(5) @default("solo")
   coverImageUrl   String   @default("") @db.VarChar(255)
   notionEmbedUrl  String   @default("") @db.VarChar(255)
+  applyFormUrl    String   @default("") @db.VarChar(255)
   riples          Riple[]  // This establishes the one-to-many relation
 
   @@index([authorID])

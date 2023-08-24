@@ -95,4 +95,33 @@ export const ripleRouter = createTRPCRouter({
 
         return riple
         }),
+        getRiplebyProjectId: publicProcedure
+        .input(z.object({ projectId: z.string() }))
+        .query(async ({ ctx, input }) => {
+            // Find the riples associated with the given projectId
+            const riples = await ctx.prisma.riple.findMany({
+                where: {
+                    projectId: input.projectId
+                },
+                include: { project: true }  // Include the related project details if needed.
+            });
+    
+            // If you also want to fetch user details for each riple, like in the getAll procedure:
+            const users = (await clerkClient.users.getUserList({
+                userId: riples.map((riple) => riple.authorID),
+                limit: 10,  // set the limit to the number of riples found
+            })).map(filterUserForClient);
+    
+            return riples.map((riple) => {
+                const author = users.find((user) => user.id === riple.authorID);
+    
+                if (!author) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Riple author not found" });
+    
+                return {
+                    riple,
+                    author,
+                    project: riple.project
+                }
+            });
+        }), 
 });
