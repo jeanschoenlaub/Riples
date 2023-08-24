@@ -93,7 +93,7 @@ export default function Home(
 
 
                 <div id="project-main-tabs" className="border-b border-gray-200 dark:border-gray-700">
-                  <Tabs activeTab={activeTab} setActiveTab={setActiveTab} ripleType={projectData?.project.ripleType}/>
+                  <Tabs activeTab={activeTab} setActiveTab={setActiveTab} collab={projectData?.project.notionEmbedUrl} apply={projectData?.applyFormUrl}/>
                 </div>
               
                 {/* SHOWN IF ABOUT TAB */}

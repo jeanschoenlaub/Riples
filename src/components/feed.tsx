@@ -91,8 +91,8 @@ type ProjectWithUser = RouterOutputs["projects"]["getAll"][number]
 const ProjectCardMeta = (props: ProjectWithUser) => {
   const {projects, author} = props;
 
-  const getImagePath = (ripleType: string) => {
-    if (ripleType === 'solo') {
+  const getImagePath = (projectType: string) => {
+    if (projectType === 'solo') {
       return '/images/solo_riple.png';
     } else {
       return '/images/multi_riple.png';
@@ -129,7 +129,7 @@ const ProjectCardMeta = (props: ProjectWithUser) => {
           <div className="flex-shrink-0">
               <div id="riple-card-riple-type" className="flex items-center justify-center"> 
                   <Image 
-                      src={getImagePath(projects.ripleType)} 
+                      src={getImagePath(projects.projectType)} 
                       alt="Riple Type"
                       className="rounded-full"
                       width={40}

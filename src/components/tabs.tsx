@@ -3,10 +3,11 @@ import React, { Dispatch, SetStateAction } from 'react';
 interface TabsProps {
   activeTab: string;
   setActiveTab: Dispatch<SetStateAction<string>>;
-  ripleType?: string; // optional prop
+  collab?: string; // optional prop
+  apply?: string;
 }
 
-const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, ripleType }) => {
+const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, collab, apply }) => {
   return (
     <div id="project-main-tabs" className="border-b border-gray-200 dark:border-gray-700">
       <ul className="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
@@ -48,7 +49,7 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, ripleType }) => {
         </li>
 
         {/* CONDITIONAL TAB COLLAB */}
-        {ripleType === 'multi' && (
+        {collab && (
             <li className="mr-2">
                 <button
                     onClick={() => setActiveTab('collab')}
@@ -68,7 +69,7 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, ripleType }) => {
         )}
 
         {/* CONDITIONAL TAB APPLY */}
-        {ripleType === 'multi' && (
+        {apply && (
             <li className="mr-2">
                 <button
                     onClick={() => setActiveTab('apply')}

@@ -35,8 +35,8 @@ export const ProjectNav = () => {
 type fakeData = RouterOutputs["projects"]["getAll"][number]
 const ProjectSideBar = (props: fakeData) => {
   const {projects} = props;
-  const getImagePath = (ripleType: string) => {
-    if (ripleType === 'solo') {
+  const getImagePath = (projectType: string) => {
+    if (projectType === 'solo') {
       return '/images/solo_riple.png';
     } else {
       return '/images/multi_riple.png';
@@ -50,7 +50,7 @@ const ProjectSideBar = (props: fakeData) => {
         </div>
         
         <Image 
-            src={getImagePath(projects.ripleType)} 
+            src={getImagePath(projects.projectType)} 
             alt="Riple Type"
             className="rounded-full"
             width={40}
