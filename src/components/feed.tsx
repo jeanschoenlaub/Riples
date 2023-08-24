@@ -68,7 +68,11 @@ export const RipleCardMeta = (props: RipleWithUser) => {
                       </Link>
                   </span>
                   {` by `}
-                  <span className="font-medium text-gray-500">{`${author?.firstName} ${author?.lastName}`}</span>
+                  <span className="font-medium text-gray-500">
+                    <Link href={`/users/${riple.project.authorID}`}>
+                      {`${author?.firstName} ${author?.lastName}`}
+                    </Link>
+                  </span>
                   <span className="ml-2">{`${dayjs(riple.createdAt).fromNow()}`}</span>
               </span>
           </div>

@@ -7,7 +7,7 @@ import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
 import { clerkClient} from "@clerk/nextjs";
 
-const filterUserForClient = (user: User) => {
+export const filterUserForClient = (user: User) => {
     return {
       id: user.id,
       username: user.username,

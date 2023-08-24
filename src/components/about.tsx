@@ -1,6 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import { RouterOutputs } from '~/utils/api';
+import Link from 'next/link';
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"]
 const AboutTab = (props: ProjectData) => {
@@ -20,7 +21,9 @@ const AboutTab = (props: ProjectData) => {
           Project Lead:
         </p>
         <p className="text-base">
-          {author.firstName} {/* Adjust how the authorId is displayed */}
+          <Link href={`/users/${project.authorID}`}>
+            {author.firstName} {/* Adjust how the authorId is displayed */}
+          </Link>
         </p>
       </div>
     </div>
