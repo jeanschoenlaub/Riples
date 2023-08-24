@@ -1,0 +1,95 @@
+import React, { Dispatch, SetStateAction } from 'react';
+
+interface TabsProps {
+  activeTab: string;
+  setActiveTab: Dispatch<SetStateAction<string>>;
+  ripleType?: string; // optional prop
+}
+
+const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, ripleType }) => {
+  return (
+    <div id="project-main-tabs" className="border-b border-gray-200 dark:border-gray-700">
+      <ul className="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
+        
+        {/* ABOUT TAB */}
+        <li className="mr-2">
+          <button
+            onClick={() => setActiveTab('about')}
+            className={`inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg ${activeTab === 'about' ? 'text-blue-600 border-blue-300' : 'text-gray-500 border-transparent'}`}>
+            <svg
+                className="w-4 h-4 mr-2"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill={activeTab === 'about' ? '#2563eb' : '#9CA3AF'}  // Blue and Gray colors
+                viewBox="0 0 20 20"
+            >
+              <path d="M18 0H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3.546l3.2 3.659a1 1 0 0 0 1.506 0L13.454 14H18a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-8 10H5a1 1 0 0 1 0-2h5a1 1 0 1 1 0 2Zm5-4H5a1 1 0 0 1 0-2h10a1 1 0 1 1 0 2Z" />
+            </svg>
+            About
+          </button>
+        </li>
+
+        {/* UPDATES TAB */}
+        <li className="mr-2">
+          <button
+            onClick={() => setActiveTab('updates')}
+            className={`inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg ${activeTab === 'updates' ? 'text-blue-600 border-blue-300' : 'text-gray-500 border-transparent'}`}>
+            <svg
+                className="w-4 h-4 mr-2"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill={activeTab === 'updates' ? '#2563eb' : '#9CA3AF'}  // Blue and Gray colors
+                viewBox="0 0 20 20"
+            >
+              <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
+            </svg>
+            Updates
+          </button>
+        </li>
+
+        {/* CONDITIONAL TAB COLLAB */}
+        {ripleType === 'multi' && (
+            <li className="mr-2">
+                <button
+                    onClick={() => setActiveTab('collab')}
+                    className={`inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg ${activeTab === 'collab' ? 'text-blue-600 border-blue-300' : 'text-gray-500 border-transparent'}`}>
+                <svg
+                    className="w-4 h-4 mr-2"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill={activeTab === 'collab' ? '#2563eb' : '#9CA3AF'}  // Blue and Gray colors
+                    viewBox="0 0 20 20"
+                >
+                <path d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z" />
+                </svg>
+                Collaboration
+            </button>
+            </li>
+        )}
+
+        {/* CONDITIONAL TAB APPLY */}
+        {ripleType === 'multi' && (
+            <li className="mr-2">
+                <button
+                    onClick={() => setActiveTab('apply')}
+                    className={`inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg ${activeTab === 'apply' ? 'text-blue-600 border-blue-300' : 'text-gray-500 border-transparent'}`}>
+                <svg
+                    className="w-4 h-4 mr-2"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill={activeTab === 'apply' ? '#2563eb' : '#9CA3AF'}  // Blue and Gray colors
+                    viewBox="0 0 20 20"
+                >
+                <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
+                </svg>
+                Apply
+            </button>
+            </li>
+        )}
+
+      </ul>
+    </div>
+  );
+};
+
+export default Tabs;
