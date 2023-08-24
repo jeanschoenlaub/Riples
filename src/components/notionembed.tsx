@@ -1,10 +1,10 @@
 import type { RouterOutputs } from "~/utils/api"
 
-type fakeData = RouterOutputs["projects"]["getProjectByProjectId"]
-export const NotionEmbed = (props: fakeData) => {
+type project = RouterOutputs["projects"]["getProjectByProjectId"]["project"]
+export const NotionEmbed = (props: project) => {
     return(
         <div className=" flex items-center justify-center">
-            {props.project.notionEmbedUrl && <iframe src={props.project.notionEmbedUrl}></iframe>}
+            {props.notionEmbedUrl && <iframe src={props.notionEmbedUrl}></iframe>}
         </div>
     )
 }

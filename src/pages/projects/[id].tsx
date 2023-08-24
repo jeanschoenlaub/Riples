@@ -9,7 +9,6 @@ import type{ GetServerSidePropsContext, InferGetServerSidePropsType } from 'next
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
-import dayjs from 'dayjs';
 import Image from 'next/image';
 
 
@@ -17,8 +16,8 @@ import { NotionEmbed } from "~/components/notionembed";
 import Tabs from "~/components/tabs";
 
 import React, { useState } from 'react';
-import toast from "react-hot-toast";
 import { useUser } from "@clerk/nextjs";
+import AboutTab from "~/components/about";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -57,7 +56,7 @@ export default function Home(
   const { data: projectData } = projQuery;
   const { data: ripleData, isLoading: ripleLoading } = api.riples.getRiplebyProjectId.useQuery({ projectId });
 
-  const {user} = useUser()
+  const user=useUser(); // logged in user
 
 
   const [activeTab, setActiveTab] = useState('updates'); // default active tab is 'updates for project pages'
@@ -98,16 +97,7 @@ export default function Home(
               
                 {/* SHOWN IF ABOUT TAB */}
                 {activeTab === 'about' && (
-                  <div id = "proj-about-html" className="mt-4">
-                    <div>
-                      {projectData?.project.summary}
-                    </div>
-                    <div>
-                      <p className="italic mt-2 text-sm text-gray-600">
-                        Created {dayjs(projectData?.project.createdAt).format('DD/MM/YYYY')}
-                      </p>
-                    </div>
-                  </div>
+                  <AboutTab project={projectData.project} author={projectData.author} ></AboutTab>
                 )}
 
                 {/* SHOWN IF UPDATES TAB */}
@@ -126,7 +116,7 @@ export default function Home(
                 {/* SHOWN IF COLLAB*/}
                 {activeTab === 'collab' && (
                   <div className="mt-4">
-                    <NotionEmbed project={projectData.project}></NotionEmbed>
+                    <NotionEmbed {...projectData.project}></NotionEmbed>
                   </div>
                 )}
 

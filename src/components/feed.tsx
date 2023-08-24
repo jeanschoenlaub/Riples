@@ -9,7 +9,6 @@ import type { RouterOutputs } from "~/utils/api";
 //My components
 import { LoadingPage, LoadingSpinner } from "~/components/loading";
 import Link from 'next/link';
-import { CreateRipleWizard } from './createriplewizard';
 
 export const Feed = () => {
     const { data, isLoading } = api.riples.getAll.useQuery();

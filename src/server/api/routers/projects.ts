@@ -63,7 +63,13 @@ export const projRouter = createTRPCRouter({
       throw new TRPCError({code: "NOT_FOUND", message: "Project not found"});
     }
 
-    return { project };
+    const author = filterUserForClient(await clerkClient.users.getUser( project.authorID));
+
+    if(!author) throw new TRPCError ({code:"INTERNAL_SERVER_ERROR", message:"Riple author not found"})
+    return{
+      project,
+      author,
+    }
   }),
   
 
