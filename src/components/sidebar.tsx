@@ -1,13 +1,5 @@
-import Image from 'next/image';
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime"
-dayjs.extend(relativeTime);
-
 import { api } from "~/utils/api";
 import type {RouterOutputs} from "~/utils/api";
-
-
-//My components
 import { LoadingPage} from "~/components/loading";
 import Link from 'next/link';
 
