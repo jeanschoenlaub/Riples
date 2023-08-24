@@ -9,6 +9,7 @@ import type {RouterOutputs} from "~/utils/api";
 
 //My components
 import { LoadingPage} from "~/components/loading";
+import Link from 'next/link';
 
 export const ProjectNav = () => {
   const { data, isLoading } = api.projects.getAll.useQuery();
@@ -23,7 +24,7 @@ export const ProjectNav = () => {
         </span>
         <div id="project-side-bar-project-card-container" className="bg-white p-4  ">
           {data.map((fullProject) => (
-              <ProjectSideBar key={fullProject.projects.id} {...fullProject}></ProjectSideBar>
+              <ProjectSideBarCard key={fullProject.projects.id} {...fullProject}></ProjectSideBarCard>
           ))}
         </div>
       </div>
@@ -32,9 +33,11 @@ export const ProjectNav = () => {
   
 }
 
-type fakeData = RouterOutputs["projects"]["getAll"][number]
-const ProjectSideBar = (props: fakeData) => {
+type projectData = RouterOutputs["projects"]["getAll"][number]
+const ProjectSideBarCard = (props: projectData) => {
   const {projects} = props;
+
+  {/* 
   const getImagePath = (projectType: string) => {
     if (projectType === 'solo') {
       return '/images/solo_riple.png';
@@ -43,21 +46,18 @@ const ProjectSideBar = (props: fakeData) => {
     }
   };
 
+  In image
+   src={getImagePath(projects.projectType)} 
+*/}
+
   return(
     <div id="project-side-bar-project-card" className="flex items-center p-4 mb-1 bg-white border-b border-e border-t border-l border-slate-300 justify-between rounded-lg">
-        <div id="project-side-bar-project-title">
-            {projects.title}
-        </div>
         
-        <Image 
-            src={getImagePath(projects.projectType)} 
-            alt="Riple Type"
-            className="rounded-full"
-            width={40}
-            height={40}
-            objectFit="cover"
-            objectPosition="center"
-        />
+        <div className="text-sm text-sky-500">
+          <Link href={`/projects/${projects.id}`}>
+            {projects.title}
+          </Link>
+        </div>
     </div>
   )
 }
