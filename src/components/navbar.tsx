@@ -10,7 +10,8 @@ export const GlobalNavBar = () => {
     <div id="global-nav-container" className="flex justify-center w-full">
       {/* LEFT NAV */}
       <div id="global-nav-left" className="flex w-1/5 gap-3 justify-center items-center p-2 border border-slate-700">
-        <Link href="/users/user_2URsJnsYNi5SZ2VMYzVESesLMx5">
+        <Link href="/about/riples">
+          {/*/users/user_2URsJnsYNi5SZ2VMYzVESesLMx5*/}
           <Image 
               src="/images/logo_128x128.png" 
               alt="Riple logo" 
@@ -21,7 +22,7 @@ export const GlobalNavBar = () => {
           />
         </Link>
             <div>
-              <Link href="/users/user_2URsJnsYNi5SZ2VMYzVESesLMx5">
+              <Link href="/about/riples">
                  {'About Riples'}
               </Link>
             </div>
