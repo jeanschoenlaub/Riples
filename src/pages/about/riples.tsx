@@ -17,12 +17,12 @@ export default function AboutRiples() {
 
             <section>
               <h2 className="text-2xl font-semibold">Our Mission</h2>
-              <p>At Riples, we're on a mission to empower individuals and teams to turn their collaborative dreams into reality. Whether you're a startup founder, an experienced professional, or just friends with a crazy idea, Riples provides the platform and tools you need to bring your projects to life in a supportive and engaging community.</p>
+              <p>At Riples, we&apos;re on a mission to empower individuals and teams to turn their collaborative dreams into reality. Whether you&apos;re a startup founder, an experienced professional, or just friends with a crazy idea, Riples provides the platform and tools you need to bring your projects to life in a supportive and engaging community.</p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold">Our Vision</h2>
-              <p>Our vision is to create a global ecosystem where collaboration knows no boundaries. We believe that innovation thrives when diverse minds come together. That's why Riples is designed to be a hub where creators, developers, and dreamers can connect, collaborate, and make waves together.</p>
+              <p>Our vision is to create a global ecosystem where collaboration knows no boundaries. We believe that innovation thrives when diverse minds come together. That&apos;s why Riples is designed to be a hub where creators, developers, and dreamers can connect, collaborate, and make waves together.</p>
             </section>
 
             <section>
@@ -32,7 +32,7 @@ export default function AboutRiples() {
 
             <section>
               <h2 className="text-2xl font-semibold">Join the Movement</h2>
-              <p>Are you ready to join a community that's redefining collaboration? Whether you have a groundbreaking idea or just want to follow innovative projects through our platform, Riples is the place to connect with like-minded individuals. Start your journey with us today!</p>
+              <p>Are you ready to join a community that&apos;s redefining collaboration? Whether you have a groundbreaking idea or just want to follow innovative projects through our platform, Riples is the place to connect with like-minded individuals. Start your journey with us today!</p>
             </section>
 
             <section>
