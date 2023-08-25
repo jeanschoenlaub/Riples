@@ -7,7 +7,7 @@ import { api } from "~/utils/api";
 import type { RouterOutputs } from "~/utils/api";
 
 //My components
-import { LoadingPage, LoadingSpinner } from "~/components/loading";
+import { LoadingPage } from "~/components/loading";
 import Link from 'next/link';
 
 export const Feed = () => {
@@ -88,59 +88,3 @@ export const RipleCardMeta = (props: RipleWithUser) => {
     </div>
   );
 }
-
-/* Not using for now but might use on a user profile a list of project 
-type ProjectWithUser = RouterOutputs["projects"]["getAll"][number]
-const ProjectCardMeta = (props: ProjectWithUser) => {
-  const {projects, author} = props;
-
-  const getImagePath = (projectType: string) => {
-    if (projectType === 'solo') {
-      return '/images/solo_riple.png';
-    } else {
-      return '/images/multi_riple.png';
-    }
-  };
-
-  return (
-    <div id="riple-card" className="border-b border-slate-700 p-4" key={projects.id}>
-      <div id="riple-card-metadata"  className="flex gap-3 items-center border-b border-e border-t border-l border-slate-300 p-2 g-4 justify-between rounded-2xl bg-white">
-          <div id="riple-card-metadata-auth-profile-image" className="flex gap-2 items-center">
-              <Image 
-                  src={author?.imageUrl} 
-                  alt="Profile Image" 
-                  className="rounded-full"
-                  width={40}
-                  height={40}
-                  objectFit="cover"
-                  objectPosition="center"
-              />
-              <div id="riple-card-metadata-auth-name-and-created-date">
-                  <div className="font-bold text-gray-800"> 
-                    <Link href={`/projects/${projects.id}`}>
-                      {projects.title}
-                    </Link>
-                  </div>
-                  <span className="text-sm text-gray-400"> 
-                      {` by `}
-                      <span className="font-bold text-gray-400">{`${author?.firstName} ${author?.lastName}`}</span>
-                      <span>{` ${dayjs(projects.createdAt).fromNow()} `}</span>
-                  </span>
-              </div>
-          </div>
-  
-          <div className="flex-shrink-0">
-              <div id="riple-card-riple-type" className="flex items-center justify-center"> 
-                  <Image 
-                      src={getImagePath(projects.projectType)} 
-                      alt="Riple Type"
-                      className="rounded-full"
-                      width={40}
-                      height={40}
-                  />
-              </div>
-          </div>
-      </div>
-    </div>
-  );
-} */
