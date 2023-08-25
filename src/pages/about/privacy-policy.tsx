@@ -19,7 +19,7 @@ export default function PrivacyPolicy() {
 
             <section>
               <h2 className="text-2xl font-semibold">Introduction</h2>
-              <p>Welcome to Riples' Privacy Policy. Your privacy is important to us, and this policy outlines how we collect, use, disclose, and protect your information.</p>
+              <p>Welcome to Riples&apos; Privacy Policy. Your privacy is important to us, and this policy outlines how we collect, use, disclose, and protect your information.</p>
             </section>
 
             <section>
@@ -67,13 +67,13 @@ export default function PrivacyPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold">Children's Privacy</h2>
+              <h2 className="text-2xl font-semibold">Children&apos;s Privacy</h2>
               <p>Our services are not intended for individuals under the age of 18.</p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold">Changes to This Privacy Policy</h2>
-              <p>We may update this Privacy Policy. Changes will be reflected on this page, and we will update the "Last Updated" date at the top.</p>
+              <p>We may update this Privacy Policy. Changes will be reflected on this page, and we will update the &quot;Last Updated&quot; date at the top.</p>
             </section>
 
             <section>
