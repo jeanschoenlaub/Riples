@@ -16,3 +16,7 @@ iframe { width: 90%; height: 500px; border: 2px solid #ccc; border-radius: 10px;
     border-radius: 20px;
 }
 
+/* Custom rule to limit the growth effect */
+.search-max-growth {
+    max-width: 400px; /* Adjust the maximum width as needed */
+  }

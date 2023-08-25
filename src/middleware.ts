@@ -3,6 +3,8 @@ import { authMiddleware } from "@clerk/nextjs";
 export default authMiddleware({
     publicRoutes: [
         "/",
+        "/about/privacy-policy",
+        "/about/terms-of-service",
         "/api/trpc/projects.getAll",
         "/api/trpc/riples.getAll",
         "/api/trpc/projects.getProjectByProjectId",
@@ -11,6 +13,7 @@ export default authMiddleware({
         "/api/trpc/projects.getProjectByProjectId,riples.getRiplebyProjectId",
         "/api/trpc/projects.getProjectByProjectId,riples.getRiplebyProjectId,projects.getAll",
         "/api/trpc/projects.getAll,projects.getProjectByProjectId,riples.getRiplebyProjectId", 
+        /^\/users\//,
         /^\/projects\//
     ]
 });
