@@ -6,6 +6,8 @@ export default authMiddleware({
         "/about/riples",
         "/about/privacy-policy",
         "/about/terms-of-service",
+        "/privacy-policy",
+        "/terms-of-service",
         "/api/trpc/projects.getAll",
         "/api/trpc/riples.getAll",
         "/api/trpc/projects.getProjectByProjectId",

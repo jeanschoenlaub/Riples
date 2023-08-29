@@ -36,8 +36,18 @@ export default function AboutRiples() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold">Legal</h2>
-              <p>Please make sure to read our <Link  href="about/terms-of-service">Terms of Service</Link> and <Link href="about/privacy-policy">Privacy Policy</Link>.</p>
+                <h2 className="text-2xl font-semibold">Legal</h2>
+                <p>
+                Please make sure to read our{" "}
+                <Link href="/about/terms-of-service" className="text-blue-500">
+                    Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link href="/about/privacy-policy" className="text-blue-500">
+                    Privacy Policy
+                </Link>
+                .
+                </p>
             </section>
           </div>
         </div>

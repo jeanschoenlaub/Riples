@@ -1,4 +1,4 @@
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignInButton, SignOutButton, UserButton, useUser } from "@clerk/nextjs";
 import Image from 'next/image';
 import Link from "next/link";
 
@@ -48,20 +48,10 @@ export const GlobalNavBar = () => {
           </div>
             
           <div id="global-nav-right" className="flex w-1/5 gap-3 items-center p-2 border border-slate-700">
-              {user?.imageUrl && 
-                  <Image 
-                      src={user.imageUrl} 
-                      alt="Profile Image" 
-                      className="rounded-full"
-                      width={32}
-                      height={32}
-                      objectFit="cover"
-                      objectPosition="center"
-                  />
-              }
+              {user &&  <UserButton />}
               <div className="flex items-center">
-                  {!user && <SignInButton />}
                   {user && <SignOutButton />}
+                  {!user && <SignInButton />}
               </div>
           </div>
       </div>

@@ -69,7 +69,7 @@ export const RipleCardMeta = (props: RipleWithUser) => {
                   </span>
                   {` by `}
                   <span className="font-medium text-gray-500">
-                    <Link href={`/users/${riple.project.authorID}`}>
+                    <Link href={`/users/${riple.authorID}`}>
                       {`${author?.firstName} ${author?.lastName}`}
                     </Link>
                   </span>
