@@ -17,8 +17,6 @@ export const GlobalNavBar = () => {
               alt="Riple logo" 
               width={32}
               height={32}
-              objectFit="cover"
-              objectPosition="center"
           />
         </Link>
             <div>

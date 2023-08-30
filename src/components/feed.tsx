@@ -15,7 +15,7 @@ import Link from 'next/link';
 export const Feed = () => {
     const { data, isLoading } = api.riples.getAll.useQuery();
 
-    if (isLoading ) return(<LoadingPage></LoadingPage>)
+    if (isLoading) return(<LoadingPage></LoadingPage>)
   
     if (!data) return(<div> Something went wrong</div>)
   
@@ -41,7 +41,34 @@ type RipleWithUser = RouterOutputs["riples"]["getAll"][number]
 export const RipleCardMeta = (props: RipleWithUser) => {
   const {riple, author} = props;
   const [isExpanded, setIsExpanded] = useState(false);
-  const rawHTML = riple.content;
+  const rawHTML = `
+  
+  <b>First Stop, Tasmania</b>
+
+  <p></br>
+    For the first leg of my year-long journey, I left Sydney and headed for Tasmania, an island off the southeast coast of Australia. This adventure promises to be exciting, so buckle up and join me for the ride!
+  </p>
+  
+  <p></br>
+    I should add a bit of background to this journey. I lived in Sydney for about 18 months, had amazing flatmates, and worked at a solar start-up called "5B." Life was easy-going. However, after four years in Australia, I decided it was time to explore the world once more. This marks a significant turning point for me.
+  </p>
+  <p></br>
+    Fast-forward to a Sunday evening following a farewell dinner with my flatmates. After a weekend of goodbyes—and nursing a heavy heart alongside a slightly heavier head—I hit the road. My first stop: Canberra, as part of my plan to break up the long drive.
+  </p>
+  
+  <!-- Insert Photos -->
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
+    <div style="flex: 1;">
+      <img src="/images/day1-1.jpeg" alt="Strolling around the Australian government in Canberra" style="width: auto; height: 300px;">
+      <p style="text-align: center; font-style: italic;">Strolling around the Australian government in Canberra</p>
+    </div>
+    <div style="flex: 1;">
+      <img src="/images/day1-2.jpeg" alt="Finding 'Mavericks' 5B solar products at a petrol station" style="width: auto; height: 300px;">
+      <p style="text-align: center; font-style: italic;">Finding 'Mavericks' 5B solar products at a random petrol station en route to Geelong</p>
+    </div>
+  </div>
+
+  `//riple.content;
   const cleanHTML = DOMPurify.sanitize(rawHTML);
   const showReadMore = riple.content.length > 15; // Show "Read More" if content is longer than X characters - TO-DO make cleaner with UseRef ?
 
@@ -88,7 +115,7 @@ export const RipleCardMeta = (props: RipleWithUser) => {
       <hr className="border-t border-slate-200 my-4" />
 
       {/* Post Content */}
-      <div className={`text-gray-700 overflow-hidden transition-all duration-500 ${isExpanded ? 'max-h-screen' : 'max-h-24'}`} dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
+      <div className={`text-gray-700 overflow-hidden transition-all duration-500 ${isExpanded ? 'max-h-200' : 'max-h-24'}`} dangerouslySetInnerHTML={{ __html: cleanHTML }}></div> 
 
       {/* Conditionally render Read More button */}
       { showReadMore && (
@@ -100,3 +127,4 @@ export const RipleCardMeta = (props: RipleWithUser) => {
     </div>
   );
 }
+
