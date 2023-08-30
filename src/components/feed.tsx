@@ -2,6 +2,7 @@ import Image from 'next/image';
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import DOMPurify from "dompurify";
+import React, { useState } from 'react';
 dayjs.extend(relativeTime);
 
 import { api } from "~/utils/api";
@@ -39,9 +40,10 @@ export const Feed = () => {
 type RipleWithUser = RouterOutputs["riples"]["getAll"][number]
 export const RipleCardMeta = (props: RipleWithUser) => {
   const {riple, author} = props;
-
+  const [isExpanded, setIsExpanded] = useState(false);
   const rawHTML = riple.content;
   const cleanHTML = DOMPurify.sanitize(rawHTML);
+  const showReadMore = riple.content.length > 15; // Show "Read More" if content is longer than X characters - TO-DO make cleaner with UseRef ?
 
   return (
     <div id="riple-card" className="bg-white border border-slate-300 rounded-lg mx-5 p-4 mt-4 mb-4 shadow-md" key={riple.id}>
@@ -86,7 +88,15 @@ export const RipleCardMeta = (props: RipleWithUser) => {
       <hr className="border-t border-slate-200 my-4" />
 
       {/* Post Content */}
-      <div className="text-gray-700" dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
+      <div className={`text-gray-700 overflow-hidden transition-all duration-500 ${isExpanded ? 'max-h-screen' : 'max-h-24'}`} dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
+
+      {/* Conditionally render Read More button */}
+      { showReadMore && (
+        <button onClick={() => setIsExpanded(!isExpanded)} className="mt-4">
+          {isExpanded ? 'Read Less' : 'Read More'}
+        </button>
+      )}
+
     </div>
   );
 }
