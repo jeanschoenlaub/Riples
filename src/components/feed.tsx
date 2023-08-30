@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
+import DOMPurify from "dompurify";
 dayjs.extend(relativeTime);
 
 import { api } from "~/utils/api";
@@ -38,6 +39,9 @@ export const Feed = () => {
 type RipleWithUser = RouterOutputs["riples"]["getAll"][number]
 export const RipleCardMeta = (props: RipleWithUser) => {
   const {riple, author} = props;
+
+  const rawHTML = riple.content;
+  const cleanHTML = DOMPurify.sanitize(rawHTML);
 
   return (
     <div id="riple-card" className="bg-white border border-slate-300 rounded-lg mx-5 p-4 mt-4 mb-4 shadow-md" key={riple.id}>
@@ -82,9 +86,7 @@ export const RipleCardMeta = (props: RipleWithUser) => {
       <hr className="border-t border-slate-200 my-4" />
 
       {/* Post Content */}
-      <div className="text-gray-700">
-          {riple.content}
-      </div>
+      <div className="text-gray-700" dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
     </div>
   );
 }
