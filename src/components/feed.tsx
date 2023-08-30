@@ -54,16 +54,16 @@ export const RipleCardMeta = (props: RipleWithUser) => {
   </p>
   <p></br>
     Fast-forward to a Sunday evening following a farewell dinner with my flatmates. After a weekend of goodbyes—and nursing a heavy heart alongside a slightly heavier head—I hit the road. My first stop: Canberra, as part of my plan to break up the long drive.
-  </p>
+  </p></br>
   
   <!-- Insert Photos -->
-  <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 50px;">
     <div style="flex: 1;">
-      <img src="/images/day1-1.jpeg" alt="Strolling around the Australian government in Canberra" style="width: auto; height: 300px;">
+      <img src="/images/day1-1.jpeg" alt="Strolling around the Australian government in Canberra" style="width: auto; height: 50vh;">
       <p style="text-align: center; font-style: italic;">Strolling around the Australian government in Canberra</p>
     </div>
     <div style="flex: 1;">
-      <img src="/images/day1-2.jpeg" alt="Finding 'Mavericks' 5B solar products at a petrol station" style="width: auto; height: 300px;">
+      <img src="/images/day1-2.jpeg" alt="Finding 'Mavericks' 5B solar products at a petrol station" style="width: auto; height: 50vh;">
       <p style="text-align: center; font-style: italic;">Finding 'Mavericks' 5B solar products at a random petrol station en route to Geelong</p>
     </div>
   </div>
