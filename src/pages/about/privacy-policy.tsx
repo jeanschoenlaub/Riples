@@ -74,7 +74,7 @@ export default function PrivacyPolicy() {
             <section>
                 <h2 className="text-2xl font-semibold">Data Deletion</h2>
                 <p>If you wish to delete your data from Riples, you can do so by signing in to your account. Once signed in, navigate to your user profile (either click on your profile picture, or {" "}
-                <Link  href="/user-profile" className="text-blue-500">HERE</Link> ). At the bottom of the profile page, you will find an option to 'Delete Account'. Clicking this will remove all data we have stored about you.</p>
+                <Link  href="/user-profile" className="text-blue-500">HERE</Link> ). At the bottom of the profile page, you will find an option to &apos;Delete Account&apos;. Clicking this will remove all data we have stored about you.</p>
                 <p>Please note that some data may still be retained for compliance with legal obligations.</p>
             </section>
 

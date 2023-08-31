@@ -1,4 +1,4 @@
-import Link from "next/link";
+//import Link from "next/link";
 import { GlobalNavBar } from "~/components/navbar";
 
 export default function AboutRiples() {
@@ -17,7 +17,7 @@ export default function AboutRiples() {
 
             <section>
               <h2 className="text-2xl font-semibold mb-2">The story</h2>
-              <p> I&apos;ve always had the desire to create start-up companies with my friends, as well as the belief that collective intelligence is super powerful. Combined with the conviction that current social media create less value than they could, the idea of a mix of a social media & project management platform was born. Let's try to do what Github did for open-source coding for all kind of projects !  </p>
+              <p> I&apos;ve always had the desire to create start-up companies with my friends, as well as the belief that collective intelligence is super powerful. Combined with the conviction that current social media create less value than they could, the idea of a mix of a social media & project management platform was born. Let&apos;s try to do what Github did for open-source coding for all kind of projects !  </p>
             </section>
 
             <section>
@@ -39,7 +39,7 @@ export default function AboutRiples() {
               <p>Crafting the future should be exhilarating, not encumbered. At Riples, we are building a platform that stands as your unwavering foundation. From inception to execution, we provide the infrastructure and resources to streamline your project journey. </p>
               
               <h2 className="font-semibold mt-4">We Will Build Riples Collaboratively</h2>
-              <p>And we're not just about talking the talk, we're walking the collaborative walk. We believe so strongly in the power of collaboration that we&apos;re using Riples to build Riples. But we&apos;re not doing it alone, we invite you to be a part of this journey. Your contributions, feedback, and insights are not just welcome, they&apos;re essential. You have the unique opportunity to help shape the platform you use, ensuring it evolves in a way that best serves your needs and aspirations. Let&apos;s build the future of collaboration together, one ripple at a time. </p>
+              <p>And we&apos;re not just about talking the talk, we&apos;re walking the collaborative walk. We believe so strongly in the power of collaboration that we&apos;re using Riples to build Riples. But we&apos;re not doing it alone, we invite you to be a part of this journey. Your contributions, feedback, and insights are not just welcome, they&apos;re essential. You have the unique opportunity to help shape the platform you use, ensuring it evolves in a way that best serves your needs and aspirations. Let&apos;s build the future of collaboration together, one ripple at a time. </p>
             </section>
 
             <section>

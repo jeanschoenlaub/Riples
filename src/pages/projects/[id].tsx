@@ -56,13 +56,11 @@ export default function Home(
   const { data: projectData, isLoading: projectLoading } = api.projects.getProjectByProjectId.useQuery({ projectId });
   const { data: ripleData, isLoading: ripleLoading } = api.riples.getRiplebyProjectId.useQuery({ projectId });
 
+  const [activeTab, setActiveTab] = useState('riples'); // default active tab is 'riples for project pages'
+  
   const user=useUser(); // logged in user
 
   if (ripleLoading || projectLoading) return(<LoadingPage></LoadingPage>)
-
-
-  const [activeTab, setActiveTab] = useState('riples'); // default active tab is 'riples for project pages'
-
   if (!projectData || !ripleData) return (<div> Something went wrong</div>)
 
   return (
@@ -104,7 +102,7 @@ export default function Home(
 
                 {/* SHOWN IF RIPLES TAB */}
                 {activeTab === 'riples' && (
-                  <div className="mt-4 mx-5 space-y-2">
+                  <div className="mt-4 space-y-2">
                       <div className="font text-gray-800"> 
                         <div>
                           {ripleData?.map((fullRiple) => (
