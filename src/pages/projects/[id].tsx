@@ -18,6 +18,7 @@ import React, { useState } from 'react';
 import { useUser } from "@clerk/nextjs";
 import AboutTab from "~/components/about";
 import { RipleCard } from "~/components/riplecard";
+import { LoadingPage } from "~/components/loading";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -52,10 +53,12 @@ export default function Home(
 ) {
   const { projectId } = props;
 
-  const { data: projectData } = api.projects.getProjectByProjectId.useQuery({ projectId });
+  const { data: projectData, isLoading: projectLoading } = api.projects.getProjectByProjectId.useQuery({ projectId });
   const { data: ripleData, isLoading: ripleLoading } = api.riples.getRiplebyProjectId.useQuery({ projectId });
 
   const user=useUser(); // logged in user
+
+  if (ripleLoading || projectLoading) return(<LoadingPage></LoadingPage>)
 
 
   const [activeTab, setActiveTab] = useState('riples'); // default active tab is 'riples for project pages'
@@ -77,7 +80,7 @@ export default function Home(
               <ProjectNav></ProjectNav>
             </div>
 
-            <div id="project-main" className="relative flex flex-col w-full md:w-4/5 border border-slate-700">
+            <div id="project-main" className="relative flex flex-col w-full md:w-3/5 mt-4 border border-slate-700">
               <div id="project-main-cover-image" className="relative w-full h-[50vh] overflow-hidden">
                 <Image 
                     src={projectData?.project.coverImageUrl} 
@@ -86,12 +89,12 @@ export default function Home(
                     objectFit="cover"
                 />
               </div>
-              <div id="project-main-metadata" className="mt-4 ml-16">
+              <div id="project-main-metadata" className="mt-4 ml-5 mr-5">
                 <h1 className="text-2xl font-bold">{projectData?.project.title}</h1>
 
 
                 <div id="project-main-tabs" className="border-b border-gray-200 dark:border-gray-700">
-                  <Tabs activeTab={activeTab} setActiveTab={setActiveTab} riple="y" collab={projectData?.project.notionEmbedUrl} apply={projectData?.project.applyFormUrl}/>
+                  <Tabs activeTab={activeTab} setActiveTab={setActiveTab} riples="y" collab={projectData?.project.notionEmbedUrl} apply={projectData?.project.applyFormUrl}/>
                 </div>
               
                 {/* SHOWN IF ABOUT TAB */}
@@ -101,7 +104,7 @@ export default function Home(
 
                 {/* SHOWN IF RIPLES TAB */}
                 {activeTab === 'riples' && (
-                  <div className="mt-4 space-y-2">
+                  <div className="mt-4 mx-5 space-y-2">
                       <div className="font text-gray-800"> 
                         <div>
                           {ripleData?.map((fullRiple) => (
@@ -138,7 +141,10 @@ export default function Home(
                   </div>
                 )}
 
+              </div>
             </div>
+            <div id="future-content" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
+              <h1>Future Content</h1>
           </div>
         </div>
       </main>

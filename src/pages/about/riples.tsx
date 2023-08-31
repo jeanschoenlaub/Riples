@@ -47,6 +47,7 @@ export default function AboutRiples() {
               <p>Are you ready to join a community that&apos;s redefining collaboration? Whether you have a groundbreaking idea or just want to follow innovative projects through our platform, Riples is the place to connect with like-minded individuals. Start your journey with us today!</p>
             </section>
 
+            {/*
             <section>
                 <h2 className="text-2xl font-semibold mb-2">Legal</h2>
                 <p>
@@ -60,7 +61,7 @@ export default function AboutRiples() {
                 </Link>
                 .
                 </p>
-            </section>
+            </section> */}
           </div>
         </div>
       </main>

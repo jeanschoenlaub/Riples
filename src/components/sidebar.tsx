@@ -9,19 +9,23 @@ export const ProjectNav = () => {
   if (!data) return(<div> Something went wrong</div>)
 
   return(
-    <div id="project-side-bar-container" className="border-b border-slate-700 p-4">
-      <div id="project-side-bar-container-2" className="flex flex-col items-center border-b border-e border-t border-l border-slate-300 p-2 justify-between rounded-lg bg-white ">
-        <span className="text-xl text-black-500">
-           Your Projects
-        </span>
-        <div id="project-side-bar-project-card-container" className="bg-white p-2  ">
-          {data.map((fullProject) => (
-              <ProjectSideBarCard key={fullProject.projects.id} {...fullProject}></ProjectSideBarCard>
-          ))}
-        </div>
-      </div>
-    </div>
+    <div id="project-side-bar-container"> Future Content</div>
   )
+
+
+/*
+<div id="project-side-bar-container" className="border-b border-slate-700 p-4">
+  <div id="project-side-bar-container-2" className="flex flex-col items-center border-b border-e border-t border-l border-slate-300 p-2 justify-between rounded-lg bg-white ">
+    <span className="text-xl text-black-500">
+        Your Projects
+    </span>
+    <div id="project-side-bar-project-card-container" className="bg-white p-2  ">
+      {data.map((fullProject) => (
+          <ProjectSideBarCard key={fullProject.projects.id} {...fullProject}></ProjectSideBarCard>
+      ))}
+    </div>
+  </div>
+</div>*/
   
 }
 

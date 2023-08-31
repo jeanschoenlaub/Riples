@@ -63,8 +63,8 @@ export const RipleCard = (props: RipleWithUser) => {
   const showReadMore = riple.content.length > 15; // Show "Read More" if content is longer than X characters - TO-DO make cleaner with UseRef ?
 
   return (
-    <div id="riple-card" className="bg-white border border-slate-300 rounded-lg mx-5 p-4 mt-4 mb-4 shadow-md" key={riple.id}>
-      <div id="riple-card-metadata" className="flex items-start space-x-3 mb-4">
+    <div id="riple-card" className="bg-white border border-slate-300 rounded-lg mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md" key={riple.id}>
+      <div id="riple-card-metadata" className="flex items-center space-x-3 mb-4">
           {/* Author's Profile Image */}
           <div id="riple-card-metadata-auth-profile-image">
             <Link href={`/projects/${riple.projectId}`}>
@@ -72,8 +72,8 @@ export const RipleCard = (props: RipleWithUser) => {
                   src={riple.project.coverImageUrl} 
                   alt="Profile Image" 
                   className="rounded-full border border-slate-300"
-                  width={80}
-                  height={80}
+                  width={100}
+                  height={100}
               />
             </Link>
           </div>

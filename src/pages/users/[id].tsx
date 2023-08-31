@@ -8,6 +8,7 @@ import { GlobalNavBar } from "~/components/navbar";
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
+import Image from 'next/image';
 
 import React, { useState } from 'react';
 
@@ -78,14 +79,25 @@ export default function UserPage(
               <ProjectNav></ProjectNav>
             </div>
 
-            <div id="user-main" className="relative flex flex-col w-full md:w-4/5 border border-slate-700">
-              <div id="user-meta" className="relative flex flex-col w-full md:w-4/5 border border-slate-700">
-                  {user.firstName}
-                  {user.lastName}
+            <div id="user-main" className="relative flex flex-col w-full md:w-3/5 border border-slate-700">
+
+            
+              <div id="user-meta" className="mt-4 ml-5">
+                 
+                  <span className="flex space-x-10 gap-5 items-center font-medium text-gray-500">  
+                      <Image 
+                          src={user.imageUrl} 
+                          alt="Profile Image" 
+                          className="rounded-full border border-slate-300"
+                          width={80}
+                          height={80}
+                      />
+                      {`${user?.firstName} ${user?.lastName}`}
+                  </span>
               </div>
 
-              <div id="project-main-tabs" className="border-b border-gray-200 dark:border-gray-700">
-                <Tabs activeTab={activeTab} setActiveTab={setActiveTab}/>
+              <div id="project-main-tabs" className="ml-5 border-b border-gray-200 dark:border-gray-700">
+                <Tabs activeTab={activeTab} setActiveTab={setActiveTab} projects="y"/>
               </div>
               
               {/* SHOWN IF PROJECTS TAB */}
@@ -100,6 +112,9 @@ export default function UserPage(
                   </div>
                 </div>
               )}
+            </div>
+            <div id="future-content" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
+              <h1>Future Content</h1>
             </div>
           </div>
         </main>

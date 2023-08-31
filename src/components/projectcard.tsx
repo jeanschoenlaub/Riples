@@ -19,42 +19,36 @@ export const ProjectCard = (props: ProjectWithUser) => {
                     src={project.coverImageUrl} 
                     alt="Profile Image" 
                     className="rounded-full border border-slate-300"
-                    width={80}
-                    height={80}
+                    width={100}
+                    height={100}
                 />
                 </Link>
             </div>
 
-            {/* Project Status */}
-            <div>
-                <span className={`inline-block px-2 py-1 rounded text-white ${
-                    project.Status === "In Progress" ? "bg-green-500" : 
-                    project.Status === "Planning" ? "bg-yellow-500" : 
-                    project.Status === "Finished" ? "bg-red-500" : ""
-                }`}>
-                    {project.Status}
-                </span>
-            </div>
+           
 
             {/* Author's Name and Post Date */}
-            <div id="project-card-metadata-auth-name-and-created-date">
-                <div className="font-semibold text-gray-800">
-                    {project.title}
+            <div id="project-card-metadata-auth-name-and-created-date" className="space-y-1">
+                <div className="font-medium text-sky-500">
+                    <Link href={`/projects/${project.id}`}>
+                        {project.title}
+                    </Link>
                 </div>
-                <span className="text-sm text-gray-500">
-                    {`Update on `}
-                    <span className="font-medium text-sky-500">
-                        <Link href={`/projects/${project.id}`}>
-                            {project.title}
-                        </Link>
+
+                <div>
+                    <span className={`text-sm inline-block px-2 py-1 rounded text-white ${
+                        project.Status === "In Progress" ? "bg-green-500" : 
+                        project.Status === "Planning" ? "bg-yellow-500" : 
+                        project.Status === "Finished" ? "bg-red-500" : ""
+                    }`}>
+                        {project.Status}
                     </span>
-                    {` by `}
-                    <span className="font-medium text-gray-500">
-                        <Link href={`/users/${project.authorID}`}>
-                        {`${author?.firstName} ${author?.lastName}`}
-                        </Link>
-                    </span>
-                </span>
+                </div>
+
+                <div className="text-sm text-gray-500">
+                    Created {dayjs(project.createdAt).format('DD/MM/YYYY')}
+                </div>
+
             </div>
       </div>
 

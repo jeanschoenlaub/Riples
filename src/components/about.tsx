@@ -9,7 +9,7 @@ const AboutTab = (props: ProjectData) => {
   const {project, author} = props;
 
   return (
-      <div id="proj-about-html" className="mt-4 space-y-4">
+      <div id="proj-about-html" className="mt-4 ml-2 mb-2 space-y-4">
         <div>
           {project.summary}
         </div>
