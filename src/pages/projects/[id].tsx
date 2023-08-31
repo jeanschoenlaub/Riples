@@ -78,7 +78,7 @@ export default function Home(
               <ProjectNav></ProjectNav>
             </div>
 
-            <div id="project-main" className="relative flex flex-col w-full md:w-3/5 mt-4 border border-slate-700">
+            <div id="project-main" className="relative flex flex-col w-full md:w-3/5 border border-slate-700">
               <div id="project-main-cover-image" className="relative w-full h-[50vh] overflow-hidden">
                 <Image 
                     src={projectData?.project.coverImageUrl} 
