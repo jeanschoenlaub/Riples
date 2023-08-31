@@ -65,11 +65,40 @@ export const projRouter = createTRPCRouter({
 
     const author = filterUserForClient(await clerkClient.users.getUser( project.authorID));
 
-    if(!author) throw new TRPCError ({code:"INTERNAL_SERVER_ERROR", message:"Riple author not found"})
+    if(!author) throw new TRPCError ({code:"INTERNAL_SERVER_ERROR", message:"Project author not found"})
     return{
       project,
       author,
     }
+  }),
+
+  getProjectByAuthorId: publicProcedure
+  .input(z.object({authorID: z.string()}))
+  .query( async ({ ctx, input }) => {
+    // Find the project by its unique ID
+    const projects = await ctx.prisma.project.findMany({
+      where: {
+        authorID: input.authorID
+      },
+      take: 100,
+      orderBy: [{ createdAt: "desc" }],
+    });
+
+    const user = (await clerkClient.users.getUserList({
+      userId: projects.map((project) => project.authorID),
+      limit: 100,
+    })).map(filterUserForClient);
+
+    return projects.map((project) => {
+      const author = user.find((user) => user.id === project.authorID)
+
+      if (!author) throw new TRPCError ({code: "INTERNAL_SERVER_ERROR", message: "Riple author not found"})
+      
+      return {
+        project,
+        author
+      }
+    });
   }),
   
 

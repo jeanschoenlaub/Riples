@@ -19,9 +19,32 @@ export const LoadingSpinner = (props: {size?: number}) => {
 }
 
 export const LoadingPage = () => {
+    //<LoadingSpinner size={60}></LoadingSpinner>
     return(
         <div className=" flex items-center justify-center">
-            <LoadingSpinner size={60}></LoadingSpinner>
+            <LoadingDropletSVG></LoadingDropletSVG>
         </div>
     )
 }
+
+export const LoadingDropletSVG = () => {
+    return (
+        <div className="loading-container">
+          <img
+              src="/images/logo_128x128.png" 
+              className="droplet" 
+              alt="Riple logo" 
+          />
+          <div className="ripple"></div>
+          <div className="ripple"></div>
+          <div className="ripple"></div>
+  
+        </div>)
+  };
+  
+  
+  
+  
+  
+  
+  
