@@ -1,4 +1,5 @@
 //import Link from "next/link";
+import Link from "next/link";
 import { GlobalNavBar } from "~/components/navbar";
 
 export default function AboutRiples() {
@@ -44,7 +45,9 @@ export default function AboutRiples() {
 
             <section>
               <h2 className="text-2xl font-semibold mb-2">Join the Movement</h2>
-              <p>Are you ready to join a community that&apos;s redefining collaboration? Whether you have a groundbreaking idea or just want to follow innovative projects through our platform, Riples is the place to connect with like-minded individuals. Start your journey with us today!</p>
+              <p>Are you ready to join a community that&apos;s redefining collaboration? Whether you have a groundbreaking idea or just want to follow innovative projects through our platform, Riples is the place to connect with like-minded individuals. Start your journey with us today! Let us know what you think about the Riples app <Link href="https://forms.gle/WPq2stK3YBDcggHw5" className="text-blue-500">
+                    here
+                </Link>  </p>
             </section>
 
             {/*
