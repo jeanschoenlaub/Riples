@@ -21,11 +21,11 @@ const AboutTab = (props: ProjectData) => {
         {/* Project Status */}
         <div>
           <span className={`inline-block px-2 py-1 rounded text-white ${
-            project.Status === "In Progress" ? "bg-green-500" : 
-            project.Status === "Planning" ? "bg-yellow-500" : 
-            project.Status === "Finished" ? "bg-red-500" : ""
+            project.status === "In Progress" ? "bg-green-500" : 
+            project.status === "Planning" ? "bg-yellow-500" : 
+            project.status === "Finished" ? "bg-red-500" : ""
           }`}>
-            {project.Status}
+            {project.status}
           </span>
         </div>
 
