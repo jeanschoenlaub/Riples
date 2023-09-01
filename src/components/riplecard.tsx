@@ -21,26 +21,26 @@ export const RipleCard = (props: RipleWithUser) => {
   const maxHeightClass = isExpanded ? '' : 'max-h-200';
   // Similar to DOMContentLoaded, useEffect runs after the component is mounted to the DOM
   useEffect(() => {
-    const parentDiv = document.getElementById('riple-content') as HTMLElement; // Type assertion here
+    const parentDiv = document.getElementById('riple-content')!; // Using ! assertion
+    
     if (parentDiv) {
       const childDivs = parentDiv.children;
-    
       const maxHeight = isExpanded ? 'none' : '200px';
-      // Set parent height
+      
       parentDiv.style.maxHeight = maxHeight;
-    
+      
       if (!isExpanded) {
-        // Loop through children to enforce max height
-        for (let i = 0; i < childDivs.length; i++) {
-          const child = childDivs[i] as HTMLElement; // Type assertion here
-          if (child.offsetHeight > 200) { // TypeScript should be okay with this now
-            child.style.height = '200px'; // TypeScript should be okay with this now
+        // Use for-of loop
+        for (const child of childDivs) {
+          const htmlChild = child as HTMLElement; // Type assertion here
+          if (htmlChild.offsetHeight > 200) {
+            htmlChild.style.height = '200px';
           }
         }
       } else {
-        for (let i = 0; i < childDivs.length; i++) {
-          const child = childDivs[i] as HTMLElement; // Type assertion here
-          child.style.height = 'auto'; // Reset to natural height
+        for (const child of childDivs) {
+          const htmlChild = child as HTMLElement; // Type assertion here
+          htmlChild.style.height = 'auto'; // Reset to natural height
         }
       }
     }
