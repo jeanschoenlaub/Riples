@@ -20,6 +20,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       </Head>
       < Toaster /> 
       <Component {...pageProps} />
+      <Analytics />
     </ClerkProvider>
   );
 
