@@ -4,9 +4,7 @@ import { LoadingPage} from "~/components/loading";
 import Link from 'next/link';
 
 export const ProjectNav = () => {
-  const { data, isLoading } = api.projects.getAll.useQuery();
-  if (isLoading ) return(<LoadingPage></LoadingPage>)
-  if (!data) return(<div> Something went wrong</div>)
+  
 
   return(
     <div id="project-side-bar-container"> Future Content</div>
@@ -14,6 +12,9 @@ export const ProjectNav = () => {
 
 
 /*
+const { data, isLoading } = api.projects.getAll.useQuery();
+  if (isLoading ) return(<LoadingPage></LoadingPage>)
+  if (!data) return(<div> Something went wrong</div>)s
 <div id="project-side-bar-container" className="border-b border-slate-700 p-4">
   <div id="project-side-bar-container-2" className="flex flex-col items-center border-b border-e border-t border-l border-slate-300 p-2 justify-between rounded-lg bg-white ">
     <span className="text-xl text-black-500">

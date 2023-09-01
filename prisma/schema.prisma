@@ -28,6 +28,7 @@ model Project {
   riples          Riple[]  // This establishes the one-to-many relation
 
   @@index([authorID])
+  @@index([id])
 }
 
 model Riple {
@@ -41,4 +42,5 @@ model Riple {
   authorID  String
 
   @@index([projectId])
+  @@index([id])
 }
