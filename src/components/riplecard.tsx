@@ -4,7 +4,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
 
 import DOMPurify from "dompurify";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { RouterOutputs } from "~/utils/api";
@@ -16,7 +16,35 @@ export const RipleCard = (props: RipleWithUser) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const rawHTML = riple.content;
   const cleanHTML = DOMPurify.sanitize(rawHTML);
-  const showReadMore = riple.content.length > 15; // Show "Read More" if content is longer than X characters - TO-DO make cleaner with UseRef ?
+  const showReadMore = cleanHTML.length > 500; // Show "Read More" if cleanHTML is longer than 500 characters
+  // Determine what the max height should be
+  const maxHeightClass = isExpanded ? '' : 'max-h-200';
+  // Similar to DOMContentLoaded, useEffect runs after the component is mounted to the DOM
+  useEffect(() => {
+    const parentDiv = document.getElementById('riple-content') as HTMLElement; // Type assertion here
+    if (parentDiv) {
+      const childDivs = parentDiv.children;
+    
+      const maxHeight = isExpanded ? 'none' : '200px';
+      // Set parent height
+      parentDiv.style.maxHeight = maxHeight;
+    
+      if (!isExpanded) {
+        // Loop through children to enforce max height
+        for (let i = 0; i < childDivs.length; i++) {
+          const child = childDivs[i] as HTMLElement; // Type assertion here
+          if (child.offsetHeight > 200) { // TypeScript should be okay with this now
+            child.style.height = '200px'; // TypeScript should be okay with this now
+          }
+        }
+      } else {
+        for (let i = 0; i < childDivs.length; i++) {
+          const child = childDivs[i] as HTMLElement; // Type assertion here
+          child.style.height = 'auto'; // Reset to natural height
+        }
+      }
+    }
+  }, [isExpanded]);
 
   return (
     <div id="riple-card" className="bg-white border border-slate-300 rounded-lg mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md" key={riple.id}>
@@ -61,8 +89,12 @@ export const RipleCard = (props: RipleWithUser) => {
       <hr className="border-t border-slate-200 my-4" />
 
       {/* Post Content */}
-      <div className={`text-gray-700 overflow-hidden transition-all duration-500 ${isExpanded ? 'max-h-200' : 'max-h-25'}`} dangerouslySetInnerHTML={{ __html: cleanHTML }}></div> 
+      <div id="riple-content" 
+           className={`text-gray-700 overflow-hidden transition-all duration-500 ${showReadMore ? maxHeightClass : ''}`}>
+        <div className="constrain-child" dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
+      </div>
 
+     
       {/* Conditionally render Read More button */}
       { showReadMore && (
         <button onClick={() => setIsExpanded(!isExpanded)} className="mt-4">
