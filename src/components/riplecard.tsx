@@ -22,7 +22,7 @@ export const RipleCard = (props: RipleWithUser) => {
   const showReadMore = cleanHTML.length > 500;
 
   // Calculate max height based on whether the content is expanded.
-  const maxHeightClass = isExpanded ? 'max-h-screen' : 'max-h-10';
+  const maxHeightClass = isExpanded ? 'max-h-screen' : 'max-h-200';
   
   return (
     <div id="riple-card" className="bg-white border border-slate-300 rounded-lg mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md" key={riple.id}>
