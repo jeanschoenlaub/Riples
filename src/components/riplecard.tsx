@@ -14,89 +14,16 @@ import type { RouterOutputs } from "~/utils/api";
 type RipleWithUser = RouterOutputs["riples"]["getAll"][number]
 export const RipleCard = (props: RipleWithUser) => {
   const {riple, author} = props;
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const rawHTML = riple.content;
   const cleanHTML = DOMPurify.sanitize(rawHTML);
-  const showReadMore = cleanHTML.length > 500; // Show "Read More" if cleanHTML is longer than 500 characters
-  // Determine what the max height should be
-  const maxHeightClass = isExpanded ? '' : 'max-h-200';
-  // Similar to DOMContentLoaded, useEffect runs after the component is mounted to the DOM
-  
 
-  useEffect(() => {
-    console.log("useEffect started");
-  
-    if (typeof window === 'undefined') {
-      console.log('This is running server-side.');
-    } else {
-      console.log('This is running client-side.');
-    }
-  
-    // Log right before the setTimeout to understand the execution order.
-    console.log("Before setting setTimeout");
-    
-    setTimeout(() => {
-      console.log("setTimeout triggered");
-  
-      // Log right before the flushSync to understand the execution order.
-      console.log("Before calling ReactDOM.flushSync");
-  
-      ReactDOM.flushSync(() => {
-        console.log("Inside flushSync");
-  
-        const parentDiv = document.getElementById('riple-content')!; // Using ! assertion
-  
-        if (parentDiv) {
-          console.log("Found parentDiv:", parentDiv);
-          
-          const childDivs = parentDiv.children;
-          console.log("Number of childDivs:", childDivs.length);
-  
-          const maxHeight = isExpanded ? 'none' : '200px';
-          console.log("maxHeight:", maxHeight);
-          
-          parentDiv.style.maxHeight = maxHeight;
-          
-          // Log right before the requestAnimationFrame to understand the execution order.
-          console.log("Before calling requestAnimationFrame");
-          
-          requestAnimationFrame(() => {
-            console.log("Inside requestAnimationFrame");
-  
-            if (!isExpanded) {
-              console.log("isExpanded is false");
-              // Use for-of loop
-              for (const child of childDivs) {
-                const htmlChild = child as HTMLElement; // Type assertion here
-                console.log("offsetHeight:", htmlChild.offsetHeight);
-                
-                if (htmlChild.offsetHeight > 200) {
-                  htmlChild.style.height = '200px';
-                  console.log("Setting height to 200px");
-                } else {
-                  console.log("Not setting height, offsetHeight is below or equal to 200");
-                }
-              }
-            } else {
-              console.log("isExpanded is true");
-              for (const child of childDivs) {
-                const htmlChild = child as HTMLElement; // Type assertion here
-                htmlChild.style.height = 'auto'; // Reset to natural height
-                console.log("Setting height to auto");
-              }
-            }
-          });
-        } else {
-          console.log("parentDiv not found");
-        }
-      });
-    }, 500); // 500 milliseconds delay, you can adjust this
-  
-    // Log right after the setTimeout to understand the execution order.
-    console.log("After setting setTimeout");
-  }, [isExpanded]);
+  // If the content is longer than 500 characters, showReadMore will be true.
+  const showReadMore = cleanHTML.length > 500;
 
-
+  // Calculate max height based on whether the content is expanded.
+  const maxHeightClass = isExpanded ? 'max-h-screen' : 'max-h-10';
+  
   return (
     <div id="riple-card" className="bg-white border border-slate-300 rounded-lg mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md" key={riple.id}>
       <div id="riple-card-metadata" className="flex items-center space-x-3 mb-4">
@@ -141,19 +68,16 @@ export const RipleCard = (props: RipleWithUser) => {
 
       {/* Post Content */}
       <div id="riple-content" 
-           className={`text-gray-700 overflow-hidden transition-all duration-500 ${showReadMore ? maxHeightClass : ''}`}>
-        <div className="constrain-child" dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
+           className={`text-gray-700 overflow-hidden transition-all duration-500 ${maxHeightClass}`}>
+        <div dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
       </div>
 
-     
       {/* Conditionally render Read More button */}
       { showReadMore && (
         <button onClick={() => setIsExpanded(!isExpanded)} className="mt-4">
-          {isExpanded ? 'Read Less' : 'Read More'}
+          {isExpanded ? 'Read More' : 'Read Less'}
         </button>
       )}
-
     </div>
   );
 }
-
