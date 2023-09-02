@@ -2,8 +2,6 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
-import ReactDOM from 'react-dom'; // Make sure you import ReactDOM
-
 import DOMPurify from "dompurify";
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -16,10 +14,16 @@ export const RipleCard = (props: RipleWithUser) => {
   const {riple, author} = props;
   const [isExpanded, setIsExpanded] = useState(true);
   const rawHTML = riple.content;
-  const cleanHTML = DOMPurify.sanitize(rawHTML);
+  
+  let cleanHTML = rawHTML; // Default to rawHTML
 
-  // If the content is longer than 500 characters, showReadMore will be true.
-  const showReadMore = cleanHTML.length > 500;
+  // Run DOMPurify only on the client side
+  if (typeof window !== 'undefined') {
+    cleanHTML = DOMPurify.sanitize(rawHTML);
+  }
+
+  const showReadMore = cleanHTML.length > 500; // If the content is longer than 500 characters
+
 
   // Calculate max height based on whether the content is expanded.
   const maxHeightClass = isExpanded ? 'max-h-screen' : 'max-h-200';
