@@ -2,6 +2,7 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
+import ReactDOM from 'react-dom'; // Make sure you import ReactDOM
 
 import DOMPurify from "dompurify";
 import React, { useEffect, useState } from 'react';
@@ -20,39 +21,62 @@ export const RipleCard = (props: RipleWithUser) => {
   // Determine what the max height should be
   const maxHeightClass = isExpanded ? '' : 'max-h-200';
   // Similar to DOMContentLoaded, useEffect runs after the component is mounted to the DOM
-  useEffect(() => {
-    const parentDiv = document.getElementById('riple-content')!; // Using ! assertion
+  
 
-    if (typeof window === 'undefined') {
-        console.log('This is running server-side.');
-    } else {
-        console.log('This is running client-side.');
-    }
+useEffect(() => {
+  console.log("useEffect started");
 
-    requestAnimationFrame(() => {
+  if (typeof window === 'undefined') {
+    console.log('This is running server-side.');
+  } else {
+    console.log('This is running client-side.');
+  }
+
+  setTimeout(() => {
+    console.log("setTimeout triggered");
+    ReactDOM.flushSync(() => {
+      console.log("Inside flushSync");
+      const parentDiv = document.getElementById('riple-content')!; // Using ! assertion
+
       if (parentDiv) {
+        console.log("Found parentDiv:", parentDiv);
+        
         const childDivs = parentDiv.children;
+        console.log("Number of childDivs:", childDivs.length);
+
         const maxHeight = isExpanded ? 'none' : '200px';
+        console.log("maxHeight:", maxHeight);
         
         parentDiv.style.maxHeight = maxHeight;
         
-        if (!isExpanded) {
-          // Use for-of loop
-          for (const child of childDivs) {
-            const htmlChild = child as HTMLElement; // Type assertion here
-            if (htmlChild.offsetHeight > 200) {
-              htmlChild.style.height = '200px';
+        requestAnimationFrame(() => {
+          console.log("Inside requestAnimationFrame");
+
+          if (!isExpanded) {
+            console.log("isExpanded is false");
+            // Use for-of loop
+            for (const child of childDivs) {
+              const htmlChild = child as HTMLElement; // Type assertion here
+              console.log("offsetHeight:", htmlChild.offsetHeight);
+              if (htmlChild.offsetHeight > 200) {
+                htmlChild.style.height = '200px';
+                console.log("Setting height to 200px");
+              }
+            }
+          } else {
+            console.log("isExpanded is true");
+            for (const child of childDivs) {
+              const htmlChild = child as HTMLElement; // Type assertion here
+              htmlChild.style.height = 'auto'; // Reset to natural height
+              console.log("Setting height to auto");
             }
           }
-        } else {
-          for (const child of childDivs) {
-            const htmlChild = child as HTMLElement; // Type assertion here
-            htmlChild.style.height = 'auto'; // Reset to natural height
-          }
-        }
+        });
       }
     });
-  }, [isExpanded]);
+  }, 500); // 0 milliseconds delay, you can adjust this
+}, [isExpanded]);
+
 
   return (
     <div id="riple-card" className="bg-white border border-slate-300 rounded-lg mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md" key={riple.id}>
@@ -60,7 +84,7 @@ export const RipleCard = (props: RipleWithUser) => {
           {/* Author's Profile Image */}
           <div id="riple-card-metadata-auth-profile-image">
             <Link href={`/projects/${riple.projectId}`}>
-              <Image 
+              <Image
                   src={riple.project.coverImageUrl} 
                   alt="Profile Image" 
                   className="rounded-full border border-slate-300"
