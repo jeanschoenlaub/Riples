@@ -22,6 +22,12 @@ export const RipleCard = (props: RipleWithUser) => {
   // Similar to DOMContentLoaded, useEffect runs after the component is mounted to the DOM
   useEffect(() => {
     const parentDiv = document.getElementById('riple-content')!; // Using ! assertion
+
+    if (typeof window === 'undefined') {
+      console.log('This is running server-side.');
+  } else {
+      console.log('This is running client-side.');
+  }
     
     if (parentDiv) {
       const childDivs = parentDiv.children;
