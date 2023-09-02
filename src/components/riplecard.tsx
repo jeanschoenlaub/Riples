@@ -23,59 +23,78 @@ export const RipleCard = (props: RipleWithUser) => {
   // Similar to DOMContentLoaded, useEffect runs after the component is mounted to the DOM
   
 
-useEffect(() => {
-  console.log("useEffect started");
-
-  if (typeof window === 'undefined') {
-    console.log('This is running server-side.');
-  } else {
-    console.log('This is running client-side.');
-  }
-
-  setTimeout(() => {
-    console.log("setTimeout triggered");
-    ReactDOM.flushSync(() => {
-      console.log("Inside flushSync");
-      const parentDiv = document.getElementById('riple-content')!; // Using ! assertion
-
-      if (parentDiv) {
-        console.log("Found parentDiv:", parentDiv);
-        
-        const childDivs = parentDiv.children;
-        console.log("Number of childDivs:", childDivs.length);
-
-        const maxHeight = isExpanded ? 'none' : '200px';
-        console.log("maxHeight:", maxHeight);
-        
-        parentDiv.style.maxHeight = maxHeight;
-        
-        requestAnimationFrame(() => {
-          console.log("Inside requestAnimationFrame");
-
-          if (!isExpanded) {
-            console.log("isExpanded is false");
-            // Use for-of loop
-            for (const child of childDivs) {
-              const htmlChild = child as HTMLElement; // Type assertion here
-              console.log("offsetHeight:", htmlChild.offsetHeight);
-              if (htmlChild.offsetHeight > 200) {
-                htmlChild.style.height = '200px';
-                console.log("Setting height to 200px");
+  useEffect(() => {
+    console.log("useEffect started");
+  
+    if (typeof window === 'undefined') {
+      console.log('This is running server-side.');
+    } else {
+      console.log('This is running client-side.');
+    }
+  
+    // Log right before the setTimeout to understand the execution order.
+    console.log("Before setting setTimeout");
+    
+    setTimeout(() => {
+      console.log("setTimeout triggered");
+  
+      // Log right before the flushSync to understand the execution order.
+      console.log("Before calling ReactDOM.flushSync");
+  
+      ReactDOM.flushSync(() => {
+        console.log("Inside flushSync");
+  
+        const parentDiv = document.getElementById('riple-content')!; // Using ! assertion
+  
+        if (parentDiv) {
+          console.log("Found parentDiv:", parentDiv);
+          
+          const childDivs = parentDiv.children;
+          console.log("Number of childDivs:", childDivs.length);
+  
+          const maxHeight = isExpanded ? 'none' : '200px';
+          console.log("maxHeight:", maxHeight);
+          
+          parentDiv.style.maxHeight = maxHeight;
+          
+          // Log right before the requestAnimationFrame to understand the execution order.
+          console.log("Before calling requestAnimationFrame");
+          
+          requestAnimationFrame(() => {
+            console.log("Inside requestAnimationFrame");
+  
+            if (!isExpanded) {
+              console.log("isExpanded is false");
+              // Use for-of loop
+              for (const child of childDivs) {
+                const htmlChild = child as HTMLElement; // Type assertion here
+                console.log("offsetHeight:", htmlChild.offsetHeight);
+                
+                if (htmlChild.offsetHeight > 200) {
+                  htmlChild.style.height = '200px';
+                  console.log("Setting height to 200px");
+                } else {
+                  console.log("Not setting height, offsetHeight is below or equal to 200");
+                }
+              }
+            } else {
+              console.log("isExpanded is true");
+              for (const child of childDivs) {
+                const htmlChild = child as HTMLElement; // Type assertion here
+                htmlChild.style.height = 'auto'; // Reset to natural height
+                console.log("Setting height to auto");
               }
             }
-          } else {
-            console.log("isExpanded is true");
-            for (const child of childDivs) {
-              const htmlChild = child as HTMLElement; // Type assertion here
-              htmlChild.style.height = 'auto'; // Reset to natural height
-              console.log("Setting height to auto");
-            }
-          }
-        });
-      }
-    });
-  }, 500); // 0 milliseconds delay, you can adjust this
-}, [isExpanded]);
+          });
+        } else {
+          console.log("parentDiv not found");
+        }
+      });
+    }, 500); // 500 milliseconds delay, you can adjust this
+  
+    // Log right after the setTimeout to understand the execution order.
+    console.log("After setting setTimeout");
+  }, [isExpanded]);
 
 
   return (
