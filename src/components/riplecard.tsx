@@ -24,32 +24,34 @@ export const RipleCard = (props: RipleWithUser) => {
     const parentDiv = document.getElementById('riple-content')!; // Using ! assertion
 
     if (typeof window === 'undefined') {
-      console.log('This is running server-side.');
-  } else {
-      console.log('This is running client-side.');
-  }
-    
-    if (parentDiv) {
-      const childDivs = parentDiv.children;
-      const maxHeight = isExpanded ? 'none' : '200px';
-      
-      parentDiv.style.maxHeight = maxHeight;
-      
-      if (!isExpanded) {
-        // Use for-of loop
-        for (const child of childDivs) {
-          const htmlChild = child as HTMLElement; // Type assertion here
-          if (htmlChild.offsetHeight > 200) {
-            htmlChild.style.height = '200px';
+        console.log('This is running server-side.');
+    } else {
+        console.log('This is running client-side.');
+    }
+
+    requestAnimationFrame(() => {
+      if (parentDiv) {
+        const childDivs = parentDiv.children;
+        const maxHeight = isExpanded ? 'none' : '200px';
+        
+        parentDiv.style.maxHeight = maxHeight;
+        
+        if (!isExpanded) {
+          // Use for-of loop
+          for (const child of childDivs) {
+            const htmlChild = child as HTMLElement; // Type assertion here
+            if (htmlChild.offsetHeight > 200) {
+              htmlChild.style.height = '200px';
+            }
+          }
+        } else {
+          for (const child of childDivs) {
+            const htmlChild = child as HTMLElement; // Type assertion here
+            htmlChild.style.height = 'auto'; // Reset to natural height
           }
         }
-      } else {
-        for (const child of childDivs) {
-          const htmlChild = child as HTMLElement; // Type assertion here
-          htmlChild.style.height = 'auto'; // Reset to natural height
-        }
       }
-    }
+    });
   }, [isExpanded]);
 
   return (
