@@ -100,6 +100,33 @@ export const projRouter = createTRPCRouter({
       }
     });
   }),
+
+  applyToProject: privateProcedure
+    .input(
+        z.object({
+            userId: z.string(), // The ID of the user applying
+            projectId: z.string(), // The ID of the project they are applying to
+        })
+    )
+    .mutation(async ({ ctx, input }) => {
+        const { userId, projectId } = input;
+
+        const { success } = await ratelimit.limit(userId);
+
+        if (!success) {
+            throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+        }
+
+        const application = await ctx.prisma.projectMembers.create({
+            data: {
+                userID: userId,
+                projectId: projectId,
+                status: "PENDING", // Default Status
+            },
+        });
+
+        return application;
+    }),
   
 
   create: privateProcedure

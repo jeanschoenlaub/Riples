@@ -1,6 +1,7 @@
 import { projRouter } from "~/server/api/routers/projects";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { ripleRouter } from "./routers/riples";
+import { projMemberRouter } from "./routers/project-members";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { ripleRouter } from "./routers/riples";
 export const appRouter = createTRPCRouter({
   projects: projRouter,
   riples: ripleRouter,
+  projectMembers: projMemberRouter,
 });
 
 // export type definition of API

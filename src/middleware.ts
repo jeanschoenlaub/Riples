@@ -16,6 +16,7 @@ export default authMiddleware({
         "/api/trpc/projects.getProjectByProjectId,riples.getRiplebyProjectId,projects.getAll",
         "/api/trpc/projects.getAll,projects.getProjectByProjectId,riples.getRiplebyProjectId", 
         /^\/users\//,
+        /^\/about\//,
         /^\/projects\//
     ]
 });

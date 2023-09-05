@@ -1,24 +1,24 @@
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { GlobalNavBar } from "~/components/navbar";
-import { ProjectNav } from "~/components/sidebar";
+import Image from 'next/image';
+import React, { useState } from 'react';
+
 //From https://trpc.io/docs/client/nextjs/server-side-helpers
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import type{ GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
-import Image from 'next/image';
 
 
-import { NotionEmbed } from "~/components/notionembed";
+//My components
 import Tabs from "~/components/tabs";
-
-import React, { useState } from 'react';
-import { useUser } from "@clerk/nextjs";
 import AboutTab from "~/components/about";
 import { RipleCard } from "~/components/riplecard";
 import { LoadingPage } from "~/components/loading";
+import { CollabTab } from "~/components/collab";
+import { GlobalNavBar } from "~/components/navbar";
+import { ProjectNav } from "~/components/sidebar";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -48,7 +48,7 @@ export async function getServerSideProps(
   };
 }
 
-export default function Home(
+export default function Project(
   props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) {
   const { projectId } = props;
@@ -57,8 +57,6 @@ export default function Home(
   const { data: ripleData, isLoading: ripleLoading } = api.riples.getRiplebyProjectId.useQuery({ projectId });
 
   const [activeTab, setActiveTab] = useState('riples'); // default active tab is 'riples for project pages'
-  
-  const user=useUser(); // logged in user
 
   if (ripleLoading || projectLoading) return(<LoadingPage></LoadingPage>)
   if (!projectData || !ripleData) return (<div> Something went wrong</div>)
@@ -92,7 +90,7 @@ export default function Home(
 
 
                 <div id="project-main-tabs" className="border-b border-gray-200 dark:border-gray-700">
-                  <Tabs activeTab={activeTab} setActiveTab={setActiveTab} riples="y" collab={projectData?.project.notionEmbedUrl} apply={projectData?.project.applyFormUrl}/>
+                  <Tabs activeTab={activeTab} setActiveTab={setActiveTab} riples="y" collab={projectData?.project.notionEmbedUrl}/>
                 </div>
               
                 {/* SHOWN IF ABOUT TAB */}
@@ -114,30 +112,7 @@ export default function Home(
                 )}
 
                 {/* SHOWN IF COLLAB*/}
-                {activeTab === 'collab' && (
-                  <div className="mt-4">
-                    <NotionEmbed {...projectData.project}></NotionEmbed>
-                  </div>
-                )}
-
-                {/* SHOWN IF APPLY */}
-                {activeTab === 'apply' && (
-                  <div className="mt-4 flex justify-center items-center">
-                    {user ? (
-                      <a 
-                        href="https://forms.gle/nfnVvnJZaMAah17v6" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">
-                        Apply
-                      </a>
-                    ) : (
-                      <>
-                        <div>You must be signed in to apply.</div>
-                      </>
-                    )}
-                  </div>
-                )}
+                {activeTab === 'collab' && <CollabTab project={projectData.project} />}
 
               </div>
             </div>

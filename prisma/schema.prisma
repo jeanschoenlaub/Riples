@@ -26,9 +26,9 @@ model Project {
 
   
   riples          Riple[]  // This establishes the one-to-many relation
+  members         ProjectMembers[] 
 
   @@index([authorID])
-  @@index([id])
 }
 
 model Riple {
@@ -42,5 +42,14 @@ model Riple {
   authorID  String
 
   @@index([projectId])
-  @@index([id])
+}
+
+model ProjectMembers {
+  id           String  @id @default(cuid())
+  projectId    String 
+  project      Project @relation(fields: [projectId], references: [id])
+  userID       String  
+  status       String  @db.VarChar(255)
+
+  @@index([projectId])
 }
