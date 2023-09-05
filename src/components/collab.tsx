@@ -8,8 +8,6 @@ interface CollabTabProps {
     project: ProjectData["project"];
     author?: ProjectData["author"];
   }
-  
-
 
 export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
     const user = useUser(); // logged in user
@@ -42,12 +40,15 @@ export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
 
     const {mutate, isLoading: isApplying}  = api.projects.applyToProject.useMutation({
         onError: (e) => {
+          console.error("Mutation error: ", e);
           const errorMessage = e.data?.zodError?.fieldErrors.content
           if (errorMessage?.[0]){
             toast.error(errorMessage[0])
           }
           else {toast.error("Application failed ! Please try again later")}
-    
+        },
+        onSuccess: (data) => {
+            console.log("Mutation successful, data: ", data);
         }
     })
   

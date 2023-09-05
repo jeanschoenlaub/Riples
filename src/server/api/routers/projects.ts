@@ -111,12 +111,6 @@ export const projRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
         const { userId, projectId } = input;
 
-        const { success } = await ratelimit.limit(userId);
-
-        if (!success) {
-            throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
-        }
-
         const application = await ctx.prisma.projectMembers.create({
             data: {
                 userID: userId,
