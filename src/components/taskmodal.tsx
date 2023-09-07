@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { RouterOutputs, api } from "~/utils/api";
+import { handleZodError } from "~/utils/error-handling";
 
 interface TaskModalProps {
   project: ProjectData["project"];
@@ -60,27 +61,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
       resetForm();
     },
     onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors;
-    
-      if (fieldErrors) {
-        let messages = [];
-    
-        if (fieldErrors.title) {
-          messages.push(fieldErrors.title[0]);
-        }
-    
-        if (fieldErrors.content) {
-          messages.push(fieldErrors.content[0]);
-        }
-    
-        if (messages.length > 0) {
-          toast.error(messages.join(" | "));
-          return;
-        }
-      }
-    
-      // If the error doesn't match any of the conditions above, show a generic error
-      toast.error("Task Creation failed! Please try again later");
+      const message = handleZodError(e);
+      toast.error(message);
     }
     });
 
@@ -91,7 +73,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
         resetForm();
       },
       onError: (e) => {
-        // Handle errors the same way you handle creation errors
+        const message = handleZodError(e);
+        toast.error(message);
       }
     });
 
