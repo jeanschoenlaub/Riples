@@ -2,9 +2,7 @@ import { useUser } from "@clerk/nextjs";
 import Link from "next/link"
 import toast from "react-hot-toast";
 import { RouterOutputs, api } from "~/utils/api";
-import { CreateTaskButtonAndModal } from './createtaskbuttonandmodal';
 import { TaskList } from "./tasklist";
-
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"]
 interface CollabTabProps {
@@ -54,18 +52,10 @@ export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
         member.userID === userId && (member.status === 'APPROVED' || member.status === 'PENDING')
     );
     const isProjectLead = userId === project.authorID;
-
-  
     
     return (
         <div>
-            {/* CREATE TASK DIV ONLY FOR PROJECT LEAD */}
-            <div id="project-collab-task-create-button" className="mt-4 ml-2 mb-2 space-y-4 justify-center"> 
-                {isProjectLead && (
-                    <CreateTaskButtonAndModal project={project} />
-                  )} 
-            </div>
-            {/* TASK TABLE DIV ONLY FOR PROJECT MEMBERS */}
+            {/* TASK TABLE DIV ONLY FOR PROJECT MEMBERS + CREATE TASK */}
             <div id="project-collab-task-table" className="mt-4 ml-2 mb-2 space-y-4">
                 {isMemberOrPending && ( 
                     <TaskList project={project} />

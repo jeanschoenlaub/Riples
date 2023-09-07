@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { RouterOutputs, api } from "~/utils/api";
 
-interface CreateTaskButtonAndModalProps {
+interface TaskModalProps {
   project: ProjectData["project"];
+  taskToEdit: TaskData | null;
+  showModal: boolean;
+  onClose: () => void;
 }
-type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"]
+type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"];
+type TaskData = RouterOutputs["tasks"]["edit"];
 
-export const CreateTaskButtonAndModal: React.FC<CreateTaskButtonAndModalProps> = ({ project }) => {
-  const [showModal, setShowModal] = useState(false);
-  
-  // Set default template text
-  const defaultTemplate = `
+// Set default template text
+const defaultTemplate = `
 ### What ?
 
 *A complete description of the task, broken down in To-Do, including team (if multiple teams).*
@@ -28,19 +29,31 @@ export const CreateTaskButtonAndModal: React.FC<CreateTaskButtonAndModalProps> =
 
 ## Work in progress`;
 
+
+export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, onClose }) => {
+  const [isEditMode, setIsEditMode] = useState(false); // New state to handle edit mode
+  
+  useEffect(() => {
+    if (taskToEdit) {
+      setTaskTitle(taskToEdit.title);
+      setTaskContent(taskToEdit.content);
+      setIsEditMode(true);
+    }
+  }, [taskToEdit]);
+
   const [taskTitle, setTaskTitle] = useState('');
   const [taskContent, setTaskContent] = useState(defaultTemplate);
+  const ctx = api.useContext();
 
   const resetForm = () => {
     setTaskTitle('');
     setTaskContent(defaultTemplate);
-    setShowModal(false);
+    onClose(); 
+    setIsEditMode(false);  // Reset edit mode
   };
   
-  // Trigger the mutation to create a new task
-  const ctx = api.useContext();
   
-  //We add a mutation for creating a post (with on success)
+  //We add a mutation for creating a task (with on success)
   const {mutate, isLoading: isCreating}  = api.tasks.create.useMutation({
     onSuccess: () => {
       void ctx.tasks.getTasksByProjectId.invalidate();
@@ -71,17 +84,29 @@ export const CreateTaskButtonAndModal: React.FC<CreateTaskButtonAndModalProps> =
     }
     });
 
+    // Mutation for editing a task
+    const editTaskMutation = api.tasks.edit.useMutation({
+      onSuccess: () => {
+        void ctx.tasks.getTasksByProjectId.invalidate();
+        resetForm();
+      },
+      onError: (e) => {
+        // Handle errors the same way you handle creation errors
+      }
+    });
+
+    const handleSave = () => {
+      const payload = { projectId: project.id, title: taskTitle, content: taskContent };
+  
+      if (isEditMode && taskToEdit) {
+        editTaskMutation.mutate({ ...payload, id: taskToEdit.id });
+      } else {
+        mutate(payload); // Create new task
+      }
+    };
+
   return (
     <div>
-      {/* Button to open the Modal */}
-      <button 
-        onClick={() => setShowModal(true)}
-        className="bg-blue-500 text-white rounded px-4 py-2"
-      >
-        Create Task
-      </button>
-
-      {/* Modal */}
       {showModal && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded p-4 w-1/3">
@@ -110,11 +135,11 @@ export const CreateTaskButtonAndModal: React.FC<CreateTaskButtonAndModalProps> =
             </label>
 
             <button 
-              onClick={() => mutate({ projectId: project.id, title: taskTitle, content: taskContent})}
-              className="bg-green-500 text-white rounded px-4 py-2 mr-2"
-            >
-              Save Task
-            </button>
+                onClick={handleSave}
+                className="bg-green-500 text-white rounded px-4 py-2 mr-2"
+              >
+                {isEditMode ? 'Save Changes' : 'Save Task'}
+              </button>
             <button 
               onClick={resetForm}
               className="bg-red-500 text-white rounded px-4 py-2"

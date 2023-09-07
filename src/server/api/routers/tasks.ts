@@ -59,4 +59,30 @@ export const taskRouter = createTRPCRouter({
 
       return task
     }),
+
+    edit: privateProcedure
+    .input(
+      z.object({
+        id: z.string(), // Added ID to know which task to edit
+        title: z.string().min(5, { message: "Task title must be 5 or more characters long" }).max(255, { message: "Task title must be 255 or less characters long" }),
+        content: z.string().min(5, { message: "Task Content must be 5 or more characters long" }).max(10000, { message: "Task title must be 10'00 or less characters long" }),
+        projectId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, title, content, projectId } = input; // Destructure input
+      const updatedById = ctx.currentUserId;
+
+      // Use Prisma's update method to edit the existing task
+      const task = await ctx.prisma.tasks.update({
+        where: { id }, // Where clause to find the task to update
+        data: {
+          title,
+          content,
+          projectId,
+        },
+      });
+
+      return task;
+    }),
 })
