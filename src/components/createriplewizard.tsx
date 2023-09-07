@@ -18,7 +18,7 @@ export const CreateRipleWizard = () => {
       },
       onError: (e) => {
         const errorMessage = e.data?.zodError?.fieldErrors.content
-        if (errorMessage?.[0]){
+        if (errorMessage && errorMessage[0]){
           toast.error(errorMessage[0])
         }
         else {toast.error("Post failed ! Please try again later")}

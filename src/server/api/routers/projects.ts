@@ -1,21 +1,14 @@
 import { z } from "zod";
 import { createTRPCRouter, privateProcedure, publicProcedure } from "~/server/api/trpc";
+import { filterUserForClient } from "~/server/helpers/filterUserForClient";
 
-import type { User } from "@clerk/nextjs/dist/types/server";
 import { TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
 import { clerkClient} from "@clerk/nextjs";
 
-export const filterUserForClient = (user: User) => {
-    return {
-      id: user.id,
-      username: user.username,
-      firstName:user.firstName,
-      lastName:user.lastName,
-      imageUrl: user.imageUrl
-    }
-}
+
+
 
 // Create a new ratelimiter, that allows 2 requests per 1 minute
 export const ratelimit = new Ratelimit({
@@ -111,6 +104,25 @@ export const projRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
         const { userId, projectId } = input;
 
+        // First, find the existing application, if any
+        const existingApplication = await ctx.prisma.projectMembers.findFirst({
+            where: {
+                userID: userId,
+                projectId: projectId
+            }
+        });
+
+        // If an existing application is found and it's in 'PENDING' state, delete it
+        if (existingApplication && existingApplication.status === 'PENDING') {
+            await ctx.prisma.projectMembers.delete({
+                where: {
+                    id: existingApplication.id,
+                }
+            });
+            return { status: 'DELETED' };
+        }
+
+        // Otherwise, proceed with creating a new application
         const application = await ctx.prisma.projectMembers.create({
             data: {
                 userID: userId,
@@ -120,7 +132,7 @@ export const projRouter = createTRPCRouter({
         });
 
         return application;
-    }),
+  }),
   
 
   create: privateProcedure
@@ -147,3 +159,4 @@ export const projRouter = createTRPCRouter({
       return project
     }),
 });
+

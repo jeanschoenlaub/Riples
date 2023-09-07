@@ -90,7 +90,12 @@ export default function Project(
 
 
                 <div id="project-main-tabs" className="border-b border-gray-200 dark:border-gray-700">
-                  <Tabs activeTab={activeTab} setActiveTab={setActiveTab} riples="y" collab={projectData?.project.notionEmbedUrl}/>
+                  <Tabs 
+                    activeTab={activeTab} 
+                    setActiveTab={setActiveTab} 
+                    riples="y" 
+                    collab={projectData?.project.projectType === "multi" ? "y" : ""}
+                  />
                 </div>
               
                 {/* SHOWN IF ABOUT TAB */}

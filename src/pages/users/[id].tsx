@@ -13,7 +13,7 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 
 
-import { filterUserForClient } from '~/server/api/routers/projects';
+import { filterUserForClient } from '~/server/helpers/filterUserForClient';
 import { clerkClient } from '@clerk/nextjs';
 import { ProjectNav } from '~/components/sidebar';
 import { ProjectCard } from '~/components/projectcard';

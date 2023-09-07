@@ -2,6 +2,9 @@ import { useUser } from "@clerk/nextjs";
 import Link from "next/link"
 import toast from "react-hot-toast";
 import { RouterOutputs, api } from "~/utils/api";
+import { CreateTaskButtonAndModal } from './createtaskbuttonandmodal';
+import { TaskList } from "./tasklist";
+
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"]
 interface CollabTabProps {
@@ -11,13 +14,28 @@ interface CollabTabProps {
 
 export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
     const user = useUser(); // logged in user
+    const { data: projectMembersData, isLoading, isError } = api.projectMembers.getMembersByProjectId.useQuery({ projectId: project.id });
+
+    const ctx = api.useContext();
+    const {mutate, isLoading: isApplying}  = api.projects.applyToProject.useMutation({
+        onError: (e) => {
+          console.error("Mutation error: ", e);
+          const errorMessage = e.data?.zodError?.fieldErrors.content
+          if (errorMessage?.[0]){
+            toast.error(errorMessage[0])
+          }
+          else {toast.error("Application failed ! Please try again later")}
+        },
+        onSuccess: (data) => {
+            void ctx.projectMembers.getMembersByProjectId.invalidate()
+        }
+    })
+
     let userId: string | null = null;
 
     if (user.user) {
         userId = user.user.id;
     }
-
-    const { data: projectMembersData, isLoading, isError } = api.projectMembers.getMembersByProjectId.useQuery({ projectId: project.id });
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -31,65 +49,57 @@ export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
         return <div>No data</div>; // or some other handling for this scenario
     }
 
-    const projectMembers = projectMembersData.members;
-
-    // Now, it is assumed that projectMembers is an array
-    const isMemberOrPending = projectMembers.some(member => 
+    //helpers to determine if the current user is a Member or the project Lead 
+    const isMemberOrPending = projectMembersData.members.some(member => 
         member.userID === userId && (member.status === 'APPROVED' || member.status === 'PENDING')
     );
+    const isProjectLead = userId === project.authorID;
 
-    const {mutate, isLoading: isApplying}  = api.projects.applyToProject.useMutation({
-        onError: (e) => {
-          console.error("Mutation error: ", e);
-          const errorMessage = e.data?.zodError?.fieldErrors.content
-          if (errorMessage?.[0]){
-            toast.error(errorMessage[0])
-          }
-          else {toast.error("Application failed ! Please try again later")}
-        },
-        onSuccess: (data) => {
-            console.log("Mutation successful, data: ", data);
-        }
-    })
   
     
     return (
         <div>
+            {/* CREATE TASK DIV ONLY FOR PROJECT LEAD */}
+            <div id="project-collab-task-create-button" className="mt-4 ml-2 mb-2 space-y-4 justify-center"> 
+                {isProjectLead && (
+                    <CreateTaskButtonAndModal project={project} />
+                  )} 
+            </div>
+            {/* TASK TABLE DIV ONLY FOR PROJECT MEMBERS */}
+            <div id="project-collab-task-table" className="mt-4 ml-2 mb-2 space-y-4">
+                {isMemberOrPending && ( 
+                    <TaskList project={project} />
+                 )} 
+            </div>
+            {/* JOIN / LEAVE PROJECT SECTION AND BUTTON */}
             <div id="project-collab-how-to-apply" className="mt-4 ml-2 mb-2 space-y-4">
                 <section>
                     <ol className="list-decimal list-inside">
                     <li> Read this info page about what to expect: <Link href="/about/collaborate-on-a-riple-project" className="text-blue-500"> How to collaborate on Riples </Link> </li>
                     <li> Sign in to your Riples Account (on the top right)</li>
-                    <li> Join us: </li>
                     </ol>
                 </section>
             </div>
 
             <div id="project-collab-apply-button" className="mt-4 mb-4 flex justify-center items-center">
-                {userId ? (
-                    <>
-                        {isMemberOrPending ? (
-                            <div>Application Processing</div>
-                        ) : (
-                            <button 
-                                onClick={() => {
-                                    if (userId) {  // Adding this check ensures userId is not null
-                                        const newApplication = {
-                                            userId: userId,
-                                            projectId: project.id,
-                                        };
-                                        
-                                        mutate(newApplication);
-                                    }
-                                }}
-                                disabled={isApplying}
-                            >
-                                {isApplying ? 'Applying...' : 'Join the project'}
-                            </button>
-                        )}
-                    </>
+                {userId ? ( <>
+                    <button className={`text-white rounded py-1 px-2 text-center ${isMemberOrPending ? 'bg-red-500' : 'bg-blue-500'}`} //This is a Aplly Quit button and the logic is handled in router
+                        onClick={() => {
+                            if (userId) {  // Adding this check ensures userId is not null for typescript
+                                const newApplication = {
+                                    userId: userId,
+                                    projectId: project.id,
+                                };
+                                mutate(newApplication);
+                            }
+                        }}
+                        disabled={isApplying}
+                    >
+                        {isApplying ? 'Updating...' : (isMemberOrPending ? 'Quit the project' : 'Join the project')}
+                    </button>
+                </>
                 ) : (
-                    <div>You must be signed in to apply.</div>
+                    <div className="bg-blue-500 text-white rounded py-1 px-2 text-center">You must be signed in to apply.</div>
                 )}
             </div>
         </div>

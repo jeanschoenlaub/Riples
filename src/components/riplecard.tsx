@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
 import DOMPurify from "dompurify";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { RouterOutputs } from "~/utils/api";
