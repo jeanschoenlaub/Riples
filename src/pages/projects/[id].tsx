@@ -39,6 +39,8 @@ export async function getServerSideProps(
    */
   await helpers.projects.getProjectByProjectId.prefetch({ projectId });
   await helpers.riples.getRiplebyProjectId.prefetch({ projectId });
+  await helpers.projectMembers.getMembersByProjectId.prefetch({ projectId });
+
   // Make sure to return { props: { trpcState: helpers.dehydrate() } }
   return {
     props: {
@@ -55,6 +57,7 @@ export default function Project(
 
   const { data: projectData, isLoading: projectLoading } = api.projects.getProjectByProjectId.useQuery({ projectId });
   const { data: ripleData, isLoading: ripleLoading } = api.riples.getRiplebyProjectId.useQuery({ projectId });
+  const { data: projectMemberData, isLoading: projectMemberLoading } = api.projectMembers.getMembersByProjectId.useQuery({ projectId });
 
   const [activeTab, setActiveTab] = useState('riples'); // default active tab is 'riples for project pages'
 
@@ -100,7 +103,7 @@ export default function Project(
               
                 {/* SHOWN IF ABOUT TAB */}
                 {activeTab === 'about' && (
-                  <AboutTab project={projectData.project} author={projectData.author} ></AboutTab>
+                  <AboutTab project={projectData.project} author={projectData.author} members={projectMemberData} ></AboutTab>
                 )}
 
                 {/* SHOWN IF RIPLES TAB */}

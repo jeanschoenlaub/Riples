@@ -78,6 +78,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
       }
     });
 
+    //handling both create and edit modes
     const handleSave = () => {
       const payload = { projectId: project.id, title: taskTitle, content: taskContent };
   

@@ -28,6 +28,6 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs"
-  ],
+, "src/utils/error-handling.js"  ],
   "exclude": ["node_modules"]
 }

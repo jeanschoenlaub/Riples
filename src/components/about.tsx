@@ -4,9 +4,12 @@ import type { RouterOutputs } from '~/utils/api';
 import Link from 'next/link';
 import Image from 'next/image';
 
-type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"]
+type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"] & {
+  members?: RouterOutputs["projectMembers"]["getMembersByProjectId"];
+};
+
 const AboutTab = (props: ProjectData) => {
-  const {project, author} = props;
+  const {project, author, members} = props;
 
   return (
       <div id="proj-about-html" className="mt-4 ml-2 mb-2 space-y-4">
@@ -55,6 +58,14 @@ const AboutTab = (props: ProjectData) => {
     
         {/* About the Author */}
         <div id="project-about-author" className="flex items-center space-x-3 mb-4">
+          <span className="text-sm text-gray-500">
+            Project Lead:  
+            <span className="font-medium ml-1">
+              <Link href={`/users/${project.authorID}`}>
+                {`${author?.firstName} ${` `} ${author?.lastName}`}
+              </Link>
+            </span>
+          </span>
           <div id="riple-card-metadata-auth-profile-image">
             <Link href={`/users/${project.authorID}`}>
               <Image 
@@ -66,14 +77,34 @@ const AboutTab = (props: ProjectData) => {
               />
             </Link>
           </div>
-          <span className="text-sm text-gray-500">
-            Project Lead:  
-            <span className="font-medium ml-1">
-              <Link href={`/users/${project.authorID}`}>
-                {`${author?.firstName} ${` `} ${author?.lastName}`}
-              </Link>
-            </span>
-          </span>
+        </div>
+
+        {/* About the Project Members */}
+        <div id="project-about-members" className="mb-4">
+          <span className="text-sm text-gray-500">Project Members:</span>
+
+          <div className="mt-2">
+            {members?.map((user, index) => (
+              <div key={index} className="flex items-center space-x-3 mb-2">
+                <span className="text-sm font-medium">
+                  <Link href={`/users/${user.user.id}`}>
+                  {`${user.user.firstName} ${` `} ${user.user.lastName}`}
+                  </Link>
+                </span>
+                <div id={`riple-card-metadata-auth-profile-image-${index}`}>
+                  <Link href={`/users/${user.user.id}`}>
+                    <Image 
+                      src={user.user.imageUrl}
+                      alt="Member Profile Image" 
+                      className="rounded-full border border-slate-300"
+                      width={40}
+                      height={40}
+                    />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 )};

@@ -1,6 +1,6 @@
-export const handleZodError = (error) => {
+export const handleZodError = (error: any) => {
     const fieldErrors = error.data?.zodError?.fieldErrors;
-    let messages = [];
+    let messages: any[] = [];
   
     if (fieldErrors) {
       Object.keys(fieldErrors).forEach((field) => {
