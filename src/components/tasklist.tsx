@@ -62,7 +62,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
                       width={32} 
                       height={32}
                     />
-                    {taskDetail.owner.firstName || ''}
+                    {taskDetail.owner.firstName ?? ''}
                   </Link>
                 ) : (
                   "N/A"
@@ -77,7 +77,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
                     width={32} 
                     height={32}
                   />
-                  {taskDetail.createdBy?.firstName || ''}
+                  {taskDetail.createdBy?.firstName ?? ''}
                 </Link>
               </td>
             </tr>

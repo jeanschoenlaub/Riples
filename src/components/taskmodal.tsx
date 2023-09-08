@@ -61,7 +61,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
       resetForm();
     },
     onError: (e) => {
-      const message = handleZodError(e);
+      const fieldErrors = e.data?.zodError?.fieldErrors; 
+      const message = handleZodError(fieldErrors);
       toast.error(message);
     }
     });
@@ -73,7 +74,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
         resetForm();
       },
       onError: (e) => {
-        const message = handleZodError(e);
+        const fieldErrors = e.data?.zodError?.fieldErrors; 
+        const message = handleZodError(fieldErrors);
         toast.error(message);
       }
     });
