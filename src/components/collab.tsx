@@ -1,8 +1,8 @@
-import { useUser } from "@clerk/nextjs";
 import Link from "next/link"
 import toast from "react-hot-toast";
 import { RouterOutputs, api } from "~/utils/api";
-import { TaskList } from "./tasklist";
+import { TaskList } from "~/components//tasklist";
+import { useSession } from "next-auth/react";
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"]
 interface CollabTabProps {
@@ -11,7 +11,12 @@ interface CollabTabProps {
   }
 
 export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
-    const user = useUser(); // logged in user
+    const { data: session, status } = useSession()
+    const loading = status === 'loading'
+
+    if (loading) return null
+
+    console.log(session?.user)  // Access user ID here.
     const { data: projectMembersData, isLoading, isError } = api.projectMembers.getMembersByProjectId.useQuery({ projectId: project.id });
 
     const ctx = api.useContext();
@@ -30,9 +35,9 @@ export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
     })
 
     let userId: string | null = null;
-
-    if (user.user) {
-        userId = user.user.id;
+    
+    if (status == "authenticated" ) {
+        userId = session.user.id
     }
 
     if (isLoading) {

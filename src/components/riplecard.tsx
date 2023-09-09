@@ -59,7 +59,7 @@ export const RipleCard = (props: RipleWithUser) => {
                   {` by `}
                   <span className="font-medium text-gray-500">
                     <Link href={`/users/${riple.authorID}`}>
-                      {`${author?.firstName} ${author?.lastName}`}
+                      {author?.name}
                     </Link>
                   </span>
                   <span className="ml-2">{`${dayjs(riple.createdAt).fromNow()}`}</span>

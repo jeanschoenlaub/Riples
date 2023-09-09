@@ -1,10 +1,10 @@
-import { SignInButton, SignOutButton, UserButton, useUser } from "@clerk/nextjs";
+import { useSession, signIn, signOut } from "next-auth/react"
 import Image from 'next/image';
 import Link from "next/link";
 
 export const GlobalNavBar = () => {
   
-  const {user} = useUser()
+  const { data: session } = useSession();
 
   return ( 
     <div id="global-nav-container" className="flex justify-center w-full">
@@ -60,10 +60,15 @@ export const GlobalNavBar = () => {
           </div>
             
           <div id="global-nav-right" className="flex w-1/3 md:w-1/5 gap-3 items-center p-2 border border-slate-700">
-              {user &&  <UserButton />}
               <div className="flex items-center">
-                  {user && <SignOutButton />}
-                  {!user && <SignInButton />}
+                  {session && <div>
+                      <button className="bg-blue-500 text-white rounded py-1 px-2 text-center text-sm" onClick={() => signOut()}>Sign out</button>
+                    </div>
+                  }
+                  {!session &&<div>
+                    <button className="bg-blue-500 text-white rounded py-1 px-2 text-center text-sm" onClick={() => signIn()}>Sign in</button>
+                  </div>
+                  }
               </div>
           </div>
       </div>

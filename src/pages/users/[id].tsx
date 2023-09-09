@@ -4,39 +4,34 @@ import type{ GetServerSidePropsContext, InferGetServerSidePropsType } from 'next
 
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { GlobalNavBar } from "~/components/navbar";
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
 import Image from 'next/image';
-
+import { getSession } from 'next-auth/react';
 import React, { useState } from 'react';
-
-
-import { filterUserForClient } from '~/server/helpers/filterUserForClient';
-import { clerkClient } from '@clerk/nextjs';
+import { GlobalNavBar } from '~/components/navbar';
 import { ProjectNav } from '~/components/sidebar';
+import { Tabs } from '~/components/tabs';
 import { ProjectCard } from '~/components/projectcard';
-import Tabs from '~/components/tabs';
-
-// ...
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
 ) {
+  // Retrieve the session information
+  const session = await getSession(context);
+
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
-      prisma,
-      currentUserId: null,
+        prisma,
+        session,
+        revalidateSSG: null, // Set to null as we are doing SSR
     },
     transformer: superjson,
   });
 
-  // Fetch user data using Clerk
   const authorID = context.params!.id;
-  const user = await clerkClient.users.getUser(authorID); //Not used yet but could be in anabout tab ? 
-  const filteredUserData = filterUserForClient(user);
 
   /*
    * Prefetching the `getProjectByUserId` query.
@@ -48,7 +43,6 @@ export async function getServerSideProps(
     props: {
       trpcState: helpers.dehydrate(),
       authorID: authorID,
-      user: filteredUserData,
     },
   };
 }
@@ -56,18 +50,19 @@ export async function getServerSideProps(
 export default function UserPage(
     props: InferGetServerSidePropsType<typeof getServerSideProps>,
   ) {
-    const { authorID, user } = props;
+    const { authorID } = props; //author id is the user id from url slug
   
     const [activeTab, setActiveTab] = useState('projects');
 
     const { data: projectData } = api.projects.getProjectByAuthorId.useQuery({ authorID });
-  
+    const { data: user} = api.users.getUserByUserId.useQuery({ userId: authorID });
+
     if (!user) return <div>Something went wrong</div>;
   
     return (
       <>
         <Head>
-          <title>{user.firstName}</title>
+          <title>{user.user.name}</title>
         </Head>
         <main className="flex flex-col items-center w-full h-screen">
           <div id="nav-container" className="w-full">
@@ -86,13 +81,13 @@ export default function UserPage(
                  
                   <span className="flex space-x-10 gap-5 items-center font-medium text-gray-500">  
                       <Image 
-                          src={user.imageUrl} 
+                          src={user.user.image || '/default-image-url'} 
                           alt="Profile Image" 
                           className="rounded-full border border-slate-300"
                           width={80}
                           height={80}
                       />
-                      {`${user?.firstName} ${user?.lastName}`}
+                      {user.user.name}
                   </span>
               </div>
 

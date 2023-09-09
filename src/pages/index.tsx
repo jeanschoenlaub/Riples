@@ -30,11 +30,11 @@ export default function Home() {
           <div id="project-nav-container" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
               <ProjectNav></ProjectNav>
           </div>
-          
+
           <div id="feed" className="flex flex-col w-full md:w-3/5 g-4 p-1 md:p-4 border border-slate-700">
               <Feed></Feed>
           </div>
-          
+              
           <div id="future-content" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
               <h1>Future Content</h1>
           </div>

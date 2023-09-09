@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { RouterOutputs, api } from "~/utils/api";
 import Link from 'next/link'; // import Next.js Link component
-import { TaskModal } from './taskmodal';
+import { TaskModal } from '~/components/taskmodal';
 
 interface TaskListProps {
   project: ProjectData["project"];
@@ -56,13 +56,13 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
                 {taskDetail.owner ? (
                   <Link href={`/users/${taskDetail.owner.id}`} className="flex items-center space-x-2">
                     <img 
-                      src={taskDetail.owner.imageUrl || '/default-image-url'} 
+                      src={taskDetail.owner.image || '/default-image-url'} 
                       alt="Owner Profile Image" 
                       className="rounded-full border border-slate-300" 
                       width={32} 
                       height={32}
                     />
-                    {taskDetail.owner.firstName ?? ''}
+                    {taskDetail.owner.name ?? ''}
                   </Link>
                 ) : (
                   "N/A"
@@ -71,13 +71,13 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
               <td className="px-6 py-4">
                 <Link href={`/users/${taskDetail.createdBy?.id}`} className="flex items-center space-x-2">
                   <img 
-                    src={taskDetail.createdBy?.imageUrl || '/default-image-url'} 
+                    src={taskDetail.createdBy?.image || '/default-image-url'} 
                     alt="Created By Profile Image" 
                     className="rounded-full border border-slate-300" 
                     width={32} 
                     height={32}
                   />
-                  {taskDetail.createdBy?.firstName ?? ''}
+                  {taskDetail.createdBy?.name ?? ''}
                 </Link>
               </td>
             </tr>

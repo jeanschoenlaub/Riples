@@ -12,25 +12,32 @@ import superjson from 'superjson';
 
 
 //My components
-import Tabs from "~/components/tabs";
-import AboutTab from "~/components/about";
+import { Tabs } from "~/components/tabs";
+import { AboutTab } from "~/components/about";
 import { RipleCard } from "~/components/riplecard";
 import { LoadingPage } from "~/components/loading";
 import { CollabTab } from "~/components/collab";
 import { GlobalNavBar } from "~/components/navbar";
 import { ProjectNav } from "~/components/sidebar";
 
+import { getSession } from 'next-auth/react'; // Importing getSession from next-auth
+
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
 ) {
+  // Retrieve the session information
+  const session = await getSession(context);
+
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
         prisma,
-        currentUserId: null
+        session,
+        revalidateSSG: null, // Set to null as we are doing SSR
     },
     transformer: superjson,
   });
+
   const projectId = context.params!.id;
 
   /*
