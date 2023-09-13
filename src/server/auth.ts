@@ -53,7 +53,7 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   callbacks: {   
     jwt: async ({token, user, account, profile}) => {
-      console.log("JWT callback:", token, user, account, profile);
+      //console.log("JWT callback:", token, user, account, profile);
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -61,17 +61,19 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     session: async ({ session, user, token }) => {
-      console.log("Inside session callback", session, user); 
+      //console.log("Inside session callback", session, user); 
+      const customUser = user as any;  // Bypass TypeScript check
       return {
         ...session,
         user: {
-         ...session.user,
-          id: user.id,
+          ...session.user,
+          id: customUser.id,
+          username: customUser.username,
         },
       };
     },
     async signIn({ user, account, profile, email, credentials }) {
-      console.log("Inside signin callback", user); 
+      //console.log("Inside signin callback", user); 
       return true
     }
   },
@@ -98,92 +100,3 @@ export const getServerAuthSession = (ctx: {
 }) => {
   return getServerSession(ctx.req, ctx.res, authOptions);
 };
-
-{/* 
-    Credentials({
-      name: "credentials",
-      credentials: {
-        //username: { label: "Username", type: "text" },
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-        //isSignUp: { label: "IsSignUp", type: "hidden" }, // Add this line
-      },
-      authorize: async (credentials, request) => {
-        if (!credentials) {
-          return null;
-        }
-        
-        const { email, password } = credentials; //username, password, isSignUp
-
-        const user = await prisma.user.findUnique({
-          where: { email },
-        });
-        
-        {/* 
-        if (isSignUp === 'true') { // Check the flag (it will be a string because it's part of the form)
-          if (user) {
-            throw new TRPCError({ code: "CONFLICT", message: "User already exists" });
-          }
-          
-          const hashedPassword = await bcrypt.hash(password, 10);
-          
-          user = await prisma.user.create({
-            data: {
-              username,
-              email,
-              password: hashedPassword,
-            },
-          });
-          
-          // Generate & store a verification token
-          const verificationToken = crypto.randomBytes(32).toString('hex');
-          await prisma.verificationToken.create({
-            data: {
-              identifier: email,
-              token: verificationToken,
-              expires: new Date(Date.now() + 3600000), // 1 hour from now
-            },
-          });
-
-          // Send verification email
-          try {
-            await transporter.sendMail({
-              from: 'admin@riples.app',
-              to: email,
-              subject: 'Please verify your email',
-              html: `
-                <h1>Email Verification</h1>
-                <p>Please verify your email by clicking the following link:</p>
-                <a href="http://localhost:3000/verify-email?token=${verificationToken}">Verify Email</a>
-              `,
-            });
-            console.log("Email sent");
-          } catch (error) {
-            console.error("An error occurred while sending the email: ", error);
-            throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to send verification email." });
-          }
-          
-        } else 
-          console.log("user sign -in")
-          if (!user) {
-            throw new TRPCError({ code: "NOT_FOUND", message: "User does not exist" });
-          }
-          
-          const isValid = await bcrypt.compare(password, user.password);
-          
-          //if (!isValid) {
-            //throw new TRPCError({ code: "UNAUTHORIZED", message: "Incorrect password" });
-          //}
-        //}
-        console.log(user)
-        console.log("Normal setup")
-
-        return {
-          user
-          //id: user.id,
-          //email: user.email,
-          //username: user.username,
-        };
-      },
-    }),
-    */}

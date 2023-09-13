@@ -112,7 +112,7 @@ model User {
     sessions      Session[]
 
     //My User Fields
-    username     String  @db.VarChar(255)@default("")
+    username     String  @unique @db.VarChar(255)@default("")
     password     String  @db.VarChar(255)@default("")
 }
 

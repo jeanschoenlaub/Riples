@@ -35,6 +35,7 @@
     "react-hot-toast": "^2.4.1",
     "react-markdown": "^8.0.7",
     "superjson": "^1.13.1",
+    "unique-names-generator": "^4.7.1",
     "zod": "^3.21.4"
   },
   "devDependencies": {
