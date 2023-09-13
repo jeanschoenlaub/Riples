@@ -5,6 +5,7 @@ import { ripleRouter } from "~/server/api/routers/riples";
 import { projMemberRouter } from "~/server/api/routers/project-members";
 import { taskRouter } from "~/server/api/routers/tasks";
 import { userRouter } from "./routers/user";
+import { authRouter } from "./routers/auth";
 
 /**
  * 
@@ -24,6 +25,7 @@ export const appRouter = createTRPCRouter({
   projectMembers: projMemberRouter,
   tasks : taskRouter,
   users : userRouter,
+  auth : authRouter,
 });
 
 // export type definition of API

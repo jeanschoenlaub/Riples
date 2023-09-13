@@ -92,7 +92,6 @@ model Account {
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
-    @@index([userId])
 }
 
 model Session {
@@ -101,8 +100,6 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@index([userId])
 }
 
 model User {
@@ -113,6 +110,10 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+
+    //My User Fields
+    username     String  @db.VarChar(255)@default("")
+    password     String  @db.VarChar(255)@default("")
 }
 
 model VerificationToken {

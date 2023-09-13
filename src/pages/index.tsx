@@ -4,7 +4,6 @@ import { GlobalNavBar } from "~/components/navbar";
 import { Feed } from "~/components/feed";
 import { ProjectNav } from "~/components/sidebar";
 
-
 export default function Home() {
   //Start this query asap
   //const {user} = useUser()
