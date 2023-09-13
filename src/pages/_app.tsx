@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 import "~/styles/globals.css";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react"
-import { Wrapper } from "~/components/usernamewrapper";
+import { OnboardingWrapper } from "~/components/modals/onboarding";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -30,7 +30,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <link rel="icon" href="/images/favicon.ico" />
       </Head>
       <Toaster />
-      <Wrapper />
+      <OnboardingWrapper />
       <Component {...pageProps} />
       <Analytics />
     </SessionProvider>

@@ -1,19 +1,52 @@
 import { useSession, signIn, signOut } from "next-auth/react"
 import Image from 'next/image';
 import Link from "next/link";
-import { useState } from "react";
-import { SignInModal } from "./signinmodal";
+import { useEffect, useRef, useState } from "react";
+import { SignInModal } from "./modals/signinmodal";
+import { ProfileImage } from '~/components/profileimage'; // Import ProfileImage component
+import { DeleteAccountModal } from "./modals/deleteaccountmodal";
 
 export const GlobalNavBar = () => {
-  
   const { data: session } = useSession();
   const [showSignInModal, setShowSignInModal] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const dropdownRef = useRef<null | HTMLDivElement>(null);
 
   const closeModal = () => {
     setShowSignInModal(false);
-    // Do other stuff if needed
   };
 
+  const deleteUserMutation = () => {
+    signOut();
+    setShowDeleteModal(false);
+    
+  };
+
+  const onClickOutside = (event: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      setShowDropdown(false);
+    }
+  };
+
+  const toggleUserDropdown = (e: React.MouseEvent) => {
+    console.log("toggling")
+    e.stopPropagation();
+    setShowDropdown(!showDropdown);
+
+    // Delay adding the event listener to allow for the current event to complete
+    setTimeout(() => {
+      if (showDropdown) {
+        window.addEventListener('click', onClickOutside);
+      }
+    }, 0);
+  };
+
+  useEffect(() => {
+    return () => {
+      window.removeEventListener('click', onClickOutside);
+    };
+  }, []);
 
   return ( 
     <div id="global-nav-container" className="flex justify-center w-full">
@@ -34,14 +67,6 @@ export const GlobalNavBar = () => {
               </Link>
             </div>
           </div>
-
-          <style jsx>{`
-  @media (max-width: 400px) {
-    .flex-direction-change {
-      flex-direction: column;
-    }
-  }
-`}</style>
 
           <div id="global-nav-mid" className="flex flex-direction-change w-1/3 md:w-3/5 justify-center items-center  gap-3 p-2 border border-slate-700">
             <Link href="/">
@@ -64,33 +89,33 @@ export const GlobalNavBar = () => {
           </div>
             
           <div id="global-nav-right" className="flex w-1/3 md:w-1/5 gap-3 items-center p-2 border border-slate-700">
-              <div className="flex items-center">
-                  {session && <div>
-                      <button className="bg-blue-500 text-white rounded py-1 px-2 text-center text-sm" onClick={() => signOut()}>Sign out</button>
-                    </div>
-                  }
-                  {!session &&<div>
-                    <button 
-                      className="bg-blue-500 text-white rounded py-1 px-2 text-center text-sm" 
-                      onClick={() => setShowSignInModal(true)}
-                    >
-                      Sign In
-                    </button>
-                    <SignInModal showModal={showSignInModal} onClose={closeModal} />
+          <div className="flex items-center">
+            {session && (
+              <div className="relative">
+                <div 
+                  onClick={toggleUserDropdown} 
+                  style={{ cursor: 'pointer' }} // Make the mouse change to a pointer when hovering
+                >
+                  <ProfileImage user={{ name: session.user.username }} size={32} />
+                </div>
+                {showDropdown && (
+                  <div ref={dropdownRef}  className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-slate-50">
+                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowDeleteModal(true)}>Delete Account</button>
+                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => signOut()}>Sign Out</button>
                   </div>
-                  }
+                )}
               </div>
+            )}
+            {!session && (
               <div>
-              <button
-                className="bg-green-500 text-white rounded py-1 px-2 text-center text-sm"
-                onClick={() => signIn()}
-              > Sign In</button>
-               {session && <div>
-                      <button className="bg-green-500 text-white rounded py-1 px-2 text-center text-sm" onClick={() => signOut()}>Sign out</button>
-                    </div>
-                  }
+                <button className="bg-blue-500 text-white rounded py-1 px-2 text-center text-sm" onClick={() => setShowSignInModal(true)}>Sign In</button>
+                <SignInModal showModal={showSignInModal} onClose={closeModal} />
               </div>
+            )}
+            
+            <DeleteAccountModal showDeleteModal={showDeleteModal} onClose={() => setShowDeleteModal(false)} onDelete={deleteUserMutation} />
           </div>
+        </div>
       </div>
     )
-  } 
+} 

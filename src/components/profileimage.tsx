@@ -11,19 +11,26 @@ type ProfileImageProps = {
   size?: number;
 };
 
-const getRandomColor = () => {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
+const tailwindColors = [
+  'bg-blue-400',
+  'bg-red-400',
+  'bg-yellow-400',
+  'bg-green-400',
+  'bg-indigo-400',
+  'bg-purple-400',
+  'bg-pink-400'
+];
+
+const getColorFromName = (name: string) => {
+  const secondLetter = name.length > 1 ? name[1] : name[0] || ' ';
+  const colorIndex = (secondLetter || 'a').charCodeAt(0) % tailwindColors.length;
+  return tailwindColors[colorIndex];
 };
 
 export const ProfileImage: FC<ProfileImageProps> = ({ user, size = 80 }) => {
-  const randomColor = getRandomColor();
   const name = user?.name || '';
-  const initial = name[0] || '?';
+  const initial = (name[0] || '?').toUpperCase();
+  const colorClass = getColorFromName(name);
   const imageUrl = user?.image;
 
   return (
@@ -41,13 +48,12 @@ export const ProfileImage: FC<ProfileImageProps> = ({ user, size = 80 }) => {
           style={{
             width: `${size}px`,
             height: `${size}px`,
-            backgroundColor: randomColor,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            borderRadius: '50%',
+            borderRadius: '50%'
           }}
-          className="border border-slate-300"
+          className={`border border-slate-300 ${colorClass}`}
         >
           <span style={{ color: '#fff', fontSize: `${Math.floor(size / 2)}px` }}>
             {initial}

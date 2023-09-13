@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { RouterOutputs, api } from "~/utils/api";
 import Link from 'next/link'; // import Next.js Link component
-import { TaskModal } from '~/components/taskmodal';
+import { TaskModal } from '~/components/modals/taskmodal';
 
 interface TaskListProps {
   project: ProjectData["project"];

@@ -35,10 +35,9 @@ export const LoadingDropletSVG = () => {
               className="droplet" 
               alt="Riple logo" 
           />
+          <div className="ripple"></div> 
           <div className="ripple"></div>
           <div className="ripple"></div>
-          <div className="ripple"></div>
-  
         </div>)
   };
   
