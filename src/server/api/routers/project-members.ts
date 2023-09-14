@@ -1,8 +1,7 @@
-import { clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { filterUserForClient } from "~/server/helpers/filterUserForClient";
+
 
 export const projMemberRouter = createTRPCRouter({
   getMembersByProjectId: publicProcedure
@@ -15,11 +14,12 @@ export const projMemberRouter = createTRPCRouter({
         },
       });
 
-      // Grab the user data from Clerk for the members
-      const memberUsers = (await clerkClient.users.getUserList({
-        userId: members.map((member) => member.userID),
-        limit: 100,
-      })).map(filterUserForClient);
+      // Grab the user data from Prisma for the members
+      const memberUsers = await ctx.prisma.user.findMany({
+        where: {
+          id: { in: members.map((member) => member.userID) },
+        },
+      });
 
       return members.map((member) => {
         const user = memberUsers.find((memberUser) => memberUser.id === member.userID);
@@ -38,3 +38,4 @@ export const projMemberRouter = createTRPCRouter({
       });
     }),
 });
+

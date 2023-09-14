@@ -2,13 +2,13 @@ import React from 'react';
 import dayjs from 'dayjs';
 import type { RouterOutputs } from '~/utils/api';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ProfileImage } from './profileimage';
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"] & {
   members?: RouterOutputs["projectMembers"]["getMembersByProjectId"];
 };
 
-const AboutTab = (props: ProjectData) => {
+export const AboutTab = (props: ProjectData) => {
   const {project, author, members} = props;
 
   return (
@@ -62,19 +62,13 @@ const AboutTab = (props: ProjectData) => {
             Project Lead:  
             <span className="font-medium ml-1">
               <Link href={`/users/${project.authorID}`}>
-                {`${author?.firstName} ${` `} ${author?.lastName}`}
+                {author.name}
               </Link>
             </span>
           </span>
           <div id="riple-card-metadata-auth-profile-image">
             <Link href={`/users/${project.authorID}`}>
-              <Image 
-                src={author.imageUrl} 
-                alt="Author Profile Image" 
-                className="rounded-full border border-slate-300"
-                width={40}
-                height={40}
-              />
+              <ProfileImage user={author} size={32} />
             </Link>
           </div>
         </div>
@@ -88,18 +82,12 @@ const AboutTab = (props: ProjectData) => {
               <div key={index} className="flex items-center space-x-3 mb-2">
                 <span className="text-sm font-medium">
                   <Link href={`/users/${user.user.id}`}>
-                  {`${user.user.firstName} ${` `} ${user.user.lastName}`}
+                  {author.name}
                   </Link>
                 </span>
                 <div id={`riple-card-metadata-auth-profile-image-${index}`}>
                   <Link href={`/users/${user.user.id}`}>
-                    <Image 
-                      src={user.user.imageUrl}
-                      alt="Member Profile Image" 
-                      className="rounded-full border border-slate-300"
-                      width={40}
-                      height={40}
-                    />
+                    <ProfileImage user={user.user} size={32} />
                   </Link>
                 </div>
               </div>
@@ -108,5 +96,3 @@ const AboutTab = (props: ProjectData) => {
         </div>
       </div>
 )};
-
-export default AboutTab;

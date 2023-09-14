@@ -1,4 +1,4 @@
-import { GlobalNavBar } from "~/components/navbar";
+import { GlobalNavBar } from "~/components/navbar/navbar";
 
 
 export default function PrivacyPolicy() {

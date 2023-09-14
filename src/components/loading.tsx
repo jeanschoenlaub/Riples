@@ -22,12 +22,12 @@ export const LoadingPage = () => {
     //<LoadingSpinner size={60}></LoadingSpinner>
     return(
         <div className=" flex items-center justify-center">
-            <LoadingDropletSVG></LoadingDropletSVG>
+            <LoadingRiplesLogo></LoadingRiplesLogo>
         </div>
     )
 }
 
-export const LoadingDropletSVG = () => {
+export const LoadingRiplesLogo = () => {
     return (
         <div className="loading-container">
           <img
@@ -35,10 +35,9 @@ export const LoadingDropletSVG = () => {
               className="droplet" 
               alt="Riple logo" 
           />
+          <div className="ripple"></div> 
           <div className="ripple"></div>
           <div className="ripple"></div>
-          <div className="ripple"></div>
-  
         </div>)
   };
   

@@ -1,11 +1,9 @@
 import { z } from "zod";
-import { createTRPCRouter, privateProcedure, publicProcedure } from "~/server/api/trpc";
-import { filterUserForClient } from "~/server/helpers/filterUserForClient";
+import { createTRPCRouter,publicProcedure, protectedProcedure } from "~/server/api/trpc";
 
 import { TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
-import { clerkClient} from "@clerk/nextjs";
 
 
 
@@ -26,75 +24,90 @@ export const projRouter = createTRPCRouter({
      }]
     });
 
-    const user = (await clerkClient.users.getUserList({
-      userId: projects.map((project) => project.authorID),
-      limit: 100,
-    })).map(filterUserForClient);
+    const users = await ctx.prisma.user.findMany({
+      where: {
+        id: {
+          in: projects.map((project) => project.authorID),
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        // Add any other fields you need
+      },
+    });
 
-    return projects.map((projects) => {
-      const author = user.find((user) => user.id === projects.authorID)
+    // Map over projects to add author information
+    return projects.map((project) => {
+      const author = users.find((user) => user.id === project.authorID);
 
-      if(!author) throw new TRPCError ({code:"INTERNAL_SERVER_ERROR", message:"Riple author not found"})
-      return{
-        projects,
-        author,
+      if (!author) {
+        throw new Error('Project author not found.');
       }
+
+      return {
+        project,
+        author,
+      };
     });
   }),
 
   getProjectByProjectId: publicProcedure
-  .input(z.object({projectId: z.string()}))
-  .query( async ({ ctx, input }) => {
-    // Find the project by its unique ID
+  .input(z.object({ projectId: z.string() }))
+  .query(async ({ ctx, input }) => {
     const project = await ctx.prisma.project.findUnique({
-      where: {
-        id: input.projectId
-      }
+      where: { id: input.projectId },
     });
 
     if (!project) {
-      throw new TRPCError({code: "NOT_FOUND", message: "Project not found"});
+      throw new TRPCError({ code: "NOT_FOUND", message: "Project not found" });
     }
 
-    const author = filterUserForClient(await clerkClient.users.getUser( project.authorID));
+    const author = await ctx.prisma.user.findUnique({
+      where: { id: project.authorID },
+    });
 
-    if(!author) throw new TRPCError ({code:"INTERNAL_SERVER_ERROR", message:"Project author not found"})
-    return{
+    if (!author) {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Project author not found" });
+    }
+
+    return {
       project,
       author,
-    }
+    };
   }),
 
   getProjectByAuthorId: publicProcedure
-  .input(z.object({authorID: z.string()}))
-  .query( async ({ ctx, input }) => {
-    // Find the project by its unique ID
+  .input(z.object({ authorID: z.string() }))
+  .query(async ({ ctx, input }) => {
     const projects = await ctx.prisma.project.findMany({
-      where: {
-        authorID: input.authorID
-      },
+      where: { authorID: input.authorID },
       take: 100,
       orderBy: [{ createdAt: "desc" }],
     });
 
-    const user = (await clerkClient.users.getUserList({
-      userId: projects.map((project) => project.authorID),
-      limit: 100,
-    })).map(filterUserForClient);
-
-    return projects.map((project) => {
-      const author = user.find((user) => user.id === project.authorID)
-
-      if (!author) throw new TRPCError ({code: "INTERNAL_SERVER_ERROR", message: "Riple author not found"})
-      
-      return {
-        project,
-        author
-      }
+    const author = await ctx.prisma.user.findUnique({
+      where: { id: input.authorID },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        // ... other fields you want to select
+      },
     });
+
+    if (!author) {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Riple author not found" });
+    }
+
+    return projects.map((project) => ({
+      project,
+      author,
+    }));
   }),
 
-  applyToProject: privateProcedure
+  applyToProject: protectedProcedure
     .input(
         z.object({
             userId: z.string(), // The ID of the user applying
@@ -135,28 +148,24 @@ export const projRouter = createTRPCRouter({
   }),
   
 
-  create: privateProcedure
-    .input(
-      z.object({
-        content: z.string().min(5, { message: "Must be 5 or more characters long" }),
-      })
-    )
-    .mutation(async ({ ctx, input}) => {
-      const authorID = ctx.currentUserId;
+  create: protectedProcedure
+  .input(z.object({ content: z.string().min(5, { message: "Must be 5 or more characters long" }) }))
+  .mutation(async ({ ctx, input }) => {
+    const authorID = ctx.session.user.id;
 
-      const { success } = await ratelimit.limit(authorID)
+    const { success } = await ratelimit.limit(authorID);
 
-      if (!success) throw new TRPCError({code:"TOO_MANY_REQUESTS"})
+    if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
-      const project = await ctx.prisma.project.create({
-        data:{
-          authorID,
-          title: input.content,
-          summary: input.content,
-        },
-      });
+    const project = await ctx.prisma.project.create({
+      data: {
+        authorID,
+        title: input.content,
+        summary: input.content,
+      },
+    });
 
-      return project
-    }),
+    return project;
+  }),
 });
 

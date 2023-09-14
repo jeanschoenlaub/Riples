@@ -1,21 +1,10 @@
 import { z } from "zod";
-import { createTRPCRouter, privateProcedure, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 
-import type { User } from "@clerk/nextjs/dist/types/server";
 import { TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
-import { clerkClient} from "@clerk/nextjs";
 
-const filterUserForClient = (user: User) => {
-    return {
-      id: user.id,
-      username: user.username,
-      firstName:user.firstName,
-      lastName:user.lastName,
-      imageUrl: user.imageUrl
-    }
-}
 
 // Create a new ratelimiter, that allows 2 requests per 1 minute
 export const ratelimit = new Ratelimit({
@@ -25,30 +14,29 @@ export const ratelimit = new Ratelimit({
 })
 
 export const ripleRouter = createTRPCRouter({
-    getAll: publicProcedure.query( async ({ ctx }) => {
+    getAll: publicProcedure.query(async ({ ctx }) => {
         const riples = await ctx.prisma.riple.findMany({
           take: 100,
           orderBy: [{ createdAt: "desc" }],
-          include: { project: true }  // Include the related project details.
+          include: { project: true },
         });
-    
-        const user = (await clerkClient.users.getUserList({
-          userId: riples.map((riple) => riple.authorID),
-          limit: 100,
-        })).map(filterUserForClient);
-    
+      
+        const authors = await ctx.prisma.user.findMany({
+          where: {
+            id: { in: riples.map((riple) => riple.authorID) },
+          },
+        });
+      
         return riples.map((riple) => {
-          const author = user.find((user) => user.id === riple.authorID)
-    
-          if (!author) throw new TRPCError ({code: "INTERNAL_SERVER_ERROR", message: "Riple author not found"})
-          
+          const author = authors.find((user) => user.id === riple.authorID);
+          if (!author) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Riple author not found" });
           return {
             riple,
             author,
-            project: riple.project
-          }
+            project: riple.project,
+          };
         });
-    }),
+      }),
 
 
     getRipleByRipleId: publicProcedure
@@ -69,59 +57,54 @@ export const ripleRouter = createTRPCRouter({
     }),
     
 
-    create: privateProcedure
-        .input(
-            z.object({
-                title: z.string().min(5, { message: "Must be 5 or more characters long" }).max(255, { message: "Must be less than 255 characters long" }),
-                content: z.string().min(5, { message: "Must be 5 or more characters long" }).max(50000, { message: "Must be less than 50'000 characters long" }),
-                projectId: z.string(),  // Add this
-            })
-        )
-        .mutation(async ({ ctx, input}) => {
-        const authorID = ctx.currentUserId;
+    create: protectedProcedure
+    .input(
+        z.object({
+        title: z.string().min(5).max(255),
+        content: z.string().min(5).max(50000),
+        projectId: z.string(),
+        })
+    )
+    .mutation(async ({ ctx, input }) => {
+        const authorID = ctx.session.user.id;
 
-        const { success } = await ratelimit.limit(authorID)
-
-        if (!success) throw new TRPCError({code:"TOO_MANY_REQUESTS"})
+        const { success } = await ratelimit.limit(authorID);
+        if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
         const riple = await ctx.prisma.riple.create({
-            data:{
+        data: {
             authorID,
             title: input.title,
             content: input.content,
             projectId: input.projectId,
-            },
+        },
         });
 
-        return riple
-        }),
-        getRiplebyProjectId: publicProcedure
-        .input(z.object({ projectId: z.string() }))
-        .query(async ({ ctx, input }) => {
-            // Find the riples associated with the given projectId
-            const riples = await ctx.prisma.riple.findMany({
-                where: {
-                    projectId: input.projectId
-                },
-                include: { project: true }  // Include the related project details if needed.
-            });
-    
-            // If you also want to fetch user details for each riple, like in the getAll procedure:
-            const users = (await clerkClient.users.getUserList({
-                userId: riples.map((riple) => riple.authorID),
-                limit: 10,  // set the limit to the number of riples found
-            })).map(filterUserForClient);
-    
-            return riples.map((riple) => {
-                const author = users.find((user) => user.id === riple.authorID);
-    
-                if (!author) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Riple author not found" });
-    
-                return {
-                    riple,
-                    author,
-                    project: riple.project
-                }
-            });
-        }), 
+        return riple;
+    }),
+        
+    getRiplebyProjectId: publicProcedure
+    .input(z.object({ projectId: z.string() }))
+    .query(async ({ ctx, input }) => {
+        const riples = await ctx.prisma.riple.findMany({
+        where: { projectId: input.projectId },
+        include: { project: true },
+        });
+
+        const authors = await ctx.prisma.user.findMany({
+        where: {
+            id: { in: riples.map((riple) => riple.authorID) },
+        },
+        });
+
+        return riples.map((riple) => {
+        const author = authors.find((user) => user.id === riple.authorID);
+        if (!author) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Riple author not found" });
+        return {
+            riple,
+            author,
+            project: riple.project,
+        };
+        });
+    }),
 });

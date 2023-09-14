@@ -1,7 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, privateProcedure, publicProcedure } from "~/server/api/trpc";
-import { filterUserForClient } from "~/server/helpers/filterUserForClient";
-import { clerkClient} from "@clerk/nextjs";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 
 export const taskRouter = createTRPCRouter({
@@ -14,19 +12,21 @@ export const taskRouter = createTRPCRouter({
       }
     });
 
-    // We also grab the user Data from clerk for the task creator and owner on the server
-    const ownerUser = (await clerkClient.users.getUserList({
-      userId: tasks.map((task) => task.ownerId),
-      limit: 100,
-    })).map(filterUserForClient);
-    const createdByUser = (await clerkClient.users.getUserList({
-      userId: tasks.map((task) => task.createdById),
-      limit: 100,
-    })).map(filterUserForClient);
+    const fetchUserData = async (userIds: string[]) => {
+      return await ctx.prisma.user.findMany({
+        where: {
+          id: { in: userIds },
+        },
+      });
+    };
+
+    const ownerUser = await fetchUserData(tasks.map((task) => task.ownerId));
+    const createdByUser = await fetchUserData(tasks.map((task) => task.createdById));
 
     return tasks.map((task) => {
-      const owner = ownerUser.find((owner) => owner.id === task.ownerId)
-      const createdBy = createdByUser.find((createdBy) => createdBy.id === task.createdById)
+      const owner = ownerUser.find((o) => o.id === task.ownerId);
+      const createdBy = createdByUser.find((c) => c.id === task.createdById);
+
 
       if (!createdBy) throw new TRPCError ({code: "INTERNAL_SERVER_ERROR", message: "Task Creator not found"})
       
@@ -38,44 +38,42 @@ export const taskRouter = createTRPCRouter({
     });
   }),
 
-  create: privateProcedure
+  create: protectedProcedure
     .input(
       z.object({
         title: z.string().min(5, { message: "Task title must be 5 or more characters long" }).max(255, { message: "Task title must be 255 or less characters long" }),
-        content: z.string().min(5, { message: "Task Content must be 5 or more characters long" }).max(10000, { message: "Task title must be 10'00 or less characters long" }),
+        content: z.string().min(5, { message: "Task Content must be 5 or more characters long" }).max(10000, { message: "Task title must be 10,000 or less characters long" }),
         projectId: z.string(),
       })
     )
-    .mutation(async ({ ctx, input}) => {
-      const createdById = ctx.currentUserId;
+    .mutation(async ({ ctx, input }) => {
+      const createdById = ctx.session.user.id;
       const task = await ctx.prisma.tasks.create({
-        data:{
-          createdById, 
+        data: {
+          createdById,
           title: input.title,
           content: input.content,
           projectId: input.projectId,
         },
       });
-
-      return task
+      return task;
     }),
 
-    edit: privateProcedure
+    edit: protectedProcedure
     .input(
       z.object({
-        id: z.string(), // Added ID to know which task to edit
+        id: z.string(),
         title: z.string().min(5, { message: "Task title must be 5 or more characters long" }).max(255, { message: "Task title must be 255 or less characters long" }),
-        content: z.string().min(5, { message: "Task Content must be 5 or more characters long" }).max(10000, { message: "Task title must be 10'00 or less characters long" }),
+        content: z.string().min(5, { message: "Task Content must be 5 or more characters long" }).max(10000, { message: "Task title must be 10,000 or less characters long" }),
         projectId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, title, content, projectId } = input; // Destructure input
-      const updatedById = ctx.currentUserId;
+      const { id, title, content, projectId } = input;
+      // const updatedById = ctx.session.user.id; not used for now
 
-      // Use Prisma's update method to edit the existing task
       const task = await ctx.prisma.tasks.update({
-        where: { id }, // Where clause to find the task to update
+        where: { id },
         data: {
           title,
           content,
@@ -85,4 +83,8 @@ export const taskRouter = createTRPCRouter({
 
       return task;
     }),
-})
+});
+
+
+
+

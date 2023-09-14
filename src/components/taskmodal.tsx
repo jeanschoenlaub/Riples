@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { RouterOutputs, api } from "~/utils/api";
+import type { RouterOutputs} from "~/utils/api";
+import { api } from "~/utils/api";
 import { handleZodError } from "~/utils/error-handling";
+import { Modal } from './reusables/modaltemplate';
 
 interface TaskModalProps {
   project: ProjectData["project"];
@@ -9,10 +11,166 @@ interface TaskModalProps {
   showModal: boolean;
   onClose: () => void;
 }
+
+interface CreateTaskPayload {
+  projectId: string;
+  title: string;
+  content: string;
+}
+
+interface EditTaskPayload extends CreateTaskPayload {
+  id: string;
+}
+
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"];
 type TaskData = RouterOutputs["tasks"]["edit"];
 
-// Set default template text
+// Main React Functional Component
+export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, onClose }) => {
+  
+  // Initialize state with values from props if taskToEdit is present (for edit mode)
+  const initialTitle = taskToEdit ? taskToEdit.title : '';
+  const initialContent = taskToEdit ? taskToEdit.content : defaultTemplate;
+  
+  // States and useEffects
+  const [taskTitle, setTaskTitle] = useState(initialTitle);
+  const [taskContent, setTaskContent] = useState(initialContent);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  useEffect(() => {
+    if (taskToEdit) {
+      setTaskTitle(taskToEdit.title);
+      setTaskContent(taskToEdit.content);
+      setIsEditMode(true);
+    }
+  }, [taskToEdit]);
+
+  const resetForm = () => {
+    setTaskTitle('');
+    setTaskContent(defaultTemplate);
+    onClose(); 
+    setIsEditMode(false);
+  };
+
+  // Helper function to generate edit payload
+  const generateEditPayload = (): EditTaskPayload => ({
+    projectId: project.id,
+    title: taskTitle,
+    content: taskContent,
+    id: taskToEdit!.id
+  });
+
+  // Helper function to generate create payload
+  const generateCreatePayload = (): CreateTaskPayload => ({
+    projectId: project.id,
+    title: taskTitle,
+    content: taskContent
+  });
+
+  const handleSave = () => {
+    const payload = isEditMode && taskToEdit ? generateEditPayload() : generateCreatePayload();
+
+    isEditMode ? editTask(payload as EditTaskPayload) : createTask(payload);
+  };
+
+  //Custom Hooks
+  const { isCreating, isEditing, createTask, editTask } = useTaskMutation(project.id, { onSuccess: resetForm });
+  const isLoading = isCreating || isEditing;
+
+  return (
+    <div>
+      <Modal showModal={showModal} isLoading={isLoading} size="medium">
+        <h2 className="text-lg mb-4">Create New Task</h2>
+
+        <label className="block text-sm mb-2" aria-label="Task Title">
+          Task Title:
+          <input
+            type="text"
+            value={taskTitle}
+            onChange={(e) => setTaskTitle(e.target.value)}
+            className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
+            maxLength={1000}
+            disabled={isLoading}
+          />
+        </label>
+
+        <label className="block text-sm mb-2" aria-label="Task Content">
+          Task Content:
+          <textarea
+            value={taskContent}
+            onChange={(e) => setTaskContent(e.target.value)}
+            className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
+            rows={10}
+            maxLength={1000}
+            disabled={isLoading}
+          />
+        </label>
+
+        <button 
+          onClick={handleSave}
+          className="bg-green-500 text-white rounded px-4 py-2 mr-2"
+          disabled={isLoading}
+        >
+          {isEditMode ? 'Save Changes' : 'Save Task'}
+        </button>
+        <button 
+          onClick={resetForm}
+          className="bg-red-500 text-white rounded px-4 py-2"
+          disabled={isLoading}
+        >
+          Close
+        </button>
+      </Modal>
+    </div>
+  );
+};
+
+// Custom hook to handle mutations and their state
+const useTaskMutation = (projectId: string, { onSuccess }: { onSuccess: () => void }) => {
+  const apiContext = api.useContext();
+  
+  // Function to run on successful mutations
+  const handleSuccess = () => {
+    void apiContext.tasks.getTasksByProjectId.invalidate(); // Invalidate the cache
+    onSuccess(); // Execute any additional onSuccess logic
+  };
+  
+  //We add a mutation for creating a task (with on success)
+  const { mutate: createTaskMutation, isLoading: isCreating }  = api.tasks.create.useMutation({
+    onSuccess: handleSuccess,
+    onError: (e) => {
+      const fieldErrors = e.data?.zodError?.fieldErrors; 
+      const message = handleZodError(fieldErrors);
+      toast.error(message);
+    }
+  });
+
+  // Mutation for editing a task
+  const { mutate: editTaskMutation, isLoading: isEditing } = api.tasks.edit.useMutation({
+    onSuccess: handleSuccess,
+    onError: (e) => {
+      const fieldErrors = e.data?.zodError?.fieldErrors; 
+      const message = handleZodError(fieldErrors);
+      toast.error(message);
+    }
+  });
+
+  const createTask = (payload: CreateTaskPayload) => {
+    createTaskMutation(payload);
+  };
+
+  const editTask = (payload: EditTaskPayload) => {
+    editTaskMutation(payload);
+  };
+
+  return {
+    isCreating,
+    isEditing,
+    createTask,
+    editTask
+  }
+}
+
 const defaultTemplate = `
 ### What ?
 
@@ -29,113 +187,3 @@ const defaultTemplate = `
 ************Any links or images that can communicate the task at hand.************
 
 ## Work in progress`;
-
-
-export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, onClose }) => {
-  const [isEditMode, setIsEditMode] = useState(false); // New state to handle edit mode
-  
-  useEffect(() => {
-    if (taskToEdit) {
-      setTaskTitle(taskToEdit.title);
-      setTaskContent(taskToEdit.content);
-      setIsEditMode(true);
-    }
-  }, [taskToEdit]);
-
-  const [taskTitle, setTaskTitle] = useState('');
-  const [taskContent, setTaskContent] = useState(defaultTemplate);
-  const ctx = api.useContext();
-
-  const resetForm = () => {
-    setTaskTitle('');
-    setTaskContent(defaultTemplate);
-    onClose(); 
-    setIsEditMode(false);  // Reset edit mode
-  };
-  
-  
-  //We add a mutation for creating a task (with on success)
-  const {mutate, isLoading: isCreating}  = api.tasks.create.useMutation({
-    onSuccess: () => {
-      void ctx.tasks.getTasksByProjectId.invalidate();
-      resetForm();
-    },
-    onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors; 
-      const message = handleZodError(fieldErrors);
-      toast.error(message);
-    }
-    });
-
-    // Mutation for editing a task
-    const editTaskMutation = api.tasks.edit.useMutation({
-      onSuccess: () => {
-        void ctx.tasks.getTasksByProjectId.invalidate();
-        resetForm();
-      },
-      onError: (e) => {
-        const fieldErrors = e.data?.zodError?.fieldErrors; 
-        const message = handleZodError(fieldErrors);
-        toast.error(message);
-      }
-    });
-
-    //handling both create and edit modes
-    const handleSave = () => {
-      const payload = { projectId: project.id, title: taskTitle, content: taskContent };
-  
-      if (isEditMode && taskToEdit) {
-        editTaskMutation.mutate({ ...payload, id: taskToEdit.id });
-      } else {
-        mutate(payload); // Create new task
-      }
-    };
-
-  return (
-    <div>
-      {showModal && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded p-4 w-1/3">
-            <h2 className="text-lg mb-4">Create New Task</h2>
-
-            <label className="block text-sm mb-2">
-              Task Title:
-              <input
-                type="text"
-                value={taskTitle}
-                onChange={(e) => setTaskTitle(e.target.value)}
-                className="w-full p-2 mt-1 rounded border"
-                maxLength={1000}
-              />
-            </label>
-
-            <label className="block text-sm mb-2">
-              Task Content:
-              <textarea
-                value={taskContent}
-                onChange={(e) => setTaskContent(e.target.value)}
-                className="w-full p-2 mt-1 rounded border"
-                rows={10}
-                maxLength={1000}
-              />
-            </label>
-
-            <button 
-                onClick={handleSave}
-                className="bg-green-500 text-white rounded px-4 py-2 mr-2"
-              >
-                {isEditMode ? 'Save Changes' : 'Save Task'}
-              </button>
-            <button 
-              onClick={resetForm}
-              className="bg-red-500 text-white rounded px-4 py-2"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
