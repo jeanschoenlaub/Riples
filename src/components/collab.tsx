@@ -1,6 +1,7 @@
 import Link from "next/link"
 import toast from "react-hot-toast";
-import { RouterOutputs, api } from "~/utils/api";
+import { api } from "~/utils/api";
+import type { RouterOutputs } from '~/utils/api';
 import { TaskList } from "~/components//tasklist";
 import { useSession } from "next-auth/react";
 
@@ -56,7 +57,7 @@ export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
     const isMemberOrPending = projectMembersData.some(({ member }) =>
         member.userID === userId && (member.status === 'APPROVED' || member.status === 'PENDING')
     );
-    const isProjectLead = userId === project.authorID;
+    //const isProjectLead = userId === project.authorID;
     
     return (
         <div>

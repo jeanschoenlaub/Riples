@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Modal } from "~/components/modals/modaltemplate";
+import { Modal } from "~/components/reusables/modaltemplate";
 
 interface DeleteModalProps {
   showDeleteModal: boolean;
@@ -7,7 +6,7 @@ interface DeleteModalProps {
   onDelete: () => void;
 }
 
-export const NavBarUserOptionModal: React.FC<DeleteModalProps> = ({ showDeleteModal, onClose, onDelete }) => {
+export const NavBarUserDeleteModal: React.FC<DeleteModalProps> = ({ showDeleteModal, onClose, onDelete }) => {
   return (
     <Modal showModal={showDeleteModal} size="small">
       <p>Are you sure you want to delete your account?</p>

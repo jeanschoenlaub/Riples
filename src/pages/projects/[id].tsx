@@ -17,7 +17,7 @@ import { AboutTab } from "~/components/about";
 import { RipleCard } from "~/components/riplecard";
 import { LoadingPage } from "~/components/loading";
 import { CollabTab } from "~/components/collab";
-import { GlobalNavBar } from "~/components/navbar";
+import { GlobalNavBar } from "~/components/navbar/navbar";
 import { ProjectNav } from "~/components/sidebar";
 
 import { getSession } from 'next-auth/react'; // Importing getSession from next-auth

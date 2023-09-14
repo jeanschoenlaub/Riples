@@ -2,7 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import type { RouterOutputs } from '~/utils/api';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ProfileImage } from './profileimage';
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"] & {
   members?: RouterOutputs["projectMembers"]["getMembersByProjectId"];
@@ -68,13 +68,7 @@ export const AboutTab = (props: ProjectData) => {
           </span>
           <div id="riple-card-metadata-auth-profile-image">
             <Link href={`/users/${project.authorID}`}>
-              <Image 
-                src={author.image || '/default-image-url'} 
-                alt="Author Profile Image" 
-                className="rounded-full border border-slate-300"
-                width={40}
-                height={40}
-              />
+              <ProfileImage user={author} size={32} />
             </Link>
           </div>
         </div>
@@ -93,13 +87,7 @@ export const AboutTab = (props: ProjectData) => {
                 </span>
                 <div id={`riple-card-metadata-auth-profile-image-${index}`}>
                   <Link href={`/users/${user.user.id}`}>
-                    <Image 
-                      src={user.user.image || '/default-image-url'}
-                      alt="Member Profile Image" 
-                      className="rounded-full border border-slate-300"
-                      width={40}
-                      height={40}
-                    />
+                    <ProfileImage user={user.user} size={32} />
                   </Link>
                 </div>
               </div>

@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 import "~/styles/globals.css";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react"
-import { OnboardingWrapper } from "~/components/modals/onboarding";
+import { OnboardingWrapper } from "~/components/onboarding";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

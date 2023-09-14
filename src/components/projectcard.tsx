@@ -7,7 +7,7 @@ import type { RouterOutputs } from "~/utils/api";
 
 type ProjectWithUser = RouterOutputs["projects"]["getProjectByAuthorId"][number]
 export const ProjectCard = (props: ProjectWithUser) => {
-  const {project, author} = props;
+  const {project} = props;
  
   return (
     <div id="project-card" className="bg-white border border-slate-300 rounded-lg mx-5 p-4 mt-4 mb-4 shadow-md" key={project.id}>

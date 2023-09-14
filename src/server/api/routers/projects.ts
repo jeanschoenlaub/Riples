@@ -66,12 +66,6 @@ export const projRouter = createTRPCRouter({
 
     const author = await ctx.prisma.user.findUnique({
       where: { id: project.authorID },
-      select: {
-        id: true,
-        name: true,
-        image: true,
-        // ... other fields you want to select
-      },
     });
 
     if (!author) {

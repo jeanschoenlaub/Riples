@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { GlobalNavBar } from "~/components/navbar";
+import { GlobalNavBar } from "~/components/navbar/navbar";
 import { Feed } from "~/components/feed";
 import { ProjectNav } from "~/components/sidebar";
 

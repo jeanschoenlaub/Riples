@@ -1,26 +1,31 @@
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession, signOut } from "next-auth/react"
 import Image from 'next/image';
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { SignInModal } from "./modals/signinmodal";
+import { NavBarSignInModal } from "./signinmodal";
 import { ProfileImage } from '~/components/profileimage'; // Import ProfileImage component
-import { NavBarUserOptionModal } from "./modals/navbaruseroptionmodal";
+import { NavBarUserDeleteModal } from "./userdeletemodal";
 import { api } from "~/utils/api";
 import toast from "react-hot-toast";
 import { handleZodError } from "~/utils/error-handling";
+import { NavBarUserNameModal } from "./usernamemodal";
 
 export const GlobalNavBar = () => {
   const { data: session } = useSession();
   const [showSignInModal, setShowSignInModal] = useState(false);
-  const [ShowUserNameModal, setShowUserNameModal] = useState(false);
+  const [showUserNameModal, setShowUserNameModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
+
+  if (showUserNameModal){
+    console.log("should open")
+  }
+
   //We add a mutation for creating a task (with on success)
-  const ctx = api.useContext();
   const {mutate, isLoading: isDeleting}  = api.users.deleteUser.useMutation({
-    onSuccess: () => {
-      signOut();
+    onSuccess: async () => {
+      await signOut();
       setShowDeleteModal(false);
     },
     onError: (e) => {
@@ -29,10 +34,6 @@ export const GlobalNavBar = () => {
       toast.error(message);
     }
     });
-
-  const closeModal = () => {
-    setShowSignInModal(false);
-  };
 
   const deleteUserMutation = () => {
     if (session?.user?.id) {  // Assuming session.user.id contains the user's ID
@@ -121,6 +122,7 @@ export const GlobalNavBar = () => {
                 </div>
                 {showDropdown && (
                   <div ref={dropdownRef}  className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-slate-50">
+                    {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
                     <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => signOut()}>Sign Out</button>
                     <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowUserNameModal(true)}>Change User Name</button>
                     <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowDeleteModal(true)}>Delete Account</button>
@@ -131,11 +133,11 @@ export const GlobalNavBar = () => {
             {!session && (
               <div>
                 <button className="bg-blue-500 text-white rounded py-1 px-2 text-center text-sm" onClick={() => setShowSignInModal(true)}>Sign In</button>
-                <SignInModal showModal={showSignInModal} onClose={closeModal} />
               </div>
             )}
-            
-            <NavBarUserOptionModal showDeleteModal={showDeleteModal} onClose={() => setShowDeleteModal(false)} onDelete={deleteUserMutation} />
+            <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
+            <NavBarUserDeleteModal showDeleteModal={showDeleteModal} onClose={() => setShowDeleteModal(false)} onDelete={deleteUserMutation} />
+            <NavBarUserNameModal showModal={showUserNameModal} onClose={() => setShowUserNameModal(false)} />
           </div>
         </div>
       </div>

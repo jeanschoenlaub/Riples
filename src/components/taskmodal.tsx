@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { RouterOutputs, api } from "~/utils/api";
+import type { RouterOutputs} from "~/utils/api";
+import { api } from "~/utils/api";
 import { handleZodError } from "~/utils/error-handling";
-import { Modal } from './modaltemplate';
+import { Modal } from './reusables/modaltemplate';
 
 interface TaskModalProps {
   project: ProjectData["project"];

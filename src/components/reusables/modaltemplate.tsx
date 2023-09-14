@@ -11,7 +11,7 @@ interface ModalProps {
 export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medium', children }) => {
   const sizeClass = {
     small: 'w-2/3 md:w-1/4',
-    medium: 'w-2/3 md:w-1/4',
+    medium: 'w-2/3 md:w-1/2',
     large: 'w-3/4',
   };
 

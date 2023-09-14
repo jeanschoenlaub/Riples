@@ -28,14 +28,14 @@ const tailwindColors = [
 ];
 
 const getColorFromName = (name: string) => {
-  const secondLetter = name.length > 1 ? name[1] : name[0] || ' ';
-  const colorIndex = (secondLetter || 'a').charCodeAt(0) % tailwindColors.length;
+  const secondLetter = name.length > 1 ? name[1] : name[0] ?? ' ';
+  const colorIndex = (secondLetter ?? 'a').charCodeAt(0) % tailwindColors.length;
   return tailwindColors[colorIndex];
 };
 
 export const ProfileImage: FC<ProfileImageProps> = ({ user, size = 80 }) => {
-  const email = user?.email || '';
-  const initial = (email[0] || '?').toUpperCase();
+  const email = user?.email ?? '';
+  const initial = (email[0] ?? '?').toUpperCase();
   const colorClass = getColorFromName(email);
   const imageUrl = user?.image;
 

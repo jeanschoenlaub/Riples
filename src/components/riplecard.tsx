@@ -11,7 +11,7 @@ import type { RouterOutputs } from "~/utils/api";
 
 type RipleWithUser = RouterOutputs["riples"]["getAll"][number]
 export const RipleCard = (props: RipleWithUser) => {
-  const {riple, author} = props;
+  const {riple} = props;
   const [isExpanded, setIsExpanded] = useState(true);
   const rawHTML = riple.content;
   

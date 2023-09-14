@@ -6,12 +6,12 @@ import {
 } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "~/server/db";
-import nodemailer from 'nodemailer';
 import { env } from "~/env.mjs";
 
 import EmailProvider from "next-auth/providers/email";
 
-// TO-DO put pass in .env
+/* For the follow functionality
+import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   secure: false,
@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
     user: 'admin@riples.app',
     pass: 'guskojpqfjfwhuti'
   }
-});
+});*/
 
 
 /**
@@ -38,11 +38,6 @@ declare module "next-auth" {
       // role: UserRole;
     } & DefaultSession["user"];
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
 /**
@@ -51,31 +46,14 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-  callbacks: {   
-    jwt: async ({token, user, account, profile}) => {
-      //console.log("JWT callback:", token, user, account, profile);
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
-      }
-      return token;
-    },
-    session: async ({ session, user, token }) => {
-      //console.log("Inside session callback", session, user); 
-      const customUser = user as any;  // Bypass TypeScript check
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: customUser.id,
-          username: customUser.username,
-        },
-      };
-    },
-    async signIn({ user, account, profile, email, credentials }) {
-      //console.log("Inside signin callback", user); 
-      return true
-    }
+  callbacks: {
+    session: ({ session, user }) => ({
+      ...session,
+      user: {
+        ...session.user,
+        id: user.id,
+      },
+    }),
   },
   adapter: PrismaAdapter(prisma),
   debug: false,
