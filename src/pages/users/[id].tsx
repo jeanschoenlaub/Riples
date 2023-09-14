@@ -7,6 +7,7 @@ import { api } from "~/utils/api";
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
+
 import { getSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { GlobalNavBar } from '~/components/navbar/navbar';
@@ -87,6 +88,15 @@ export default function UserPage(
               <div id="project-main-tabs" className="ml-5 border-b border-gray-200 dark:border-gray-700">
                 <Tabs activeTab={activeTab} setActiveTab={setActiveTab} projects="y"/>
               </div>
+
+              {/* SHOWN IF ABOUT TAB */}
+              {activeTab === 'about' && (
+                <div className="mt-4 space-y-2">
+                    <div className="font text-gray-800"> 
+                      Username : {user.user.username}
+                   </div>
+                </div>
+              )}
               
               {/* SHOWN IF PROJECTS TAB */}
               {activeTab === 'projects' && (
