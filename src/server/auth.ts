@@ -78,7 +78,7 @@ export const authOptions: NextAuthOptions = {
     }
   },
   adapter: PrismaAdapter(prisma),
-  debug: true,
+  debug: false,
   providers: [
     EmailProvider({
       server: env.EMAIL_SERVER,

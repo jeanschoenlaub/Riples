@@ -56,12 +56,13 @@ export const RipleCard = (props: RipleWithUser) => {
                           {riple.project.title}
                       </Link>
                   </span>
+                  {/*
                   {` by `}
                   <span className="font-medium text-gray-500">
                     <Link href={`/users/${riple.authorID}`}>
                       {author?.name}
                     </Link>
-                  </span>
+                  </span>*/}
                   <span className="ml-2">{`${dayjs(riple.createdAt).fromNow()}`}</span>
               </span>
           </div>

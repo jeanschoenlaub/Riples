@@ -7,7 +7,7 @@ interface DeleteModalProps {
   onDelete: () => void;
 }
 
-export const DeleteAccountModal: React.FC<DeleteModalProps> = ({ showDeleteModal, onClose, onDelete }) => {
+export const NavBarUserOptionModal: React.FC<DeleteModalProps> = ({ showDeleteModal, onClose, onDelete }) => {
   return (
     <Modal showModal={showDeleteModal} size="small">
       <p>Are you sure you want to delete your account?</p>

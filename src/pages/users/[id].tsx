@@ -14,6 +14,7 @@ import { GlobalNavBar } from '~/components/navbar';
 import { ProjectNav } from '~/components/sidebar';
 import { Tabs } from '~/components/tabs';
 import { ProjectCard } from '~/components/projectcard';
+import { ProfileImage } from '~/components/profileimage';
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -80,14 +81,7 @@ export default function UserPage(
               <div id="user-meta" className="mt-4 ml-5">
                  
                   <span className="flex space-x-10 gap-5 items-center font-medium text-gray-500">  
-                      <Image 
-                          src={user.user.image || '/default-image-url'} 
-                          alt="Profile Image" 
-                          className="rounded-full border border-slate-300"
-                          width={80}
-                          height={80}
-                      />
-                      {user.user.name}
+                    <ProfileImage user={user.user} size={80} />
                   </span>
               </div>
 

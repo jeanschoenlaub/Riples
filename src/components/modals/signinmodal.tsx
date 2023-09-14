@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { signIn, getSession } from 'next-auth/react';
 import { Modal} from "~/components/modals/modaltemplate";
-import { LoadingDropletSVG } from '../loading';
 
 interface SignInModalProps {
   showModal: boolean;
@@ -28,25 +27,8 @@ export const SignInModal: React.FC<SignInModalProps> = ({ showModal, onClose }) 
   };
 
   return (
-    <Modal showModal={showModal} size="medium">
-      {isLoading ? (
-        <div className="flex justify-center my-4">
-          {/*<Riples Logo + CSS Loading/>*/}
-          <LoadingDropletSVG/>
-        </div>
-      ) : (
-        <div className="flex justify-center my-4">
-          {/*<Riples Logo />*/}
-          <div className="loading-container">
-          <img
-              src="/images/logo_128x128.png" 
-              className="droplet" 
-              alt="Riple logo" 
-          />
-          </div>
-        </div>
-      )}
-      <label className="block text-sm mb-5">
+    <Modal showModal={showModal} isLoading={isLoading} size="medium">
+      <label className="block text-xs mb-2">
         Email:
         <input
           type="text"
@@ -56,19 +38,23 @@ export const SignInModal: React.FC<SignInModalProps> = ({ showModal, onClose }) 
           maxLength={100}
         />
       </label>
-      <div className="flex items-center justify-center space-x-2">
-      `<button 
-        onClick={handleSignIn}
-        className="bg-green-500 text-white rounded px-4 py-2 mb-2"
-      >
-        Sign In
-      </button>
-      <button
-        onClick={onClose}
-        className="bg-red-500 text-white rounded px-4 py-2 mb-2"
+      <div className='flex flex-col'>
+        <div className='text-sm italic mb-4 px-1'> (Make sure to check your junk box) </div>
+        <div className="flex items-center justify-center space-x-2">
+        
+        `<button 
+          onClick={handleSignIn}
+          className="bg-green-500 text-white rounded px-4 py-2 mb-2"
         >
-        Close
-      </button>`
+          Sign In
+        </button>
+        <button
+          onClick={onClose}
+          className="bg-red-500 text-white rounded px-4 py-2 mb-2"
+          >
+          Close
+        </button>`
+        </div>
       </div>
     </Modal>
   );

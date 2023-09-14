@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { RouterOutputs, api } from "~/utils/api";
 import Link from 'next/link'; // import Next.js Link component
 import { TaskModal } from '~/components/modals/taskmodal';
+import { ProfileImage } from './profileimage';
 
 interface TaskListProps {
   project: ProjectData["project"];
@@ -70,13 +71,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
               </td>
               <td className="px-6 py-4">
                 <Link href={`/users/${taskDetail.createdBy?.id}`} className="flex items-center space-x-2">
-                  <img 
-                    src={taskDetail.createdBy?.image || '/default-image-url'} 
-                    alt="Created By Profile Image" 
-                    className="rounded-full border border-slate-300" 
-                    width={32} 
-                    height={32}
-                  />
+                  <ProfileImage user={taskDetail.createdBy} size={32} />
                   {taskDetail.createdBy?.name ?? ''}
                 </Link>
               </td>

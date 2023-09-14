@@ -4,25 +4,47 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { SignInModal } from "./modals/signinmodal";
 import { ProfileImage } from '~/components/profileimage'; // Import ProfileImage component
-import { DeleteAccountModal } from "./modals/deleteaccountmodal";
+import { NavBarUserOptionModal } from "./modals/navbaruseroptionmodal";
+import { api } from "~/utils/api";
+import toast from "react-hot-toast";
+import { handleZodError } from "~/utils/error-handling";
 
 export const GlobalNavBar = () => {
   const { data: session } = useSession();
   const [showSignInModal, setShowSignInModal] = useState(false);
+  const [ShowUserNameModal, setShowUserNameModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
+  //We add a mutation for creating a task (with on success)
+  const ctx = api.useContext();
+  const {mutate, isLoading: isDeleting}  = api.users.deleteUser.useMutation({
+    onSuccess: () => {
+      signOut();
+      setShowDeleteModal(false);
+    },
+    onError: (e) => {
+      const fieldErrors = e.data?.zodError?.fieldErrors; 
+      const message = handleZodError(fieldErrors);
+      toast.error(message);
+    }
+    });
 
   const closeModal = () => {
     setShowSignInModal(false);
   };
 
   const deleteUserMutation = () => {
-    signOut();
-    setShowDeleteModal(false);
-    
+    if (session?.user?.id) {  // Assuming session.user.id contains the user's ID
+      mutate({ userId: session.user.id })
+    } else {
+      toast.error("User ID not found in session");
+    }
   };
+  
 
+
+  // User Drop Down Event 
   const onClickOutside = (event: MouseEvent) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
       setShowDropdown(false);
@@ -30,16 +52,16 @@ export const GlobalNavBar = () => {
   };
 
   const toggleUserDropdown = (e: React.MouseEvent) => {
-    console.log("toggling")
     e.stopPropagation();
-    setShowDropdown(!showDropdown);
-
-    // Delay adding the event listener to allow for the current event to complete
-    setTimeout(() => {
-      if (showDropdown) {
+    if (showDropdown) {
+      window.removeEventListener('click', onClickOutside);
+    } else {
+      // Delay adding the event listener to allow for the current event to complete
+      setTimeout(() => {
         window.addEventListener('click', onClickOutside);
-      }
-    }, 0);
+      }, 0);
+    }
+    setShowDropdown(!showDropdown);
   };
 
   useEffect(() => {
@@ -53,7 +75,6 @@ export const GlobalNavBar = () => {
       {/* LEFT NAV */}
       <div id="global-nav-left" className="flex w-1/3 md:w-1/5 gap-3 justify-center items-center p-2 border border-slate-700">
         <Link href="/about/riples">
-          {/*/users/user_2URsJnsYNi5SZ2VMYzVESesLMx5*/}
           <Image 
               src="/images/logo_128x128.png" 
               alt="Riple logo" 
@@ -96,12 +117,13 @@ export const GlobalNavBar = () => {
                   onClick={toggleUserDropdown} 
                   style={{ cursor: 'pointer' }} // Make the mouse change to a pointer when hovering
                 >
-                  <ProfileImage user={{ name: session.user.username }} size={32} />
+                  <ProfileImage user={ session.user } size={32} />
                 </div>
                 {showDropdown && (
                   <div ref={dropdownRef}  className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-slate-50">
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowDeleteModal(true)}>Delete Account</button>
                     <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => signOut()}>Sign Out</button>
+                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowUserNameModal(true)}>Change User Name</button>
+                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowDeleteModal(true)}>Delete Account</button>
                   </div>
                 )}
               </div>
@@ -113,7 +135,7 @@ export const GlobalNavBar = () => {
               </div>
             )}
             
-            <DeleteAccountModal showDeleteModal={showDeleteModal} onClose={() => setShowDeleteModal(false)} onDelete={deleteUserMutation} />
+            <NavBarUserOptionModal showDeleteModal={showDeleteModal} onClose={() => setShowDeleteModal(false)} onDelete={deleteUserMutation} />
           </div>
         </div>
       </div>

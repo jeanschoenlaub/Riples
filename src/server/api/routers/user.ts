@@ -64,4 +64,32 @@ export const userRouter = createTRPCRouter({
         user: updatedUser,
       };
     }),
+    
+    deleteUser: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: input.userId },
+      });
+
+      if (!user) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
+      }
+
+      let deletedUser;
+      try {
+        deletedUser = await ctx.prisma.user.delete({
+          where: { id: input.userId },
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'An error occurred while deleting the user',
+        });
+      }
+
+      return {
+        user: deletedUser,
+      };
+    }),
 });
