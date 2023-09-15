@@ -56,43 +56,43 @@ export const AboutTab = (props: ProjectData) => {
           </span>
         </div>
     
-        {/* About the Author */}
-        <div id="project-about-author" className="flex items-center space-x-3 mb-4">
-          <span className="text-sm text-gray-500">
-            Project Lead:  
-            <span className="font-medium ml-1">
-              <Link href={`/users/${project.authorId}`}>
-                {author.name}
-              </Link>
-            </span>
-          </span>
-          <div id="riple-card-metadata-auth-profile-image">
-            <Link href={`/users/${project.authorId}`}>
+        <span className="text-sm text-gray-500 flex items-center">
+        Project Lead:  
+        <span className="font-medium ml-1 flex items-center">
+          <div id="riple-card-metadata-auth-profile-image" className="flex items-center">
+            <Link href={`/users/${project.authorID}`}>
               <ProfileImage user={author} size={32} />
             </Link>
           </div>
-        </div>
+          <Link href={`/users/${project.authorID}`} className="ml-2">
+            {author.username}
+          </Link>
+        </span>
+      </span>
+
 
         {/* About the Project Members */}
-        <div id="project-about-members" className="mb-4">
-          <span className="text-sm text-gray-500">Project Members:</span>
+        <div id="project-about-members" className="mb-4 flex flex-wrap items-center">
+  <span className="text-sm text-gray-500">Project Members:</span>
 
-          <div className="mt-2">
-            {members?.map((user, index) => (
-              <div key={index} className="flex items-center space-x-3 mb-2">
-                <span className="text-sm font-medium">
-                  <Link href={`/users/${user.user.id}`}>
-                  {author.name}
-                  </Link>
-                </span>
-                <div id={`riple-card-metadata-auth-profile-image-${index}`}>
-                  <Link href={`/users/${user.user.id}`}>
-                    <ProfileImage user={user.user} size={32} />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
+  <div className="mt-2 flex flex-wrap items-center">
+    {members?.map((user, index) => (
+      <div key={index} className="flex items-center ml-2">
+        {index > 0 && <span className="text-sm font-medium">, </span>}
+        <div id={`riple-card-metadata-auth-profile-image-${index}`} className="flex items-center">
+          <Link href={`/users/${user.user.id}`}>
+            <ProfileImage user={user.user} size={32} />
+          </Link>
         </div>
+        <span className="font-medium ml-1 flex items-center">
+          <Link href={`/users/${user.user.id}`} className="text-sm font-medium ml-2">
+            {user.user.username}
+          </Link>
+        </span>
       </div>
+    ))}
+  </div>
+</div>
+
+</div>
 )};

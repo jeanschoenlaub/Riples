@@ -18,10 +18,6 @@ export const GlobalNavBar = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
 
-  if (showUserNameModal){
-    console.log("should open")
-  }
-
   //We add a mutation for creating a task (with on success)
   const {mutate, isLoading: isDeleting}  = api.users.deleteUser.useMutation({
     onSuccess: async () => {
