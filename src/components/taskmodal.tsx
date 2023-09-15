@@ -172,18 +172,19 @@ const useTaskMutation = (projectId: string, { onSuccess }: { onSuccess: () => vo
 }
 
 const defaultTemplate = `
-### What ?
+ What ?
 
-*A complete description of the task, broken down in To-Do, including team (if multiple teams).*
+A complete description of the task, broken down in bullet points.
+- Sub-Task 1
+- Sub-Task 2
 
-- [ ]  *Task 1*
+Why ?
 
-### Why ?
+A short section on why this task is important 
 
-*Why is it important to do this task ?*
+Resources
 
-### Resources
+Any links, text, or images that can communicate the task at hand.
 
-************Any links or images that can communicate the task at hand.************
-
-## Work in progress`;
+Work in progress:
+Task owner to edit this`;
