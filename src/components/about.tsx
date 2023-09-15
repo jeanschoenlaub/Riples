@@ -61,13 +61,13 @@ export const AboutTab = (props: ProjectData) => {
           <span className="text-sm text-gray-500">
             Project Lead:  
             <span className="font-medium ml-1">
-              <Link href={`/users/${project.authorID}`}>
+              <Link href={`/users/${project.authorId}`}>
                 {author.name}
               </Link>
             </span>
           </span>
           <div id="riple-card-metadata-auth-profile-image">
-            <Link href={`/users/${project.authorID}`}>
+            <Link href={`/users/${project.authorId}`}>
               <ProfileImage user={author} size={32} />
             </Link>
           </div>

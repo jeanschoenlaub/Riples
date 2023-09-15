@@ -14,7 +14,7 @@ export const ProjectCard = (props: ProjectWithUser) => {
       <div id="project-card-metadata" className="flex items-start space-x-3 mb-4">
             {/* Author's Profile Image */}
             <div id="project-card-metadata-auth-profile-image">
-                <Link href={`/projects/${project.authorID}`}>
+                <Link href={`/projects/${project.authorId}`}>
                 <Image 
                     src={project.coverImageUrl} 
                     alt="Profile Image" 

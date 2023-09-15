@@ -23,7 +23,7 @@ export const NavBarUserNameModal: React.FC<{ showModal: boolean; onClose: () => 
     onClose();
   };
 
-  console.log(showModal)
+  console.log(userQuery)
 
   if (session) {
     return (

@@ -17,12 +17,12 @@ export const projMemberRouter = createTRPCRouter({
       // Grab the user data from Prisma for the members
       const memberUsers = await ctx.prisma.user.findMany({
         where: {
-          id: { in: members.map((member) => member.userID) },
+          id: { in: members.map((member) => member.userId) },
         },
       });
 
       return members.map((member) => {
-        const user = memberUsers.find((memberUser) => memberUser.id === member.userID);
+        const user = memberUsers.find((memberUser) => memberUser.id === member.userId);
 
         if (!user) {
           throw new TRPCError({
