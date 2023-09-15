@@ -27,7 +27,7 @@ export const projRouter = createTRPCRouter({
     const users = await ctx.prisma.user.findMany({
       where: {
         id: {
-          in: projects.map((project) => project.authorId),
+          in: projects.map((project) => project.authorID),
         },
       },
       select: {
@@ -40,7 +40,7 @@ export const projRouter = createTRPCRouter({
 
     // Map over projects to add author information
     return projects.map((project) => {
-      const author = users.find((user) => user.id === project.authorId);
+      const author = users.find((user) => user.id === project.authorID);
 
       if (!author) {
         throw new Error('Project author not found.');
@@ -65,7 +65,7 @@ export const projRouter = createTRPCRouter({
     }
 
     const author = await ctx.prisma.user.findUnique({
-      where: { id: project.authorId },
+      where: { id: project.authorID },
     });
 
     if (!author) {
@@ -82,7 +82,7 @@ export const projRouter = createTRPCRouter({
   .input(z.object({ authorId: z.string() }))
   .query(async ({ ctx, input }) => {
     const projects = await ctx.prisma.project.findMany({
-      where: { authorId: input.authorId },
+      where: { authorID: input.authorId },
       take: 100,
       orderBy: [{ createdAt: "desc" }],
     });
@@ -120,7 +120,7 @@ export const projRouter = createTRPCRouter({
         // First, find the existing application, if any
         const existingApplication = await ctx.prisma.projectMembers.findFirst({
             where: {
-                userId: userId,
+                userID: userId,
                 projectId: projectId
             }
         });
@@ -138,7 +138,7 @@ export const projRouter = createTRPCRouter({
         // Otherwise, proceed with creating a new application
         const application = await ctx.prisma.projectMembers.create({
             data: {
-                userId: userId,
+                userID: userId,
                 projectId: projectId,
                 status: "PENDING", // Default Status
             },
@@ -151,15 +151,15 @@ export const projRouter = createTRPCRouter({
   create: protectedProcedure
   .input(z.object({ content: z.string().min(5, { message: "Must be 5 or more characters long" }) }))
   .mutation(async ({ ctx, input }) => {
-    const authorId = ctx.session.user.id;
+    const authorID = ctx.session.user.id;
 
-    const { success } = await ratelimit.limit(authorId);
+    const { success } = await ratelimit.limit(authorID);
 
     if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
     const project = await ctx.prisma.project.create({
       data: {
-        authorId,
+        authorID,
         title: input.content,
         summary: input.content,
       },

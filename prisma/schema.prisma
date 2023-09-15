@@ -24,13 +24,13 @@ model Project {
   applyFormUrl    String   @default("") @db.VarChar(255)
 
   //Relations
-  authorId        String
+  authorID        String
   riples          Riple[]  // This establishes the one-to-many relation
   members         ProjectMembers[] 
   tasks           Tasks[] 
   followers       ProjectFollowers[] 
 
-  @@index([authorId])
+  @@index([authorID])
 }
 
 model ProjectFollowers {
@@ -54,7 +54,7 @@ model Riple {
   //Relations
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
-  authorId  String
+  authorID  String
 
   @@index([projectId])
 }
@@ -66,7 +66,7 @@ model ProjectMembers {
   //Relations
   projectId    String 
   project      Project @relation(fields: [projectId], references: [id])
-  userId       String  
+  userID       String  
 
   @@index([projectId])
 }

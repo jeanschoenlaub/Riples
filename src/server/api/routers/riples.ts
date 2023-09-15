@@ -23,12 +23,12 @@ export const ripleRouter = createTRPCRouter({
       
         const authors = await ctx.prisma.user.findMany({
           where: {
-            id: { in: riples.map((riple) => riple.authorId) },
+            id: { in: riples.map((riple) => riple.authorID) },
           },
         });
       
         return riples.map((riple) => {
-          const author = authors.find((user) => user.id === riple.authorId);
+          const author = authors.find((user) => user.id === riple.authorID);
           if (!author) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Riple author not found" });
           return {
             riple,
@@ -66,14 +66,14 @@ export const ripleRouter = createTRPCRouter({
         })
     )
     .mutation(async ({ ctx, input }) => {
-        const authorId = ctx.session.user.id;
+        const authorID = ctx.session.user.id;
 
-        const { success } = await ratelimit.limit(authorId);
+        const { success } = await ratelimit.limit(authorID);
         if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
         const riple = await ctx.prisma.riple.create({
         data: {
-            authorId,
+            authorID,
             title: input.title,
             content: input.content,
             projectId: input.projectId,
@@ -93,12 +93,12 @@ export const ripleRouter = createTRPCRouter({
 
         const authors = await ctx.prisma.user.findMany({
         where: {
-            id: { in: riples.map((riple) => riple.authorId) },
+            id: { in: riples.map((riple) => riple.authorID) },
         },
         });
 
         return riples.map((riple) => {
-        const author = authors.find((user) => user.id === riple.authorId);
+        const author = authors.find((user) => user.id === riple.authorID);
         if (!author) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Riple author not found" });
         return {
             riple,

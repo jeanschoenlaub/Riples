@@ -55,7 +55,7 @@ export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
 
     //helpers to determine if the current user is a Member or the project Lead 
     const isMemberOrPending = projectMembersData.some(({ member }) =>
-        member.userId === userId && (member.status === 'APPROVED' || member.status === 'PENDING')
+        member.userID === userId && (member.status === 'APPROVED' || member.status === 'PENDING')
     );
     //const isProjectLead = userId === project.authorID;
     
