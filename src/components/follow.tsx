@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
+import { NavBarSignInModal } from './navbar/signinmodal';
+import toast from 'react-hot-toast';
 
 type FollowProps = {
   projectId: string;
@@ -9,6 +11,7 @@ type FollowProps = {
 export const Follow: React.FC<FollowProps> = ({ projectId }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // To handle loading state during mutation
+  const [showSignInModal, setShowSignInModal] = useState(false); // If click on folllow when not signed in we redirect
   const { data: session } = useSession();
 
   
@@ -29,7 +32,11 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
   }, [followerQuery.data, session]);
 
   const toggleFollow = async () => {
-    if (!session?.user?.id) return; // Exit if the user is not logged in
+    if (!session?.user?.id) {
+        setShowSignInModal(true); // Show sign-in modal if the user is not logged in
+        console.log("A")
+        return;
+    } // Exit if the user is not logged in
     
     setIsLoading(true); // Set loading state
     try {
@@ -49,6 +56,13 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
       });
 
       setIsFollowing(!isFollowing);
+      //Ui
+      if (isFollowing) {
+        toast.success("UnFollowed");
+      }
+      else {
+        toast.success("Followed");
+      }
     } catch (error) {
       console.error('Failed to toggle follow state:', error);
     } finally {
@@ -56,7 +70,7 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
     }
   };
 
-  if (followerQuery.isLoading || isLoading) return <p>Loading...</p>;
+  if ((shouldExecuteQuery && followerQuery.isLoading) || isLoading) return <p>Loading...</p>;
   if (followerQuery.isError) return <p>Error loading followers.</p>;
 
   return (
@@ -64,7 +78,6 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
       <button 
         className= "border rounded border-gray-300 px-4 py-2" 
         onClick={toggleFollow}
-        disabled={!shouldExecuteQuery} // Disable the button if the query shouldn't execute
       >
         {isFollowing ? 
             <svg 
@@ -86,6 +99,7 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
             </svg>
          }
       </button>
+      <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
     </div>
   );
 };

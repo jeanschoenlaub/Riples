@@ -31,7 +31,7 @@ export const OnboardingWrapper: React.FC<{ children: React.ReactNode }> = ({ chi
         <Modal showModal={showUserNameModal} size="medium"> {/* Assuming your modal component uses these props */}
           <div>
             <div className="pb-5 text-3xl">On-Boarding!</div>
-            <h1 className="pb-5">Please add a username to complete account creation</h1>
+            <h1 className="pb-5">Please add a username to complete account creation:</h1>
             <UserNameForm onSuccess={closeModal} /> {/* This will replace the previous NavBarUserNameModal */}
           </div>
         </Modal>
