@@ -133,7 +133,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
 
   return (
     <div>
-      <Modal showModal={showModal} isLoading={isLoading} size="medium">
+      <Modal showModal={showModal} isLoading={isLoading} size="medium" onClose={onClose}>
         <h2 className="text-lg mb-4">{taskToEdit ? "Edit Task" : "Create New Task"}</h2>
 
         <label className="block text-sm mb-3" aria-label="Task Content">
@@ -156,9 +156,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
           )}
         </label>
    
-        <div id="task-modal-owner-info" className="flex flex-wrap items-center space-x-3 md:space-x-0 md:flex-nowrap"> {/* Flex container */}
-          <span className="text-sm mb-2 flex items-center space-x-4 w-full md:w-auto" aria-label="Task Title">Task owner & status:</span> {/* Task owner text */}
-
+        <div id="task-modal-owner-info" className="flex flex-wrap items-center space-x-3 md:space-x-0 md:flex-nowrap">
+          <span className="text-sm mb-2 flex items-center space-x-4 w-full md:w-auto" aria-label="Task Title">Task owner & status:</span> 
           {taskToEdit && ( // If taskToEdit exists (in edit mode)
             <span className={`flex ml-2 rounded text-white py-1 px-2 items-center md:w-auto ${
               taskToEdit.status === "In Progress" ? "bg-green-500" : 
@@ -199,9 +198,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
           )}
         </div>
 
-
-
-
         <label className="block text-sm mb-2" aria-label="Task Content">
           Task Content:
           {showHtmlPreview ? (
@@ -224,36 +220,27 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
           )}
         </label>
 
-        <div className="flex">
-          {/*Buttons for all types of users*/}
-          <button 
-            onClick={resetForm}
-            className="bg-red-500 text-white rounded px-4 py-2 mr-2 inline-block flex items-center justify-center w-40"
-            disabled={isLoading}
-          >
-            <span>Close</span>
-          </button>
-
+        <div className="flex md:flex-nowrap">
           {/*Buttons for users allowed to edit*/}
           {allowedToEdit && (
             <>
               <button 
                 onClick={handleSave}
-                className="bg-green-500 text-white rounded px-4 py-2 mr-2 inline-block flex items-center justify-center w-40"
+                className="bg-green-500 text-white rounded px-4 py-2 mr-2  flex items-center justify-center w-auto"
                 disabled={isLoading}
               >
                 <span>Save</span>
               </button>
               <button 
                 onClick={() => deleteTask({ id: taskToEdit!.id, projectId: project.id, userId: session!.user.id })} 
-                className="bg-red-500 text-white rounded px-4 py-2 mr-2 inline-block flex items-center justify-center w-40"
+                className="bg-red-500 text-white rounded px-4 py-2 mr-2 flex items-center justify-center w-auto"
                 disabled={isLoading || isDeleting}
               >
                 <span>Delete Task</span>
               </button>
               <button 
                 onClick={togglePreviewMode}
-                className="bg-blue-500 text-white rounded px-4 py-2 inline-block flex items-center justify-center w-40"
+                className="bg-blue-500 text-white rounded px-4 py-2 flex items-center justify-center w-auto"
                 disabled={isLoading}
               >
                 <span>{showHtmlPreview ? 'Switch to Edit Mode' : 'Preview'}</span>

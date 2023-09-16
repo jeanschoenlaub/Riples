@@ -13,7 +13,7 @@ export const NavBarUserNameModal: React.FC<{ showModal: boolean; onClose: () => 
   };
 
   return (
-    <Modal showModal={showModal} size="medium">
+    <Modal showModal={showModal} size="medium" onClose={handleClose}>
       <div className="flex flex-col">
         <div className="mb-2">Choose a username:</div>
         <UserNameForm onSuccess={handleUsernameChangeSuccess} />

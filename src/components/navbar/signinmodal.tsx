@@ -32,7 +32,7 @@ export const NavBarSignInModal: React.FC<SignInModalProps> = ({ showModal, onClo
   };
 
   return (
-    <Modal showModal={showModal} isLoading={isLoading} size="small">
+    <Modal showModal={showModal} isLoading={isLoading} size="small" onClose={onClose}>
       <h1>Sign-In</h1>
       <label className="block text-xs mb-2 mt-4">
         Email:

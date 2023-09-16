@@ -28,7 +28,7 @@ export const OnboardingWrapper: React.FC<{ children: React.ReactNode }> = ({ chi
   return (
     <>
       {showUserNameModal && (
-        <Modal showModal={showUserNameModal} size="medium"> {/* Assuming your modal component uses these props */}
+        <Modal showModal={showUserNameModal} size="medium" onClose={closeModal}> {/* Assuming your modal component uses these props */}
           <div>
             <div className="pb-5 text-3xl">On-Boarding!</div>
             <h1 className="pb-5">Please add a username to complete account creation:</h1>
