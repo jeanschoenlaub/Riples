@@ -1,5 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { RouterOutputs } from '~/utils/api';
+import Image from 'next/image';
+
 
 interface SessionUserType {
   id: string;
@@ -12,6 +14,7 @@ interface SessionUserType {
 type ProfileImageProps = {
   user?: RouterOutputs["users"]["getUserByUserId"]["user"] | SessionUserType;
   size?: number;
+  showUsernameOnHover?: boolean;
 };
 
 const tailwindColors = [
@@ -33,39 +36,63 @@ const getColorFromName = (name: string) => {
   return tailwindColors[colorIndex];
 };
 
-export const ProfileImage: FC<ProfileImageProps> = ({ user, size = 80 }) => {
+export const ProfileImage: FC<ProfileImageProps> = ({ user, size = 80, showUsernameOnHover = false}) => {
   const email = user?.email ?? '';
+  const username = user?.username ?? 'Unknown User';  // Assuming you have a username field
   const initial = (email[0] ?? '?').toUpperCase();
   const colorClass = getColorFromName(email);
   const imageUrl = user?.image;
+  
+  const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <>
-      {imageUrl ? (
-        <img
-          src={imageUrl}
-          alt="Profile Image"
-          className="rounded-full border border-slate-300"
-          width={size}
-          height={size}
-        />
-      ) : (
-        <div
-          style={{
-            width: `${size}px`,
-            height: `${size}px`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: '50%'
-          }}
-          className={`border border-slate-300 ${colorClass}`}
-        >
-          <span style={{ color: '#fff', fontSize: `${Math.floor(size / 2)}px` }}>
-            {initial}
-          </span>
-        </div>
-      )}
+      <div 
+        onMouseEnter={() => showUsernameOnHover && setShowTooltip(true)}
+        onMouseLeave={() => showUsernameOnHover && setShowTooltip(false)}
+        style={{ position: 'relative' }}
+      >
+        {showTooltip && (
+          <div style={{
+            position: 'absolute',
+            bottom: '100%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            padding: '4px',
+            backgroundColor: '#333',
+            color: '#fff',
+            borderRadius: '4px',
+            zIndex: 10
+          }}>
+            {username}
+          </div>
+        )}
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt="Profile Image"
+            className="rounded-full border border-slate-300"
+            width={size}
+            height={size}
+          />
+        ) : (
+          <div
+            style={{
+              width: `${size}px`,
+              height: `${size}px`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '50%'
+            }}
+            className={`border border-slate-300 ${colorClass}`}
+          >
+            <span style={{ color: '#fff', fontSize: `${Math.floor(size / 2)}px` }}>
+              {initial}
+            </span>
+          </div>
+        )}
+      </div>
     </>
   );
 };

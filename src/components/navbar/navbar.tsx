@@ -17,6 +17,7 @@ export const GlobalNavBar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
+  
 
   //We add a mutation for creating a task (with on success)
   const {mutate, isLoading: isDeleting}  = api.users.deleteUser.useMutation({

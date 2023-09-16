@@ -83,6 +83,87 @@ export const taskRouter = createTRPCRouter({
 
       return task;
     }),
+
+    delete: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        userId: z.string(),
+        projectId: z.string()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, userId, projectId } = input;
+
+      // Retrieve the task and project details to validate permissions
+      const task = await ctx.prisma.tasks.findUnique({
+        where: { id },
+      });
+      
+      const project = await ctx.prisma.project.findUnique({
+        where: { id: projectId },
+      });
+
+      if (!task || !project) {
+        throw new TRPCError ({code: "INTERNAL_SERVER_ERROR", message: "Task or Project not found"})
+      }
+
+      if (task.createdById !== userId && project.authorID !== userId) {
+        throw new TRPCError ({code: "UNAUTHORIZED", message: "Only the task creator or project owner is allowed to delete"})
+      }
+
+      const deletedTask = await ctx.prisma.tasks.delete({
+        where: { id },
+      });
+
+      return deletedTask;
+    }),
+
+
+    changeStatus: protectedProcedure
+    .input(z.object({
+      id: z.string(),
+      status: z.string().nonempty("Status cannot be empty"), // Add your validation rules here
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const { id, status } = input;
+
+      // Optionally, check if the user has permissions to change the status of this task
+      // Your logic here...
+
+      const updatedTask = await ctx.prisma.tasks.update({
+        where: { id },
+        data: { status },
+      });
+
+      return updatedTask;
+    }),
+
+    changeOwner: protectedProcedure
+    .input(z.object({
+      id: z.string(),
+      projectId: z.string(),
+      userId: z.string().nullable(),
+    }))    .mutation(async ({ ctx, input }) => {
+      const { id, projectId, userId } = input;
+
+      // Optionally, check if the user has permissions to change the owner of this task
+      // Your logic here...
+
+      // Validate if the user is a part of the project before changing ownership
+      // Your logic here...
+
+      const updatedTask = await ctx.prisma.tasks.update({
+        where: { id },
+        data: { ownerId: userId || "" },
+      });
+      
+
+      return updatedTask;
+    }),
+
+    
+
 });
 
 

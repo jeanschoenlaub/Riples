@@ -57,7 +57,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
               <td className="px-6 py-4">
                 {taskDetail.owner ? (
                   <Link href={`/users/${taskDetail.owner.id}`} className="flex items-center space-x-2">
-                    <ProfileImage user={taskDetail.owner} size={32} />
+                    <ProfileImage user={taskDetail.owner} size={32} showUsernameOnHover={true} />
                     {taskDetail.owner.name ?? ''}
                   </Link>
                 ) : (
@@ -66,7 +66,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
               </td>
               <td className="px-6 py-4">
                 <Link href={`/users/${taskDetail.createdBy?.id}`} className="flex items-center space-x-2">
-                  <ProfileImage user={taskDetail.createdBy} size={32} />
+                  <ProfileImage user={taskDetail.createdBy} size={32} showUsernameOnHover={true} />
                   {taskDetail.createdBy?.name ?? ''}
                 </Link>
               </td>
