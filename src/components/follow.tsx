@@ -3,6 +3,7 @@ import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import { NavBarSignInModal } from './navbar/signinmodal';
 import toast from 'react-hot-toast';
+import { LoadingSpinner } from './loading';
 
 type FollowProps = {
   projectId: string;
@@ -12,6 +13,8 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // To handle loading state during mutation
   const [showSignInModal, setShowSignInModal] = useState(false); // If click on folllow when not signed in we redirect
+  const [showTooltip, setShowTooltip] = useState(false);
+
   const { data: session } = useSession();
 
   
@@ -34,7 +37,6 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
   const toggleFollow = async () => {
     if (!session?.user?.id) {
         setShowSignInModal(true); // Show sign-in modal if the user is not logged in
-        console.log("A")
         return;
     } // Exit if the user is not logged in
     
@@ -70,13 +72,15 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
     }
   };
 
-  if ((shouldExecuteQuery && followerQuery.isLoading) || isLoading) return <p>Loading...</p>;
+  if ((shouldExecuteQuery && followerQuery.isLoading) || isLoading) return <LoadingSpinner size={32} />;
   if (followerQuery.isError) return <p>Error loading followers.</p>;
 
   return (
-    <div className="mt-4 ml-2 mb-2 space-y-4 justify-center">
-      <button 
-        className= "border rounded border-gray-300 px-4 py-2" 
+    <div className="mt-4 ml-2 mb-2 space-y-4 justify-center relative">
+      <button
+        className="border rounded border-gray-300 px-4 py-2"
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
         onClick={toggleFollow}
       >
         {isFollowing ? 
@@ -99,6 +103,21 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
             </svg>
          }
       </button>
+      {showTooltip && (
+        <div style={{
+          position: 'absolute',
+          bottom: '100%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          padding: '4px',
+          backgroundColor: '#333',
+          color: '#fff',
+          borderRadius: '4px',
+          zIndex: 10
+        }}>
+          {isFollowing ? 'Following' : 'Not Followed'}
+        </div>
+      )}
       <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
     </div>
   );

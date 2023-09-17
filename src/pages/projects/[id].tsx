@@ -21,6 +21,7 @@ import { GlobalNavBar } from "~/components/navbar/navbar";
 import { ProjectNav } from "~/components/sidebar";
 
 import { getSession } from 'next-auth/react'; // Importing getSession from next-auth
+import Follow from "~/components/follow";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -96,8 +97,10 @@ export default function Project(
                 />
               </div>
               <div id="project-main-metadata" className="mt-4 ml-5 mr-5">
-                <h1 className="text-2xl font-bold">{projectData?.project.title}</h1>
-
+                <div id="project-metadata" className="flex items-center"> 
+                  <h1 className="text-2xl font-bold">{projectData?.project.title}</h1>
+                  <Follow projectId={projectId} />
+                </div>
 
                 <div id="project-main-tabs" className="border-b border-gray-200 dark:border-gray-700">
                   <Tabs 
