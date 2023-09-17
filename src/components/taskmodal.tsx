@@ -404,8 +404,8 @@ const defaultTemplate = `
 
 <p><em>A complete description of the task, broken down in To-Do.</em></p>
 <br>
-  <li><input type="checkbox" > <em>Task 1</em></li>
-  <li><input type="checkbox" > <em>Task 1</em></li>
+  <li><input type="checkbox" > Task 1 </li>
+  <li><input type="checkbox" > Task 1 </li>
 <br>
 
 <h3>Why ?</h3>

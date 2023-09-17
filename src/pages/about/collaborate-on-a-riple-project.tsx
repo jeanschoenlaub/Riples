@@ -14,7 +14,7 @@ export default function HowToCollaborate() {
                 <h1 className="text-3xl font-semibold">How to Collaborate on Riples Projects</h1>
 
                 <p className="text-lg"><strong>Last Updated: 17/09/23</strong></p>
-                <p className="text-lg">This is far from ideal but somewhere to start. It's meant to be fun, feel free to try your hand and if it's not your thing no worries. also it will get much easier than this as we go !</p>
+                <p className="text-lg">This is far from ideal but somewhere to start. It&apos;s meant to be fun, feel free to try your hand and if it&apos;s not your thing no worries. Also it will get much easier than this as we go !</p>
 
                 <section>
                     <h2 className="text-2xl font-semibold">Where to Find Tasks</h2>
@@ -29,8 +29,8 @@ export default function HowToCollaborate() {
                       <Image
                         src="/images/how-to-collab.jpeg"
                         alt="How to Collaborate"
-                        width={350}
-                        height={250}
+                        width={700}
+                        height={500}
                       />
                     </div>
                     <p><em>Fig: How to Collaborate</em></p>
@@ -43,10 +43,11 @@ export default function HowToCollaborate() {
                     <br></br>
                     <p>To engage with an existing task, follow these steps:</p>
                     <ul className="list-disc list-inside">
-                        <li>Review the list of tasks. If one has no owner, you can claim it.</li>
-                        <li>Once claimed, record your progress within the task.</li>
-                        <li>After completion, click the &apos;Submit for Review&apos; button.</li>
+                        <li> Review the list of tasks. You can click the taks title to find out more about it </li>
+                        <li> If a taks has no owner, you can claim it by licking the title and clicking &apos;Ill do it&apos; on the pop-up.</li>
+                        <li> Once claimed, click save button at the bottom. If you change your mind you can also remove yourself as the owner by click Quit</li>
                     </ul>
+                    <br></br>
                     <div style={{ textAlign: 'center', border: '3px solid black'  }}>
                       <Image
                         src="/images/how-to-edit-tasks.jpeg"
@@ -55,9 +56,17 @@ export default function HowToCollaborate() {
                         height={500}
                       />
                     </div>
+                    <br></br>
+                    <ul className="list-disc list-inside">
+                        <li> So once you have clicked &apos;Ill do it&apos; button hit save and re-opened the task, </li>
+                        <li> You can finally edit the task by clicking the edit button</li>
+                        <li> Whats the purpose of editing  ? Well for others to be able to see the progress / what&apos;s being work on. You are now the owner of the task so feel free to rename it, change it completly .. it&apos;s yours</li>
+                        <li> The rest should be pretty straight forward, but try save all your work even if you quit the owner role.</li>
+                    </ul>
+                    <br></br>
                     <div style={{ textAlign: 'center', border: '3px solid black'  }}>
                       <Image
-                        src="/images/how-to-edit-tasks.jpeg"
+                        src="/images/how-to-edit2.jpeg"
                         alt="How to Edit Tasks"
                         width={700}
                         height={500}
@@ -69,22 +78,12 @@ export default function HowToCollaborate() {
                 <section>
                     <h2 className="text-2xl font-semibold">How to Create Tasks</h2>
                     <br></br>
-                    <p>Creating a new task is simple. Here&apos;s how:</p>
+                    <p>Please do so ! Would be cool to see lots of ideas. You can create for yourself or others. Creating a new task is simple. Here&apos;s how:</p>
                     <ul className="list-disc list-inside">
                         <li>Click the &apos;Create&apos; button located at the top of the task list.</li>
                         <li>Fill in the task template and click &apos;Create Task&apos;.</li>
                         <li>If you&apos;re interested in completing the task, you can claim it right away.</li>
                     </ul>
-                    <br></br>
-                    <div style={{ textAlign: 'center' }}>
-                      <Image
-                        src="/how-to-create-tasks.jpg"
-                        alt="How to Create Tasks"
-                        width={700}
-                        height={500}
-                      />
-                    </div>
-                    <p><em>Fig: How to Create Tasks</em></p>
                 </section>
             </div>
         </div>
