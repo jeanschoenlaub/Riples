@@ -32,18 +32,18 @@ export async function getServerSideProps(
     transformer: superjson,
   });
 
-  const authorID = context.params!.id;
+  const authorId = context.params!.id;
 
   /*
    * Prefetching the `getProjectByUserId` query.
    * `prefetch` does not return the result and never throws - if you need that behavior, use `fetch` instead.
    */
-  await helpers.projects.getProjectByAuthorId.prefetch({ authorID });
+  await helpers.projects.getProjectByAuthorId.prefetch({ authorId });
 
   return {
     props: {
       trpcState: helpers.dehydrate(),
-      authorID: authorID,
+      authorId: authorId,
     },
   };
 }
@@ -51,12 +51,12 @@ export async function getServerSideProps(
 export default function UserPage(
     props: InferGetServerSidePropsType<typeof getServerSideProps>,
   ) {
-    const { authorID } = props; //author id is the user id from url slug
+    const { authorId } = props; //author id is the user id from url slug
   
     const [activeTab, setActiveTab] = useState('projects');
 
-    const { data: projectData } = api.projects.getProjectByAuthorId.useQuery({ authorID });
-    const { data: user} = api.users.getUserByUserId.useQuery({ userId: authorID });
+    const { data: projectData } = api.projects.getProjectByAuthorId.useQuery({ authorId });
+    const { data: user} = api.users.getUserByUserId.useQuery({ userId: authorId });
 
     if (!user) return <div>Something went wrong</div>;
   

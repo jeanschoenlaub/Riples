@@ -1,7 +1,9 @@
 import { api } from "~/utils/api";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { NavBarUserNameModal } from "./navbar/usernamemodal";
+import { Modal } from "~/components/reusables/modaltemplate";  
+import { UserNameForm } from "./usernameform";
+
 
 export const OnboardingWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { data: session } = useSession();
@@ -23,15 +25,16 @@ export const OnboardingWrapper: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   }, [userQuery.data]);
 
-  //TO-DO refactor username into just entry + buttons
   return (
     <>
       {showUserNameModal && (
-        <div>
-          <div className="pb-5 text-3xl">On-Boarding!</div>
-          <h1 className="pb-5">Please add a username to complete account creation</h1>
-          <NavBarUserNameModal showModal={showUserNameModal} onClose={closeModal} />
-        </div>
+        <Modal showModal={showUserNameModal} size="medium"> {/* Assuming your modal component uses these props */}
+          <div>
+            <div className="pb-5 text-3xl">On-Boarding!</div>
+            <h1 className="pb-5">Please add a username to complete account creation:</h1>
+            <UserNameForm onSuccess={closeModal} /> {/* This will replace the previous NavBarUserNameModal */}
+          </div>
+        </Modal>
       )}
       {children}
     </>

@@ -79,16 +79,16 @@ export const projRouter = createTRPCRouter({
   }),
 
   getProjectByAuthorId: publicProcedure
-  .input(z.object({ authorID: z.string() }))
+  .input(z.object({ authorId: z.string() }))
   .query(async ({ ctx, input }) => {
     const projects = await ctx.prisma.project.findMany({
-      where: { authorID: input.authorID },
+      where: { authorID: input.authorId },
       take: 100,
       orderBy: [{ createdAt: "desc" }],
     });
 
     const author = await ctx.prisma.user.findUnique({
-      where: { id: input.authorID },
+      where: { id: input.authorId },
       select: {
         id: true,
         name: true,
