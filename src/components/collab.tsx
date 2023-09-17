@@ -13,12 +13,13 @@ interface CollabTabProps {
 
 export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
     const { data: session, status } = useSession()
+    const { data: projectMembersData, isLoading, isError } = api.projectMembers.getMembersByProjectId.useQuery({ projectId: project.id });
+
     const loading = status === 'loading'
 
     if (loading) return null
 
     console.log(session?.user)  // Access user ID here.
-    const { data: projectMembersData, isLoading, isError } = api.projectMembers.getMembersByProjectId.useQuery({ projectId: project.id });
 
     const ctx = api.useContext();
     const {mutate, isLoading: isApplying}  = api.projects.applyToProject.useMutation({

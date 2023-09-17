@@ -11,7 +11,7 @@ interface ModalProps {
 
 export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medium', children, onClose }) => {
   const sizeClass = {
-    small: 'w-full sm:w-2/3 md:w-1/4 max-h-full sm:max-h-[70vh]',
+    small: 'w-2/3 sm:w-2/3 md:w-1/4 max-h-full sm:max-h-[70vh]',
     medium: 'w-full sm:w-2/3 md:w-1/2 max-h-full sm:max-h-[70vh]',
     large: 'w-full sm:w-3/4 max-h-full sm:max-h-[70vh]',
   };

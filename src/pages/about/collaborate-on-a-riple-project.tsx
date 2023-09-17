@@ -13,7 +13,8 @@ export default function HowToCollaborate() {
             <div className="flex flex-col w-full md:w-3/5 p-4 border rounded-lg border-slate-700 space-y-6">
                 <h1 className="text-3xl font-semibold">How to Collaborate on Riples Projects</h1>
 
-                <p className="text-lg"><strong>Last Updated: 05/09/23</strong></p>
+                <p className="text-lg"><strong>Last Updated: 17/09/23</strong></p>
+                <p className="text-lg">This is far from ideal but somewhere to start.</p>
 
                 <section>
                     <h2 className="text-2xl font-semibold">Where to Find Tasks</h2>

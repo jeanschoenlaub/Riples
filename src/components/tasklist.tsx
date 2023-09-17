@@ -4,6 +4,7 @@ import { api } from "~/utils/api";
 import Link from 'next/link'; // import Next.js Link component
 import { TaskModal } from '~/components/taskmodal';
 import { ProfileImage } from './profileimage';
+import { LoadingRiplesLogo } from './loading';
 
 interface TaskListProps {
   project: ProjectData["project"];
@@ -19,7 +20,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
 
   const { data: taskData, isLoading, isError } = api.tasks.getTasksByProjectId.useQuery({ projectId: project.id });
             
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <div className="flex justify-center"><LoadingRiplesLogo/></div>;
   if (isError || !taskData) return <p>Error loading tasks.</p>;
 
   const openEditModal = (task: TaskData | null) => {
@@ -53,11 +54,20 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
                   {taskDetail.task.title}
                 </button>
               </th>
-              <td className="px-6 py-4">{taskDetail.task.status}</td>
+              <td className="px-6 py-6 flex items-center">
+                <span className={`text-white rounded w-auto px-2 py-2 ${
+                  taskDetail.task.status === "Doing" ? "bg-yellow-500" : 
+                  taskDetail.task.status === "To-Do" ? "bg-gray-500" : 
+                  taskDetail.task.status === "Done" ? "bg-green-500" : ""
+                }`}>
+                  {taskDetail.task.status}
+                </span>
+              </td>
+
               <td className="px-6 py-4">
                 {taskDetail.owner ? (
                   <Link href={`/users/${taskDetail.owner.id}`} className="flex items-center space-x-2">
-                    <ProfileImage user={taskDetail.owner} size={32} showUsernameOnHover={true} />
+                    <ProfileImage user={taskDetail.owner} size={32} showUsernameOnHover={true}/>
                     {taskDetail.owner.name ?? ''}
                   </Link>
                 ) : (
@@ -66,7 +76,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
               </td>
               <td className="px-6 py-4">
                 <Link href={`/users/${taskDetail.createdBy?.id}`} className="flex items-center space-x-2">
-                  <ProfileImage user={taskDetail.createdBy} size={32} showUsernameOnHover={true} />
+                  <ProfileImage user={taskDetail.createdBy} size={32} showUsernameOnHover={true}/>
                   {taskDetail.createdBy?.name ?? ''}
                 </Link>
               </td>
@@ -75,6 +85,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
         </tbody>
         </table>
 
+      </div>
         <TaskModal 
           project={project} 
           taskToEdit={selectedTask} 
@@ -85,6 +96,5 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
           }}
         />
       </div>
-    </div>
   );
 };

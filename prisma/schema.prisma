@@ -40,7 +40,7 @@ model ProjectFollowers {
   projectId    String 
   project      Project @relation(fields: [projectId], references: [id])
   userId       String
-  user         User @relation(fields: [userId], references: [id])  
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)  
 
   @@index([projectId])
 }
@@ -66,14 +66,15 @@ model ProjectMembers {
   //Relations
   projectId    String 
   project      Project @relation(fields: [projectId], references: [id])
-  userID       String  
+  userID       String 
+  user         User @relation(fields: [userID], references: [id], onDelete: Cascade) 
 
   @@index([projectId])
 }
 
 model Tasks {
   id           String  @id @default(cuid())
-  status       String  @db.VarChar(255) @default("NOT STARTED")
+  status       String  @db.VarChar(255) @default("To-Do")
   title        String  @db.VarChar(255)
   content      String  @db.VarChar(10000)
   createdById  String  //userId
@@ -102,6 +103,7 @@ model User {
   username          String  @unique @db.VarChar(255)@default("")
   password          String  @db.VarChar(255)@default("")
   following         ProjectFollowers[] 
+  member            ProjectMembers[] 
 }
 
 model Account {

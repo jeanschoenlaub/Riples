@@ -27,9 +27,6 @@ export const taskRouter = createTRPCRouter({
       const owner = ownerUser.find((o) => o.id === task.ownerId);
       const createdBy = createdByUser.find((c) => c.id === task.createdById);
 
-
-      if (!createdBy) throw new TRPCError ({code: "INTERNAL_SERVER_ERROR", message: "Task Creator not found"})
-      
       return {
         task,
         owner,
@@ -161,9 +158,6 @@ export const taskRouter = createTRPCRouter({
 
       return updatedTask;
     }),
-
-    
-
 });
 
 

@@ -32,7 +32,7 @@ export const NavBarSignInModal: React.FC<SignInModalProps> = ({ showModal, onClo
   };
 
   return (
-    <Modal showModal={showModal} isLoading={isLoading} size="small" onClose={onClose}>
+    <Modal showModal={showModal} isLoading={isLoading} onClose={onClose} size="small">
       <h1>Sign-In</h1>
       <label className="block text-xs mb-2 mt-4">
         Email:
@@ -50,12 +50,6 @@ export const NavBarSignInModal: React.FC<SignInModalProps> = ({ showModal, onClo
         {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <button className="bg-green-500 text-white rounded px-4 py-2 mb-2" onClick={ handleSignIn }>Sign In</button>
 
-        <button
-          onClick={onClose}
-          className="bg-red-500 text-white rounded px-4 py-2 mb-2"
-          >
-          Close
-        </button>`
         </div>
       </div>
     </Modal>
