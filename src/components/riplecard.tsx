@@ -12,7 +12,7 @@ import Follow from "./follow";
 
 type RipleWithUser = RouterOutputs["riples"]["getAll"][number]
 export const RipleCard = (props: RipleWithUser) => {
-  const {riple} = props;
+  const {riple, author} = props;
   const [isExpanded, setIsExpanded] = useState(true);
   const rawHTML = riple.content;
   
@@ -57,13 +57,13 @@ export const RipleCard = (props: RipleWithUser) => {
                           {riple.project.title}
                       </Link>
                   </span>
-                  {/*
+
                   {` by `}
                   <span className="font-medium text-gray-500">
                     <Link href={`/users/${riple.authorID}`}>
-                      {author?.name}
+                      {author?.username}
                     </Link>
-                  </span>*/}
+                  </span>
                   <span className="ml-2">{`${dayjs(riple.createdAt).fromNow()}`}</span>
               </span>
           </div>
