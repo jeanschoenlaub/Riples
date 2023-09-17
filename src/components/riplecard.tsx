@@ -3,15 +3,16 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
 import DOMPurify from "dompurify";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { RouterOutputs } from "~/utils/api";
+import Follow from "./follow";
 
 
 type RipleWithUser = RouterOutputs["riples"]["getAll"][number]
 export const RipleCard = (props: RipleWithUser) => {
-  const {riple, author} = props;
+  const {riple} = props;
   const [isExpanded, setIsExpanded] = useState(true);
   const rawHTML = riple.content;
   
@@ -30,9 +31,9 @@ export const RipleCard = (props: RipleWithUser) => {
   
   return (
     <div id="riple-card" className="bg-white border border-slate-300 rounded-lg mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md" key={riple.id}>
-      <div id="riple-card-metadata" className="flex items-center space-x-3 mb-4">
+        <div id="riple-card-header" className="flex items-center justify-between space-x-3 mb-4">
           {/* Author's Profile Image */}
-          <div id="riple-card-metadata-auth-profile-image">
+          <div id="riple-card-header-image">
             <Link href={`/projects/${riple.projectId}`}>
               <Image
                   src={riple.project.coverImageUrl} 
@@ -45,7 +46,7 @@ export const RipleCard = (props: RipleWithUser) => {
           </div>
 
           {/* Author's Name and Post Date */}
-          <div id="riple-card-metadata-auth-name-and-created-date">
+          <div id="riple-card-header-metadata" className="flex-grow">
               <div className="font-semibold text-gray-800">
                   {riple.title}
               </div>
@@ -56,16 +57,21 @@ export const RipleCard = (props: RipleWithUser) => {
                           {riple.project.title}
                       </Link>
                   </span>
+                  {/*
                   {` by `}
                   <span className="font-medium text-gray-500">
                     <Link href={`/users/${riple.authorID}`}>
-                      {`${author?.firstName} ${author?.lastName}`}
+                      {author?.name}
                     </Link>
-                  </span>
+                  </span>*/}
                   <span className="ml-2">{`${dayjs(riple.createdAt).fromNow()}`}</span>
               </span>
           </div>
-      </div>
+          {/* Follow Button */}
+          <div id="riple-card-header-follow">
+            <Follow projectId={riple.projectId} />
+          </div>
+        </div>
 
       {/* Horizontal Divider */}
       <hr className="border-t border-slate-200 my-4" />
@@ -85,3 +91,4 @@ export const RipleCard = (props: RipleWithUser) => {
     </div>
   );
 }
+

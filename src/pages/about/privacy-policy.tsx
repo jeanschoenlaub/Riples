@@ -1,4 +1,4 @@
-import { GlobalNavBar } from "~/components/navbar";
+import { GlobalNavBar } from "~/components/navbar/navbar";
 import Link from "next/link";
 
 export default function PrivacyPolicy() {
@@ -10,9 +10,9 @@ export default function PrivacyPolicy() {
           <GlobalNavBar />
         </div>
 
-        <div className="flex justify-center w-full bg-sky-50">
+        <div className="flex justify-center w-full bg-sky-50 p-6">
           
-          <div id="feed" className="flex flex-col w-full md:w-3/5 p-4 border rounded-lg border-slate-700 space-y-6">
+          <div className="flex flex-col w-full md:w-3/5 p-4 border rounded-lg border-slate-700 space-y-6">
             <h1 className="text-3xl font-semibold">Privacy Policy for Riples</h1>
 
             <p className="text-lg"><strong>Last Updated: 25/08/23</strong></p>

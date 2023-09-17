@@ -4,51 +4,46 @@ import type{ GetServerSidePropsContext, InferGetServerSidePropsType } from 'next
 
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { GlobalNavBar } from "~/components/navbar";
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
-import Image from 'next/image';
 
+import { getSession } from 'next-auth/react';
 import React, { useState } from 'react';
-
-
-import { filterUserForClient } from '~/server/api/routers/projects';
-import { clerkClient } from '@clerk/nextjs';
+import { GlobalNavBar } from '~/components/navbar/navbar';
 import { ProjectNav } from '~/components/sidebar';
+import { Tabs } from '~/components/tabs';
 import { ProjectCard } from '~/components/projectcard';
-import Tabs from '~/components/tabs';
-
-// ...
+import { ProfileImage } from '~/components/profileimage';
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
 ) {
+  // Retrieve the session information
+  const session = await getSession(context);
+
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
-      prisma,
-      currentUserId: null,
+        prisma,
+        session,
+        revalidateSSG: null, // Set to null as we are doing SSR
     },
     transformer: superjson,
   });
 
-  // Fetch user data using Clerk
-  const authorID = context.params!.id;
-  const user = await clerkClient.users.getUser(authorID); //Not used yet but could be in anabout tab ? 
-  const filteredUserData = filterUserForClient(user);
+  const authorId = context.params!.id;
 
   /*
    * Prefetching the `getProjectByUserId` query.
    * `prefetch` does not return the result and never throws - if you need that behavior, use `fetch` instead.
    */
-  await helpers.projects.getProjectByAuthorId.prefetch({ authorID });
+  await helpers.projects.getProjectByAuthorId.prefetch({ authorId });
 
   return {
     props: {
       trpcState: helpers.dehydrate(),
-      authorID: authorID,
-      user: filteredUserData,
+      authorId: authorId,
     },
   };
 }
@@ -56,18 +51,19 @@ export async function getServerSideProps(
 export default function UserPage(
     props: InferGetServerSidePropsType<typeof getServerSideProps>,
   ) {
-    const { authorID, user } = props;
+    const { authorId } = props; //author id is the user id from url slug
   
     const [activeTab, setActiveTab] = useState('projects');
 
-    const { data: projectData } = api.projects.getProjectByAuthorId.useQuery({ authorID });
-  
+    const { data: projectData } = api.projects.getProjectByAuthorId.useQuery({ authorId });
+    const { data: user} = api.users.getUserByUserId.useQuery({ userId: authorId });
+
     if (!user) return <div>Something went wrong</div>;
   
     return (
       <>
         <Head>
-          <title>{user.firstName}</title>
+          <title>{user.user.name}</title>
         </Head>
         <main className="flex flex-col items-center w-full h-screen">
           <div id="nav-container" className="w-full">
@@ -85,20 +81,22 @@ export default function UserPage(
               <div id="user-meta" className="mt-4 ml-5">
                  
                   <span className="flex space-x-10 gap-5 items-center font-medium text-gray-500">  
-                      <Image 
-                          src={user.imageUrl} 
-                          alt="Profile Image" 
-                          className="rounded-full border border-slate-300"
-                          width={80}
-                          height={80}
-                      />
-                      {`${user?.firstName} ${user?.lastName}`}
+                    <ProfileImage user={user.user} size={80} />
                   </span>
               </div>
 
               <div id="project-main-tabs" className="ml-5 border-b border-gray-200 dark:border-gray-700">
                 <Tabs activeTab={activeTab} setActiveTab={setActiveTab} projects="y"/>
               </div>
+
+              {/* SHOWN IF ABOUT TAB */}
+              {activeTab === 'about' && (
+                <div className="mt-4 space-y-2">
+                    <div className="font text-gray-800"> 
+                      Username : {user.user.username}
+                   </div>
+                </div>
+              )}
               
               {/* SHOWN IF PROJECTS TAB */}
               {activeTab === 'projects' && (

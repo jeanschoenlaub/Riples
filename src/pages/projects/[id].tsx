@@ -1,36 +1,44 @@
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { GlobalNavBar } from "~/components/navbar";
-import { ProjectNav } from "~/components/sidebar";
+import Image from 'next/image';
+import React, { useState } from 'react';
+
 //From https://trpc.io/docs/client/nextjs/server-side-helpers
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import type{ GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
-import Image from 'next/image';
 
 
-import { NotionEmbed } from "~/components/notionembed";
-import Tabs from "~/components/tabs";
-
-import React, { useState } from 'react';
-import { useUser } from "@clerk/nextjs";
-import AboutTab from "~/components/about";
+//My components
+import { Tabs } from "~/components/tabs";
+import { AboutTab } from "~/components/about";
 import { RipleCard } from "~/components/riplecard";
 import { LoadingPage } from "~/components/loading";
+import { CollabTab } from "~/components/collab";
+import { GlobalNavBar } from "~/components/navbar/navbar";
+import { ProjectNav } from "~/components/sidebar";
+
+import { getSession } from 'next-auth/react'; // Importing getSession from next-auth
+import Follow from "~/components/follow";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
 ) {
+  // Retrieve the session information
+  const session = await getSession(context);
+
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
         prisma,
-        currentUserId: null
+        session,
+        revalidateSSG: null, // Set to null as we are doing SSR
     },
     transformer: superjson,
   });
+
   const projectId = context.params!.id;
 
   /*
@@ -39,6 +47,8 @@ export async function getServerSideProps(
    */
   await helpers.projects.getProjectByProjectId.prefetch({ projectId });
   await helpers.riples.getRiplebyProjectId.prefetch({ projectId });
+  await helpers.projectMembers.getMembersByProjectId.prefetch({ projectId });
+
   // Make sure to return { props: { trpcState: helpers.dehydrate() } }
   return {
     props: {
@@ -48,17 +58,16 @@ export async function getServerSideProps(
   };
 }
 
-export default function Home(
+export default function Project(
   props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) {
   const { projectId } = props;
 
   const { data: projectData, isLoading: projectLoading } = api.projects.getProjectByProjectId.useQuery({ projectId });
   const { data: ripleData, isLoading: ripleLoading } = api.riples.getRiplebyProjectId.useQuery({ projectId });
+  const { data: projectMemberData, isLoading: projectMemberLoading } = api.projectMembers.getMembersByProjectId.useQuery({ projectId });
 
   const [activeTab, setActiveTab] = useState('riples'); // default active tab is 'riples for project pages'
-  
-  const user=useUser(); // logged in user
 
   if (ripleLoading || projectLoading) return(<LoadingPage></LoadingPage>)
   if (!projectData || !ripleData) return (<div> Something went wrong</div>)
@@ -88,16 +97,23 @@ export default function Home(
                 />
               </div>
               <div id="project-main-metadata" className="mt-4 ml-5 mr-5">
-                <h1 className="text-2xl font-bold">{projectData?.project.title}</h1>
-
+                <div id="project-metadata" className="flex items-center justify-between"> 
+                  <h1 className="text-2xl font-bold">{projectData?.project.title}</h1>
+                  <Follow projectId={projectId} />
+                </div>
 
                 <div id="project-main-tabs" className="border-b border-gray-200 dark:border-gray-700">
-                  <Tabs activeTab={activeTab} setActiveTab={setActiveTab} riples="y" collab={projectData?.project.notionEmbedUrl} apply={projectData?.project.applyFormUrl}/>
+                  <Tabs 
+                    activeTab={activeTab} 
+                    setActiveTab={setActiveTab} 
+                    riples="y" 
+                    collab={projectData?.project.projectType === "multi" ? "y" : ""}
+                  />
                 </div>
               
                 {/* SHOWN IF ABOUT TAB */}
                 {activeTab === 'about' && (
-                  <AboutTab project={projectData.project} author={projectData.author} ></AboutTab>
+                  <AboutTab project={projectData.project} author={projectData.author} members={projectMemberData} ></AboutTab>
                 )}
 
                 {/* SHOWN IF RIPLES TAB */}
@@ -114,30 +130,7 @@ export default function Home(
                 )}
 
                 {/* SHOWN IF COLLAB*/}
-                {activeTab === 'collab' && (
-                  <div className="mt-4">
-                    <NotionEmbed {...projectData.project}></NotionEmbed>
-                  </div>
-                )}
-
-                {/* SHOWN IF APPLY */}
-                {activeTab === 'apply' && (
-                  <div className="mt-4 flex justify-center items-center">
-                    {user ? (
-                      <a 
-                        href="https://forms.gle/nfnVvnJZaMAah17v6" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">
-                        Apply
-                      </a>
-                    ) : (
-                      <>
-                        <div>You must be signed in to apply.</div>
-                      </>
-                    )}
-                  </div>
-                )}
+                {activeTab === 'collab' && <CollabTab project={projectData.project} />}
 
               </div>
             </div>
