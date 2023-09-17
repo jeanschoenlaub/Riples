@@ -185,7 +185,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
               value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
               className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
-              maxLength={1000}
+              maxLength={50}
               disabled={isLoading}
             />
           )}
