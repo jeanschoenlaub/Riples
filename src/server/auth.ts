@@ -63,6 +63,11 @@ export const authOptions: NextAuthOptions = {
       from: env.EMAIL_FROM
     }),
   ],
+  session: {
+    // Set to 31 days
+    maxAge: 31 * 24 * 60 * 60, 
+  },
+
 };
 
 

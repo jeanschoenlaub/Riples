@@ -17,6 +17,7 @@ export const GlobalNavBar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
+  
 
   //We add a mutation for creating a task (with on success)
   const {mutate, isLoading: isDeleting}  = api.users.deleteUser.useMutation({
@@ -86,15 +87,15 @@ export const GlobalNavBar = () => {
             </div>
           </div>
 
-          <div id="global-nav-mid" className="flex flex-direction-change w-1/3 md:w-3/5 justify-center items-center  gap-3 p-2 border border-slate-700">
+          <div id="global-nav-mid" className="flex flex-col md:flex-row w-1/3 md:w-3/5 justify-center items-center gap-3 p-2 border border-slate-700">
             <Link href="/">
               <svg 
-                className="w-6 h-6 text-gray-800 dark:text-white"
+                className="w-6 h-6 text-gray-800 dark:text-white mb-2 md:mb-0"
                 aria-hidden="true" 
                 xmlns="http://www.w3.org/2000/svg" 
                 fill="#0883C6"
                 viewBox="0 0 20 20"
-                >
+              >
                 <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
               </svg>
             </Link>
@@ -103,15 +104,15 @@ export const GlobalNavBar = () => {
                 Feedback
               </button>
             </a>
-            {/* 
+          </div>
+          {/* 
             <input 
                   className="outline-none grow grey-background hidden text-xs md:flex search-max-growth" 
                   placeholder="Search Riples" 
                   type="text"
               />*/}
-          </div>
             
-          <div id="global-nav-right" className="flex w-1/3 md:w-1/5 gap-3 items-center p-2 border border-slate-700">
+          <div id="global-nav-right" className="flex w-1/3 md:w-1/5 gap-3 items-center justify-center p-2 border border-slate-700">
           <div className="flex items-center">
             {session && (
               <div className="relative">
@@ -122,7 +123,7 @@ export const GlobalNavBar = () => {
                   <ProfileImage user={ session.user } size={32} />
                 </div>
                 {showDropdown && (
-                  <div ref={dropdownRef}  className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-slate-50">
+                  <div ref={dropdownRef}  className="absolute right-0 md:right-auto md:left-0 mt-2 w-48 rounded-md shadow-lg z-30 bg-slate-50">
                     {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
                     <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => signOut()}>Sign Out</button>
                     <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowUserNameModal(true)}>Change User Name</button>

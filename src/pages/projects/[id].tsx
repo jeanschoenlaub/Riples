@@ -97,7 +97,7 @@ export default function Project(
                 />
               </div>
               <div id="project-main-metadata" className="mt-4 ml-5 mr-5">
-                <div id="project-metadata" className="flex items-center"> 
+                <div id="project-metadata" className="flex items-center justify-between"> 
                   <h1 className="text-2xl font-bold">{projectData?.project.title}</h1>
                   <Follow projectId={projectId} />
                 </div>

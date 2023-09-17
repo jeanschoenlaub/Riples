@@ -64,9 +64,6 @@ export const UserNameForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess })
           }}>
             Save
           </button>
-          <button className="bg-red-500 text-white rounded px-4 py-2" onClick={onSuccess}>
-            Close
-          </button>
         </div>
       </div>
     );

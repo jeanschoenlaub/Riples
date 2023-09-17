@@ -1,3 +1,4 @@
+import { on } from "events";
 import { Modal } from "~/components/reusables/modaltemplate";
 
 interface DeleteModalProps {
@@ -8,7 +9,7 @@ interface DeleteModalProps {
 
 export const NavBarUserDeleteModal: React.FC<DeleteModalProps> = ({ showDeleteModal, onClose, onDelete }) => {
   return (
-    <Modal showModal={showDeleteModal} size="small">
+    <Modal showModal={showDeleteModal} onClose={onClose} size="small">
       <p>Are you sure you want to delete your account?</p>
       <div className="flex justify-end">
         <button onClick={onClose} className="bg-red-500 text-white rounded px-4 py-2">No</button>
