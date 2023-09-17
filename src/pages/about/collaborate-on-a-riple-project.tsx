@@ -29,8 +29,8 @@ export default function HowToCollaborate() {
                       <Image
                         src="/images/how-to-collab.jpeg"
                         alt="How to Collaborate"
-                        width={700}
-                        height={500}
+                        width={350}
+                        height={250}
                       />
                     </div>
                     <p><em>Fig: How to Collaborate</em></p>
@@ -47,6 +47,14 @@ export default function HowToCollaborate() {
                         <li>Once claimed, record your progress within the task.</li>
                         <li>After completion, click the &apos;Submit for Review&apos; button.</li>
                     </ul>
+                    <div style={{ textAlign: 'center', border: '3px solid black'  }}>
+                      <Image
+                        src="/images/how-to-edit-tasks.jpeg"
+                        alt="How to Edit Tasks"
+                        width={700}
+                        height={500}
+                      />
+                    </div>
                     <div style={{ textAlign: 'center', border: '3px solid black'  }}>
                       <Image
                         src="/images/how-to-edit-tasks.jpeg"
