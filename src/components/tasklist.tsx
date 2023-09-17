@@ -32,9 +32,10 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
     <div>
       <div id="project-collab-task-create-button" className="mt-4 ml-2 mb-2 space-y-4 justify-center">
         <button className="bg-blue-500 text-white rounded px-4 py-2" onClick={() => openEditModal(null)}>
-            Create Task
+            Create Task 
         </button>      
       </div>
+      <div> Send me (Jean) a whats-app / phone all if anything unclear +61413061292</div>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">

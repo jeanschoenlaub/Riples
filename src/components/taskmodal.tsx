@@ -282,7 +282,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
 
         <div className="flex md:flex-nowrap">
           {/*Buttons for users allowed to edit*/}
-          {allowedToEdit && (
             <>
               <button 
                 onClick={handleSave}
@@ -292,7 +291,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
                 <span>{(isEditing || isCreating) && <LoadingSpinner size={20} />}Save</span>
               </button>
            </>
-          )}
           {allowedToDelete && (
             <button 
             onClick={() => deleteTask({ id: taskToEdit!.id, projectId: project.id, userId: session!.user.id })} 
