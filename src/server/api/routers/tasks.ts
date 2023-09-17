@@ -152,7 +152,7 @@ export const taskRouter = createTRPCRouter({
 
       const updatedTask = await ctx.prisma.tasks.update({
         where: { id },
-        data: { ownerId: userId || "" },
+        data: { ownerId: userId ?? "" },
       });
       
 

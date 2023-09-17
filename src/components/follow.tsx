@@ -72,6 +72,12 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
     }
   };
 
+  const handleToggleFollow = () => {
+    toggleFollow().catch(err => {
+      console.error("Failed to toggle follow:", err);
+    });
+  };
+
   if ((shouldExecuteQuery && followerQuery.isLoading) || isLoading) return <LoadingSpinner size={32} />;
   if (followerQuery.isError) return <p>Error loading followers.</p>;
 
@@ -81,7 +87,7 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
         className="border rounded border-gray-300 px-4 py-2"
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
-        onClick={toggleFollow}
+        onClick={handleToggleFollow}
       >
         {isFollowing ? 
             <svg 

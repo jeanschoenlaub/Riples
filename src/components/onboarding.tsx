@@ -5,7 +5,7 @@ import { Modal } from "~/components/reusables/modaltemplate";
 import { UserNameForm } from "./usernameform";
 
 
-export const OnboardingWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const OnboardingWrapper: React.FC = () => {
   const { data: session } = useSession();
   const [showUserNameModal, setShowUserNameModal] = useState(false);
   
@@ -36,7 +36,6 @@ export const OnboardingWrapper: React.FC<{ children: React.ReactNode }> = ({ chi
           </div>
         </Modal>
       )}
-      {children}
     </>
   );
 };

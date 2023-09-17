@@ -21,8 +21,8 @@ export default function HowToCollaborate() {
                     <br></br>
                     <p>Follow these steps to locate tasks within a project:</p>
                     <ul className="list-disc list-inside">
-                        <li>Navigate to the relevant project and click on the 'Collaborate' tab.</li>
-                        <li>Only projects marked as 'Multi' will have the 'Collaborate' tab.</li>
+                        <li>Navigate to the relevant project and click on the `&apos;`Collaborate`&apos;` tab.</li>
+                        <li>Only projects marked as `&apos;`Multi`&apos;` will have the `&apos;`Collaborate`&apos;` tab.</li>
                     </ul>
                     <br></br>
                     <div style={{ textAlign: 'center', border: '3px solid black'  }}>
@@ -43,7 +43,7 @@ export default function HowToCollaborate() {
                     <ul className="list-disc list-inside">
                         <li>Review the list of tasks. If one has no owner, you can claim it.</li>
                         <li>Once claimed, record your progress within the task.</li>
-                        <li>After completion, click the 'Submit for Review' button.</li>
+                        <li>After completion, click the `&apos;`Submit for Review`&apos;` button.</li>
                     </ul>
                     <div style={{ textAlign: 'center' }}>
                       <Image
@@ -59,11 +59,11 @@ export default function HowToCollaborate() {
                 <section>
                     <h2 className="text-2xl font-semibold">How to Create Tasks</h2>
                     <br></br>
-                    <p>Creating a new task is simple. Here's how:</p>
+                    <p>Creating a new task is simple. Here`&apos;`s how:</p>
                     <ul className="list-disc list-inside">
-                        <li>Click the 'Create' button located at the top of the task list.</li>
-                        <li>Fill in the task template and click 'Create Task'.</li>
-                        <li>If you're interested in completing the task, you can claim it right away.</li>
+                        <li>Click the `&apos;`Create`&apos;` button located at the top of the task list.</li>
+                        <li>Fill in the task template and click `&apos;`Create Task`&apos;`.</li>
+                        <li>If you`&apos;`re interested in completing the task, you can claim it right away.</li>
                     </ul>
                     <div style={{ textAlign: 'center' }}>
                       <Image
