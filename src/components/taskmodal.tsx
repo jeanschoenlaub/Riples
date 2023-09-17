@@ -274,7 +274,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
                 onChange={(e) => setTaskContent(e.target.value)}
                 className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
                 rows={10}
-                maxLength={1000}
+                maxLength={10000}
                 disabled={isLoading}
               />
           )}
@@ -406,8 +406,8 @@ const defaultTemplate = `
 
 <p><em>A complete description of the task, broken down in To-Do.</em></p>
 <br>
-  <li><input type="checkbox" disabled> <em>Task 1</em></li>
-  <li><input type="checkbox" disabled> <em>Task 1</em></li>
+  <li><input type="checkbox" > <em>Task 1</em></li>
+  <li><input type="checkbox" > <em>Task 1</em></li>
 <br>
 
 <h3>Why ?</h3>
@@ -417,6 +417,6 @@ const defaultTemplate = `
 <br>
 
 <h3>Work in progress</h3>
-<p><em> Keep a reord of your work here, for easy access.</em></p>
+<p><em> Keep a record of your work here, for easy access.</em></p>
 <br>
 `;
