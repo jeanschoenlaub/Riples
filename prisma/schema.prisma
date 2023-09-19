@@ -78,6 +78,8 @@ model Tasks {
   title        String  @db.VarChar(255)
   content      String  @db.VarChar(10000)
   createdById  String  //userId
+  createdAt    DateTime @default(now())
+  editedAt     DateTime @default(now())
 
   //Relations
   ownerId      String  @default("")

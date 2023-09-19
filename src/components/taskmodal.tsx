@@ -107,7 +107,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     setTaskTitle('');
     setTaskContent(defaultTemplate);
     setIsEditMode(false);
-    setShowHtmlPreview(false);
+    setShowHtmlPreview(true);
     onClose(); 
     };
 

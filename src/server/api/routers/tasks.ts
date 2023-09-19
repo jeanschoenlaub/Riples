@@ -9,6 +9,9 @@ export const taskRouter = createTRPCRouter({
     const tasks = await ctx.prisma.tasks.findMany({
       where: {
         projectId: input.projectId
+      },
+      orderBy: {
+        editedAt: 'desc' // Sort tasks by the 'editedAt' field in descending order
       }
     });
 
@@ -75,6 +78,7 @@ export const taskRouter = createTRPCRouter({
           title,
           content,
           projectId,
+          editedAt: new Date() // This updates the editedAt field to the current date and time
         },
       });
 
