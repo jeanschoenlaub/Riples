@@ -35,7 +35,6 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
             Create Task 
         </button>      
       </div>
-      <div> Send me (Jean) a whats-app / phone all if anything unclear +61413061292. It's better viewed on computer but should work fine on phone</div>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
