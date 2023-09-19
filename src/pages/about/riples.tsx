@@ -1,6 +1,6 @@
 //import Link from "next/link";
 import Link from "next/link";
-import { GlobalNavBar } from "~/components/navbar/navbar";
+import { GlobalNavBar } from "~/components/navbar";
 
 export default function AboutRiples() {
 

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { GlobalNavBar } from "~/components/navbar/navbar";
+import { GlobalNavBar } from "~/components/navbar";
 
 export default function HowToCollaborate() {
   return (
