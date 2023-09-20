@@ -3,11 +3,11 @@ import toast from 'react-hot-toast';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
 import { handleZodError } from "~/utils/error-handling";
-import { Modal } from '../reusables/modaltemplate';
+import { Modal } from '../../reusables/modaltemplate';
 import { useSession } from 'next-auth/react';
-import { LoadingSpinner } from '../loading';
+import { LoadingSpinner } from '../../loading';
 import Link from 'next/link';
-import { ProfileImage } from '../profileimage';
+import { ProfileImage } from '../../profileimage';
 
 interface TaskModalProps {
   project: ProjectData["project"];

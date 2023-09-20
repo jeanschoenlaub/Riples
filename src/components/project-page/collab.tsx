@@ -2,7 +2,7 @@ import Link from "next/link"
 import toast from "react-hot-toast";
 import { api } from "~/utils/api";
 import type { RouterOutputs } from '~/utils/api';
-import { TaskList } from "~/components/project-page/tasklist";
+import { TaskList } from "~/components/project-page/task/tasklist";
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"]
 interface CollabTabProps {
