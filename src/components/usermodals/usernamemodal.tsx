@@ -1,5 +1,5 @@
 import { Modal } from "~/components/reusables/modaltemplate";
-import { UserNameForm } from "../usernameform";
+import { UserNameForm } from "../reusables/usernameform";
 
 
 export const NavBarUserNameModal: React.FC<{ showModal: boolean; onClose: () => void }> = ({ showModal, onClose }) => {
