@@ -53,7 +53,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember}) => {
     if (subTaskData) {
       setSubTasks((prevSubTasks) => ({
         ...prevSubTasks,
-        [taskIdToFetch as string]: subTaskData,
+        [taskIdToFetch!]: subTaskData,
       }));
     }
   }, [subTaskData, taskIdToFetch]);
