@@ -2,7 +2,7 @@ import { api } from "~/utils/api";
 import { LoadingPage } from "~/components/loading";
 import { RipleCard } from './riplecard';
 import { ProjectCard } from './projectcard';
-import { CreateProjectModal } from "./createprojetmodal";
+import { CreateProjectModal } from "./projectmodal/createprojetmodal";
 import { useState } from "react";
 
 export const CreateFeed = () => {
@@ -13,10 +13,6 @@ export const CreateFeed = () => {
     if (projectLoading) return(<LoadingPage></LoadingPage>)
   
     if (!projectData) return(<div> Something went wrong</div>)
-
-    const openProjModal = () => {
-      setShowCreateProjModal(true);
-    };
   
     return ( 
       <div>
@@ -42,8 +38,7 @@ export const CreateFeed = () => {
         */}
 
         <div>
-        <CreateProjectModal showModal={showCreateProjModal} onClose={() => {setShowCreateProjModal(false); // Hide the modal when closing
-          }}
+        <CreateProjectModal showModal={showCreateProjModal} onClose={() => {setShowCreateProjModal(false);}}
         />
         </div>
       </div>
