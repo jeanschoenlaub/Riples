@@ -12,16 +12,17 @@ import superjson from 'superjson';
 
 
 //My components
-import { Tabs } from "~/components/tabs";
-import { AboutTab } from "~/components/about";
+import { Tabs } from "~/components/reusables/tabs";
+import { AboutTab } from "~/components/project-page/about";
 import { RipleCard } from "~/components/riplecard";
 import { LoadingPage } from "~/components/loading";
-import { CollabTab } from "~/components/collab";
+import { CollabTab } from "~/components/project-page/collab";
 import { GlobalNavBar } from "~/components/navbar/navbar";
 import { ProjectNav } from "~/components/sidebar";
 
-import { getSession } from 'next-auth/react'; // Importing getSession from next-auth
+import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
 import Follow from "~/components/follow";
+import { AdminTab } from "~/components/project-page/admin";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -62,15 +63,27 @@ export default function Project(
   props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) {
   const { projectId } = props;
-
+  const { data: session, status: sessionStatus } = useSession()
+  const userId = session?.user.id;
   const { data: projectData, isLoading: projectLoading } = api.projects.getProjectByProjectId.useQuery({ projectId });
   const { data: ripleData, isLoading: ripleLoading } = api.riples.getRiplebyProjectId.useQuery({ projectId });
-  const { data: projectMemberData, isLoading: projectMemberLoading } = api.projectMembers.getMembersByProjectId.useQuery({ projectId });
+  const { data: projectMemberData, isLoading:projectMemberLoading} = api.projectMembers.getMembersByProjectId.useQuery({ projectId });
 
   const [activeTab, setActiveTab] = useState('riples'); // default active tab is 'riples for project pages'
 
-  if (ripleLoading || projectLoading) return(<LoadingPage></LoadingPage>)
-  if (!projectData || !ripleData) return (<div> Something went wrong</div>)
+  
+  if (ripleLoading || projectLoading || projectMemberLoading || sessionStatus=="loading") return(<LoadingPage></LoadingPage>)
+  if (!projectData || !ripleData || !projectMemberData ) return (<div> Something went wrong</div>)
+
+  //helpers to determine if the current user is a Member or the project Lead 
+  const isMember = projectMemberData.some(({ member }) =>
+    member.userID === session?.user.id && (member.status === 'APPROVED')
+  );
+  const isPending = projectMemberData.some(({ member }) =>
+    member.userID ===session?.user.id && (member.status === 'PENDING')
+  );
+  const isProjectLead = session?.user.id === projectData.project.authorID;
+
 
   return (
     <>
@@ -106,7 +119,8 @@ export default function Project(
                   <Tabs 
                     activeTab={activeTab} 
                     setActiveTab={setActiveTab} 
-                    riples="y" 
+                    riples="y"
+                    admin={isProjectLead} 
                     collab={projectData?.project.projectType === "multi" ? "y" : ""}
                   />
                 </div>
@@ -130,7 +144,10 @@ export default function Project(
                 )}
 
                 {/* SHOWN IF COLLAB*/}
-                {activeTab === 'collab' && <CollabTab project={projectData.project} />}
+                {activeTab === 'collab' && <CollabTab project={projectData.project} isMember={isMember} isPending={isPending} userId={userId}/>}
+
+                {/* SHOWN IF ADMIN */}
+                {activeTab === 'admin' && <AdminTab project={projectData.project} members={projectMemberData} ></AdminTab>}
 
               </div>
             </div>

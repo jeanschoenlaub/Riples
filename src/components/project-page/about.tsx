@@ -2,7 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import type { RouterOutputs } from '~/utils/api';
 import Link from 'next/link';
-import { ProfileImage } from './profileimage';
+import { ProfileImage } from '../profileimage';
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"] & {
   members?: RouterOutputs["projectMembers"]["getMembersByProjectId"];

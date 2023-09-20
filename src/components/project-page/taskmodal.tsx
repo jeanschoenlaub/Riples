@@ -3,16 +3,17 @@ import toast from 'react-hot-toast';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
 import { handleZodError } from "~/utils/error-handling";
-import { Modal } from './reusables/modaltemplate';
+import { Modal } from '../reusables/modaltemplate';
 import { useSession } from 'next-auth/react';
-import { LoadingSpinner } from './loading';
+import { LoadingSpinner } from '../loading';
 import Link from 'next/link';
-import { ProfileImage } from './profileimage';
+import { ProfileImage } from '../profileimage';
 
 interface TaskModalProps {
   project: ProjectData["project"];
   taskToEdit: TaskData | null; 
   showModal: boolean;
+  isMember: boolean;
   onClose: () => void;
 }
 
@@ -49,7 +50,7 @@ type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"];
 type TaskData = RouterOutputs["tasks"]["edit"];
 
 // Main React Functional Component
-export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal,  onClose }) => {
+export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, onClose }) => {
   
   // Initialize state with values from props if taskToEdit is present (for edit mode vs create mode)
   const initialTitle = taskToEdit ? taskToEdit.title : '';
@@ -58,14 +59,16 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   //Is the logged in user allowed to edit ?
   const { data: session } = useSession();
   const allowedToEdit =  
+    isMember && (
     session?.user.id === taskToEdit?.ownerId || 
     session?.user.id === taskToEdit?.createdById || 
     session?.user.id === project.authorID ||
-    taskToEdit === null;
+    taskToEdit === null)
 
   const allowedToDelete =  
+    isMember && (
     session?.user.id === taskToEdit?.createdById || 
-    session?.user.id === project.authorID;
+    session?.user.id === project.authorID)
 
   // States and useEffects
   const [taskTitle, setTaskTitle] = useState(initialTitle);
@@ -116,12 +119,17 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   };
 
   const toggleOwnership = () => {
-    if (isOwner) {
-      changeTaskOwner({ id: taskToEdit!.id, projectId: project.id, userId: "" }) 
-    } else {
-      changeTaskOwner({ id: taskToEdit!.id, projectId: project.id, userId: session!.user.id })
+    if (!isMember){
+      toast.error("Apply to join the project to claim task")
     }
-    setIsOwner(!isOwner);
+    else{
+      if (isOwner) {
+        changeTaskOwner({ id: taskToEdit!.id, projectId: project.id, userId: "" }) 
+      } else {
+        changeTaskOwner({ id: taskToEdit!.id, projectId: project.id, userId: session!.user.id })
+      }
+      setIsOwner(!isOwner);
+    }
   };
 
   // Helper function to generate edit payload
@@ -230,7 +238,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
             <button 
               onClick={() => {
                 toggleOwnership();
-                setTaskOwnerId(session!.user.id);  
+                if (isMember) {setTaskOwnerId(session!.user.id);} 
               }}
               className={`text-white rounded px-4 py-1 flex items-center justify-center ${isOwner ? 'bg-red-500' : 'bg-green-500'}`}
               disabled={isLoading || isChangingOwner}
@@ -282,7 +290,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
 
         <div className="flex md:flex-nowrap">
           {/*Buttons for users allowed to edit*/}
-            <>
+          {allowedToEdit &&
               <button 
                 onClick={handleSave}
                 className="bg-green-500 text-white rounded px-4 py-2 mr-2  flex items-center justify-center w-auto"
@@ -290,7 +298,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
               >
                 <span>{(isEditing || isCreating) && <LoadingSpinner size={20} />}Save</span>
               </button>
-           </>
+          }
           {allowedToDelete && (
             <button 
             onClick={() => deleteTask({ id: taskToEdit!.id, projectId: project.id, userId: session!.user.id })} 

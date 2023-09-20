@@ -2,18 +2,21 @@ import React, { useState } from 'react';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
 import Link from 'next/link'; // import Next.js Link component
-import { TaskModal } from '~/components/taskmodal';
-import { ProfileImage } from './profileimage';
-import { LoadingRiplesLogo } from './loading';
+import { TaskModal } from '~/components/project-page/taskmodal';
+import { ProfileImage } from '../profileimage';
+import { LoadingRiplesLogo } from '../loading';
+import { StyledTable } from '../reusables/styledtables';
 
 interface TaskListProps {
   project: ProjectData["project"];
+  isMember: boolean,
+  isPending: boolean
 }
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"];
 type TaskData = RouterOutputs["tasks"]["edit"];
 
-export const TaskList: React.FC<TaskListProps> = ({ project }) => {
+export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isPending }) => {
   // To allow the editing of Tasks 
   const [selectedTask, setSelectedTask] = useState<TaskData | null>(null);
   const [showTaskModal, setShowTaskModal] = useState(false); 
@@ -30,23 +33,15 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
 
   return (
     <div>
+      {isMember &&
       <div id="project-collab-task-create-button" className="mt-4 ml-2 mb-2 space-y-4 justify-center">
         <button className="bg-blue-500 text-white rounded px-4 py-2" onClick={() => openEditModal(null)}>
             Create Task 
         </button>      
-      </div>
+      </div>}
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">Task Title</th>
-              <th scope="col" className="px-6 py-3">Status</th>
-              <th scope="col" className="px-6 py-3">Owner</th>
-              <th scope="col" className="px-6 py-3">Created By</th>
-            </tr>
-          </thead>
-        <tbody>
+        <StyledTable headers={["Task Title", "Status", "Owner", "Created By"]}>
           {taskData.map((taskDetail, index) => (
             <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
               <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -82,13 +77,13 @@ export const TaskList: React.FC<TaskListProps> = ({ project }) => {
               </td>
             </tr>
           ))}
-        </tbody>
-        </table>
+        </StyledTable>
 
       </div>
         <TaskModal 
           project={project} 
-          taskToEdit={selectedTask} 
+          taskToEdit={selectedTask}
+          isMember={isMember} 
           showModal={showTaskModal}
           onClose={() => {
             setSelectedTask(null);
