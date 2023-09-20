@@ -162,6 +162,53 @@ export const taskRouter = createTRPCRouter({
 
       return updatedTask;
     }),
+
+  getSubTasksByTaskId: publicProcedure
+    .input(z.object({ taskId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const subTasks = await ctx.prisma.subTasks.findMany({
+        where: {
+          taskId: input.taskId,
+        },
+      });
+      return subTasks;
+    }),
+
+  // Route to create a new sub-task
+  createSubTask: protectedProcedure
+    .input(z.object({ taskId: z.string(), title: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const newSubTask = await ctx.prisma.subTasks.create({
+        data: {
+          taskId: input.taskId,
+          title: input.title,
+          status: false,
+        },
+      });
+      return newSubTask;
+    }),
+
+  // Route to delete a sub-task
+  deleteSubTask: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const deletedSubTask = await ctx.prisma.subTasks.delete({
+        where: { id: input.id },
+      });
+      return deletedSubTask;
+    }),
+
+  // Route to change the status of a sub-task
+  changeSubTaskStatus: protectedProcedure
+    .input(z.object({ id: z.string(), status: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const updatedSubTask = await ctx.prisma.subTasks.update({
+        where: { id: input.id },
+        data: { status: input.status },
+      });
+      return updatedSubTask;
+    }),
+
 });
 
 

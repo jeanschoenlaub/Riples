@@ -37,5 +37,53 @@ export const projMemberRouter = createTRPCRouter({
         };
       });
     }),
+    // Mutation for approving a member
+  approveMember: publicProcedure
+  .input(z.object({ projectId: z.string(), userId: z.string() }))
+  .mutation(async ({ ctx, input }) => {
+    const updatedMember = await ctx.prisma.projectMembers.update({
+      where: {
+        projectId_userID: {
+          projectId: input.projectId,
+          userID: input.userId,
+        },
+      },
+      data: {
+        status: 'APPROVED', // Assuming you have a `status` field
+      },
+    });
+
+    if (!updatedMember) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to approve member',
+      });
+    }
+
+    return updatedMember;
+  }),
+
+  // Mutation for refusing a member
+  refuseMember: publicProcedure
+  .input(z.object({ projectId: z.string(), userId: z.string() }))
+  .mutation(async ({ ctx, input }) => {
+    const deletedMember = await ctx.prisma.projectMembers.delete({
+      where: {
+        projectId_userID: {
+          projectId: input.projectId,
+          userID: input.userId,
+        },
+      },
+    });
+
+    if (!deletedMember) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to refuse member',
+      });
+    }
+
+    return deletedMember;
+  }),
 });
 

@@ -2,24 +2,17 @@ import Link from "next/link"
 import toast from "react-hot-toast";
 import { api } from "~/utils/api";
 import type { RouterOutputs } from '~/utils/api';
-import { TaskList } from "~/components//tasklist";
-import { useSession } from "next-auth/react";
+import { TaskList } from "~/components/project-page/task/tasklist";
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"]
 interface CollabTabProps {
     project: ProjectData["project"];
-    author?: ProjectData["author"];
+    isMember: boolean;
+    isPending: boolean;
+    userId: string | undefined;
   }
 
-export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
-    const { data: session, status } = useSession()
-    const { data: projectMembersData, isLoading, isError } = api.projectMembers.getMembersByProjectId.useQuery({ projectId: project.id });
-
-    const loading = status === 'loading'
-
-    if (loading) return null
-
-    console.log(session?.user)  // Access user ID here.
+export const CollabTab: React.FC<CollabTabProps> = ({ project, isMember, isPending, userId }) => {
 
     const ctx = api.useContext();
     const {mutate, isLoading: isApplying}  = api.projects.applyToProject.useMutation({
@@ -31,41 +24,17 @@ export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
           }
           else {toast.error("Application failed ! Please try again later")}
         },
-        onSuccess: (data) => {
+        onSuccess: () => {
             void ctx.projectMembers.getMembersByProjectId.invalidate()
         }
     })
-
-    let userId: string | null = null;
-    
-    if (status == "authenticated" ) {
-        userId = session.user.id
-    }
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (isError) {
-        return <div>Error loading project members</div>;
-    }
-
-    if (!projectMembersData) {
-        return <div>No data</div>; // or some other handling for this scenario
-    }
-
-    //helpers to determine if the current user is a Member or the project Lead 
-    const isMemberOrPending = projectMembersData.some(({ member }) =>
-        member.userID === userId && (member.status === 'APPROVED' || member.status === 'PENDING')
-    );
-    //const isProjectLead = userId === project.authorID;
     
     return (
         <div>
             {/* TASK TABLE DIV ONLY FOR PROJECT MEMBERS + CREATE TASK */}
             <div id="project-collab-task-table" className="mt-4 ml-2 mb-2 space-y-4">
-                {isMemberOrPending && ( 
-                    <TaskList project={project} />
+                { (project.projectPrivacy === "public" || isMember) && ( 
+                    <TaskList project={project} isMember={isMember} isPending={isPending}/>
                  )} 
             </div>
             {/* JOIN / LEAVE PROJECT SECTION AND BUTTON */}
@@ -80,7 +49,7 @@ export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
 
             <div id="project-collab-apply-button" className="mt-4 mb-4 flex justify-center items-center">
                 {userId ? ( <>
-                    <button className={`text-white rounded py-1 px-2 text-center ${isMemberOrPending ? 'bg-red-500' : 'bg-blue-500'}`} //This is a Aplly Quit button and the logic is handled in router
+                    <button className={`text-white rounded py-1 px-2 text-center ${isMember ? 'bg-red-500' : 'bg-blue-500'}`} //This is a Aplly Quit button and the logic is handled in router
                         onClick={() => {
                             if (userId) {  // Adding this check ensures userId is not null for typescript
                                 const newApplication = {
@@ -90,9 +59,9 @@ export const CollabTab: React.FC<CollabTabProps> = ({ project }) => {
                                 mutate(newApplication);
                             }
                         }}
-                        disabled={isApplying}
+                        disabled={isApplying || isPending}
                     >
-                        {isApplying ? 'Updating...' : (isMemberOrPending ? 'Quit the project' : 'Join the project')}
+                        {isApplying ? 'Updating...' : (isMember ? 'Quit the project' : (isPending ? 'Application submitted' : 'Join the project'))}
                     </button>
                 </>
                 ) : (
