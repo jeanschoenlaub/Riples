@@ -89,7 +89,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember}) => {
       </div>}
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <StyledTable headers={["Task Title", "Status", "Owner", "Created By","Actions"]}>
+        <StyledTable headers={["Task Title", "Status", "Owner", "Created","Actions"]}>
           {taskData.map((taskDetail, index) => (
             <React.Fragment key={index}>
             <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -98,7 +98,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember}) => {
                   {taskDetail.task.title}
                 </button>
               </th>
-              <td className="px-6 py-6 flex items-center">
+              <td className="px-6 py-4 flex text-center">
                 <span className={`text-white rounded w-auto px-2 py-2 ${
                   taskDetail.task.status === "Doing" ? "bg-yellow-500" : 
                   taskDetail.task.status === "To-Do" ? "bg-gray-500" : 
@@ -108,9 +108,9 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember}) => {
                 </span>
               </td>
 
-              <td className="px-6 py-4">
+              <td className="px-6 py-4" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
                 {taskDetail.owner ? (
-                  <Link href={`/users/${taskDetail.owner.id}`} className="flex items-center space-x-2">
+                  <Link href={`/users/${taskDetail.owner.id}`} className="flex items-center justify-center space-x-2">
                     <ProfileImage user={taskDetail.owner} size={32} showUsernameOnHover={true}/>
                     {taskDetail.owner.name ?? ''}
                   </Link>
@@ -119,12 +119,12 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember}) => {
                 )}
               </td>
               <td className="px-6 py-4">
-                <Link href={`/users/${taskDetail.createdBy?.id}`} className="flex items-center space-x-2">
+                <Link href={`/users/${taskDetail.createdBy?.id}`} className="flex items-center justify-center space-x-2">
                   <ProfileImage user={taskDetail.createdBy} size={32} showUsernameOnHover={true}/>
                   {taskDetail.createdBy?.name ?? ''}
                 </Link>
               </td>
-              <td className="px-6 py-4 space-x-6">
+              <td className="px-6 py-4 flex justify-center">
                 <button onClick={() => toggleSubtasks(taskDetail.task.id)} className="text-blue-600 dark:text-blue-500 hover:underline">
                 {displaySubtasks[taskDetail.task.id] ? (
                   <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">

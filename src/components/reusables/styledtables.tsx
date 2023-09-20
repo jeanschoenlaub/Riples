@@ -1,4 +1,3 @@
-// StyledTable.tsx
 import React from 'react';
 
 interface StyledTableProps {
@@ -13,15 +12,18 @@ export const StyledTable: React.FC<StyledTableProps> = ({ headers, children }) =
         <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             {headers.map((header, index) => (
-              <th key={index} scope="col" className="px-6 py-3">
+              <th
+                key={index}
+                scope="col"
+                className={`px-6 py-3 ${index !== 0 ? 'text-center' : ''}`}
+                style={{ width: index === 0 ? '40%' : '15%' }}
+              >
                 {header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody>
-          {children}
-        </tbody>
+        <tbody>{children}</tbody>
       </table>
     </div>
   );
