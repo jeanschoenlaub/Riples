@@ -15,6 +15,7 @@ export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medi
     medium: 'w-full sm:w-2/3 md:w-1/2 max-h-full sm:max-h-[80vh]',
     large: 'w-full sm:w-3/4 max-h-full sm:max-h-[80vh]',
   };
+  
 
   return (
     <div>
@@ -23,7 +24,7 @@ export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medi
           <div className={`bg-white rounded-lg p-4 ${sizeClass[size]} shadow-lg relative overflow-y-auto`}>
             <button 
               onClick={onClose} 
-              style={{ top: 'calc(50% - someValue)', right: 'calc(50% - someOtherValue)' }} 
+              style={{ top: 'calc(50% - someValue)', right: '100' }} 
               className="fixed text-red-600 hover:text-red-800 text-xl z-10">
               &times; {/* This is an HTML entity representing a multiplication symbol (looks like 'x') */}
             </button>
