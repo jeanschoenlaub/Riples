@@ -1,7 +1,7 @@
 import { api } from "~/utils/api";
-import { LoadingPage } from "~/components/loading";
-import { RipleCard } from './riplecard';
-import { CreateProjectModal } from "./projectmodal/createprojetmodal";
+import { LoadingPage } from "~/components/reusables/loading";
+import { RipleCard } from '../riplecard';
+import { CreateProjectModal } from "../projectmodal/createprojetmodal";
 import { useState } from "react";
 
 export const SocialFeed = () => {

@@ -2,9 +2,9 @@ import Head from "next/head";
 import { useState } from "react";
 import { api } from "~/utils/api";
 import { GlobalNavBar } from "~/components/navbar";
-import { SocialFeed } from "~/components/socialfeed";  // Rename to avoid naming conflicts
+import { SocialFeed } from "~/components/feed/socialfeed";  // Rename to avoid naming conflicts
 import { ProjectNav } from "~/components/sidebar";
-import { CreateFeed } from "~/components/createfeed"; // Assume you have a CreateFeed component
+import { CreateFeed } from "~/components/feed/createfeed"; // Assume you have a CreateFeed component
 
 export default function Home() {
   // Initialize component state

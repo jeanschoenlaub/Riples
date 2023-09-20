@@ -15,7 +15,7 @@ import superjson from 'superjson';
 import { Tabs } from "~/components/reusables/tabs";
 import { AboutTab } from "~/components/project-page/about";
 import { RipleCard } from "~/components/riplecard";
-import { LoadingPage } from "~/components/loading";
+import { LoadingPage } from "~/components/reusables/loading";
 import { CollabTab } from "~/components/project-page/collab";
 import { GlobalNavBar } from "~/components/navbar";
 import { ProjectNav } from "~/components/sidebar";

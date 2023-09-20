@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
-import { LoadingRiplesLogo, LoadingSpinner } from '../../loading';
+import { LoadingRiplesLogo, LoadingSpinner } from '../../reusables/loading';
 import toast from 'react-hot-toast';
 import { handleZodError } from '~/utils/error-handling';
 

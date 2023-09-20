@@ -5,7 +5,7 @@ import { api } from "~/utils/api";
 import { handleZodError } from "~/utils/error-handling";
 import { Modal } from '../../reusables/modaltemplate';
 import { useSession } from 'next-auth/react';
-import { LoadingSpinner } from '../../loading';
+import { LoadingSpinner } from '../../reusables/loading';
 import Link from 'next/link';
 import { ProfileImage } from '../../profileimage';
 
