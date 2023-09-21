@@ -107,47 +107,6 @@ export const projRouter = createTRPCRouter({
     }));
   }),
 
-  applyToProject: protectedProcedure
-    .input(
-        z.object({
-            userId: z.string(), // The ID of the user applying
-            projectId: z.string(), // The ID of the project they are applying to
-        })
-    )
-    .mutation(async ({ ctx, input }) => {
-        const { userId, projectId } = input;
-
-        // First, find the existing application, if any
-        const existingApplication = await ctx.prisma.projectMembers.findFirst({
-            where: {
-                userID: userId,
-                projectId: projectId
-            }
-        });
-
-        // If an existing application is found and it's in 'PENDING' state, delete it
-        if (existingApplication && existingApplication.status === 'PENDING') {
-            await ctx.prisma.projectMembers.delete({
-                where: {
-                    id: existingApplication.id,
-                }
-            });
-            return { status: 'DELETED' };
-        }
-
-        // Otherwise, proceed with creating a new application
-        const application = await ctx.prisma.projectMembers.create({
-            data: {
-                userID: userId,
-                projectId: projectId,
-                status: "PENDING", // Default Status
-            },
-        });
-
-        return application;
-  }),
-  
-
   create: protectedProcedure
   .input(z.object({ content: z.string().min(5, { message: "Must be 5 or more characters long" }) }))
   .mutation(async ({ ctx, input }) => {

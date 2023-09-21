@@ -13,6 +13,7 @@ interface TaskListProps {
   project: ProjectData["project"];
   isMember: boolean,
   isPending: boolean
+  isProjectLead: boolean
 }
 
 // Payload for creating a new sub-task
@@ -36,7 +37,7 @@ type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"];
 type TaskData = RouterOutputs["tasks"]["edit"];
 type SubTaskData = RouterOutputs["tasks"]["getSubTasksByTaskId"][0];
 
-export const TaskList: React.FC<TaskListProps> = ({ project, isMember}) => {
+export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProjectLead}) => {
   const [selectedTask, setSelectedTask] = useState<TaskData | null>(null);
   const [showTaskModal, setShowTaskModal] = useState(false); 
   const [displaySubtasks, setDisplaySubtasks] = useState<Record<string, boolean>>({});
@@ -81,7 +82,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember}) => {
 
   return (
     <div>
-      {isMember &&
+      {isMember ||isProjectLead &&
       <div id="project-collab-task-create-button" className="mt-4 ml-2 mb-2 space-y-4 justify-center">
         <button className="bg-blue-500 text-white rounded px-4 py-2" onClick={() => openEditModal(null)}>
             Create Task 
@@ -155,6 +156,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember}) => {
           project={project} 
           taskToEdit={selectedTask}
           isMember={isMember} 
+          isProjectLead={isProjectLead} 
           showModal={showTaskModal}
           onClose={() => {
             setSelectedTask(null);

@@ -123,7 +123,7 @@ const useUserStatusMutation = ({ onSuccess }: { onSuccess: () => void }) => {
     });
   
     // Mutation for refusing a user
-    const { mutate: refuseUserMutation, isLoading: isRefusing } = api.projectMembers.refuseMember.useMutation({
+    const { mutate: refuseUserMutation, isLoading: isRefusing } = api.projectMembers.deleteProjectMember.useMutation({
       onSuccess: handleSuccess,
       onError: (e) => {
         const fieldErrors = e.data?.zodError?.fieldErrors;
