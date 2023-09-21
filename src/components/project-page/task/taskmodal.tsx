@@ -15,6 +15,7 @@ interface TaskModalProps {
   showModal: boolean;
   isMember: boolean;
   isProjectLead: boolean;
+  inputValue: string; //If the user types some text before clicking create task
   onClose: () => void;
 }
 
@@ -51,11 +52,13 @@ type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"];
 type TaskData = RouterOutputs["tasks"]["edit"];
 
 // Main React Functional Component
-export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, isProjectLead, onClose }) => {
+export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
   
   // Initialize state with values from props if taskToEdit is present (for edit mode vs create mode)
-  const initialTitle = taskToEdit ? taskToEdit.title : '';
+  const initialTitle = taskToEdit ? taskToEdit.title : inputValue;
   const initialContent = taskToEdit ? taskToEdit.content : defaultTemplate;
+
+  console.log("Input Value in Modal: ", inputValue);
 
   //Is the logged in user allowed to edit ?
   const { data: session } = useSession();
@@ -90,6 +93,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   useEffect(() => {
     if (taskToEdit) { // Existing task
       setTaskTitle(taskToEdit.title);
+      console.log("no")
       setShowHtmlPreview(false); 
       setTaskStatus(taskToEdit.status);
       setTaskContent(taskToEdit.content);
@@ -98,6 +102,9 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
       if (allowedToEdit) {
         setIsEditMode(true); // If the task already exists + the user has the right to edit, we are editing vs creating
       }
+    }
+    else {
+      setTaskTitle(inputValue);
     }
   }, [taskToEdit, session]); 
   
@@ -407,23 +414,4 @@ const useTaskMutation = (projectId: string, { onSuccess }: { onSuccess: () => vo
   }
 }
 
-const defaultTemplate = `
-<h3>What ?</h3>
-<br>
-
-<p><em>A complete description of the task, broken down in To-Do.</em></p>
-<br>
-  <li><input type="checkbox" > Task 1 </li>
-  <li><input type="checkbox" > Task 1 </li>
-<br>
-
-<h3>Why ?</h3>
-<br>
-
-<p><em>Why is it important to do this task ?</em></p>
-<br>
-
-<h3>Work in progress</h3>
-<p><em> Keep a record of your work here, for easy access.</em></p>
-<br>
-`;
+const defaultTemplate = `You can add more details about the task or store knowledge here :)  `;
