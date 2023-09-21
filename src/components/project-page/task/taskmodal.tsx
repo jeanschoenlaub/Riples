@@ -14,6 +14,7 @@ interface TaskModalProps {
   taskToEdit: TaskData | null; 
   showModal: boolean;
   isMember: boolean;
+  isProjectLead: boolean;
   onClose: () => void;
 }
 
@@ -50,7 +51,7 @@ type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"];
 type TaskData = RouterOutputs["tasks"]["edit"];
 
 // Main React Functional Component
-export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, onClose }) => {
+export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, isProjectLead, onClose }) => {
   
   // Initialize state with values from props if taskToEdit is present (for edit mode vs create mode)
   const initialTitle = taskToEdit ? taskToEdit.title : '';
@@ -59,14 +60,14 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   //Is the logged in user allowed to edit ?
   const { data: session } = useSession();
   const allowedToEdit =  
-    isMember && (
+    ((isMember && (
     session?.user.id === taskToEdit?.ownerId || 
     session?.user.id === taskToEdit?.createdById || 
     session?.user.id === project.authorID ||
-    taskToEdit === null)
+    taskToEdit === null)) || isProjectLead)
 
   const allowedToDelete =  
-    isMember && (
+   (isMember || isProjectLead) && (
     session?.user.id === taskToEdit?.createdById || 
     session?.user.id === project.authorID)
 
