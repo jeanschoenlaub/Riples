@@ -3,8 +3,8 @@ import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
 import Link from 'next/link'; // import Next.js Link component
 import { TaskModal } from '~/components/project-page/task/taskmodal';
-import { ProfileImage } from '../../profileimage';
-import { LoadingRiplesLogo } from '../../loading';
+import { ProfileImage } from '../../reusables/profileimage';
+import { LoadingRiplesLogo } from '../../reusables/loading';
 import { StyledTable } from '../../reusables/styledtables';
 import { SubTasksRows } from './subtask';
 

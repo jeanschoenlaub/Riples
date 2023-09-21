@@ -14,14 +14,14 @@ import superjson from 'superjson';
 //My components
 import { Tabs } from "~/components/reusables/tabs";
 import { AboutTab } from "~/components/project-page/about";
-import { RipleCard } from "~/components/riplecard";
-import { LoadingPage } from "~/components/loading";
+import { RipleCard } from "~/components/cards/riplecard";
+import { LoadingPage } from "~/components/reusables/loading";
 import { CollabTab } from "~/components/project-page/collab";
 import { GlobalNavBar } from "~/components/navbar";
-import { ProjectNav } from "~/components/sidebar";
+import { SideNavProject } from "~/components/sidenavproject";
 
 import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
-import Follow from "~/components/follow";
+import Follow from "~/components/reusables/follow";
 import { AdminTab } from "~/components/project-page/admin";
 
 export async function getServerSideProps(
@@ -100,7 +100,7 @@ export default function Project(
 
         <div className="flex justify-center w-full bg-sky-50">
             <div id="project-nav-container" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
-              <ProjectNav></ProjectNav>
+              <SideNavProject></SideNavProject>
             </div>
 
             <div id="project-main" className="relative flex flex-col w-full md:w-3/5 border border-slate-700">

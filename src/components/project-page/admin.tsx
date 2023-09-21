@@ -2,7 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { api, type RouterOutputs } from '~/utils/api';
 import Link from 'next/link';
-import { ProfileImage } from '../profileimage';
+import { ProfileImage } from '../reusables/profileimage';
 import { StyledTable } from '../reusables/styledtables';
 import toast from 'react-hot-toast';
 import { handleZodError } from '~/utils/error-handling';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { LoadingRiplesLogo } from '../loading';
+import { LoadingRiplesLogo } from './loading';
 
 interface ModalProps {
   showModal: boolean;

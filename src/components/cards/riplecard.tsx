@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { RouterOutputs } from "~/utils/api";
-import Follow from "./follow";
+import Follow from "../reusables/follow";
 
 
 type RipleWithUser = RouterOutputs["riples"]["getAll"][number]
