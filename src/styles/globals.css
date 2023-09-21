@@ -11,11 +11,32 @@ body {
     0%, 100% { transform: translateX(0); }
     10%, 30%, 50%, 70%, 90% { transform: translateX(-1px); }
     20%, 40%, 60%, 80% { transform: translateX(1px); }
-  }
+}
+
+@keyframes expand {
+    0% {
+        transform: translate(-50%, -50%) scale(3);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(8);
+        opacity: 0;
+    }
+};
   
-  .shake-animation {
+.shake-animation {
     animation: shake 0.5s linear;
-  }
+}
+
+.iframe { width: 90%; height: 500px; border: 2px solid #ccc; border-radius: 10px; padding: none; }
+
+.grey-background {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 20px;
+}
 
 /* Custom rule to limit the growth effect */
 .search-max-growth {
@@ -38,7 +59,6 @@ height: auto;
 transform: translate(-50%, -50%);
 }
   
-
 .ripple {
 position: absolute;
 top: 50%;
