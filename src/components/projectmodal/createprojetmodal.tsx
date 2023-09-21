@@ -28,6 +28,9 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   const { data: session } = useSession(); 
 
   const [projectName, setProjectName] = useState(inputValue ? inputValue : '');
+  useEffect(() => {
+    setProjectName(inputValue ? inputValue : '');
+  }, [inputValue]);
   const [projectDescription, setProjectDescription] = useState('');
   const [projectStatus, setProjectStatus] = useState('To-Do');
 
@@ -37,10 +40,6 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   const nextStep = () => {
     if (currentStep === Step.ProjectDescription) {
       setCurrentStep(Step.ProjectBuild);
-      console.log("Project Details:");
-      console.log(`Name: ${projectName}`);
-      console.log(`Description: ${projectDescription}`);
-      console.log(`Status: ${projectStatus}`);
     } else if (currentStep === Step.ProjectBuild) {
       setCurrentStep(Step.ProjectSettings);
     }
@@ -55,7 +54,6 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   };
 
   const resetForm = () => {
-    setProjectName('');
     setProjectDescription('');
     onClose();
   };
@@ -76,6 +74,8 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   const closeModal = () => {
     resetForm();
   };
+
+  console.log(projectName)
 
   return (
     <>

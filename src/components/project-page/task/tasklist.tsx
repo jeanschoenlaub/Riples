@@ -52,9 +52,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
   const { data: taskData, isLoading: isLoadingTasks, isError } = api.tasks.getTasksByProjectId.useQuery({ projectId: project.id });
 
   const handleCreateClick = () => {
-    console.log(inputValue)
     setShowTaskModal(true);
-    // Pass `inputValue` to your modal here if needed
   };
 
   useEffect(() => {
@@ -125,7 +123,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
                   {taskDetail.task.title}
                 </button>
               </th>
-              <td className="px-6 py-4 hidden md:table-cell">
+              <td className="px-8 py-6 hidden md:table-cell">
                 <span className={`text-white flex text-center rounded w-auto px-2 py-2 ${
                   taskDetail.task.status === "Doing" ? "bg-yellow-500" : 
                   taskDetail.task.status === "To-Do" ? "bg-gray-500" : 

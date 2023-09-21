@@ -55,10 +55,7 @@ type TaskData = RouterOutputs["tasks"]["edit"];
 export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
   
   // Initialize state with values from props if taskToEdit is present (for edit mode vs create mode)
-  const initialTitle = taskToEdit ? taskToEdit.title : inputValue;
   const initialContent = taskToEdit ? taskToEdit.content : defaultTemplate;
-
-  console.log("Input Value in Modal: ", inputValue);
 
   //Is the logged in user allowed to edit ?
   const { data: session } = useSession();
@@ -72,10 +69,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   const allowedToDelete =  
    (isMember || isProjectLead) && (
     session?.user.id === taskToEdit?.createdById || 
-    session?.user.id === project.authorID)
+    session?.user.id === project.authorID) && taskToEdit
 
   // States and useEffects
-  const [taskTitle, setTaskTitle] = useState(initialTitle);
+  const [taskTitle, setTaskTitle] = useState(() => taskToEdit ? taskToEdit.title : inputValue)
   const [taskContent, setTaskContent] = useState(initialContent); //can the user edit ? 
   const [showHtmlPreview, setShowHtmlPreview] = useState(true); // state variable to control HTML preview mode -- Set to edit by default
   const [isEditMode, setIsEditMode] = useState(false); //If the task is being created --> edit mode
@@ -93,7 +90,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   useEffect(() => {
     if (taskToEdit) { // Existing task
       setTaskTitle(taskToEdit.title);
-      console.log("no")
       setShowHtmlPreview(false); 
       setTaskStatus(taskToEdit.status);
       setTaskContent(taskToEdit.content);
@@ -106,7 +102,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     else {
       setTaskTitle(inputValue);
     }
-  }, [taskToEdit, session]); 
+  }, [taskToEdit, session, inputValue]); 
   
   const enhancedOnClose = () => {
     resetForm();
@@ -114,8 +110,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   };
 
   const resetForm = () => {
-    //Could add make sure to save ?
-    setTaskTitle('');
     setTaskContent(defaultTemplate);
     setIsEditMode(false);
     setShowHtmlPreview(true);

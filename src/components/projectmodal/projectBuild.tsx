@@ -11,6 +11,8 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
   }) => {
     const [taskCount, setTaskCount] = useState<number>(5); // Default value is 5 tasks
     const [selectedCategory, setSelectedCategory] = useState<string>(""); // Default is empty
+
+    console.log("Im run too")
     
     // Assuming these are your project categories.
     const projectCategories = ["Web Development", "Data Science", "Design", "Other"];
