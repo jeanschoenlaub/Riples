@@ -15,7 +15,7 @@ export const StyledTable: React.FC<StyledTableProps> = ({ headers, children }) =
               <th
                 key={index}
                 scope="col"
-                className={`px-6 py-3 ${index !== 0 ? 'text-center' : ''}`}
+                className={`px-6 py-3 ${index !== 0 ? 'text-center' : ''} ${index !== 0 && index !== headers.length - 1 ? 'hidden md:table-cell' : ''}`}
                 style={{ width: index === 0 ? '40%' : '15%' }}
               >
                 {header}
