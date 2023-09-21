@@ -5,6 +5,8 @@ import { Modal } from "~/components/reusables/modaltemplate";
 import { handleZodError } from "~/utils/error-handling";
 import toast from "react-hot-toast";
 import ProjectDescriptionComponent from "./projectDescription";
+import ProjectBuildComponent from "./projectBuild";
+import ProjectSettingsComponent from "./projectSettings";
 
 
 interface CreateProjectModalProps {
@@ -86,20 +88,24 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
         setProjectName={setProjectName}
         projectDescription={projectDescription}
         setProjectDescription={setProjectDescription}
-        projectStatus={projectStatus}
-        setProjectStatus={setProjectStatus}
         isLoading={isLoading}
       />
       }
-      {currentStep === Step.ProjectBuild && <div></div>}
-      {currentStep === Step.ProjectSettings && <div></div>}
+      {currentStep === Step.ProjectBuild && <ProjectBuildComponent 
+        projectName={projectName}
+        projectDescription={projectDescription}
+        projectStatus={projectStatus}
+        setProjectStatus={setProjectStatus}
+      />}
+      
+      {currentStep === Step.ProjectSettings && <ProjectSettingsComponent/>}
 
       <div className="flex justify-between">
-        <span className="text-lg flex justify-center items-center space-x-4 mb-2 w-auto">
+        <span className="text-lg flex justify-center items-center space-x-4 mt-2 mb-2 w-auto">
           {currentStep !== Step.ProjectDescription && (
             <button 
               onClick={prevStep}
-              className="bg-blue-500 text-white text-sm rounded px-4 py-1 ml-2 flex items-center justify-center w-auto"
+              className="bg-blue-500 text-white text-lg rounded px-4 py-1 flex items-center justify-center w-auto"
               disabled={isLoading}
             >
               <span className='flex items-center'>
@@ -112,11 +118,11 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
           )}
         </span>
 
-        <span className="text-lg flex justify-center items-center space-x-4 mb-2 w-auto">
+        <span className="text-lg flex justify-center items-center space-x-4 mt-2 mb-2 w-auto">
           {currentStep !== Step.ProjectSettings ? (
             <button 
               onClick={nextStep}
-              className="bg-blue-500 text-white text-sm rounded px-4 py-1 ml-2 flex items-center justify-center w-auto"
+              className="bg-blue-500 text-white text-lg rounded px-4 py-1  flex items-center justify-center w-auto"
               disabled={isLoading}
             >
               <span className='flex items-center'>
@@ -129,7 +135,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
           ) : (
             <button 
               onClick={nextStep}
-              className="bg-green-500 text-white text-sm rounded px-4 py-1 ml-2 flex items-center justify-center w-auto"
+              className="bg-green-500 text-white text-base rounded px-4 py-1 ml-2 flex items-center justify-center w-auto"
               disabled={isLoading}
             >
               <span className='flex items-center'>
