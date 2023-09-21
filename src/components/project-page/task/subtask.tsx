@@ -32,7 +32,9 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskId, subTasks, is
           {subTasks.map((subTask, index) => (
             <div key={index} className="flex items-center py-2 border-b">
                 {isEditingStatus && LoadingSubTaskId === subTask.id ? (
-                <LoadingSpinner size={16} />
+                  <div className="mr-2">
+                    <LoadingSpinner size={16} />
+                  </div>
                 ) : (
                 <input
                     type="checkbox"
@@ -58,7 +60,7 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskId, subTasks, is
             </div>
           ))}
           {/*Add a new Sub-Task*/}
-          <div className="flex items-center mt-2 opacity-50">
+          <div className="flex items-center mt-2 space-x-1 opacity-50">
             <input
                 type="text"
                 placeholder="Add a Sub-Task"

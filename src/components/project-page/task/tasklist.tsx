@@ -40,7 +40,7 @@ type SubTaskData = RouterOutputs["tasks"]["getSubTasksByTaskId"][0];
 export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProjectLead}) => {
   const [selectedTask, setSelectedTask] = useState<TaskData | null>(null);
   const [showTaskModal, setShowTaskModal] = useState(false); 
-  const [displaySubtasks, setDisplaySubtasks] = useState<Record<string, boolean>>({});
+  const [displaySubtasks, setDisplaySubtasks] = useState<string | null>(null);
   const [subTasks, setSubTasks] = useState<Record<string, SubTaskData[]>>({});
   const [taskIdToFetch, setTaskIdToFetch] = useState<string | null>(null);
 
@@ -60,15 +60,15 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
   }, [subTaskData, taskIdToFetch]);
 
   const toggleSubtasks = (taskId: string) => {
-    if (!displaySubtasks[taskId]) {
+    // If the clicked task is already open, close it
+    if (displaySubtasks === taskId) {
+      setDisplaySubtasks(null); // Close the current task
+    } else {
       setTaskIdToFetch(taskId); // This will trigger the useQuery to refetch
+      setDisplaySubtasks(taskId); // Open the clicked task
     }
-    
-    setDisplaySubtasks((prev) => ({
-      ...prev,
-      [taskId]: !prev[taskId],
-    }));
   };
+  
 
   const openEditModal = (task: TaskData | null) => {
     setSelectedTask(task);
@@ -99,8 +99,8 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
                   {taskDetail.task.title}
                 </button>
               </th>
-              <td className="px-6 py-4 flex text-center">
-                <span className={`text-white rounded w-auto px-2 py-2 ${
+              <td className="flex items-center justify-center py-4 ">
+                <span className={`text-white rounded w-auto px-2 py-2  ${
                   taskDetail.task.status === "Doing" ? "bg-yellow-500" : 
                   taskDetail.task.status === "To-Do" ? "bg-gray-500" : 
                   taskDetail.task.status === "Done" ? "bg-green-500" : ""
@@ -127,20 +127,20 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
               </td>
               <td className="px-6 py-4 flex justify-center">
                 <button onClick={() => toggleSubtasks(taskDetail.task.id)} className="text-blue-600 dark:text-blue-500 hover:underline">
-                {displaySubtasks[taskDetail.task.id] ? (
+                {displaySubtasks === taskDetail.task.id ? (
                   <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
                     <path stroke="#2563eb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 7 7.674 1.3a.91.91 0 0 0-1.348 0L1 7"/>
                   </svg>
                 ) : (
                   <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                     <path stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="m1 1 4 4 4-4" />
-                  </svg>  // If not, display this SVG
+                  </svg>  
                 )}
               </button>
               </td>
             </tr>
             {/* Conditionally display subtasks */}
-            {displaySubtasks[taskDetail.task.id] && (
+            {displaySubtasks === taskDetail.task.id && (
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <td colSpan={5} className="px-6 py-4">
                   <SubTasksRows taskId={taskDetail.task.id} subTasks={subTasks[taskDetail.task.id] ?? []} isLoadingSubtasks={isLoadingSubTasks}  isErrorSubStaks={isErrorSubTasks} />
