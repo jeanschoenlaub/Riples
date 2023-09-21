@@ -53,44 +53,6 @@ export const projRouter = createTRPCRouter({
     });
   }),
 
-  getAllWithRiples: publicProcedure.query( async ({ ctx }) => {
-    const projects = await ctx.prisma.project.findMany({
-      take: 100,
-      orderBy: [{ createdAt: "desc" }],
-      include: {
-        riples: true, // Include riples
-      },
-    });
-
-    const users = await ctx.prisma.user.findMany({
-      where: {
-        id: {
-          in: projects.map((project) => project.authorID),
-        },
-      },
-      select: {
-        id: true,
-        name: true,
-        image: true,
-        // Add any other fields you need
-      },
-    });
-
-    // Map over projects to add author information
-    return projects.map((project) => {
-      const author = users.find((user) => user.id === project.authorID);
-
-      if (!author) {
-        throw new Error('Project author not found.');
-      }
-
-      return {
-        project,
-        author,
-      };
-    });
-  }),
-
   getProjectByProjectId: publicProcedure
   .input(z.object({ projectId: z.string() }))
   .query(async ({ ctx, input }) => {
@@ -146,11 +108,7 @@ export const projRouter = createTRPCRouter({
   }),
 
   create: protectedProcedure
-  .input(z.object({ 
-    title: z.string().min(5, { message: "Must be 5 or more characters long" }), 
-    summary: z.string().min(5, { message: "Must be 5 or more characters long" }) 
-  }),
-  )
+  .input(z.object({ content: z.string().min(5, { message: "Must be 5 or more characters long" }) }))
   .mutation(async ({ ctx, input }) => {
     const authorID = ctx.session.user.id;
 
@@ -161,8 +119,8 @@ export const projRouter = createTRPCRouter({
     const project = await ctx.prisma.project.create({
       data: {
         authorID,
-        title: input.title,
-        summary: input.summary,
+        title: input.content,
+        summary: input.content,
       },
     });
 
