@@ -6,7 +6,7 @@ interface TabsProps {
   setActiveTab: Dispatch<SetStateAction<string>>;
   riples? : string;  // optional props
   projects? : string;
-  collab?: string; 
+  collab?: boolean; 
   admin?: boolean; 
 }
 

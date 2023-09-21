@@ -14,6 +14,8 @@ interface TaskModalProps {
   taskToEdit: TaskData | null; 
   showModal: boolean;
   isMember: boolean;
+  isProjectLead: boolean;
+  inputValue: string; //If the user types some text before clicking create task
   onClose: () => void;
 }
 
@@ -50,23 +52,25 @@ type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"];
 type TaskData = RouterOutputs["tasks"]["edit"];
 
 // Main React Functional Component
-export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, onClose }) => {
+export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
   
   // Initialize state with values from props if taskToEdit is present (for edit mode vs create mode)
-  const initialTitle = taskToEdit ? taskToEdit.title : '';
+  const initialTitle = taskToEdit ? taskToEdit.title : inputValue;
   const initialContent = taskToEdit ? taskToEdit.content : defaultTemplate;
+
+  console.log("Input Value in Modal: ", inputValue);
 
   //Is the logged in user allowed to edit ?
   const { data: session } = useSession();
   const allowedToEdit =  
-    isMember && (
+    ((isMember && (
     session?.user.id === taskToEdit?.ownerId || 
     session?.user.id === taskToEdit?.createdById || 
     session?.user.id === project.authorID ||
-    taskToEdit === null)
+    taskToEdit === null)) || isProjectLead)
 
   const allowedToDelete =  
-    isMember && (
+   (isMember || isProjectLead) && (
     session?.user.id === taskToEdit?.createdById || 
     session?.user.id === project.authorID)
 
@@ -89,6 +93,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   useEffect(() => {
     if (taskToEdit) { // Existing task
       setTaskTitle(taskToEdit.title);
+      console.log("no")
       setShowHtmlPreview(false); 
       setTaskStatus(taskToEdit.status);
       setTaskContent(taskToEdit.content);
@@ -97,6 +102,9 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
       if (allowedToEdit) {
         setIsEditMode(true); // If the task already exists + the user has the right to edit, we are editing vs creating
       }
+    }
+    else {
+      setTaskTitle(inputValue);
     }
   }, [taskToEdit, session]); 
   
@@ -119,7 +127,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   };
 
   const toggleOwnership = () => {
-    if (!isMember){
+    if (!isMember || !isProjectLead ){
       toast.error("Apply to join the project to claim task")
     }
     else{
@@ -406,15 +414,4 @@ const useTaskMutation = (projectId: string, { onSuccess }: { onSuccess: () => vo
   }
 }
 
-const defaultTemplate = `
-Task Description
-<!-- This is the html tag for adding a space in text -->
-<br>
-
-
-<!-- This is the html tag to make a checklist if you want to tick some things off -->
-<br>
-  <li><input type="checkbox" > Sub-task 1 </li>
-  <li><input type="checkbox" > Sub-task 2 </li>
-<br>
-`;
+const defaultTemplate = `You can add more details about the task or store knowledge here :)  `

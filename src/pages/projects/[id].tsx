@@ -84,6 +84,9 @@ export default function Project(
   );
   const isProjectLead = session?.user.id === projectData.project.authorID;
 
+  const displayCollabTab = 
+    isProjectLead || 
+    (projectData?.project.projectType === "multi" && projectData?.project.projectPrivacy === "public")
 
   return (
     <>
@@ -121,7 +124,7 @@ export default function Project(
                     setActiveTab={setActiveTab} 
                     riples="y"
                     admin={isProjectLead} 
-                    collab={projectData?.project.projectType === "multi" ? "y" : ""}
+                    collab={ displayCollabTab}
                   />
                 </div>
               
@@ -144,7 +147,7 @@ export default function Project(
                 )}
 
                 {/* SHOWN IF COLLAB*/}
-                {activeTab === 'collab' && <CollabTab project={projectData.project} isMember={isMember} isPending={isPending} userId={userId}/>}
+                {activeTab === 'collab' && <CollabTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} userId={userId}/>}
 
                 {/* SHOWN IF ADMIN */}
                 {activeTab === 'admin' && <AdminTab project={projectData.project} members={projectMemberData} ></AdminTab>}
