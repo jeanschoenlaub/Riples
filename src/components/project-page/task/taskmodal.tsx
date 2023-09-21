@@ -120,7 +120,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   };
 
   const toggleOwnership = () => {
-    if (!isMember || !isProjectLead ){
+    if (!isMember){
       toast.error("Apply to join the project to claim task")
     }
     else{
@@ -408,14 +408,22 @@ const useTaskMutation = (projectId: string, { onSuccess }: { onSuccess: () => vo
 }
 
 const defaultTemplate = `
-Task Description
-<!-- This is the html tag for adding a space in text -->
+<h3>What ?</h3>
 <br>
 
-
-<!-- This is the html tag to make a checklist if you want to tick some things off -->
+<p><em>A complete description of the task, broken down in To-Do.</em></p>
 <br>
-  <li><input type="checkbox" > Sub-task 1 </li>
-  <li><input type="checkbox" > Sub-task 2 </li>
+  <li><input type="checkbox" > Task 1 </li>
+  <li><input type="checkbox" > Task 1 </li>
+<br>
+
+<h3>Why ?</h3>
+<br>
+
+<p><em>Why is it important to do this task ?</em></p>
+<br>
+
+<h3>Work in progress</h3>
+<p><em> Keep a record of your work here, for easy access.</em></p>
 <br>
 `;
