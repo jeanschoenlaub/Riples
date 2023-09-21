@@ -10,7 +10,7 @@ import superjson from 'superjson';
 
 import { getSession } from 'next-auth/react';
 import React, { useState } from 'react';
-import { GlobalNavBar } from '~/components/navbar/navbar';
+import { GlobalNavBar } from '~/components/navbar';
 import { ProjectNav } from '~/components/sidebar';
 import { Tabs } from '~/components/reusables/tabs';
 import { ProjectCard } from '~/components/projectcard';
