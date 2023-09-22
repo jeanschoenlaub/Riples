@@ -2,6 +2,7 @@ import { useState } from "react";
 import MultiSelect from "../reusables/multiselect";
 import projectClassifications from '~/utils/constants/projectclassifications';
 import ToggleSwitch from "../reusables/toogleswitch";
+import Tooltip from "../reusables/tooltip";
 
 interface ProjectSettingsComponentProps {
     tags: string[];
@@ -56,7 +57,17 @@ const ProjectSettingsComponent: React.FC<ProjectSettingsComponentProps> =  ({
 
             
                 <div className="flex flex-row items-center justify-between">
-                    <label className=" text-base">Project Type</label>
+                    <div className="flex items-center space-x-2">
+                        <label className="text-base">Project Type</label>
+                        <Tooltip content="Information about project type.">
+                            <span>
+                                <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9h2v5m-2 0h4M9.408 5.5h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                </svg>
+                            </span>
+                        </Tooltip>
+                    </div>
+
                     <ToggleSwitch 
                         activeTab={isSolo ? "Solo" : "Collab"} 
                         setActiveTab={(value) => setIsSolo(value === "Solo")} 
@@ -65,7 +76,17 @@ const ProjectSettingsComponent: React.FC<ProjectSettingsComponentProps> =  ({
                         background="bg-gray-100"
                     />
 
-                    <label className="text-base">Visibility</label>
+                    <div className="flex items-center space-x-2">
+                        <label className="text-base">Visibility</label>
+                        <Tooltip content="Information about visibility.">
+                            <span>
+                                <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9h2v5m-2 0h4M9.408 5.5h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                </svg>
+                            </span>
+                        </Tooltip>
+                    </div>
+
                     <ToggleSwitch 
                         activeTab={isPrivate ? "Private" : "Public"} 
                         setActiveTab={(value) => setIsPrivate(value === "Private")} 
