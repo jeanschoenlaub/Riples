@@ -1,31 +1,15 @@
-import { api } from "~/utils/api";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Modal } from "~/components/reusables/modaltemplate";  
-import { handleZodError } from "~/utils/error-handling";
-import toast from "react-hot-toast";
-import ProjectDescriptionComponent from "./projectDescription";
-import ProjectBuildComponent from "./projectBuild";
-import ProjectSettingsComponent from "./projectSettings";
+import ProjectDescriptionComponent from "./projectdescription/projectdescription";
+import ProjectBuildComponent from "./projectbuild/projectbuild";
+import ProjectSettingsComponent from "./projectsettings/projectsettings";
+import { useProjectMutation } from "./createprojectapi";
+import { RouterOutputs } from "~/utils/api";
+import { CreateProjectModalProps, CreateProjectPayload, Step } from "./createprojecttypes";
+import router from "next/router";
 
-
-interface CreateProjectModalProps {
-  showModal: boolean;
-  inputValue? : string;
-  onClose: () => void;
-}
-
-interface CreateProjectPayload {
-  title: string;
-  summary: string;
-}
-
-enum Step {
-  ProjectDescription = 'DESCRIPTION',
-  ProjectBuild = 'BUILD',
-  ProjectSettings = 'SETTINGS',
-}
-
+type NewProjecResponse  = RouterOutputs["projects"]["create"] 
 export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModal, inputValue, onClose }) => {
   const { data: session } = useSession(); 
 
@@ -48,7 +32,6 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   const handleTagsChange = (updatedTags: string[]) => {
     setTags(updatedTags);
   };
-  
 
 
   // Modify handleTasksChange to set task count
@@ -83,12 +66,20 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
 
   const generateCreatePayload = (): CreateProjectPayload => ({
     title: projectName,
-    summary: projectDescription
+    summary: projectDescription,
+    tags: tags,
+    isSolo: isSolo,
+    isPrivate: isPrivate,
+    projectStatus: projectStatus,
+    tasks: tasks,
   });
 
-  const handleSave = () => {
+  const handleCreateProject = async  () => {
     const payload = generateCreatePayload();
-    createProject(payload);
+    const newProject: NewProjecResponse | undefined = await createProject(payload);
+    if (newProject) {
+      router.push(`/projects/${newProject.id}`);
+    }
   };
 
   const { isCreating, createProject} = useProjectMutation({ onSuccess: resetForm });
@@ -163,7 +154,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
             </button>
           ) : (
             <button 
-              onClick={nextStep}
+              onClick={handleCreateProject}
               className="bg-green-500 text-white text-base rounded px-4 py-1 ml-2 flex items-center justify-center w-auto"
               disabled={isLoading}
             >
@@ -182,33 +173,3 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   );
 };
 
-// Custom hook to handle mutations and their state
-const useProjectMutation =  ({ onSuccess }: { onSuccess: () => void }) => {
-  const apiContext = api.useContext();
-  
-  // Function to run on successful mutations
-  const handleSuccess = () => {
-    void apiContext.projects.getAll.invalidate(); // Invalidate the cache
-    onSuccess(); // Execute any additional onSuccess logic
-  };
-  
-  //We add a mutation for creating a task (with on success)
-  const { mutate: createProjectMutation, isLoading: isCreating }  = api.projects.create.useMutation({
-    onSuccess: handleSuccess,
-    onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors; 
-      const message = handleZodError(fieldErrors);
-      toast.error(message);
-    }
-  });
-
-  const createProject = (payload: CreateProjectPayload) => {
-    createProjectMutation(payload);
-  };
-
-
-  return {
-    isCreating,
-    createProject,
-  }
-}

@@ -28,7 +28,7 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
     return (
     <div>
       <div className="container mx-auto py-2">
-            <div className="p-8 rounded-lg shadow-lg bg-gray-100">
+            <div className="p-4 rounded-lg shadow-lg bg-gray-100">
                 <div className="text-center mb-4">
                     <h1 className="text-3xl font-semibold">Step 2</h1>
                     <p>Breaking it down</p>

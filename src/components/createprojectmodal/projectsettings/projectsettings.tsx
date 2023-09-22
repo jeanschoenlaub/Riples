@@ -1,8 +1,8 @@
 import { useState } from "react";
-import MultiSelect from "../reusables/multiselect";
+import MultiSelect from "../../reusables/multiselect";
 import projectClassifications from '~/utils/constants/projectclassifications';
-import ToggleSwitch from "../reusables/toogleswitch";
-import Tooltip from "../reusables/tooltip";
+import ToggleSwitch from "../../reusables/toogleswitch";
+import Tooltip from "../../reusables/tooltip";
 
 interface ProjectSettingsComponentProps {
     tags: string[];

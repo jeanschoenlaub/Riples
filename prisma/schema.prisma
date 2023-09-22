@@ -30,22 +30,45 @@ model Project {
   members         ProjectMembers[] 
   tasks           Tasks[] 
   followers       ProjectFollowers[] 
+  tags            ProjectTags[]
 
   @@index([authorID])
 }
 
-model ProjectFollowers {
-  id           String  @id @default(cuid())
+model ProjectTags {
+    tag       Tag     @relation(fields: [tagId], references: [id])
+    tagId     String
+    project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId String
 
-  //Relations
-  projectId    String 
+    @@id([tagId, projectId])
+}
+
+model Tasks {
+  id           String  @id @default(cuid())
+  status       String  @db.VarChar(255) @default("To-Do")
+  title        String  @db.VarChar(255)
+  content      String  @db.VarChar(10000)
+  createdById  String  //userId
+  createdAt    DateTime @default(now())
+  editedAt     DateTime @default(now())
+
+  // Relations
+  ownerId      String  @default("")
+  projectId    String  
   project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  userId       String
-  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)  
+  subTasks     SubTasks[]
 
   @@index([projectId])
-  @@index([userId])
 }
+
+
+model Tag {
+    id       String        @id @default(cuid())
+    name     String        @unique
+    projects ProjectTags[]
+}
+
 
 model Riple {
   id        String  @id @default(cuid())
@@ -76,22 +99,18 @@ model ProjectMembers {
   @@unique([projectId, userID])
 }
 
-model Tasks {
-  id           String  @id @default(cuid())
-  status       String  @db.VarChar(255) @default("To-Do")
-  title        String  @db.VarChar(255)
-  content      String  @db.VarChar(10000)
-  createdById  String  //userId
-  createdAt    DateTime @default(now())
-  editedAt     DateTime @default(now())
 
-  // Relations
-  ownerId      String  @default("")
-  projectId    String  
+model ProjectFollowers {
+  id           String  @id @default(cuid())
+
+  //Relations
+  projectId    String 
   project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  subTasks     SubTasks[]
+  userId       String
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)  
 
   @@index([projectId])
+  @@index([userId])
 }
 
 model SubTasks {

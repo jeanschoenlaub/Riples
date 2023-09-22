@@ -1,7 +1,7 @@
 import { api } from "~/utils/api";
 import { LoadingPage } from "~/components/reusables/loading";
 import { ProjectCard } from '../projectcard';
-import { CreateProjectModal } from "../projectmodal/createprojetmodal";
+import { CreateProjectModal } from "../createprojectmodal/createprojetmodal";
 import { useState } from "react";
 import { NavBarSignInModal } from "../usermodals/signinmodal";
 import { useSession } from "next-auth/react";

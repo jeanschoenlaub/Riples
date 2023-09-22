@@ -6,8 +6,6 @@ import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
 
 
-
-
 // Create a new ratelimiter, that allows 2 requests per 1 minute
 export const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -146,27 +144,108 @@ export const projRouter = createTRPCRouter({
   }),
 
   create: protectedProcedure
-  .input(z.object({ 
-    title: z.string().min(5, { message: "Must be 5 or more characters long" }), 
-    summary: z.string().min(5, { message: "Must be 5 or more characters long" }) 
-  }),
-  )
+  .input(z.object({
+    title: z.string()
+      .min(5, { message: "Project title must be 5 or more characters long" })
+      .max(255, { message: "Project title must be 255 or less characters long" }),
+    summary: z.string()
+      .max(5000, { message: "Project Description must be 5000 or less characters long" }),
+    isSolo: z.boolean(),
+    isPrivate: z.boolean(),
+    projectStatus: z.string(),
+    tasks: z.array(z.string()),   // Assuming tasks are just an array of titles for simplicity
+    tags: z.array(z.string()),    // Assuming tags are an array of tag names
+  }))
   .mutation(async ({ ctx, input }) => {
     const authorID = ctx.session.user.id;
 
     const { success } = await ratelimit.limit(authorID);
-
     if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
+    // Check existing tags
+    const existingTags = await ctx.prisma.tag.findMany({
+      where: {
+        name: {
+          in: input.tags
+        }
+      }
+    });
+
+    const existingTagNames = existingTags.map(t => t.name);
+    const newTagNames = input.tags.filter(tag => !existingTagNames.includes(tag));
+
+    if (newTagNames.length > 0) {
+      await ctx.prisma.tag.createMany({
+        data: newTagNames.map(tagName => ({ name: tagName })),
+        skipDuplicates: true
+      });
+    }
+
+    // Get all tag IDs, including the ones we just created
+    const allTags = await ctx.prisma.tag.findMany({
+      where: {
+        name: {
+          in: input.tags
+        }
+      }
+    });
+
+    const allTagIds = allTags.map(t => t.id);
+
+    // Now create the project with tasks and tags
     const project = await ctx.prisma.project.create({
       data: {
         authorID,
         title: input.title,
         summary: input.summary,
+        projectType: input.isSolo ? "solo" : "team", 
+        projectPrivacy: input.isPrivate ? "private" : "public",
+        status: input.projectStatus,
+        
+        tasks: {
+          create: input.tasks.map(taskTitle => ({
+            title: taskTitle,
+            content: '',
+            createdById: authorID,
+          }))
+        },
+
+        tags: {
+          create: allTagIds.map(tagId => ({
+            tagId
+          }))
+        }
       },
     });
 
     return project;
   }),
-});
 
+  
+  delete: protectedProcedure
+  .input(z.object({
+    projectId: z.string()
+  }))
+  .mutation(async ({ ctx, input }) => {
+    const authorID = ctx.session.user.id;
+
+    // Check if the user is the owner of the project
+    const project = await ctx.prisma.project.findFirst({
+      where: {
+        id: input.projectId,
+        authorID
+      }
+    });
+
+    if (!project) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Project not found or you do not have permission to delete it." });
+    }
+
+    // Delete the project. Due to cascading, related entities will be deleted too.
+    await ctx.prisma.project.delete({
+      where: { id: input.projectId }
+    });
+
+    return { message: "Project successfully deleted." };
+  }),
+});
