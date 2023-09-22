@@ -30,7 +30,7 @@ export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medi
             </button>
             <div className="flex justify-center my-4">
               {isLoading ? (
-                <LoadingRiplesLogo />
+                <LoadingRiplesLogo isLoading={isLoading}/>
               ) : (
                 <div className="loading-container">
                   <img

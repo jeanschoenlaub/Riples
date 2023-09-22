@@ -82,7 +82,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
 
   const isLoading = isLoadingTasks 
 
-  if (isLoading) return <div className="flex justify-center"><LoadingRiplesLogo/></div>;
+  if (isLoading) return <div className="flex justify-center"><LoadingRiplesLogo isLoading={isLoading}/></div>;
   if (isError || !taskData) return <p>Error loading tasks.</p>;
 
   return (

@@ -51,32 +51,35 @@ max-width: 400px; /* Adjust the maximum width as needed */
   }
   
 .droplet {
-position: absolute;
-top: 50%;
-left: 50%;
-width: 50px; /* You can adjust this depending on your image's aspect ratio */
-height: auto;
-transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px; /* You can adjust this depending on your image's aspect ratio */
+    height: auto;
+    transform: translate(-50%, -50%);
 }
   
 .ripple {
-position: absolute;
-top: 50%;
-left: 50%;
-width: 50;
-height: 50;
-border: 5px solid blue;
-border-radius: 50%;
-opacity: 0.5;
-transform: translate(-50%, -50%) scale(0);
-animation: expand 3s infinite ease-out;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50;
+    height: 50;
+    border: 5px solid blue;
+    border-radius: 50%;
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.ripple-active .ripple {
+    animation: expand 3s infinite ease-out;
 }
 
 .ripple:nth-child(2) {
-animation-delay: 0.5s;
+    animation-delay: 0.5s;
 }
 
 .ripple:nth-child(3) {
-animation-delay: 0.1s;
+    animation-delay: 0.1s;
 }
 

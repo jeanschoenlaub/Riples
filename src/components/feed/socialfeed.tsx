@@ -10,7 +10,7 @@ export const SocialFeed = () => {
     
     const [showCreateProjModal, setShowCreateProjModal] = useState(false); 
 
-    if (isLoading) return(<LoadingPage></LoadingPage>)
+    if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)
   
     if (!data) return(<div> Something went wrong</div>)
 

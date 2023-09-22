@@ -29,16 +29,36 @@ enum Step {
 export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModal, inputValue, onClose }) => {
   const { data: session } = useSession(); 
 
+  // For the project description component 
   const [projectName, setProjectName] = useState(inputValue ? inputValue : '');
+  const [projectDescription, setProjectDescription] = useState('');
+
+  // For the project Build page 
+  const [projectStatus, setProjectStatus] = useState('To-Do');
+  const [taskCount, setTaskCount] = useState<number>(0);
+  const [tasks, setTasks] = useState<string[]>([]);
+  const handleTasksChange = (updatedTasks: string[]) => {
+      setTasks(updatedTasks);
+  };
+
+  //for the settings page
+  const [isSolo, setIsSolo] = useState(true);
+  const [isPrivate, setIsPrivate] = useState(true);
+  const [tags, setTags] = useState<string[]>([]);
+  const handleTagsChange = (updatedTags: string[]) => {
+    setTags(updatedTags);
+  };
+  
+
+
+  // Modify handleTasksChange to set task count
   useEffect(() => {
     setProjectName(inputValue ? inputValue : '');
   }, [inputValue]);
-  const [projectDescription, setProjectDescription] = useState('');
-  const [projectStatus, setProjectStatus] = useState('To-Do');
 
+  
+  //For the previous and next logic
   const [currentStep, setCurrentStep] = useState(Step.ProjectDescription);
-
-
   const nextStep = () => {
     if (currentStep === Step.ProjectDescription) {
       setCurrentStep(Step.ProjectBuild);
@@ -57,6 +77,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
 
   const resetForm = () => {
     setProjectDescription('');
+    setTaskCount(0);  // Reset task count
     onClose();
   };
 
@@ -77,11 +98,10 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
     resetForm();
   };
 
-  console.log(projectName)
 
   return (
     <>
-      <Modal showModal={showModal} size="medium" onClose={closeModal}> 
+      <Modal showModal={showModal} size="medium" isLoading={isLoading} onClose={closeModal}> 
       {currentStep === Step.ProjectDescription && 
         <ProjectDescriptionComponent 
         projectName={projectName}
@@ -92,13 +112,22 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
       />
       }
       {currentStep === Step.ProjectBuild && <ProjectBuildComponent 
-        projectName={projectName}
-        projectDescription={projectDescription}
         projectStatus={projectStatus}
         setProjectStatus={setProjectStatus}
+        taskCount={taskCount}
+        setTaskCount={setTaskCount}
+        tasks={tasks}
+        onTasksChange={handleTasksChange}
       />}
       
-      {currentStep === Step.ProjectSettings && <ProjectSettingsComponent/>}
+      {currentStep === Step.ProjectSettings && <ProjectSettingsComponent
+        tags={tags}
+        onTagsChange={handleTagsChange}
+        isSolo={isSolo}
+        setIsSolo={setIsSolo}
+        isPrivate={isPrivate}
+        setIsPrivate={setIsPrivate}
+      />}
 
       <div className="flex justify-between">
         <span className="text-lg flex justify-center items-center space-x-4 mt-2 mb-2 w-auto">

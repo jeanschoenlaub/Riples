@@ -3,17 +3,28 @@ import { LoadingPage } from "~/components/reusables/loading";
 import { ProjectCard } from '../projectcard';
 import { CreateProjectModal } from "../projectmodal/createprojetmodal";
 import { useState } from "react";
+import { NavBarSignInModal } from "../usermodals/signinmodal";
+import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
 
 export const CreateFeed = () => {
   const { data: projectData, isLoading: projectLoading } = api.projects.getAll.useQuery();
   const [showCreateProjModal, setShowCreateProjModal] = useState(false); 
   const [inputValue, setInputValue] = useState('');  // New state for input value
+  const [showSignInModal, setShowSignInModal] = useState(false); // If click on folllow when not signed in we redirect
 
-  if (projectLoading) return <LoadingPage />;
+  const { data: session } = useSession();
+
+  if (projectLoading) return <LoadingPage isLoading={projectLoading} />;
   
   if (!projectData) return <div>Something went wrong</div>;
 
   const handleCreateClick = () => {
+    if (!session?.user?.id) {
+      toast.error("You must be signed in to create a project")
+      setShowSignInModal(true); // Show sign-in modal if the user is not logged in
+      return;
+  } // Exit if the user is not logged in
     setShowCreateProjModal(true);
     // Pass `inputValue` to your modal here if needed
   };
@@ -52,10 +63,13 @@ export const CreateFeed = () => {
         ))}
       </div>
 
-      {/* Create Project Modal */}
+      {/*  Modals Opening on logic */}
       <div>
         <CreateProjectModal showModal={showCreateProjModal} inputValue={inputValue} onClose={() => setShowCreateProjModal(false)} />
+        <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
       </div>
+
+      
     </div>
   )
 }

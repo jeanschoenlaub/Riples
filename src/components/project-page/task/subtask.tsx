@@ -25,7 +25,7 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskId, subTasks, is
     const { isCreating, isDeleting, isEditingStatus, createSubTask, deleteSubTask, editStatus } = useSubTaskMutation(taskId, { onSuccess: resetSubTasks });
     const isLoading = isCreating || isDeleting || isEditingStatus 
   
-    if (isLoadingSubtasks) return <div className="flex justify-center"><LoadingRiplesLogo/></div>;
+    if (isLoadingSubtasks) return <div className="flex justify-center"><LoadingRiplesLogo isLoading={isLoadingSubtasks}/></div>;
 
     return (
         <div className="pl-4 border-l-2 border-gray-300">
