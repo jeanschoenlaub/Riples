@@ -5,12 +5,13 @@ import { ProjectCard } from '../cards/projectcard';
 import { CreateProjectModal } from "../createprojectmodal/createprojetmodal";
 import { useState } from "react";
 
+
 export const CreateFeed = () => {
   const { data: projectData, isLoading: projectLoading } = api.projects.getAll.useQuery();
     
     const [showCreateProjModal, setShowCreateProjModal] = useState(false); 
 
-    if (projectLoading) return(<LoadingPage></LoadingPage>)
+    if (projectLoading) return(<LoadingPage isLoading={projectLoading}></LoadingPage>)
   
     if (!projectData) return(<div> Something went wrong</div>)
   
