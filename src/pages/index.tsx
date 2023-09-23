@@ -2,15 +2,9 @@ import Head from "next/head";
 import { useState } from "react";
 import { api } from "~/utils/api";
 import { GlobalNavBar } from "~/components/navbar";
-<<<<<<< HEAD
-import { SocialFeed } from "~/components/feed/socialfeed";  // Rename to avoid naming conflicts
-import { ProjectNav } from "~/components/sidebar";
-import { CreateFeed } from "~/components/feed/createfeed"; // Assume you have a CreateFeed component
-=======
 import { SocialFeed } from "~/components/feeds/socialfeed";  // Rename to avoid naming conflicts
 import { SideNavProject } from "~/components/sidenavproject";
 import { CreateFeed } from "~/components/feeds/createfeed"; // Assume you have a CreateFeed component
->>>>>>> mvp_sprint_2
 
 export default function Home() {
   // Initialize component state

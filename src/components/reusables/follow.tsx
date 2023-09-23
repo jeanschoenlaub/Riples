@@ -3,7 +3,7 @@ import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import { NavBarSignInModal } from '../usermodals/signinmodal';
 import toast from 'react-hot-toast';
-import { LoadingSpinner } from './reusables/loading';
+import { LoadingSpinner } from './loading';
 
 type FollowProps = {
   projectId: string;

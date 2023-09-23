@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect } from 'react';
 import { RouterOutputs } from '~/utils/api';
 import Image from 'next/image';
-import Tooltip from './reusables/tooltip';
+import Tooltip from './tooltip';
 
 
 interface SessionUserType {

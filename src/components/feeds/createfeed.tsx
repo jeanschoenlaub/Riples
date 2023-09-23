@@ -2,7 +2,7 @@ import { api } from "~/utils/api";
 import { LoadingPage } from "~/components/reusables/loading";
 import { RipleCard } from '../cards/riplecard';
 import { ProjectCard } from '../cards/projectcard';
-import { CreateProjectModal } from "../projectmodal/createprojetmodal";
+import { CreateProjectModal } from "../createprojectmodal/createprojetmodal";
 import { useState } from "react";
 
 export const CreateFeed = () => {

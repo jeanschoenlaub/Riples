@@ -1,12 +1,7 @@
 import { api } from "~/utils/api";
 import { LoadingPage } from "~/components/reusables/loading";
-<<<<<<<< HEAD:src/components/feed/socialfeed.tsx
-import { RipleCard } from '../riplecard';
-import { CreateProjectModal } from "../createprojectmodal/createprojetmodal";
-========
 import { RipleCard } from '../cards/riplecard';
-import { CreateProjectModal } from "../projectmodal/createprojetmodal";
->>>>>>>> mvp_sprint_2:src/components/feeds/socialfeed.tsx
+import { CreateProjectModal } from "../createprojectmodal/createprojetmodal";
 import { useState } from "react";
 
 export const SocialFeed = () => {
