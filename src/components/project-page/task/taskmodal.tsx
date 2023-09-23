@@ -55,10 +55,6 @@ type TaskData = RouterOutputs["tasks"]["edit"];
 export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
   
   // Initialize state with values from props if taskToEdit is present (for edit mode vs create mode)
-<<<<<<< HEAD
-=======
-  const initialTitle = taskToEdit ? taskToEdit.title : inputValue;
->>>>>>> main
   const initialContent = taskToEdit ? taskToEdit.content : defaultTemplate;
 
   console.log("Input Value in Modal: ", inputValue);
@@ -109,11 +105,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     else {
       setTaskTitle(inputValue);
     }
-<<<<<<< HEAD
   }, [taskToEdit, session, inputValue]); 
-=======
-  }, [taskToEdit, session]); 
->>>>>>> main
   
   const enhancedOnClose = () => {
     resetForm();
@@ -314,7 +306,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
           }
           {allowedToDelete && (
             <button 
-            onClick={() => deleteTask({ id: taskToEdit!.id, projectId: project.id, userId: session!.user.id })} 
+            onClick={() => deleteTask({ id: taskToEdit.id, projectId: project.id, userId: session!.user.id })} 
             className="bg-red-500 text-white rounded px-4 py-2 mr-2 flex items-center justify-center w-auto"
             disabled={isLoading || isDeleting}
           >
@@ -419,8 +411,4 @@ const useTaskMutation = (projectId: string, { onSuccess }: { onSuccess: () => vo
   }
 }
 
-<<<<<<< HEAD
 const defaultTemplate = `You can add more details about the task or store knowledge here :)  `
-=======
-const defaultTemplate = `You can add more details about the task or store knowledge here :)  `;
->>>>>>> main

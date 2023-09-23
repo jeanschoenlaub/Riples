@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
 import { LoadingRiplesLogo, LoadingSpinner } from '../../reusables/loading';

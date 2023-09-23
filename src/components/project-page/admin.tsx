@@ -21,9 +21,11 @@ interface AdminTabProps {
 export const AdminTab: React.FC<AdminTabProps> = ({ project, members }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   //Custom Hooks
+  /* eslint-disable @typescript-eslint/no-empty-function */
   const { isApproving, isRefusing, isDeleting, deleteProject, approveUser, refuseUser } = useUserStatusMutation({
     onSuccess: () => {},
   });
+  /* eslint-enable @typescript-eslint/no-empty-function */
 
   const isLoading = isApproving || isRefusing;
 
@@ -39,8 +41,8 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members }) => {
       try {
         await deleteProject({ projectId: project.id });
         setShowDeleteModal(false);
+        await router.push('/');
         toast.success("Project Deleted successfully");
-        router.push(`/`);
       } catch (error) {
         // You can handle any error related to the deletion here if necessary.
         toast.error("Failed to delete the project");
@@ -131,7 +133,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members }) => {
               <div className="flex items-center justify-center space-x-2">
               {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
               <button className="bg-green-500 text-white rounded px-4 py-2 mb-2" 
-                onClick={() => {handleDeleteProject(project.id)}}
+                onClick={() => { void handleDeleteProject(project.id); }}
                 disabled={isDeleting}
                 > {isDeleting && <LoadingSpinner size={20} />} Yes 
               </button>

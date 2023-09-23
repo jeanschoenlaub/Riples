@@ -23,7 +23,6 @@ model Project {
 
   coverImageUrl   String   @default("https://t3-portofolio.s3.us-east-2.amazonaws.com/mvp_riples/Riple_bannner.png") @db.VarChar(255)
   
-
   //Relations
   authorID        String
   riples          Riple[]  // This establishes the one-to-many relation

@@ -29,7 +29,7 @@ export const UserNameForm: React.FC<{ onSuccess: () => void , onLoadingChange?: 
       setUsername(userQuery.data.user.username);
     }
       onLoadingChange?.(isLoading);
-  }, [userQuery.data?.user, isLoading]);
+  }, [userQuery.data?.user, onLoadingChange, isLoading]);
 
   if (session) {
     return (

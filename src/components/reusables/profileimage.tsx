@@ -1,5 +1,6 @@
-import React, { FC, useState, useEffect } from 'react';
-import { RouterOutputs } from '~/utils/api';
+import React from 'react';
+import type { FC } from 'react';
+import type { RouterOutputs } from '~/utils/api';
 import Image from 'next/image';
 import Tooltip from './tooltip';
 

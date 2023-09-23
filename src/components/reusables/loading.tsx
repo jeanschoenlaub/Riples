@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export const LoadingSpinner = (props: {size?: number}) => {
     return(
         <div role="status">
@@ -33,10 +35,12 @@ export const LoadingPage: React.FC<LoadingProps> = ({ isLoading }) => {
 export const LoadingRiplesLogo: React.FC<LoadingProps> = ({ isLoading }) => {
     return (
       <div className={`loading-container ${isLoading ? 'ripple-active' : ''}`}>
-        <img
+        <Image
             src="/images/logo_128x128.png" 
             className="droplet" 
             alt="Riple logo" 
+            width={32}
+            height={32}
         />
         <div className="ripple"></div> 
         <div className="ripple"></div>

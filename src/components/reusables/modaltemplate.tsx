@@ -1,5 +1,6 @@
 import React from 'react';
 import { LoadingRiplesLogo } from './loading';
+import Image from 'next/image';
 
 interface ModalProps {
   showModal: boolean;
@@ -39,10 +40,12 @@ export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medi
                 <LoadingRiplesLogo isLoading={isLoading}/>
               ) : (
                 <div className="loading-container">
-                  <img
+                  <Image
                     src="/images/logo_128x128.png"
                     className="droplet"
                     alt="Riple logo"
+                    width={32}
+                    height={32}
                   />
                 </div>
               )}

@@ -47,7 +47,7 @@ const ProjectDescriptionComponent: React.FC<ProjectDescriptionComponentProps> = 
         } else if (isSolo && isPrivate) {
             return (
                 <em>
-                  Your project will be visible only to you. You won't be able to share your project updates &#40;riples&#41; on the feed.
+                  Your project will be visible only to you. You won&apos;t be able to share your project updates &#40;riples&#41; on the feed.
                 </em>
             );
         } else if (!isSolo && !isPrivate) {
@@ -59,7 +59,7 @@ const ProjectDescriptionComponent: React.FC<ProjectDescriptionComponentProps> = 
         } else {
             return (
                 <em>
-                    Your project will be visible only to you and accepted project collaborators. You won't be able to share your project updates &#40;riples&#41; on the feed.
+                    Your project will be visible only to you and accepted project collaborators. You won&apos;t be able to share your project updates &#40;riples&#41; on the feed.
                 </em>
             );
         }

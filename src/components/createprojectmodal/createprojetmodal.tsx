@@ -4,14 +4,14 @@ import { Modal } from "~/components/reusables/modaltemplate";
 import ProjectDescriptionComponent from "./projectdescription/projectdescription";
 import ProjectBuildComponent from "./projectbuild/projectbuild";
 import { useProjectMutation } from "./createprojectapi";
-import { RouterOutputs } from "~/utils/api";
-import { CreateProjectModalProps, CreateProjectPayload, Step } from "./createprojecttypes";
+import type { RouterOutputs } from "~/utils/api";
+import type { CreateProjectModalProps, CreateProjectPayload } from "./createprojecttypes";
+import  { Step } from "./createprojecttypes";
 import router from "next/router";
 import { LoadingSpinner } from "../reusables/loading";
 
 type NewProjecResponse  = RouterOutputs["projects"]["create"] 
 export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModal, inputValue, onClose }) => {
-  const { data: session } = useSession(); 
 
   // For the project description component 
   const [projectName, setProjectName] = useState(inputValue ? inputValue : '');
@@ -93,13 +93,13 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
 
   const handleCreateProject = async  () => {
     const payload = generateCreatePayload();
-    const newProject: NewProjecResponse | undefined = await createProject(payload);
+    const newProject: NewProjecResponse | undefined = await createProjectAsyncMutation(payload);
     if (newProject) {
-      router.push(`/projects/${newProject.id}`);
+      await router.push(`/projects/${newProject.id}`);
     }
   };
 
-  const { isCreating, createProject} = useProjectMutation({ onSuccess: resetForm });
+  const { isCreating, createProjectAsyncMutation} = useProjectMutation({ onSuccess: resetForm });
   const isLoading = isCreating;
 
   const closeModal = () => {
@@ -174,7 +174,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
             </button>
           ) : (
             <button 
-              onClick={handleCreateProject}
+              onClick={() => { void handleCreateProject(); }}
               className="bg-green-500 text-white text-lg rounded px-4 py-1 ml-2 flex items-center justify-center w-auto"
               disabled={isLoading}
             >

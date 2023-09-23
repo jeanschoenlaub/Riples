@@ -1,4 +1,3 @@
-import Link from "next/link"
 import { api } from "~/utils/api";
 import { useState } from "react";
 import { LoadingPage } from "./reusables/loading";
@@ -12,7 +11,7 @@ export const SideNavProject = () => {
     const { data: projectFollowed, isLoading: projectFollowedLoading } = api.projectFollowers.getProjectsFollowedByFollowerId.useQuery({ userId: session?.user.id ?? ''  });
     const { data: projectMember, isLoading: projectMemberLoading } = api.projectMembers.getProjectsByMemberId.useQuery({ userId: session?.user.id ?? ''  });
 
-    const combinedProjectsForWorking = [...(projectLead || []), ...(projectMember || [])];
+    const combinedProjectsForWorking = [...(projectLead ?? []), ...(projectMember ?? [])];
     
     if (!session) {
         return (<div> Log in to see your projects </div>);

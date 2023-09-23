@@ -3,9 +3,9 @@ import Link from 'next/link';
 import type { RouterOutputs } from "~/utils/api";
 
 
-type Project = RouterOutputs["projectFollowers"]["getProjectsFollowedByFollowerId"]
+type Project = RouterOutputs["projectFollowers"]["getProjectsFollowedByFollowerId"][0]
 export const ProjectCard = (props: Project) => {
-  const {project} = props;
+  const {project,author} = props;
  
   return (
     <li className="py-3 sm:py-4">

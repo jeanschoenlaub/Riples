@@ -1,6 +1,4 @@
 import { useState } from "react";
-import MultiSelect from "~/components/reusables/multiselect";
-import projectClassifications from '~/utils/constants/projectclassifications';
 
 interface ProjectBuildComponentProps {
     tasks: string[];
@@ -31,16 +29,7 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
     isPrivate,
     isLoading
 }) => {
-    const [shake, setShake] = useState(false);
 
-    const handleShake = () => {
-        setShake(true);
-        setTimeout(() => setShake(false), 500);  // Remove the shake class after 500ms
-    }
-
-    const handleAddTask = () => {
-        onTasksChange([...tasks, ""]);
-    }
       
     return (
       <div>

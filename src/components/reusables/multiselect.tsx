@@ -1,5 +1,6 @@
 import React from 'react';
-import Select, { ActionMeta } from 'react-select';
+import Select from 'react-select';
+import type { ActionMeta } from 'react-select';
 
 interface OptionType {
     value: string;
@@ -24,9 +25,15 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   placeholder = "Select...",
   value,
 }) => {
-  // Handle change and enforce max selection limit
-  const handleChange = (selectedOptions: ValueType, actionMeta: ActionMeta<OptionType>) => {
-    let mutableOptions: OptionType[] = Array.isArray(selectedOptions) ? [...selectedOptions] : [];
+  type ReadonlyValueType = readonly OptionType[];
+
+  const handleChange = (selectedOptions: ReadonlyValueType | null, actionMeta: ActionMeta<OptionType>) => {
+    if (!selectedOptions) {
+        onChange(null);
+        return;
+    }
+
+    let mutableOptions: OptionType[] = [...selectedOptions];
 
     if (maxSelection && mutableOptions.length > maxSelection) {
         // Limit the tags to maxSelection
@@ -40,7 +47,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
     <Select
       isMulti
       options={options}
-      onChange={handleChange as any}  // Using "as any" here to bypass potential type issues.
+      onChange={handleChange}  // Using "as any" here to bypass potential type issues.
       placeholder={placeholder}
       value={value}
     />
