@@ -44,6 +44,12 @@ body {
 max-width: 400px; /* Adjust the maximum width as needed */
 }
 
+.truncate {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
   
 /* Loading ripple SVG */
 .loading-container {
