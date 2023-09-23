@@ -69,7 +69,7 @@ export default function Project(
   const { data: ripleData, isLoading: ripleLoading } = api.riples.getRiplebyProjectId.useQuery({ projectId });
   const { data: projectMemberData, isLoading:projectMemberLoading} = api.projectMembers.getMembersByProjectId.useQuery({ projectId });
 
-  const [activeTab, setActiveTab] = useState('riples'); // default active tab is 'riples for project pages'
+  const [activeTab, setActiveTab] = useState('about'); // default active tab is 'riples for project pages'
 
   const isLoading = (ripleLoading || projectLoading || projectMemberLoading || sessionStatus=="loading")
   if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)
@@ -86,7 +86,7 @@ export default function Project(
 
   const displayCollabTab = 
     isProjectLead || 
-    (projectData?.project.projectType === "multi" && projectData?.project.projectPrivacy === "public")
+    (projectData?.project.projectType === "collab" && projectData?.project.projectPrivacy === "public")
 
   return (
     <>

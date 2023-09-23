@@ -136,7 +136,8 @@ export const projRouter = createTRPCRouter({
     isPrivate: z.boolean(),
     tasks: z.array(z.string()),   
     goals: z.array(z.string()),  
-    tags: z.array(z.string()),    
+    tags: z.array(z.string()),  
+    postToFeed: z.boolean(),
   }))
   .mutation(async ({ ctx, input }) => {
     const authorID = ctx.session.user.id;
@@ -180,7 +181,7 @@ export const projRouter = createTRPCRouter({
         authorID,
         title: input.title,
         summary: input.summary,
-        projectType: input.isSolo ? "solo" : "multi", 
+        projectType: input.isSolo ? "solo" : "collab", 
         projectPrivacy: input.isPrivate ? "private" : "public",
 
         tasks: {
@@ -204,6 +205,20 @@ export const projRouter = createTRPCRouter({
         }
       },
     });
+
+    // Check if postToFeed is true, and if so, create a ripple
+    if (input.postToFeed) {
+      await ctx.prisma.riple.create({
+        data: {
+          title: "A new Project was created !",   // or any suitable title for the ripple
+          ripleType: "creation",
+          content: "", // or any suitable content
+          projectId: project.id,
+          authorID: authorID,
+        }
+      });
+    }
+
 
     return project;
   }),

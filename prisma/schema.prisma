@@ -13,7 +13,7 @@ model Project {
   title           String   @db.VarChar(255)
   summary         String   @db.VarChar(5000)
   
-  projectType     String   @db.VarChar(5) @default("solo")
+  projectType     String   @db.VarChar(6) @default("solo")
   projectPrivacy  String   @db.VarChar(10) @default("private")
 
   status          String   @db.VarChar(255)@default("To-Do")
@@ -88,10 +88,11 @@ model Tag {
 
 
 model Riple {
-  id        String  @id @default(cuid())
-  title     String  @db.VarChar(255)
-  content   String  @db.Text
+  id        String   @id @default(cuid())
+  title     String   @db.VarChar(255)
+  content   String   @db.Text
   createdAt DateTime @default(now())
+  ripleType String   @default("update")
 
   //Relations
   projectId String

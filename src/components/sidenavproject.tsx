@@ -55,7 +55,7 @@ export const SideNavProject = () => {
     
         {/*  List of projects */}
         <div className="flow-root w-full border-t">
-          <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
+          <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700 font-medium text-sky-500 underline">
             {SideBarToggle === "Following" 
             ? projectFollowed?.map((fullProject) => (
                 <ProjectCard

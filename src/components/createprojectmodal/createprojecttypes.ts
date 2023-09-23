@@ -12,6 +12,7 @@ export interface CreateProjectPayload {
     isPrivate: boolean;
     tasks: string[];
     goals: string[];
+    postToFeed: boolean;
 }
 
 export enum Step {

@@ -3,9 +3,14 @@ import { uniqueNamesGenerator, adjectives, colors, animals } from "unique-names-
 import { useEffect, useState } from 'react';
 import { useSession } from "next-auth/react";
 
-export const UserNameForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
+export const UserNameForm: React.FC<{ onSuccess: () => void , onLoadingChange: (loading: boolean) => void }> = ({ onSuccess,  onLoadingChange  }) => {
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false); 
+
+  const setAndNotifyLoading = (state: boolean) => {
+    setIsLoading(state);
+    onLoadingChange(state);
+  }
 
   const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user id is not null
   
@@ -15,6 +20,7 @@ export const UserNameForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess })
     { enabled: shouldExecuteQuery }
   );
 
+
   const userMutation = api.users.updateUsername.useMutation();
   const [username, setUsername] = useState(userQuery.data?.user.username ?? "");
 
@@ -22,7 +28,8 @@ export const UserNameForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess })
     if (userQuery.data?.user) {
       setUsername(userQuery.data.user.username);
     }
-  }, [userQuery.data?.user]);
+      onLoadingChange(isLoading);
+  }, [userQuery.data?.user, isLoading]);
 
   if (session) {
     return (
@@ -45,7 +52,7 @@ export const UserNameForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess })
       </div>
         <div className="flex items-center space-x-2 mt-2">
           <button className="bg-green-500 text-white rounded px-4 py-2" onClick={() => {
-            setIsLoading(true);
+            setAndNotifyLoading(true); // this will both set the state and notify the parent
             userMutation.mutate(
               {
                 userId: session.user.id,
@@ -56,7 +63,7 @@ export const UserNameForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess })
                   userQuery.refetch().catch((err) => {
                     console.error(err);
                   });
-                  setIsLoading(false);
+                  setAndNotifyLoading(false); // this will both set the state and notify the parent
                   onSuccess();  // Call the passed-in callback
                 },
               }

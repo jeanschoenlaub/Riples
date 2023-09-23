@@ -25,6 +25,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
 
   // For the project Build page 
   const [tasks, setTasks] = useState<string[]>(new Array(3).fill('')); //Start with 3 enmpty tasks but can add more
+  const [postToFeed, setPostToFeed] = useState(false);
   const handleTasksChange = (updatedTasks: string[]) => {
       setTasks(updatedTasks);
   };
@@ -87,6 +88,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
     isPrivate: isPrivate,
     tasks: tasks.filter(task => task.trim() !== ""),  // filtering tasks with empty titles
     goals: goals.filter(goal => goal.trim() !== ""),  // filtering goals with empty titles
+    postToFeed: postToFeed,
   });
 
   const handleCreateProject = async  () => {
@@ -132,10 +134,12 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
         onGoalsChange={handleGoalsChange}
         onGoalAdd={handleAddGoal}
         onGoalDelete={handleDeleteGoal}
+        postToFeed={postToFeed}
+        setPostToFeed= {setPostToFeed}
+        isPrivate={isPrivate}
         isLoading={isLoading}
       />}
       
-
       <div className="flex justify-between">
         <span className="text-lg flex justify-center items-center space-x-4 mt-4 w-auto">
           {currentStep !== Step.ProjectDescription && (

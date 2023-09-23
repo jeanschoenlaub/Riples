@@ -44,33 +44,38 @@ export const ProfileImage: FC<ProfileImageProps> = ({ user, size = 80, showUsern
   const colorClass = getColorFromName(email);
   const imageUrl = user?.image;
 
+  const content = (
+    imageUrl ? (
+      <Image
+        src={imageUrl}
+        alt="Profile Image"
+        className="rounded-full border border-slate-300"
+        width={size}
+        height={size}
+      />
+    ) : (
+      <div
+        style={{
+          width: `${size}px`,
+          height: `${size}px`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: '50%'
+        }}
+        className={`border border-slate-300 ${colorClass}`}
+      >
+        <span style={{ color: '#fff', fontSize: `${Math.floor(size / 2)}px` }}>
+          {initial}
+        </span>
+      </div>
+    )
+  );
+
   return (
-    <Tooltip content={username}>
-      {imageUrl ? (
-        <Image
-          src={imageUrl}
-          alt="Profile Image"
-          className="rounded-full border border-slate-300"
-          width={size}
-          height={size}
-        />
-      ) : (
-        <div
-          style={{
-            width: `${size}px`,
-            height: `${size}px`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: '50%'
-          }}
-          className={`border border-slate-300 ${colorClass}`}
-        >
-          <span style={{ color: '#fff', fontSize: `${Math.floor(size / 2)}px` }}>
-            {initial}
-          </span>
-        </div>
-      )}
-    </Tooltip>
+    showUsernameOnHover
+      ? <Tooltip content={username}>{content}</Tooltip>
+      : content
   );
 };
+ 

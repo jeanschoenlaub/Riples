@@ -22,7 +22,7 @@ export default function HowToCollaborate() {
                     <p>Follow these steps to locate tasks within a project:</p>
                     <ul className="list-disc list-inside">
                         <li>Navigate to the relevant project and click on the &apos;Collaborate&apos; tab.</li>
-                        <li>Only projects marked as &apos;Multi&apos; will have the &apos;Collaborate&apos; tab.</li>
+                        <li>Only projects marked as &apos;collab&apos; will have the &apos;Collaborate&apos; tab.</li>
                     </ul>
                     <br></br>
                     <div style={{ textAlign: 'center', border: '3px solid black'  }}>

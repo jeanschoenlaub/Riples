@@ -24,14 +24,20 @@ export const RipleCard = (props: RipleWithUser) => {
   }
 
   const showReadMore = cleanHTML.length > 500; // If the content is longer than 500 characters
+  const cardBackgroundColor = riple.ripleType == "creation" ? "bg-orange-50" : "bg-white";
+  const cardBorderClass = riple.ripleType == "creation" ? "" : "border border-slate-300";
 
 
   // Calculate max height based on whether the content is expanded.
   const maxHeightClass = isExpanded ? 'max-h-screen' : 'max-h-200';
   
   return (
-    <div id="riple-card" className="bg-white border border-slate-300 rounded-lg mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md" key={riple.id}>
-        <div id="riple-card-header" className="flex items-center justify-between space-x-3 mb-4">
+    <div 
+      id="riple-card" 
+      key={riple.id}
+      className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md`}
+      >
+        <div id="riple-card-header" className="flex items-center justify-between space-x-3 ">
           {/* Author's Profile Image */}
           <div id="riple-card-header-image">
             <Link href={`/projects/${riple.projectId}`}>
@@ -51,14 +57,14 @@ export const RipleCard = (props: RipleWithUser) => {
                   {riple.title}
               </div>
               <span className="text-sm text-gray-500">
-                  {`Update on `}
-                  <span className="font-medium text-sky-500">
+                  {riple.ripleType == "update" ? `Update on ` : `Check out `}
+                  <span className="font-medium text-sky-500 underline">
                       <Link href={`/projects/${riple.projectId}`}>
                           {riple.project.title}
                       </Link>
                   </span>
 
-                  {` by `}
+                  &nbsp;&#40;{riple.project.projectType}&#41;&nbsp;by&nbsp;
                   <span className="font-medium text-gray-500">
                     <Link href={`/users/${riple.authorID}`}>
                       {author?.username}
@@ -74,14 +80,18 @@ export const RipleCard = (props: RipleWithUser) => {
         </div>
 
       {/* Horizontal Divider */}
-      <hr className="border-t border-slate-200 my-4" />
+      <hr className={`border-t mt-4 border-slate-200 ${riple.ripleType == "creation" ? "hidden" : ""}`} />
 
-      {/* Post Content */}
-      <div id="riple-content" 
-           className={`text-gray-700 overflow-hidden transition-all duration-500 ${maxHeightClass}`}>
-        <div dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
-      </div>
-
+     {/* Post Content */}
+     {riple.ripleType !== "creation" && (
+        <div 
+            id="riple-content" 
+            className={`text-gray-700 mt-2 overflow-hidden transition-all duration-500 ${maxHeightClass}`}
+        >
+            <div dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
+        </div>
+      )}
+  
       {/* Conditionally render Read More button */}
       { showReadMore && (
         <button onClick={() => setIsExpanded(!isExpanded)} className="mt-4">
