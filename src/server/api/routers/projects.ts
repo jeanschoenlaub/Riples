@@ -28,12 +28,6 @@ export const projRouter = createTRPCRouter({
           in: projects.map((project) => project.authorID),
         },
       },
-      select: {
-        id: true,
-        name: true,
-        image: true,
-        // Add any other fields you need
-      },
     });
 
     // Map over projects to add author information
@@ -65,12 +59,6 @@ export const projRouter = createTRPCRouter({
         id: {
           in: projects.map((project) => project.authorID),
         },
-      },
-      select: {
-        id: true,
-        name: true,
-        image: true,
-        // Add any other fields you need
       },
     });
 
@@ -125,12 +113,6 @@ export const projRouter = createTRPCRouter({
 
     const author = await ctx.prisma.user.findUnique({
       where: { id: input.authorId },
-      select: {
-        id: true,
-        name: true,
-        image: true,
-        // ... other fields you want to select
-      },
     });
 
     if (!author) {

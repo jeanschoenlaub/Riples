@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { NavBarSignInModal } from "./usermodals/signinmodal";
-import { ProfileImage } from '~/components/profileimage'; // Import ProfileImage component
+import { ProfileImage } from '~/components/reusables/profileimage'; // Import ProfileImage component
 import { NavBarUserDeleteModal } from "./usermodals/userdeletemodal";
 import { api } from "~/utils/api";
 import toast from "react-hot-toast";

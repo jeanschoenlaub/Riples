@@ -11,10 +11,10 @@ import superjson from 'superjson';
 import { getSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { GlobalNavBar } from '~/components/navbar';
-import { ProjectNav } from '~/components/sidebar';
+import { ProjectNav } from '~/components/sidenavproject';
 import { Tabs } from '~/components/reusables/tabs';
-import { ProjectCard } from '~/components/projectcard';
-import { ProfileImage } from '~/components/profileimage';
+import { ProjectCard } from '~/components/cards/projectcard';
+import { ProfileImage } from '~/components/reusables/profileimage';
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,

@@ -3,7 +3,11 @@ import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
 import Link from 'next/link'; // import Next.js Link component
 import { TaskModal } from '~/components/project-page/task/taskmodal';
+<<<<<<< HEAD
 import { ProfileImage } from '../../profileimage';
+=======
+import { ProfileImage } from '../../reusables/profileimage';
+>>>>>>> mvp_sprint_2
 import { LoadingRiplesLogo } from '../../reusables/loading';
 import { StyledTable } from '../../reusables/styledtables';
 import { SubTasksRows } from './subtask';

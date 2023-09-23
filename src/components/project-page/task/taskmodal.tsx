@@ -7,7 +7,7 @@ import { Modal } from '../../reusables/modaltemplate';
 import { useSession } from 'next-auth/react';
 import { LoadingSpinner } from '../../reusables/loading';
 import Link from 'next/link';
-import { ProfileImage } from '../../profileimage';
+import { ProfileImage } from '../../reusables/profileimage';
 
 interface TaskModalProps {
   project: ProjectData["project"];
