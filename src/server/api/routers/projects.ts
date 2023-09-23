@@ -152,9 +152,9 @@ export const projRouter = createTRPCRouter({
       .max(5000, { message: "Project Description must be 5000 or less characters long" }),
     isSolo: z.boolean(),
     isPrivate: z.boolean(),
-    projectStatus: z.string(),
-    tasks: z.array(z.string()),   // Assuming tasks are just an array of titles for simplicity
-    tags: z.array(z.string()),    // Assuming tags are an array of tag names
+    tasks: z.array(z.string()),   
+    goals: z.array(z.string()),  
+    tags: z.array(z.string()),    
   }))
   .mutation(async ({ ctx, input }) => {
     const authorID = ctx.session.user.id;
@@ -198,14 +198,19 @@ export const projRouter = createTRPCRouter({
         authorID,
         title: input.title,
         summary: input.summary,
-        projectType: input.isSolo ? "solo" : "team", 
+        projectType: input.isSolo ? "solo" : "multi", 
         projectPrivacy: input.isPrivate ? "private" : "public",
-        status: input.projectStatus,
-        
+
         tasks: {
           create: input.tasks.map(taskTitle => ({
             title: taskTitle,
             content: '',
+            createdById: authorID,
+          }))
+        },
+        goals: {
+          create: input.goals.map(goalTitle => ({
+            title: goalTitle,
             createdById: authorID,
           }))
         },

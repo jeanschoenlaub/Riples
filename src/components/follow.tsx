@@ -105,7 +105,7 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none" 
                 viewBox="0 0 14 20">
-                <path stroke="#2563eb" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m13 19-6-5-6 5V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17Z"/>
+                <path stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m13 19-6-5-6 5V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17Z"/>
             </svg>
          }
       </button>

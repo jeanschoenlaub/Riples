@@ -3,9 +3,10 @@ import { useState } from "react";
 interface TooltipProps {
     content: string;
     children: React.ReactNode;
+    width?: string;
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ content, children }) => {
+const Tooltip: React.FC<TooltipProps> = ({ content, children, width }) => {
     const [showTooltip, setShowTooltip] = useState(false);
 
     return (
@@ -25,7 +26,10 @@ const Tooltip: React.FC<TooltipProps> = ({ content, children }) => {
                     color: '#fff',
                     borderRadius: '4px',
                     zIndex: 10,
-                    whiteSpace: 'nowrap'
+                    width: width ?? 'auto',
+                    whiteSpace: width ? 'normal' : 'nowrap', 
+                    overflowWrap: 'break-word', // additional property
+                    boxSizing: 'border-box'
                 }}>
                     {content}
                 </div>

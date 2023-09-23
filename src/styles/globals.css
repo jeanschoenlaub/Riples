@@ -23,7 +23,8 @@ body {
         opacity: 0;
     }
 };
-  
+
+
 .shake-animation {
     animation: shake 0.5s linear;
 }
@@ -43,6 +44,7 @@ body {
 max-width: 400px; /* Adjust the maximum width as needed */
 }
 
+  
 /* Loading ripple SVG */
 .loading-container {
     position: relative;

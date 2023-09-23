@@ -27,13 +27,13 @@ const ToggleSwitch: React.FC<ToggleProps> = ({
         ></div>
         <div
           onClick={() => setActiveTab(option1)}
-          className={`absolute top-0 left-0 w-1/2 h-full flex items-center justify-center rounded-full cursor-pointer ${activeTab === option1 ? "text-blue-500" : "text-gray-400"} p-2`}
+          className={`absolute top-0 left-0 w-1/2 h-full flex items-center justify-center rounded-full cursor-pointer ${activeTab === option1 ? "text-blue-500" : "text-gray-500"} p-2`}
         >
           {option1}
         </div>
         <div
           onClick={() => setActiveTab(option2)}
-          className={`absolute top-0 left-1/2 w-1/2 h-full flex items-center justify-center rounded-full cursor-pointer ${activeTab === option2 ? "text-blue-500" : "text-gray-400"} p-2`}
+          className={`absolute top-0 left-1/2 w-1/2 h-full flex items-center justify-center rounded-full cursor-pointer ${activeTab === option2 ? "text-blue-500" : "text-gray-500"} p-2`}
         >
           {option2}
         </div>

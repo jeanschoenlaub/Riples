@@ -153,7 +153,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
                 <button onClick={() => toggleSubtasks(taskDetail.task.id)} className="  text-blue-600 dark:text-blue-500 hover:underline">
                 {displaySubtasks === taskDetail.task.id ? (
                   <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
-                    <path stroke="#2563eb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 7 7.674 1.3a.91.91 0 0 0-1.348 0L1 7"/>
+                    <path stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M13 7 7.674 1.3a.91.91 0 0 0-1.348 0L1 7"/>
                   </svg>
                 ) : (
                   <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">

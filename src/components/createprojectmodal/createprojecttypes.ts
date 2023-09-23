@@ -10,13 +10,12 @@ export interface CreateProjectPayload {
     tags: string[];
     isSolo: boolean;
     isPrivate: boolean;
-    projectStatus: string;
     tasks: string[];
+    goals: string[];
 }
 
 export enum Step {
     ProjectDescription = 'DESCRIPTION',
     ProjectBuild = 'BUILD',
-    ProjectSettings = 'SETTINGS',
 }
   
