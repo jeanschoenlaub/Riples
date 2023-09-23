@@ -107,7 +107,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
 
   return (
     <>
-      <Modal showModal={showModal} size="medium" isLoading={isLoading} removeLogo={false} onClose={closeModal}> 
+      <Modal showModal={showModal} size="medium" isLoading={isLoading} Logo={false} onClose={closeModal}> 
       {currentStep === Step.ProjectDescription && 
         <ProjectDescriptionComponent 
         projectName={projectName}

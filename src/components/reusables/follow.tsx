@@ -15,6 +15,8 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
   const [showSignInModal, setShowSignInModal] = useState(false); // If click on folllow when not signed in we redirect
   const [showTooltip, setShowTooltip] = useState(false);
 
+  const apiContext = api.useContext();//To invalidate cache
+
   const { data: session } = useSession();
 
   
@@ -36,6 +38,7 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
 
   const toggleFollow = async () => {
     if (!session?.user?.id) {
+        toast.error("You must be signed in to create a project")
         setShowSignInModal(true); // Show sign-in modal if the user is not logged in
         return;
     } // Exit if the user is not logged in
@@ -51,6 +54,8 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
       } else {
         await addFollowerMutation.mutateAsync(mutationOptions);
       }
+
+      void apiContext.projectFollowers.getProjectsFollowedByFollowerId.invalidate(); // Invalidate the cache
 
       // Refetch the follower data
       followerQuery.refetch().catch(err => {
