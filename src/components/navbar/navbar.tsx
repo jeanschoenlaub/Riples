@@ -2,24 +2,14 @@ import { useSession, signOut } from "next-auth/react"
 import Image from 'next/image';
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-<<<<<<< HEAD:src/components/navbar.tsx
-import { NavBarSignInModal } from "./usermodals/signinmodal";
-import { ProfileImage } from '~/components/reusables/profileimage'; // Import ProfileImage component
-import { NavBarUserDeleteModal } from "./usermodals/userdeletemodal";
-import { api } from "~/utils/api";
-import toast from "react-hot-toast";
-import { handleZodError } from "~/utils/error-handling";
-import { NavBarUserNameModal } from "./usermodals/usernamemodal";
-import ToggleSwitch from "./reusables/toogleswitch";
-=======
 import { NavBarSignInModal } from "./signinmodal";
-import { ProfileImage } from '~/components/profileimage'; // Import ProfileImage component
+import { ProfileImage } from '~/components/reusables/profileimage'; // Import ProfileImage component
 import { NavBarUserDeleteModal } from "./userdeletemodal";
 import { api } from "~/utils/api";
 import toast from "react-hot-toast";
 import { handleZodError } from "~/utils/error-handling";
 import { NavBarUserNameModal } from "./usernamemodal";
->>>>>>> main:src/components/navbar/navbar.tsx
+import ToggleSwitch from "../reusables/toogleswitch";
 
 export const GlobalNavBar = () => {
   const { data: session } = useSession();
@@ -28,6 +18,7 @@ export const GlobalNavBar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
+  const [activeTab,setActiveTab] = useState("Creating")
   
 
   //We add a mutation for creating a task (with on success)
@@ -91,7 +82,6 @@ export const GlobalNavBar = () => {
               height={32}
           />
         </Link>
-<<<<<<< HEAD:src/components/navbar.tsx
         <div>
           <Link href="/about/riples">
               {'About Riples'}
@@ -125,41 +115,6 @@ export const GlobalNavBar = () => {
         }
       </div>
           <div id="global-nav-right" className="flex w-1/5 md:w-1/5 gap-3 items-center justify-center p-2 border border-slate-700">
-=======
-            <div>
-              <Link href="/about/riples">
-                 {'About Riples'}
-              </Link>
-            </div>
-          </div>
-
-          <div id="global-nav-mid" className="flex flex-col md:flex-row w-1/3 md:w-3/5 justify-center items-center gap-3 p-2 border border-slate-700">
-            <Link href="/">
-              <svg 
-                className="w-6 h-6 text-gray-800 dark:text-white mb-2 md:mb-0"
-                aria-hidden="true" 
-                xmlns="http://www.w3.org/2000/svg" 
-                fill="#0883C6"
-                viewBox="0 0 20 20"
-              >
-                <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
-              </svg>
-            </Link>
-            <a href="https://forms.gle/WPq2stK3YBDcggHw5" target="_blank" rel="noopener noreferrer">
-              <button className="bg-green-500 text-white rounded py-1 px-2 text-center text-sm">
-                Feedback
-              </button>
-            </a>
-          </div>
-          {/* 
-            <input 
-                  className="outline-none grow grey-background hidden text-xs md:flex search-max-growth" 
-                  placeholder="Search Riples" 
-                  type="text"
-              />*/}
-            
-          <div id="global-nav-right" className="flex w-1/3 md:w-1/5 gap-3 items-center justify-center p-2 border border-slate-700">
->>>>>>> main:src/components/navbar/navbar.tsx
           <div className="flex items-center">
             {session && (
               <div className="relative">

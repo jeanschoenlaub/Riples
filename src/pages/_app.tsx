@@ -6,14 +6,10 @@ import { Toaster } from "react-hot-toast";
 import "~/styles/globals.css";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react"
-<<<<<<< HEAD
-import { OnboardingWrapper } from "~/components/usermodals/onboardingmodal";
+import { OnboardingWrapper } from "~/components/onboarding";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import ReactGA from 'react-ga';
-=======
-import { OnboardingWrapper } from "~/components/onboarding";
->>>>>>> main
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

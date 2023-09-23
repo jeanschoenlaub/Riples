@@ -3,13 +3,13 @@ import { uniqueNamesGenerator, adjectives, colors, animals } from "unique-names-
 import { useEffect, useState } from 'react';
 import { useSession } from "next-auth/react";
 
-export const UserNameForm: React.FC<{ onSuccess: () => void , onLoadingChange: (loading: boolean) => void }> = ({ onSuccess,  onLoadingChange  }) => {
+export const UserNameForm: React.FC<{ onSuccess: () => void , onLoadingChange?: (loading: boolean) => void }> = ({ onSuccess,  onLoadingChange  }) => {
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false); 
 
   const setAndNotifyLoading = (state: boolean) => {
     setIsLoading(state);
-    onLoadingChange(state);
+    onLoadingChange?.(state);
   }
 
   const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user id is not null
@@ -28,7 +28,7 @@ export const UserNameForm: React.FC<{ onSuccess: () => void , onLoadingChange: (
     if (userQuery.data?.user) {
       setUsername(userQuery.data.user.username);
     }
-      onLoadingChange(isLoading);
+      onLoadingChange?.(isLoading);
   }, [userQuery.data?.user, isLoading]);
 
   if (session) {

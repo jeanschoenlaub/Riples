@@ -3,7 +3,7 @@ import { LoadingPage } from "~/components/reusables/loading";
 import { ProjectCard } from '~/components/cards/projectcard';
 import { CreateProjectModal } from "../createprojectmodal/createprojetmodal";
 import { useState } from "react";
-import { NavBarSignInModal } from "../usermodals/signinmodal";
+import { NavBarSignInModal } from "../navbar/signinmodal";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 

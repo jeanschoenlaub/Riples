@@ -1,15 +1,8 @@
 import Head from "next/head";
 import { api } from "~/utils/api";
-<<<<<<< HEAD
-import { GlobalNavBar } from "~/components/navbar";
-import { SocialFeed } from "~/components/feeds/socialfeed";  // Rename to avoid naming conflicts
-import { SideNavProject } from "~/components/sidenavproject";
-import { CreateFeed } from "~/components/feeds/createfeed"; // Assume you have a CreateFeed component
-=======
 import { GlobalNavBar } from "~/components/navbar/navbar";
+import { SideNavProject } from "~/components/sidenavproject";
 import { Feed } from "~/components/feed";
-import { ProjectNav } from "~/components/sidebar";
->>>>>>> main
 
 export default function Home() {
   //Start this query asap
@@ -34,11 +27,7 @@ export default function Home() {
 
         <div className="flex justify-center w-full bg-sky-50">
           <div id="project-nav-container" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
-<<<<<<< HEAD
             <SideNavProject></SideNavProject>
-=======
-              <ProjectNav></ProjectNav>
->>>>>>> main
           </div>
 
           <div id="feed" className="flex flex-col w-full md:w-3/5 g-4 p-1 md:p-4 border border-slate-700">
