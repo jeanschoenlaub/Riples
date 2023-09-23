@@ -7,7 +7,29 @@ body {
     overscroll-behavior: none;
 }
 
-iframe { width: 90%; height: 500px; border: 2px solid #ccc; border-radius: 10px; padding: none; }
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-1px); }
+    20%, 40%, 60%, 80% { transform: translateX(1px); }
+}
+
+@keyframes expand {
+    0% {
+        transform: translate(-50%, -50%) scale(3);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(8);
+        opacity: 0;
+    }
+};
+
+
+.shake-animation {
+    animation: shake 0.5s linear;
+}
+
+.iframe { width: 90%; height: 500px; border: 2px solid #ccc; border-radius: 10px; padding: none; }
 
 .grey-background {
     background-color: #f0f0f0;
@@ -22,6 +44,7 @@ iframe { width: 90%; height: 500px; border: 2px solid #ccc; border-radius: 10px;
 max-width: 400px; /* Adjust the maximum width as needed */
 }
 
+  
 /* Loading ripple SVG */
 .loading-container {
     position: relative;
@@ -30,43 +53,35 @@ max-width: 400px; /* Adjust the maximum width as needed */
   }
   
 .droplet {
-position: absolute;
-top: 50%;
-left: 50%;
-width: 50px; /* You can adjust this depending on your image's aspect ratio */
-height: auto;
-transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px; /* You can adjust this depending on your image's aspect ratio */
+    height: auto;
+    transform: translate(-50%, -50%);
 }
   
-
 .ripple {
-position: absolute;
-top: 50%;
-left: 50%;
-width: 50;
-height: 50;
-border: 5px solid blue;
-border-radius: 50%;
-opacity: 0.5;
-transform: translate(-50%, -50%) scale(0);
-animation: expand 3s infinite ease-out;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50;
+    height: 50;
+    border: 5px solid blue;
+    border-radius: 50%;
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.ripple-active .ripple {
+    animation: expand 3s infinite ease-out;
 }
 
 .ripple:nth-child(2) {
-animation-delay: 0.5s;
+    animation-delay: 0.5s;
 }
 
 .ripple:nth-child(3) {
-animation-delay: 0.1s;
+    animation-delay: 0.1s;
 }
 
-@keyframes expand {
-    0% {
-        transform: translate(-50%, -50%) scale(3);
-        opacity: 0.5;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(8);
-        opacity: 0;
-    }
-};

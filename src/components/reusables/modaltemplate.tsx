@@ -6,10 +6,11 @@ interface ModalProps {
   size?: 'small' | 'medium' | 'large';
   children: React.ReactNode;
   isLoading?: boolean;
+  removeLogo?: boolean;
   onClose: () => void;  // <-- Add this prop
 }
 
-export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medium', children, onClose }) => {
+export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medium', children, removeLogo, onClose }) => {
   const sizeClass = {
     small: 'w-2/3 sm:w-2/3 md:w-1/4 max-h-full sm:max-h-[80vh]',
     medium: 'w-full sm:w-2/3 md:w-1/2 max-h-full sm:max-h-[80vh]',
@@ -28,9 +29,10 @@ export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medi
               className="fixed text-red-600 hover:text-red-800 text-xl z-10">
               &times; {/* This is an HTML entity representing a multiplication symbol (looks like 'x') */}
             </button>
+            {removeLogo! ? (
             <div className="flex justify-center my-4">
               {isLoading ? (
-                <LoadingRiplesLogo />
+                <LoadingRiplesLogo isLoading={isLoading}/>
               ) : (
                 <div className="loading-container">
                   <img
@@ -40,7 +42,8 @@ export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medi
                   />
                 </div>
               )}
-            </div>
+            </div>) : <div className="flex justify-center my-4"></div> }
+
             {children}
           </div>
         </div>

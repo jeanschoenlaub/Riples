@@ -87,8 +87,9 @@ export const ripleRouter = createTRPCRouter({
     .input(z.object({ projectId: z.string() }))
     .query(async ({ ctx, input }) => {
         const riples = await ctx.prisma.riple.findMany({
-        where: { projectId: input.projectId },
-        include: { project: true },
+          where: { projectId: input.projectId },
+          include: { project: true },
+          orderBy: [{ createdAt: "desc" }],
         });
 
         const authors = await ctx.prisma.user.findMany({

@@ -1,7 +1,7 @@
 import { api } from "~/utils/api";
 import { LoadingPage } from "~/components/reusables/loading";
 import { RipleCard } from '../cards/riplecard';
-import { CreateProjectModal } from "../projectmodal/createprojetmodal";
+import { CreateProjectModal } from "../createprojectmodal/createprojetmodal";
 import { useState } from "react";
 
 export const SocialFeed = () => {
@@ -10,7 +10,7 @@ export const SocialFeed = () => {
     
     const [showCreateProjModal, setShowCreateProjModal] = useState(false); 
 
-    if (isLoading) return(<LoadingPage></LoadingPage>)
+    if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)
   
     if (!data) return(<div> Something went wrong</div>)
 

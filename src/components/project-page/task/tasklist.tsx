@@ -52,9 +52,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
   const { data: taskData, isLoading: isLoadingTasks, isError } = api.tasks.getTasksByProjectId.useQuery({ projectId: project.id });
 
   const handleCreateClick = () => {
-    console.log(inputValue)
     setShowTaskModal(true);
-    // Pass `inputValue` to your modal here if needed
   };
 
   useEffect(() => {
@@ -84,7 +82,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
 
   const isLoading = isLoadingTasks 
 
-  if (isLoading) return <div className="flex justify-center"><LoadingRiplesLogo/></div>;
+  if (isLoading) return <div className="flex justify-center"><LoadingRiplesLogo isLoading={isLoading}/></div>;
   if (isError || !taskData) return <p>Error loading tasks.</p>;
 
   return (
@@ -125,7 +123,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
                   {taskDetail.task.title}
                 </button>
               </th>
-              <td className="px-6 py-4 hidden md:table-cell">
+              <td className="px-8 py-6 hidden md:table-cell">
                 <span className={`text-white flex text-center rounded w-auto px-2 py-2 ${
                   taskDetail.task.status === "Doing" ? "bg-yellow-500" : 
                   taskDetail.task.status === "To-Do" ? "bg-gray-500" : 
@@ -155,7 +153,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
                 <button onClick={() => toggleSubtasks(taskDetail.task.id)} className="  text-blue-600 dark:text-blue-500 hover:underline">
                 {displaySubtasks === taskDetail.task.id ? (
                   <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
-                    <path stroke="#2563eb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 7 7.674 1.3a.91.91 0 0 0-1.348 0L1 7"/>
+                    <path stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M13 7 7.674 1.3a.91.91 0 0 0-1.348 0L1 7"/>
                   </svg>
                 ) : (
                   <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
