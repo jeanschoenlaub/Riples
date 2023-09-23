@@ -55,7 +55,13 @@ type TaskData = RouterOutputs["tasks"]["edit"];
 export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
   
   // Initialize state with values from props if taskToEdit is present (for edit mode vs create mode)
+<<<<<<< HEAD
+=======
+  const initialTitle = taskToEdit ? taskToEdit.title : inputValue;
+>>>>>>> main
   const initialContent = taskToEdit ? taskToEdit.content : defaultTemplate;
+
+  console.log("Input Value in Modal: ", inputValue);
 
   //Is the logged in user allowed to edit ?
   const { data: session } = useSession();
@@ -90,6 +96,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   useEffect(() => {
     if (taskToEdit) { // Existing task
       setTaskTitle(taskToEdit.title);
+      console.log("no")
       setShowHtmlPreview(false); 
       setTaskStatus(taskToEdit.status);
       setTaskContent(taskToEdit.content);
@@ -102,7 +109,11 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     else {
       setTaskTitle(inputValue);
     }
+<<<<<<< HEAD
   }, [taskToEdit, session, inputValue]); 
+=======
+  }, [taskToEdit, session]); 
+>>>>>>> main
   
   const enhancedOnClose = () => {
     resetForm();
@@ -121,7 +132,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   };
 
   const toggleOwnership = () => {
-    if (!isMember || !isProjectLead ){
+    if (!isMember){
       toast.error("Apply to join the project to claim task")
     }
     else{
@@ -408,4 +419,8 @@ const useTaskMutation = (projectId: string, { onSuccess }: { onSuccess: () => vo
   }
 }
 
+<<<<<<< HEAD
 const defaultTemplate = `You can add more details about the task or store knowledge here :)  `
+=======
+const defaultTemplate = `You can add more details about the task or store knowledge here :)  `;
+>>>>>>> main
