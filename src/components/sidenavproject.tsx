@@ -7,9 +7,23 @@ import { useSession } from "next-auth/react";
 export const SideNavProject = () => {
     const [SideBarToggle, setSideBarToggle] = useState('Working');
     const { data: session } = useSession(); 
-    const { data: projectLead, isLoading: projectLeadLoading } = api.projects.getProjectByAuthorId.useQuery({ authorId: session?.user.id ?? ''  });
-    const { data: projectFollowed, isLoading: projectFollowedLoading } = api.projectFollowers.getProjectsFollowedByFollowerId.useQuery({ userId: session?.user.id ?? ''  });
-    const { data: projectMember, isLoading: projectMemberLoading } = api.projectMembers.getProjectsByMemberId.useQuery({ userId: session?.user.id ?? ''  });
+
+    const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user ID exist
+    const userId = session?.user?.id ?? ''; //will never be empty 
+  
+  // Conditional query using tRPC to avoid no user error if not signed-in
+    const { data: projectLead, isLoading: projectLeadLoading } = api.projects.getProjectByAuthorId.useQuery(
+      { authorId: userId },
+      { enabled: shouldExecuteQuery }
+    )
+    const { data: projectFollowed, isLoading: projectFollowedLoading } = api.projectFollowers.getProjectsFollowedByFollowerId.useQuery(
+      { userId: userId },
+      { enabled: shouldExecuteQuery }
+    )
+    const { data: projectMember, isLoading: projectMemberLoading } = api.projectMembers.getProjectsByMemberId.useQuery(
+      { userId: userId },
+      { enabled: shouldExecuteQuery }
+    )
 
     const combinedProjectsForWorking = [...(projectLead ?? []), ...(projectMember ?? [])];
     
@@ -54,7 +68,7 @@ export const SideNavProject = () => {
     
         {/*  List of projects */}
         <div className="flow-root w-full border-t">
-          <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700 font-medium text-sky-500 underline">
+          <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
             {SideBarToggle === "Following" 
             ? projectFollowed?.map((fullProject) => (
                 <ProjectCard

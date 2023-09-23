@@ -13,7 +13,6 @@ type ProjectCardProps = ProjectWithUser & {
 export const ProjectCard = (props: ProjectCardProps) => {
   const { data: session } = useSession(); 
   const {project, author} = props;
-
  
   return (
     <li className="py-3 sm:py-4">
@@ -28,7 +27,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
           />
         </div>
         <div className="flex-1 min-w-0">
-          <Link href={`/projects/${project.id}`} className="text-sm font-medium text-gray-900 truncate dark:text-white underline">
+          <Link href={`/projects/${project.id}`} className="text-sm font-medium text-sky-500 truncate dark:text-white underline">
             {project.title}
           </Link>
           <p className="text-sm text-gray-500 truncate dark:text-gray-400">
