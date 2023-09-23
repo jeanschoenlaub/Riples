@@ -71,8 +71,8 @@ export default function Project(
 
   const [activeTab, setActiveTab] = useState('riples'); // default active tab is 'riples for project pages'
 
-  
-  if (ripleLoading || projectLoading || projectMemberLoading || sessionStatus=="loading") return(<LoadingPage></LoadingPage>)
+  const isLoading = (ripleLoading || projectLoading || projectMemberLoading || sessionStatus=="loading")
+  if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)
   if (!projectData || !ripleData || !projectMemberData ) return (<div> Something went wrong</div>)
 
   //helpers to determine if the current user is a Member or the project Lead 
