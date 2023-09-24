@@ -146,7 +146,7 @@ export const taskRouter = createTRPCRouter({
       projectId: z.string(),
       userId: z.string().nullable(),
     }))    .mutation(async ({ ctx, input }) => {
-      const { id, projectId, userId } = input;
+      const { id, userId } = input;
 
       // Optionally, check if the user has permissions to change the owner of this task
       // Your logic here...

@@ -38,6 +38,61 @@ export const projMemberRouter = createTRPCRouter({
       });
     }),
 
+    getProjectsByMemberId: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      // Find the projects by the user ID
+      const memberships = await ctx.prisma.projectMembers.findMany({
+        where: {
+          userID: input.userId,
+        },
+      });
+  
+      // Grab the project data from Prisma for the memberships
+      const projects = await ctx.prisma.project.findMany({
+        where: {
+          id: { in: memberships.map((membership) => membership.projectId) },
+        },
+      });
+
+       // Grab the associtated author id's
+      const users = await ctx.prisma.user.findMany({
+        where: {
+          id: {
+            in: projects.map((project) => project.authorID),
+          },
+        },
+      });
+
+      if (!projects) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Project not found for member",
+        });
+      }
+
+      if (!users) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Users not found for projectsr",
+        });
+      }
+  
+      // Map over projects to add author information
+      return projects.map((project) => {
+        const author = users.find((user) => user.id === project.authorID);
+
+        if (!author) {
+          throw new Error('Project author not found.');
+        }
+
+        return {
+          project,
+          author,
+        };
+      });
+  }),  
+
   applyToProject: protectedProcedure
     .input(
         z.object({

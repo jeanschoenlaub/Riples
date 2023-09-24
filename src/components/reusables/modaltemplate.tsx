@@ -1,20 +1,27 @@
 import React from 'react';
-import { LoadingRiplesLogo } from '../loading';
+import { LoadingRiplesLogo } from './loading';
+import Image from 'next/image';
 
 interface ModalProps {
   showModal: boolean;
   size?: 'small' | 'medium' | 'large';
   children: React.ReactNode;
   isLoading?: boolean;
+  Logo?: boolean;
   onClose: () => void;  // <-- Add this prop
 }
 
-export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medium', children, onClose }) => {
+export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medium', children, Logo, onClose }) => {
   const sizeClass = {
     small: 'w-2/3 sm:w-2/3 md:w-1/4 max-h-full sm:max-h-[80vh]',
     medium: 'w-full sm:w-2/3 md:w-1/2 max-h-full sm:max-h-[80vh]',
     large: 'w-full sm:w-3/4 max-h-full sm:max-h-[80vh]',
   };
+
+  Modal.defaultProps = {
+    Logo: true
+  };
+  
 
   return (
     <div>
@@ -27,19 +34,23 @@ export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medi
               className="fixed text-red-600 hover:text-red-800 text-xl z-10">
               &times; {/* This is an HTML entity representing a multiplication symbol (looks like 'x') */}
             </button>
+            {Logo ? (
             <div className="flex justify-center my-4">
               {isLoading ? (
-                <LoadingRiplesLogo />
+                <LoadingRiplesLogo isLoading={isLoading}/>
               ) : (
                 <div className="loading-container">
-                  <img
+                  <Image
                     src="/images/logo_128x128.png"
                     className="droplet"
                     alt="Riple logo"
+                    width={32}
+                    height={32}
                   />
                 </div>
               )}
-            </div>
+            </div>) : <div className="flex justify-center my-4"></div> }
+
             {children}
           </div>
         </div>

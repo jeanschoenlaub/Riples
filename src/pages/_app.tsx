@@ -7,11 +7,31 @@ import "~/styles/globals.css";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react"
 import { OnboardingWrapper } from "~/components/onboarding";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import ReactGA from 'react-ga';
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  const router = useRouter();
+  ReactGA.initialize('G-NPW2X3G8YQ');
+
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      ReactGA.pageview(url);
+    };
+  
+    router.events.on('routeChangeComplete', handleRouteChange);
+  
+    // Cleanup the listener when the component is unmounted
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+  
+
   return (
     <SessionProvider session={session}>
       {/* Default Head can be overriden in specific pages */}

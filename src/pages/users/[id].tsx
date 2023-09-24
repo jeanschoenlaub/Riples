@@ -11,10 +11,10 @@ import superjson from 'superjson';
 import { getSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { GlobalNavBar } from '~/components/navbar/navbar';
-import { ProjectNav } from '~/components/sidebar';
+import { SideNavProject } from '~/components/sidenavproject';
 import { Tabs } from '~/components/reusables/tabs';
-import { ProjectCard } from '~/components/projectcard';
-import { ProfileImage } from '~/components/profileimage';
+import { ProjectCard } from '~/components/cards/projectcard';
+import { ProfileImage } from '~/components/reusables/profileimage';
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -72,7 +72,7 @@ export default function UserPage(
   
           <div className="flex justify-center w-full bg-sky-50">
             <div id="project-nav-container" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
-              <ProjectNav></ProjectNav>
+              <SideNavProject></SideNavProject>
             </div>
 
             <div id="user-main" className="relative flex flex-col w-full md:w-3/5 border border-slate-700">

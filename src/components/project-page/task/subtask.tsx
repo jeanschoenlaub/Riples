@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
-import { LoadingRiplesLogo, LoadingSpinner } from '../../loading';
+import { LoadingRiplesLogo, LoadingSpinner } from '../../reusables/loading';
 import toast from 'react-hot-toast';
 import { handleZodError } from '~/utils/error-handling';
 
@@ -25,7 +25,7 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskId, subTasks, is
     const { isCreating, isDeleting, isEditingStatus, createSubTask, deleteSubTask, editStatus } = useSubTaskMutation(taskId, { onSuccess: resetSubTasks });
     const isLoading = isCreating || isDeleting || isEditingStatus 
   
-    if (isLoadingSubtasks) return <div className="flex justify-center"><LoadingRiplesLogo/></div>;
+    if (isLoadingSubtasks) return <div className="flex justify-center"><LoadingRiplesLogo isLoading={isLoadingSubtasks}/></div>;
 
     return (
         <div className="pl-4 border-l-2 border-gray-300">
@@ -62,7 +62,7 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskId, subTasks, is
             <input
                 type="text"
                 placeholder="Add a Sub-Task"
-                className="flex-grow text-gray-400 border-b py-1 px-2"
+                className="flex-grow text-gray-800 border-b py-1 px-2"
                 disabled={isLoading}
                 value={subTaskTitle}
                 onChange={(e) => setSubTaskTitle(e.target.value)}

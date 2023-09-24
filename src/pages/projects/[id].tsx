@@ -14,14 +14,14 @@ import superjson from 'superjson';
 //My components
 import { Tabs } from "~/components/reusables/tabs";
 import { AboutTab } from "~/components/project-page/about";
-import { RipleCard } from "~/components/riplecard";
-import { LoadingPage } from "~/components/loading";
+import { RipleCard } from "~/components/cards/riplecard";
+import { LoadingPage } from "~/components/reusables/loading";
 import { CollabTab } from "~/components/project-page/collab";
 import { GlobalNavBar } from "~/components/navbar/navbar";
-import { ProjectNav } from "~/components/sidebar";
+import { SideNavProject } from "~/components/sidenavproject";
 
 import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
-import Follow from "~/components/follow";
+import Follow from "~/components/reusables/follow";
 import { AdminTab } from "~/components/project-page/admin";
 
 export async function getServerSideProps(
@@ -69,10 +69,10 @@ export default function Project(
   const { data: ripleData, isLoading: ripleLoading } = api.riples.getRiplebyProjectId.useQuery({ projectId });
   const { data: projectMemberData, isLoading:projectMemberLoading} = api.projectMembers.getMembersByProjectId.useQuery({ projectId });
 
-  const [activeTab, setActiveTab] = useState('riples'); // default active tab is 'riples for project pages'
+  const [activeTab, setActiveTab] = useState('about'); // default active tab is 'riples for project pages'
 
-  
-  if (ripleLoading || projectLoading || projectMemberLoading || sessionStatus=="loading") return(<LoadingPage></LoadingPage>)
+  const isLoading = (ripleLoading || projectLoading || projectMemberLoading || sessionStatus=="loading")
+  if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)
   if (!projectData || !ripleData || !projectMemberData ) return (<div> Something went wrong</div>)
 
   //helpers to determine if the current user is a Member or the project Lead 
@@ -86,7 +86,7 @@ export default function Project(
 
   const displayCollabTab = 
     isProjectLead || 
-    (projectData?.project.projectType === "multi" && projectData?.project.projectPrivacy === "public")
+    (projectData?.project.projectType === "collab" && projectData?.project.projectPrivacy === "public")
 
   return (
     <>
@@ -95,16 +95,16 @@ export default function Project(
       </Head>
       <main className="flex flex-col items-center w-full h-screen">
         <div id="nav-container" className="w-full">
-          <GlobalNavBar></GlobalNavBar>
+          <GlobalNavBar ToogleinBetween={true}></GlobalNavBar>
         </div>
 
         <div className="flex justify-center w-full bg-sky-50">
-            <div id="project-nav-container" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
-              <ProjectNav></ProjectNav>
+            <div id="project-nav-container" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
+              <SideNavProject></SideNavProject>
             </div>
 
-            <div id="project-main" className="relative flex flex-col w-full md:w-3/5 border border-slate-700">
-              <div id="project-main-cover-image" className="relative w-full h-[50vh] overflow-hidden">
+            <div id="project-main" className="relative flex flex-col w-full md:w-3/4 border border-slate-700">
+              <div id="project-main-cover-image" className="relative w-full h-[30vh] overflow-hidden">
                 <Image 
                     src={projectData?.project.coverImageUrl} 
                     alt="Project cover image" 
@@ -154,9 +154,6 @@ export default function Project(
 
               </div>
             </div>
-            <div id="future-content" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
-              <h1>Future Content</h1>
-          </div>
         </div>
       </main>
     </>

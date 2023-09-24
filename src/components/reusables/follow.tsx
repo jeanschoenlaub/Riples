@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
-import { NavBarSignInModal } from './navbar/signinmodal';
+import { NavBarSignInModal } from '../navbar/signinmodal';
 import toast from 'react-hot-toast';
 import { LoadingSpinner } from './loading';
 
@@ -14,6 +14,8 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
   const [isLoading, setIsLoading] = useState(false); // To handle loading state during mutation
   const [showSignInModal, setShowSignInModal] = useState(false); // If click on folllow when not signed in we redirect
   const [showTooltip, setShowTooltip] = useState(false);
+
+  const apiContext = api.useContext();//To invalidate cache
 
   const { data: session } = useSession();
 
@@ -36,6 +38,7 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
 
   const toggleFollow = async () => {
     if (!session?.user?.id) {
+        toast.error("You must be signed in to create a project")
         setShowSignInModal(true); // Show sign-in modal if the user is not logged in
         return;
     } // Exit if the user is not logged in
@@ -51,6 +54,8 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
       } else {
         await addFollowerMutation.mutateAsync(mutationOptions);
       }
+
+      void apiContext.projectFollowers.getProjectsFollowedByFollowerId.invalidate(); // Invalidate the cache
 
       // Refetch the follower data
       followerQuery.refetch().catch(err => {
@@ -82,16 +87,16 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
   if (followerQuery.isError) return <p>Error loading followers.</p>;
 
   return (
-    <div className="mt-4 ml-2 mb-2 space-y-4 justify-center relative">
+    <div className="justify-center relative">
       <button
-        className="border rounded border-gray-300 px-4 py-2"
+        className="border rounded border-gray-300 px-2 py-2"
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         onClick={handleToggleFollow}
       >
         {isFollowing ? 
             <svg 
-                className="w-6 h-6 text-gray-800 dark:text-white" 
+                className="w-4 h-4 text-gray-800 dark:text-white" 
                 aria-hidden="true" 
                 xmlns="http://www.w3.org/2000/svg" 
                 fill="#2563eb" 
@@ -100,12 +105,12 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
             </svg>
          :
             <svg 
-                className="w-6 h-6 text-gray-800 dark:text-white"
+                className="w-4 h-4 text-gray-800 dark:text-white"
                 aria-hidden="true" 
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none" 
                 viewBox="0 0 14 20">
-                <path stroke="#2563eb" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m13 19-6-5-6 5V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17Z"/>
+                <path stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m13 19-6-5-6 5V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17Z"/>
             </svg>
          }
       </button>

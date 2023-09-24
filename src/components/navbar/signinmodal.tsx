@@ -20,9 +20,7 @@ export const NavBarSignInModal: React.FC<SignInModalProps> = ({ showModal, onClo
         toast.error(result.error);
         return; // return early if an error occurred
       }
-      
       const newSession = await getSession(); // Use await here to satisfy ESLint
-      console.log(newSession);
       onClose();
     } catch (error) {
       console.error("An error occurred during sign-in:", error);

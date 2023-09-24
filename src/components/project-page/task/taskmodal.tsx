@@ -5,9 +5,9 @@ import { api } from "~/utils/api";
 import { handleZodError } from "~/utils/error-handling";
 import { Modal } from '../../reusables/modaltemplate';
 import { useSession } from 'next-auth/react';
-import { LoadingSpinner } from '../../loading';
+import { LoadingSpinner } from '../../reusables/loading';
 import Link from 'next/link';
-import { ProfileImage } from '../../profileimage';
+import { ProfileImage } from '../../reusables/profileimage';
 
 interface TaskModalProps {
   project: ProjectData["project"];
@@ -55,7 +55,6 @@ type TaskData = RouterOutputs["tasks"]["edit"];
 export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
   
   // Initialize state with values from props if taskToEdit is present (for edit mode vs create mode)
-  const initialTitle = taskToEdit ? taskToEdit.title : inputValue;
   const initialContent = taskToEdit ? taskToEdit.content : defaultTemplate;
 
   console.log("Input Value in Modal: ", inputValue);
@@ -72,10 +71,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   const allowedToDelete =  
    (isMember || isProjectLead) && (
     session?.user.id === taskToEdit?.createdById || 
-    session?.user.id === project.authorID)
+    session?.user.id === project.authorID) && taskToEdit
 
   // States and useEffects
-  const [taskTitle, setTaskTitle] = useState(initialTitle);
+  const [taskTitle, setTaskTitle] = useState(() => taskToEdit ? taskToEdit.title : inputValue)
   const [taskContent, setTaskContent] = useState(initialContent); //can the user edit ? 
   const [showHtmlPreview, setShowHtmlPreview] = useState(true); // state variable to control HTML preview mode -- Set to edit by default
   const [isEditMode, setIsEditMode] = useState(false); //If the task is being created --> edit mode
@@ -106,7 +105,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     else {
       setTaskTitle(inputValue);
     }
-  }, [taskToEdit, session]); 
+  }, [taskToEdit, session, inputValue]); 
   
   const enhancedOnClose = () => {
     resetForm();
@@ -114,8 +113,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   };
 
   const resetForm = () => {
-    //Could add make sure to save ?
-    setTaskTitle('');
     setTaskContent(defaultTemplate);
     setIsEditMode(false);
     setShowHtmlPreview(true);
@@ -263,7 +260,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
                   ) : (
                     <>
                       <svg className="w-6 h-6 text-gray-800 dark:text-white flex items-center mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 8h6m-3 3V5m-6-.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0ZM5 11h3a4 4 0 0 1 4 4v2H1v-2a4 4 0 0 1 4-4Z"/>
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 8h6m-3 3V5m-6-.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0ZM5 11h3a4 4 0 0 1 4 4v2H1v-2a4 4 0 0 1 4-4Z"/>
                       </svg>
                       I will do it
                     </>
@@ -309,7 +306,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
           }
           {allowedToDelete && (
             <button 
-            onClick={() => deleteTask({ id: taskToEdit!.id, projectId: project.id, userId: session!.user.id })} 
+            onClick={() => deleteTask({ id: taskToEdit.id, projectId: project.id, userId: session!.user.id })} 
             className="bg-red-500 text-white rounded px-4 py-2 mr-2 flex items-center justify-center w-auto"
             disabled={isLoading || isDeleting}
           >
@@ -414,4 +411,4 @@ const useTaskMutation = (projectId: string, { onSuccess }: { onSuccess: () => vo
   }
 }
 
-const defaultTemplate = `You can add more details about the task or store knowledge here :)  `;
+const defaultTemplate = `You can add more details about the task or store knowledge here :)  `

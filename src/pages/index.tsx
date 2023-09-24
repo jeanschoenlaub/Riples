@@ -1,13 +1,25 @@
 import Head from "next/head";
 import { api } from "~/utils/api";
 import { GlobalNavBar } from "~/components/navbar/navbar";
-import { Feed } from "~/components/feed";
-import { ProjectNav } from "~/components/sidebar";
+import { SideNavProject } from "~/components/sidenavproject";
+import { SocialFeed } from "~/components/feeds/socialfeed";  // Rename to avoid naming conflicts
+import { CreateFeed } from "~/components/feeds/createfeed"; // Assume you have a CreateFeed component
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Home() {
   //Start this query asap
-  //const {user} = useUser()
   api.projects.getAll.useQuery();
+
+  const router = useRouter();
+  //We either have initial state on first land or can be changed from childs or via router pushes
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    const tabFromQuery = Array.isArray(router.query.activeTab)
+      ? router.query.activeTab[0]
+      : router.query.activeTab;
+
+    return tabFromQuery ?? "Social";
+  });
   
   return (
     <>
@@ -22,19 +34,20 @@ export default function Home() {
       
       <main className="flex flex-col items-center w-full h-screen">
         <div id="nav-container" className="w-full">
-          <GlobalNavBar></GlobalNavBar>
+          <GlobalNavBar activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
 
         <div className="flex justify-center w-full bg-sky-50">
-          <div id="project-nav-container" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
-              <ProjectNav></ProjectNav>
+          <div id="project-nav-container" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
+            <SideNavProject></SideNavProject>
           </div>
 
-          <div id="feed" className="flex flex-col w-full md:w-3/5 g-4 p-1 md:p-4 border border-slate-700">
-              <Feed></Feed>
+         <div className="flex flex-col w-full md:w-1/2 g-4 p-1 md:p-4 border border-slate-700">
+            {/* Different Content Between Social and Create */}
+            {activeTab === "Social" ? <SocialFeed /> : <CreateFeed />}
           </div>
               
-          <div id="future-content" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
+          <div id="future-content" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
               <h1>Future Content</h1>
           </div>
         </div>
