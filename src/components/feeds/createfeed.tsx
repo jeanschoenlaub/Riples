@@ -57,16 +57,14 @@ export const CreateFeed = () => {
       </div>
 
       {/* Project Cards */}
-      <div>
-        {projectData?.map((fullProject) => (
-          <ProjectCard key={fullProject.project.id} {...fullProject} />
-        ))}
+      <div className="mt-4 flex justify-center">
+        Creat Feed is Coming 
       </div>
 
       {/*  Modals Opening on logic */}
       <div>
         <CreateProjectModal showModal={showCreateProjModal} inputValue={inputValue} onClose={() => setShowCreateProjModal(false)} />
-        <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
+         <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
       </div>
 
       
