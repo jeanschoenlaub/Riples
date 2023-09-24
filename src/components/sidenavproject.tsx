@@ -5,7 +5,7 @@ import { ProjectCard } from "./cards/projectcard";
 import { useSession } from "next-auth/react";
 
 export const SideNavProject = () => {
-    const [SideBarToggle, setSideBarToggle] = useState('Working');
+    const [SideBarToggle, setSideBarToggle] = useState('Doing');
     const { data: session } = useSession(); 
 
     const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user ID exist
@@ -55,10 +55,10 @@ export const SideNavProject = () => {
               Following
             </div>
             <div
-              onClick={() => setSideBarToggle("Working")}
-              className={`absolute top-0 left-1/2 w-1/2 h-full flex items-center justify-center rounded cursor-pointer ${SideBarToggle === "Working" ? "text-blue-500" : "text-gray-400"} p-2`}
+              onClick={() => setSideBarToggle("Doing")}
+              className={`absolute top-0 left-1/2 w-1/2 h-full flex items-center justify-center rounded cursor-pointer ${SideBarToggle === "Doing" ? "text-blue-500" : "text-gray-400"} p-2`}
             >
-              Working
+              Doing
             </div>
           </div>
         </div>

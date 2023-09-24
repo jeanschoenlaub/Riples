@@ -95,15 +95,15 @@ export default function Project(
       </Head>
       <main className="flex flex-col items-center w-full h-screen">
         <div id="nav-container" className="w-full">
-          <GlobalNavBar></GlobalNavBar>
+          <GlobalNavBar ToogleinBetween={true}></GlobalNavBar>
         </div>
 
         <div className="flex justify-center w-full bg-sky-50">
-            <div id="project-nav-container" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
+            <div id="project-nav-container" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
               <SideNavProject></SideNavProject>
             </div>
 
-            <div id="project-main" className="relative flex flex-col w-full md:w-3/5 border border-slate-700">
+            <div id="project-main" className="relative flex flex-col w-full md:w-3/4 border border-slate-700">
               <div id="project-main-cover-image" className="relative w-full h-[30vh] overflow-hidden">
                 <Image 
                     src={projectData?.project.coverImageUrl} 
@@ -154,9 +154,6 @@ export default function Project(
 
               </div>
             </div>
-            <div id="future-content" className="hidden md:flex flex-col w-1/5 p-4 border border-slate-700">
-              <h1>Future Content</h1>
-          </div>
         </div>
       </main>
     </>

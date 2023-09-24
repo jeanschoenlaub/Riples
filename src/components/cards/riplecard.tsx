@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
 import DOMPurify from "dompurify";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { RouterOutputs } from "~/utils/api";
@@ -29,7 +29,17 @@ export const RipleCard = (props: RipleWithUser) => {
 
 
   // Calculate max height based on whether the content is expanded.
-  const maxHeightClass = isExpanded ? 'max-h-screen' : 'max-h-200';
+  const maxHeightClass = isExpanded ? 'max-h-40' : 'max-h-200';
+
+  //Smaller images if phone
+  const [imgDimensions, setImgDimensions] = useState({width: 100, height: 100});
+  useEffect(() => {
+      if (typeof window !== 'undefined') {
+          if (window.innerWidth < 640) {
+              setImgDimensions({width: 80, height: 80});
+          }
+      }
+  }, []);
   
   return (
     <div 
@@ -37,47 +47,57 @@ export const RipleCard = (props: RipleWithUser) => {
       key={riple.id}
       className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md`}
       >
-        <div id="riple-card-header" className="flex items-center justify-between space-x-3 ">
-          {/* Author's Profile Image */}
-          <div id="riple-card-header-image">
+      <div id="riple-card-header" className="flex items-center space-x-3">
+      
+        {/* Author's Profile Image */}
+        <div id="riple-card-header-image" className="flex-none">
             <Link href={`/projects/${riple.projectId}`}>
-              <Image
-                  src={riple.project.coverImageUrl} 
-                  alt="Profile Image" 
-                  className="rounded-full border border-slate-300"
-                  width={100}
-                  height={100}
-              />
+                <Image
+                    src={riple.project.coverImageUrl} 
+                    alt="Profile Image" 
+                    className="rounded-full border border-slate-300"
+                    width={imgDimensions.width} 
+                    height={imgDimensions.height}
+                />
             </Link>
-          </div>
+        </div>
 
-          {/* Author's Name and Post Date */}
-          <div id="riple-card-header-metadata" className="flex-grow">
-              <div className="font-semibold text-gray-800">
-                  {riple.title}
+        <div className="flex-grow  ">
+            {/* Project Title and Follow Button */}
+            <div className="flex justify-between items-center flex-wrap">
+                <div id="riple-card-header-title" className="font-semibold text-gray-800 mr-2">
+                    {riple.title}
+                </div>
+                <div id="riple-card-header-follow">
+                    <Follow projectId={riple.projectId} />
+                </div>
+            </div>
+          
+            {/* Metadata */}
+            <div className="space-y-1">
+                <div className="text-sm text-gray-500">
+                    {riple.ripleType == "update" ? `Update on` : `Check out`}
+                    <span className="font-medium text-sky-500 ml-1">
+                        <Link href={`/projects/${riple.projectId}`}>
+                            {riple.project.title}
+                        </Link>
+                  </span>
+                  &nbsp;&#40;{riple.project.projectType}&#41;
               </div>
-              <span className="text-sm text-gray-500">
-                  {riple.ripleType == "update" ? `Update on ` : `Check out `}
-                  <span className="font-medium text-sky-500 underline">
-                      <Link href={`/projects/${riple.projectId}`}>
-                          {riple.project.title}
+
+              <div className="text-sm text-gray-500">
+                  By&nbsp;
+                  <span className="font-medium text-black">
+                      <Link href={`/users/${riple.authorID}`}>
+                          {author?.username}
                       </Link>
                   </span>
-
-                  &nbsp;&#40;{riple.project.projectType}&#41;&nbsp;by&nbsp;
-                  <span className="font-medium text-gray-500">
-                    <Link href={`/users/${riple.authorID}`}>
-                      {author?.username}
-                    </Link>
-                  </span>
                   <span className="ml-2">{`${dayjs(riple.createdAt).fromNow()}`}</span>
-              </span>
+              </div>
           </div>
-          {/* Follow Button */}
-          <div id="riple-card-header-follow">
-            <Follow projectId={riple.projectId} />
-          </div>
-        </div>
+
+      </div>
+  </div>
 
       {/* Horizontal Divider */}
       <hr className={`border-t mt-4 border-slate-200 ${riple.ripleType == "creation" ? "hidden" : ""}`} />

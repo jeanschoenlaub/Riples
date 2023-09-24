@@ -87,16 +87,16 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
   if (followerQuery.isError) return <p>Error loading followers.</p>;
 
   return (
-    <div className="mt-4 ml-2 mb-2 space-y-4 justify-center relative">
+    <div className="justify-center relative">
       <button
-        className="border rounded border-gray-300 px-4 py-2"
+        className="border rounded border-gray-300 px-2 py-2"
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         onClick={handleToggleFollow}
       >
         {isFollowing ? 
             <svg 
-                className="w-6 h-6 text-gray-800 dark:text-white" 
+                className="w-4 h-4 text-gray-800 dark:text-white" 
                 aria-hidden="true" 
                 xmlns="http://www.w3.org/2000/svg" 
                 fill="#2563eb" 
@@ -105,7 +105,7 @@ export const Follow: React.FC<FollowProps> = ({ projectId }) => {
             </svg>
          :
             <svg 
-                className="w-6 h-6 text-gray-800 dark:text-white"
+                className="w-4 h-4 text-gray-800 dark:text-white"
                 aria-hidden="true" 
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none" 
