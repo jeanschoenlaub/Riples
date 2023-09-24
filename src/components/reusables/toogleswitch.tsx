@@ -29,16 +29,19 @@ const ToggleSwitch: React.FC<ToggleProps> = ({
 
   // toogle blue overlay is either half of the toogle size (ie covers one word) or a blue dot in between  
   const computedWidth = inBetween ? "w-8" : "w-20";
-
-  const handleRedirectHome = (option: string) => {
-    router.push(`/?activeTab=${option}`);
+  
+  const handleRedirectHome = async (option: string) => {
+    await router.push(`/?activeTab=${option}`).catch(err => {
+      console.error("Navigation error:", err);
+    });
   };
+  
 
   const handleOptionClick = (option: string) => {
     if (activeTab && setActiveTab) {
       setActiveTab(option);
     } else {
-      handleRedirectHome(option);
+      void handleRedirectHome(option);
     }
   }
 
