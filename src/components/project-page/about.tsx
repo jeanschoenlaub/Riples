@@ -79,6 +79,11 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
             </svg>
             {project.project.projectType === "collab" ? "Collaborative" : "Individual"}
           </div>
+    
+          <span className="text-sm text-gray-500">
+            This is a <span className="font-medium text-sky-500">{project.project.projectType}</span> project
+          </span>
+        </div>
 
           {/* JOIN / LEAVE PROJECT SECTION AND BUTTON */}
           <div id="project-collab-how-to-apply" className="mt-4 ml-2 mb-2 space-y-4">
@@ -116,11 +121,6 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
                    <div className="bg-blue-500 text-white rounded py-1 px-2 text-center"> {!isProjectLead ? 'You must be signed in to apply.' : ''} </div>
                 )}
             </div>
-    
-          <span className="text-sm text-gray-500">
-            This is a <span className="font-medium text-sky-500">{project.project.projectType}</span> project
-          </span>
-        </div>
     
         <span className="text-sm text-gray-500 flex items-center">
         Project Lead:  
