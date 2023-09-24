@@ -85,7 +85,7 @@ export default function Project(
   const isProjectLead = session?.user.id === projectData.project.authorID;
 
   const displayCollabTab = 
-    isProjectLead || 
+    isProjectLead || isMember ||
     (projectData?.project.projectType === "collab" && projectData?.project.projectPrivacy === "public")
 
   return (
