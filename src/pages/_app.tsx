@@ -10,26 +10,29 @@ import { OnboardingWrapper } from "~/components/onboarding";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import ReactGA from 'react-ga';
+import { pageview } from "~/utils/googleanalytics";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   const router = useRouter();
-  ReactGA.initialize('G-NPW2X3G8YQ');
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
-      ReactGA.pageview(url);
-    };
-  
-    router.events.on('routeChangeComplete', handleRouteChange);
-  
-    // Cleanup the listener when the component is unmounted
+      pageview(url)
+    }
+    //When the component is mounted, subscribe to router changes
+    //and log those page views
+    router.events.on('routeChangeComplete', handleRouteChange)
+
+    // If the component is unmounted, unsubscribe
+    // from the event with the `off` method
     return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, [router.events]);
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [router.events])
+
   
 
   return (
