@@ -89,15 +89,17 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
             )}
             </button>
             </div>
-            <SubTaskModal 
-              subTaskToEdit={selectedSubTask} 
-              allowedToEdit={allowedToEdit}
-              showModal={showSubTaskModal}
-              onClose={() => {
-                setShowSubTaskModal(false); // Hide the modal when closing
-                setSelectedSubTask(null);
-              }}
-            />
+            {selectedSubTask && (
+              <SubTaskModal 
+                  subTaskToEdit={selectedSubTask} 
+                  allowedToEdit={allowedToEdit}
+                  showModal={showSubTaskModal}
+                  onClose={() => {
+                      setShowSubTaskModal(false); // Hide the modal when closing
+                      setSelectedSubTask(null);
+                  }}
+              />
+          )}
         </div>
       )      
   };
