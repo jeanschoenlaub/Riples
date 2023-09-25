@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import type { RouterOutputs} from "~/utils/api";
-import { api } from "~/utils/api";
-import { LoadingRiplesLogo, LoadingSpinner } from '../../reusables/loading';
+import { LoadingSpinner } from '../../reusables/loading';
 import toast from 'react-hot-toast';
-import { handleZodError } from '~/utils/error-handling';
-import { SubTaskModal } from '~/components/project-page/task/subtaskmodal';
+import { SubTaskModal } from '~/components/project-page/subtask/subtaskmodal/subtaskmodal';
 import { useSession } from 'next-auth/react';
+import type { SubTaskData, SubTasksRowsProps } from './subtasktypes';
+import { useSubTaskMutation } from './subtaskapi';
 
-type TaskData = RouterOutputs["tasks"]["getTasksByProjectId"][0];
-interface SubTasksRowsProps {
-    taskData: TaskData;
-}
-type SubTaskData = RouterOutputs["tasks"]["getTasksByProjectId"][0]["task"]["subTasks"][0];
+
   
 export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
     const [subTaskTitle, setSubTaskTitle] = useState(''); // state variable to store sub-task title
@@ -160,6 +155,7 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
                 onClose={() => {
                     setShowSubTaskModal(false); // Hide the modal when closing
                     setSelectedSubTask(null);
+                    console.log("called")
                 }}
             />
         )}
@@ -167,98 +163,4 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
     )      
 };
   
-// Payload for creating a new sub-task
-interface CreateSubTaskPayload {
-    taskId: string;
-    title: string;
-  }
 
-// Payload for deleting a sub-task
-interface DeleteSubTaskPayload {
-id: string;
-}
-
-// Payload for changing the status of a sub-task
-interface EditSubTaskStatusPayload {
-id: string;
-status: boolean;  // Note: using boolean to match your Prisma model
-}
-  
-// Custom hook to handle mutations and their state for Subtasks
-const useSubTaskMutation = (taskId: string, { onSuccess }: { onSuccess: () => void }) => {
-  const apiContext = api.useContext();
-  
-  const handleSuccess = async () => {
-    await apiContext.tasks.getTasksByProjectId.invalidate();
-    onSuccess();
-  };
-  
-  const { mutate: createSubTaskMutation, isLoading: isCreating } = api.tasks.createSubTask.useMutation({
-    onSuccess: handleSuccess
-  });
-  const createSubTask = (payload: CreateSubTaskPayload) => {
-      return new Promise<void>((resolve, reject) => {
-          createSubTaskMutation(payload, {
-              onSuccess: () => { resolve(); },
-              onError: (e) => {
-                  const errorMessage = e.data?.zodError?.fieldErrors.title;
-                  if (errorMessage?.[0]) {
-                      toast.error(errorMessage[0]);
-                  } else {
-                      toast.error("Failed to create subtask! Please try again later.");
-                  }
-                  reject(e);
-              }
-          });
-      });
-  };
-
-  const { mutate: deleteSubTaskMutation, isLoading: isDeleting } = api.tasks.deleteSubTask.useMutation({
-    onSuccess: handleSuccess
-  });
-  const deleteSubTask = (payload: DeleteSubTaskPayload) => {
-    return new Promise<void>((resolve, reject) => {
-        deleteSubTaskMutation(payload, {
-            onSuccess: () => { resolve(); },
-            onError: (e) => {
-                const errorMessage = e.data?.zodError?.fieldErrors.id;
-                if (errorMessage?.[0]) {
-                    toast.error(errorMessage[0]);
-                } else {
-                    toast.error("Failed to delete subtask! Please try again later.");
-                }
-                reject(e);
-            }
-        });
-    });
-  };
-
-  const { mutate: editStatusMutation, isLoading: isEditingStatus } = api.tasks.changeSubTaskStatus.useMutation({
-    onSuccess: handleSuccess
-  });
-  const editStatus = (payload: EditSubTaskStatusPayload) => {
-    return new Promise<void>((resolve, reject) => {
-        editStatusMutation(payload, {
-            onSuccess: () => { resolve(); },
-            onError: (e) => {
-                const errorMessage = e.data?.zodError?.fieldErrors.status;
-                if (errorMessage?.[0]) {
-                    toast.error(errorMessage[0]);
-                } else {
-                    toast.error("Failed to edit subtask status! Please try again later.");
-                }
-                reject(e);
-            }
-        });
-    });
-  };
-
-  return {
-    isCreating,
-    isDeleting,
-    isEditingStatus,
-    createSubTask,
-    deleteSubTask,
-    editStatus,
-  };
-};

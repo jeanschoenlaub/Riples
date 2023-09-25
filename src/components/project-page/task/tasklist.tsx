@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
 import Link from 'next/link'; // import Next.js Link component
-import { TaskModal } from '~/components/project-page/task/taskmodal';
+import { TaskModal } from '~/components/project-page/task/taskmodal/taskmodal';
 import { ProfileImage } from '../../reusables/profileimage';
 import { LoadingRiplesLogo } from '../../reusables/loading';
 import { StyledTable } from '../../reusables/styledtables';
-import { SubTasksRows } from './subtask';
+import { SubTasksRows } from '../subtask/subtask';
 
 
 interface TaskListProps {

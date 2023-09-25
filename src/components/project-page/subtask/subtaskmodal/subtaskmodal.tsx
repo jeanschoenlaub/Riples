@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
-import { handleZodError } from "~/utils/error-handling";
-import { Modal } from '../../reusables/modaltemplate';
+import { Modal } from '../../../reusables/modaltemplate';
+import { handleZodError } from '~/utils/error-handling';
 
 interface SubTaskModalProps {
   subTaskToEdit: SubTaskData; 
@@ -115,11 +115,6 @@ const useSubTaskMutation = () => {
   // Edit subtask Mutation
 const { mutate: editSubTaskMutation, isLoading: isEditing } = api.tasks.editSubTask.useMutation({
     onSuccess: handleSuccess,
-    onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors;
-      const message = handleZodError(fieldErrors);
-      toast.error(message);
-    }
   });
   
   const editSubTask = (payload: EditSubTaskPayload) => {
@@ -127,12 +122,9 @@ const { mutate: editSubTaskMutation, isLoading: isEditing } = api.tasks.editSubT
       editSubTaskMutation(payload, {
         onSuccess: () => { resolve(); },
         onError: (e) => {
-          const errorMessage = e.data?.zodError?.fieldErrors.content;
-          if (errorMessage?.[0]) {
-            toast.error(errorMessage[0]);
-          } else {
-            toast.error("Failed to edit subtask! Please try again later.");
-          }
+          const fieldErrors = e.data?.zodError?.fieldErrors;
+          const message = handleZodError(fieldErrors);
+          toast.error(message);
           reject(e);
         }
       });

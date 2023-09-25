@@ -1,60 +1,22 @@
+// External Imports
 import React, { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import type { RouterOutputs} from "~/utils/api";
-import { api } from "~/utils/api";
-import { handleZodError } from "~/utils/error-handling";
-import { Modal } from '../../reusables/modaltemplate';
-import { useSession } from 'next-auth/react';
-import { LoadingSpinner } from '../../reusables/loading';
 import Link from 'next/link';
-import { ProfileImage } from '../../reusables/profileimage';
+import toast from 'react-hot-toast';
+import { useSession } from 'next-auth/react';
 
-interface TaskModalProps {
-  project: ProjectData["project"];
-  taskToEdit: TaskData | null; 
-  showModal: boolean;
-  isMember: boolean;
-  isProjectLead: boolean;
-  inputValue: string; //If the user types some text before clicking create task
-  onClose: () => void;
-}
-
-interface CreateTaskPayload {
-  projectId: string;
-  title: string;
-  content: string;
-}
-
-interface ChangeTaskOwnerPayload {
-  id: string;
-  projectId: string;
-  userId: string;
-}
-
-interface DeleteTaskPayload {
-  id: string;
-  projectId: string;
-  userId: string;
-}
-
-interface EditStatusPayload {
-  id: string;
-  status: string;
-}
-
-
-interface EditTaskPayload extends CreateTaskPayload {
-  id: string;
-}
-
-
-type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"];
-type TaskData = RouterOutputs["tasks"]["edit"];
+// Local Imports
+import { api } from "~/utils/api";
+import { Modal } from '../../../reusables/modaltemplate';
+import { LoadingSpinner } from '../../../reusables/loading';
+import { ProfileImage } from '../../../reusables/profileimage';
+import type { CreateTaskPayload, EditTaskPayload, TaskModalProps } from './taskmodaltypes';
+import { useTaskMutation } from './taskmodalapi';
 
 // Main React Functional Component
 export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
   
   // Initialize state with values from props if taskToEdit is present (for edit mode vs create mode)
+  const defaultTemplate = ``
   const initialContent = taskToEdit ? taskToEdit.content : defaultTemplate;
 
   //Is the logged in user allowed to edit ?
@@ -100,38 +62,27 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     else {
       setTaskTitle(inputValue);
     }
-  }, [taskToEdit, session, inputValue]); 
+  }, [taskToEdit, session, inputValue, allowedToEdit]); 
+
+  const handleToogleOwnership = () => {
+    if (!isMember) {
+      toast.error("Apply to join the project to claim task");
+      return;
+    }
   
-  const enhancedOnClose = () => {
-    resetForm();
-    onClose();
+    const payload = isOwner 
+      ? { id: taskToEdit!.id, projectId: project.id, userId: "" }
+      : { id: taskToEdit!.id, projectId: project.id, userId: session!.user.id };
+  
+    changeTaskOwner(payload)
+      .then(() => {
+        setIsOwner(!isOwner);
+        toast.success('Ownership toggled successfully!');
+      })
+      .catch(() => {
+        toast.error('Error claiming task');
+      });
   };
-
-  const resetForm = () => {
-    setTaskContent(defaultTemplate);
-    setIsEditMode(false);
-    onClose(); 
-    };
-
-    const handleToogleOwnership = () => {
-      if (!isMember) {
-        toast.error("Apply to join the project to claim task");
-        return;
-      }
-    
-      const payload = isOwner 
-        ? { id: taskToEdit!.id, projectId: project.id, userId: "" }
-        : { id: taskToEdit!.id, projectId: project.id, userId: session!.user.id };
-    
-      changeTaskOwner(payload)
-        .then(() => {
-          setIsOwner(!isOwner);
-          toast.success('Ownership toggled successfully!');
-        })
-        .catch(() => {
-          toast.error('Error claiming task');
-        });
-    };
     
 
   // Helper function to generate edit payload
@@ -161,6 +112,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     taskAction
       .then(() => {
         toast.success('Task saved successfully!');
+        onClose();
       })
       .catch(() => {
         toast.error('Error saving task');
@@ -173,6 +125,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
       deleteTask({ id: taskToEdit.id, projectId: project.id, userId: session!.user.id })
         .then(() => {
           toast.success('Task deleted successfully!');
+          onClose();
         })
         .catch(() => {
           toast.error('Error deleting task');
@@ -198,13 +151,12 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   
 
   //Custom Hooks
-  const { isCreating, isEditing, isDeleting, isChangingOwner, isEditingStatus, editStatus, changeTaskOwner, createTask, editTask, deleteTask } = useTaskMutation(project.id, { onSuccess: resetForm });
+  const { isCreating, isEditing, isDeleting, isChangingOwner, isEditingStatus, editStatus, changeTaskOwner, createTask, editTask, deleteTask } = useTaskMutation(project.id);
   const isLoading = isCreating || isEditing || isDeleting || isChangingOwner || isEditingStatus;
-  const { handleSuccess } = useTaskMutation(project.id, { onSuccess: resetForm});
 
   return (
     <div>
-      <Modal showModal={showModal} isLoading={isLoading} size="medium" onClose={enhancedOnClose}>
+      <Modal showModal={showModal} isLoading={isLoading} size="medium" onClose={onClose}>
       <span className="text-lg flex justify-center items-center space-x-4 mb-2w-auto">
         {taskToEdit ? (isEditMode ? "Edit Task" : "View Task") : "Create New Task"}
       </span>
@@ -318,161 +270,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   );
 };
 
-// Custom hook to handle mutations and their state
-const useTaskMutation = (projectId: string, { onSuccess }: { onSuccess: () => void }) => {
-  const apiContext = api.useContext();
-  
-  const handleSuccess = async () => {
-    await apiContext.tasks.getTasksByProjectId.invalidate();
-  };
 
 
-  // Create Task Mutation
-  const { mutate: createTaskMutation, isLoading: isCreating } = api.tasks.create.useMutation({
-    onSuccess: handleSuccess,
-    onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors;
-      const message = handleZodError(fieldErrors);
-      toast.error(message);
-    }
-  });
 
-  const createTask = (payload: CreateTaskPayload) => {
-    return new Promise<void>((resolve, reject) => {
-      createTaskMutation(payload, {
-        onSuccess: () => { resolve(); },
-        onError: (e) => {
-          const errorMessage = e.data?.zodError?.fieldErrors.content;
-          if (errorMessage?.[0]) {
-            toast.error(errorMessage[0]);
-          } else {
-            toast.error("Failed to create task! Please try again later.");
-          }
-          reject(e);
-        }
-      });
-    });
-  };
-
-  // Edit Task Mutation
-  const { mutate: editTaskMutation, isLoading: isEditing } = api.tasks.edit.useMutation({
-    onSuccess: handleSuccess,
-    onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors;
-      const message = handleZodError(fieldErrors);
-      toast.error(message);
-    }
-  });
-
-  const editTask = (payload: EditTaskPayload) => {
-    return new Promise<void>((resolve, reject) => {
-      editTaskMutation(payload, {
-        onSuccess: () => { resolve(); },
-        onError: (e) => {
-          const errorMessage = e.data?.zodError?.fieldErrors.content;
-          if (errorMessage?.[0]) {
-            toast.error(errorMessage[0]);
-          } else {
-            toast.error("Failed to edit task! Please try again later.");
-          }
-          reject(e);
-        }
-      });
-    });
-  };
-
-  // Mutation for deleting a task
-  const { mutate: deleteTaskMutation, isLoading: isDeleting } = api.tasks.delete.useMutation({
-    onSuccess: handleSuccess,
-    onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors;
-      const message = handleZodError(fieldErrors);
-      toast.error(message);
-    }
-  });
-
-  const deleteTask = (payload: DeleteTaskPayload) => {
-    return new Promise<void>((resolve, reject) => {
-      deleteTaskMutation(payload, {
-        onSuccess: () => { resolve(); },
-        onError: (e) => {
-          const errorMessage = e.data?.zodError?.fieldErrors.content;
-          if (errorMessage?.[0]) {
-            toast.error(errorMessage[0]);
-          } else {
-            toast.error("Failed to delete task! Please try again later.");
-          }
-          reject(e);
-        }
-      });
-    });
-  };
-
-  // Change Task Owner Mutation
-  const { mutate: changeTaskOwnerMutation, isLoading: isChangingOwner } = api.tasks.changeOwner.useMutation({
-    onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors;
-      const message = handleZodError(fieldErrors);
-      toast.error(message);
-    }
-  });
-
-  const changeTaskOwner = (payload: ChangeTaskOwnerPayload) => {
-    return new Promise<void>((resolve, reject) => {
-      changeTaskOwnerMutation(payload, {
-        onSuccess: () => { resolve(); },
-        onError: (e) => {
-          const errorMessage = e.data?.zodError?.fieldErrors.content;
-          if (errorMessage?.[0]) {
-            toast.error(errorMessage[0]);
-          } else {
-            toast.error("Failed to change task owner! Please try again later.");
-          }
-          reject(e);
-        }
-      });
-    });
-  };
-
-  // Edit Status Mutation
-  const { mutate: editStatusMutation, isLoading: isEditingStatus } = api.tasks.changeStatus.useMutation({
-  onError: (e) => {
-    const fieldErrors = e.data?.zodError?.fieldErrors;
-    const message = handleZodError(fieldErrors);
-    toast.error(message);
-  }
-});
-
-const editStatus = (payload: EditStatusPayload) => {
-  return new Promise<void>((resolve, reject) => {
-    editStatusMutation(payload, {
-      onSuccess: () => { resolve(); },
-      onError: (e) => {
-        const errorMessage = e.data?.zodError?.fieldErrors.content;
-        if (errorMessage?.[0]) {
-          toast.error(errorMessage[0]);
-        } else {
-          toast.error("Failed to change task owner! Please try again later.");
-        }
-        reject(e);
-      }
-    });
-  });
-};
-
-  return {
-    isCreating,
-    isEditing,
-    isDeleting,
-    isChangingOwner,
-    isEditingStatus,
-    handleSuccess, 
-    createTask,
-    changeTaskOwner,
-    editTask,
-    deleteTask,
-    editStatus  
-  }
-}
-
-const defaultTemplate = ``
