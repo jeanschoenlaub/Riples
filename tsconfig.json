@@ -5,6 +5,7 @@
     "allowJs": true,
     "checkJs": true,
     "skipLibCheck": true,
+    "typeRoots": ["./types", "./node_modules/@types"],
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
@@ -28,6 +29,6 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs"
-, "src/utils/error-handling.ts"  ],
+, "src/utils/error-handling.ts", "src/utils/googleanalytics/index.ts"  ],
   "exclude": ["node_modules"]
 }
