@@ -179,7 +179,11 @@ export const taskRouter = createTRPCRouter({
 
   // Route to create a new sub-task
   createSubTask: protectedProcedure
-    .input(z.object({ taskId: z.string(), title: z.string() }))
+    .input(
+      z.object({ 
+        taskId: z.string(),
+        title: z.string().min(5, { message: "Sub-task title must be 5 or more characters long" }).max(255, { message: "Sub-task title must be 255 or less characters long" }), 
+    }))
     .mutation(async ({ ctx, input }) => {
       const newSubTask = await ctx.prisma.subTasks.create({
         data: {

@@ -127,7 +127,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
         .then(() => {
           setIsOwner(!isOwner);
           toast.success('Ownership toggled successfully!');
-          handleSuccess();
         })
         .catch(() => {
           toast.error('Error claiming task');
@@ -323,119 +322,117 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
 const useTaskMutation = (projectId: string, { onSuccess }: { onSuccess: () => void }) => {
   const apiContext = api.useContext();
   
-  // Function to run on successful mutations
-  const handleSuccess = () => {
-    void apiContext.tasks.getTasksByProjectId.invalidate();
-    onSuccess();
+  const handleSuccess = async () => {
+    await apiContext.tasks.getTasksByProjectId.invalidate();
   };
 
+
   // Create Task Mutation
-const { mutate: createTaskMutation, isLoading: isCreating } = api.tasks.create.useMutation({
-  onSuccess: handleSuccess,
-  onError: (e) => {
-    const fieldErrors = e.data?.zodError?.fieldErrors;
-    const message = handleZodError(fieldErrors);
-    toast.error(message);
-  }
-});
-
-const createTask = (payload: CreateTaskPayload) => {
-  return new Promise<void>((resolve, reject) => {
-    createTaskMutation(payload, {
-      onSuccess: () => { resolve(); },
-      onError: (e) => {
-        const errorMessage = e.data?.zodError?.fieldErrors.content;
-        if (errorMessage?.[0]) {
-          toast.error(errorMessage[0]);
-        } else {
-          toast.error("Failed to create task! Please try again later.");
-        }
-        reject(e);
-      }
-    });
+  const { mutate: createTaskMutation, isLoading: isCreating } = api.tasks.create.useMutation({
+    onSuccess: handleSuccess,
+    onError: (e) => {
+      const fieldErrors = e.data?.zodError?.fieldErrors;
+      const message = handleZodError(fieldErrors);
+      toast.error(message);
+    }
   });
-};
 
-// Edit Task Mutation
-const { mutate: editTaskMutation, isLoading: isEditing } = api.tasks.edit.useMutation({
-  onSuccess: handleSuccess,
-  onError: (e) => {
-    const fieldErrors = e.data?.zodError?.fieldErrors;
-    const message = handleZodError(fieldErrors);
-    toast.error(message);
-  }
-});
-
-const editTask = (payload: EditTaskPayload) => {
-  return new Promise<void>((resolve, reject) => {
-    editTaskMutation(payload, {
-      onSuccess: () => { resolve(); },
-      onError: (e) => {
-        const errorMessage = e.data?.zodError?.fieldErrors.content;
-        if (errorMessage?.[0]) {
-          toast.error(errorMessage[0]);
-        } else {
-          toast.error("Failed to edit task! Please try again later.");
+  const createTask = (payload: CreateTaskPayload) => {
+    return new Promise<void>((resolve, reject) => {
+      createTaskMutation(payload, {
+        onSuccess: () => { resolve(); },
+        onError: (e) => {
+          const errorMessage = e.data?.zodError?.fieldErrors.content;
+          if (errorMessage?.[0]) {
+            toast.error(errorMessage[0]);
+          } else {
+            toast.error("Failed to create task! Please try again later.");
+          }
+          reject(e);
         }
-        reject(e);
-      }
+      });
     });
+  };
+
+  // Edit Task Mutation
+  const { mutate: editTaskMutation, isLoading: isEditing } = api.tasks.edit.useMutation({
+    onSuccess: handleSuccess,
+    onError: (e) => {
+      const fieldErrors = e.data?.zodError?.fieldErrors;
+      const message = handleZodError(fieldErrors);
+      toast.error(message);
+    }
   });
-};
 
-// Mutation for deleting a task
-const { mutate: deleteTaskMutation, isLoading: isDeleting } = api.tasks.delete.useMutation({
-  onSuccess: handleSuccess,
-  onError: (e) => {
-    const fieldErrors = e.data?.zodError?.fieldErrors;
-    const message = handleZodError(fieldErrors);
-    toast.error(message);
-  }
-});
-
-const deleteTask = (payload: DeleteTaskPayload) => {
-  return new Promise<void>((resolve, reject) => {
-    deleteTaskMutation(payload, {
-      onSuccess: () => { resolve(); },
-      onError: (e) => {
-        const errorMessage = e.data?.zodError?.fieldErrors.content;
-        if (errorMessage?.[0]) {
-          toast.error(errorMessage[0]);
-        } else {
-          toast.error("Failed to delete task! Please try again later.");
+  const editTask = (payload: EditTaskPayload) => {
+    return new Promise<void>((resolve, reject) => {
+      editTaskMutation(payload, {
+        onSuccess: () => { resolve(); },
+        onError: (e) => {
+          const errorMessage = e.data?.zodError?.fieldErrors.content;
+          if (errorMessage?.[0]) {
+            toast.error(errorMessage[0]);
+          } else {
+            toast.error("Failed to edit task! Please try again later.");
+          }
+          reject(e);
         }
-        reject(e);
-      }
+      });
     });
+  };
+
+  // Mutation for deleting a task
+  const { mutate: deleteTaskMutation, isLoading: isDeleting } = api.tasks.delete.useMutation({
+    onSuccess: handleSuccess,
+    onError: (e) => {
+      const fieldErrors = e.data?.zodError?.fieldErrors;
+      const message = handleZodError(fieldErrors);
+      toast.error(message);
+    }
   });
-};
 
-// Change Task Owner Mutation
-const { mutate: changeTaskOwnerMutation, isLoading: isChangingOwner } = api.tasks.changeOwner.useMutation({
-  onError: (e) => {
-    const fieldErrors = e.data?.zodError?.fieldErrors;
-    const message = handleZodError(fieldErrors);
-    toast.error(message);
-  }
-});
-
-const changeTaskOwner = (payload: ChangeTaskOwnerPayload) => {
-  return new Promise<void>((resolve, reject) => {
-    changeTaskOwnerMutation(payload, {
-      onSuccess: () => { resolve(); },
-      onError: (e) => {
-        const errorMessage = e.data?.zodError?.fieldErrors.content;
-        if (errorMessage?.[0]) {
-          toast.error(errorMessage[0]);
-        } else {
-          toast.error("Failed to change task owner! Please try again later.");
+  const deleteTask = (payload: DeleteTaskPayload) => {
+    return new Promise<void>((resolve, reject) => {
+      deleteTaskMutation(payload, {
+        onSuccess: () => { resolve(); },
+        onError: (e) => {
+          const errorMessage = e.data?.zodError?.fieldErrors.content;
+          if (errorMessage?.[0]) {
+            toast.error(errorMessage[0]);
+          } else {
+            toast.error("Failed to delete task! Please try again later.");
+          }
+          reject(e);
         }
-        reject(e);
-      }
+      });
     });
-  });
-};
+  };
 
+  // Change Task Owner Mutation
+  const { mutate: changeTaskOwnerMutation, isLoading: isChangingOwner } = api.tasks.changeOwner.useMutation({
+    onError: (e) => {
+      const fieldErrors = e.data?.zodError?.fieldErrors;
+      const message = handleZodError(fieldErrors);
+      toast.error(message);
+    }
+  });
+
+  const changeTaskOwner = (payload: ChangeTaskOwnerPayload) => {
+    return new Promise<void>((resolve, reject) => {
+      changeTaskOwnerMutation(payload, {
+        onSuccess: () => { resolve(); },
+        onError: (e) => {
+          const errorMessage = e.data?.zodError?.fieldErrors.content;
+          if (errorMessage?.[0]) {
+            toast.error(errorMessage[0]);
+          } else {
+            toast.error("Failed to change task owner! Please try again later.");
+          }
+          reject(e);
+        }
+      });
+    });
+  };
 
   // Edit Status Mutation
   const { mutate: editStatusMutation, isLoading: isEditingStatus } = api.tasks.changeStatus.useMutation({
