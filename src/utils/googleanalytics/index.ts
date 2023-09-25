@@ -1,3 +1,4 @@
+import { env } from "~/env.mjs";
 
 export const event = ({ action, params }: { action: string, params: GAEventParams }) => {
   window.gtag('event', action, params);
@@ -5,9 +6,12 @@ export const event = ({ action, params }: { action: string, params: GAEventParam
 
 // log the pageview with their URL
 export const pageview = (url: string) => {
-  if (typeof window !== "undefined") {
-    window.gtag('config', process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS, {
+  const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS;
+    if (!gaId) {
+      console.error('NEXT_PUBLIC_GOOGLE_ANALYTICS is not defined');
+      return;
+    }
+    window.gtag('config', gaId, {
       page_path: url,
-    })
-  }
+    });
 }

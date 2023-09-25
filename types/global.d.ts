@@ -1,11 +1,12 @@
+type GTagEvent = 'config' | 'event';
+
 interface Window {
-    gtag: any;  // You can make this more specific if needed
-  }
-  
-  type GAEventParams = {
+  gtag: (type: GTagEvent, action: string, params?: GAEventParams | { page_path: string }) => void;
+}
+
+type GAEventParams = {
     category?: string;
     label?: string;
     value?: number;
-    [key: string]: any;  // This allows other properties too
-  }
-  
+    // ... any other specific fields you expect ...
+}
