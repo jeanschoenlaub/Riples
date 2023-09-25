@@ -81,7 +81,7 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
           </div>
     
           <span className="text-sm text-gray-500">
-            This is a <span className="font-medium text-sky-500">{project.project.projectType}</span> project
+            This is a <span className="font-medium text-sky-500">{project.project.projectType}</span> project  &nbsp;&#40;<Link href="/about/collaborate-on-a-riple-project" className="text-blue-500"> How to collaborate on Riples </Link> &#41;
           </span>
         </div>
 
@@ -89,8 +89,7 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
           <div id="project-collab-how-to-apply" className="mt-4 ml-2 mb-2 space-y-4">
                 <section>
                     <ol className="list-decimal list-inside">
-                    <li> Read this info page about what to expect: <Link href="/about/collaborate-on-a-riple-project" className="text-blue-500"> How to collaborate on Riples </Link> </li>
-                    <li> Sign in to your Riples Account (on the top right)</li>
+                    <li> Read this info page about what to expect:</li>
                     </ol>
                 </section>
             </div>

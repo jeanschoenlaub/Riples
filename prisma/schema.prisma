@@ -133,6 +133,7 @@ model ProjectFollowers {
 model SubTasks {
   id          String  @id @default(cuid())
   title       String  @db.VarChar(255)
+  content     String  @db.VarChar(10000)@default("")
   status      Boolean @default(false) // You could use a boolean to represent status; false for To-Do, true for Done
 
   // Relations

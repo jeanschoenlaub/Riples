@@ -12,6 +12,9 @@ export const taskRouter = createTRPCRouter({
       },
       orderBy: {
         editedAt: 'desc' // Sort tasks by the 'editedAt' field in descending order
+      },
+      include: {
+        subTasks: true
       }
     });
 
@@ -187,6 +190,30 @@ export const taskRouter = createTRPCRouter({
       });
       return newSubTask;
     }),
+
+    editSubTask: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string().min(5, { message: "Sub-task title must be 5 or more characters long" }).max(255, { message: "Sub-task title must be 255 or less characters long" }),
+        content: z.string().max(10000, { message: "Sub-task content must be 10000 or less characters long" }),
+        taskId: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, title, content, taskId } = input;
+  
+      const subTask = await ctx.prisma.subTasks.update({
+        where: { id },
+        data: {
+          title,
+          content
+        },
+      });
+  
+      return subTask;
+    }),
+  
 
   // Route to delete a sub-task
   deleteSubTask: protectedProcedure

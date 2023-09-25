@@ -57,8 +57,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   // Initialize state with values from props if taskToEdit is present (for edit mode vs create mode)
   const initialContent = taskToEdit ? taskToEdit.content : defaultTemplate;
 
-  console.log("Input Value in Modal: ", inputValue);
-
   //Is the logged in user allowed to edit ?
   const { data: session } = useSession();
   const allowedToEdit =  
@@ -76,7 +74,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   // States and useEffects
   const [taskTitle, setTaskTitle] = useState(() => taskToEdit ? taskToEdit.title : inputValue)
   const [taskContent, setTaskContent] = useState(initialContent); //can the user edit ? 
-  const [showHtmlPreview, setShowHtmlPreview] = useState(true); // state variable to control HTML preview mode -- Set to edit by default
   const [isEditMode, setIsEditMode] = useState(false); //If the task is being created --> edit mode
   const [isOwner, setIsOwner] = useState(session?.user.id === taskToEdit?.ownerId);
   const [taskStatus, setTaskStatus] = useState(taskToEdit ? taskToEdit.status : 'To-Do');
@@ -85,15 +82,13 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   // Conditional query using tRPC if task owner to display profile image
   const shouldExecuteQuery = !!taskToEdit?.ownerId // Run query only if there is a task owner
   const userQuery = api.users.getUserByUserId.useQuery(
-    { userId: session?.user?.id ?? "" },
+    { userId: taskToEdit?.ownerId ?? "" },
     { enabled: shouldExecuteQuery }
   );
 
   useEffect(() => {
     if (taskToEdit) { // Existing task
       setTaskTitle(taskToEdit.title);
-      console.log("no")
-      setShowHtmlPreview(false); 
       setTaskStatus(taskToEdit.status);
       setTaskContent(taskToEdit.content);
       setTaskOwnerId(taskToEdit.ownerId);
@@ -115,27 +110,30 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   const resetForm = () => {
     setTaskContent(defaultTemplate);
     setIsEditMode(false);
-    setShowHtmlPreview(true);
     onClose(); 
     };
 
-  const togglePreviewMode = () => {
-    setShowHtmlPreview(!showHtmlPreview);
-  };
-
-  const toggleOwnership = () => {
-    if (!isMember){
-      toast.error("Apply to join the project to claim task")
-    }
-    else{
-      if (isOwner) {
-        changeTaskOwner({ id: taskToEdit!.id, projectId: project.id, userId: "" }) 
-      } else {
-        changeTaskOwner({ id: taskToEdit!.id, projectId: project.id, userId: session!.user.id })
+    const handleToogleOwnership = () => {
+      if (!isMember) {
+        toast.error("Apply to join the project to claim task");
+        return;
       }
-      setIsOwner(!isOwner);
-    }
-  };
+    
+      const payload = isOwner 
+        ? { id: taskToEdit!.id, projectId: project.id, userId: "" }
+        : { id: taskToEdit!.id, projectId: project.id, userId: session!.user.id };
+    
+      changeTaskOwner(payload)
+        .then(() => {
+          setIsOwner(!isOwner);
+          toast.success('Ownership toggled successfully!');
+          handleSuccess();
+        })
+        .catch(() => {
+          toast.error('Error claiming task');
+        });
+    };
+    
 
   // Helper function to generate edit payload
   const generateEditPayload = (): EditTaskPayload => ({
@@ -153,74 +151,89 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   });
 
   const handleSave = () => {
-    const payload = isEditMode && taskToEdit ? generateEditPayload() : generateCreatePayload();
-    isEditMode ? editTask(payload as EditTaskPayload) : createTask(payload);
+    const payload = isEditMode && taskToEdit 
+      ? generateEditPayload() 
+      : generateCreatePayload();
+  
+    const taskAction = isEditMode 
+      ? editTask(payload as EditTaskPayload) 
+      : createTask(payload);
+  
+    taskAction
+      .then(() => {
+        toast.success('Task saved successfully!');
+      })
+      .catch(() => {
+        toast.error('Error saving task');
+      });
   };
+  
+
+  const handleDelete = () => {
+    if (taskToEdit) {
+      deleteTask({ id: taskToEdit.id, projectId: project.id, userId: session!.user.id })
+        .then(() => {
+          toast.success('Task deleted successfully!');
+        })
+        .catch(() => {
+          toast.error('Error deleting task');
+        });
+    }
+  };
+  
+
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const newStatus = event.target.value;
+    setTaskStatus(newStatus);
+  
+    if (taskToEdit) {
+      editStatus({ id: taskToEdit.id, status: newStatus })
+        .then(() => {
+          toast.success('Status updated successfully!');
+        })
+        .catch(() => {
+          toast.error('Error updating status');
+        });
+    }
+  };
+  
 
   //Custom Hooks
   const { isCreating, isEditing, isDeleting, isChangingOwner, isEditingStatus, editStatus, changeTaskOwner, createTask, editTask, deleteTask } = useTaskMutation(project.id, { onSuccess: resetForm });
   const isLoading = isCreating || isEditing || isDeleting || isChangingOwner || isEditingStatus;
+  const { handleSuccess } = useTaskMutation(project.id, { onSuccess: resetForm});
 
   return (
     <div>
       <Modal showModal={showModal} isLoading={isLoading} size="medium" onClose={enhancedOnClose}>
       <span className="text-lg flex justify-center items-center space-x-4 mb-2w-auto">
-        {taskToEdit ? (showHtmlPreview ? "Edit Task" : "View Task") : "Create New Task"}
-        {allowedToEdit && (<button 
-                onClick={togglePreviewMode}
-                className="bg-blue-500 text-white text-sm rounded px-4 py-1 ml-2 flex items-center justify-center w-auto"
-                disabled={isLoading}
-              >
-                <span className='flex items-center'>{!showHtmlPreview ? 
-                  <>
-                      Edit 
-                      <svg className="w-6 h-6 ml-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z"/>
-                        <path d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z"/>
-                      </svg>
-                    </>: 
-                  'Preview'}
-                </span>
-            </button>)}
+        {taskToEdit ? (isEditMode ? "Edit Task" : "View Task") : "Create New Task"}
       </span>
 
         <label className="block text-sm mb-3 justify-br" aria-label="Task Content">
           Task Title:
-          {!showHtmlPreview ? (
-            <>
-              <div className="w-full p-2 mt-1 rounded border bg-gray-100">
-                {taskTitle}
-              </div>
-            </>
-          ) : (
             <input
               type="text"
               value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
               className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
               maxLength={50}
-              disabled={isLoading}
+              disabled={!allowedToEdit || isLoading}
             />
-          )}
         </label>
    
         <div id="task-modal-owner-info" className="flex flex-wrap items-center space-x-5 mb-2 md:flex-nowrap">
-          {taskToEdit && ( // If taskToEdit exists (in edit mode)]
             <span className="text-sm flex items-center space-x-4 w-auto mr-2" aria-label="Task Title">Task Status:
               <select 
                 value={taskStatus} 
-                onChange={(e) => {
-                  setTaskStatus(e.target.value);
-                  editStatus({ id: taskToEdit.id, status: e.target.value });
-                }}
-                disabled={!showHtmlPreview}
+                onChange={handleStatusChange}
+                disabled={!allowedToEdit || isLoading}
               >
                 <option value="To-Do">To-Do</option>
                 <option value="Doing">Doing</option>
                 <option value="Done">Done</option>
               </select>
             </span>
-          )}
         </div>
 
 
@@ -241,10 +254,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
             )}
 
             <button 
-              onClick={() => {
-                toggleOwnership();
-                if (isMember) {setTaskOwnerId(session!.user.id);} 
-              }}
+              onClick={() => {handleToogleOwnership(); }}
               className={`text-white rounded px-4 py-1 flex items-center justify-center ${isOwner ? 'bg-red-500' : 'bg-green-500'}`}
               disabled={isLoading || isChangingOwner}
             >
@@ -273,24 +283,14 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
 
         <label className="block text-sm mb-2" aria-label="Task Content">
           Task Content:
-          {!showHtmlPreview ? (
-            <>
-              <div 
-                className="w-full p-2 mt-1 rounded border bg-gray-100"
-                style={{ maxHeight: '200px', overflow: 'auto' }} 
-                dangerouslySetInnerHTML={{ __html: taskContent }} 
-              ></div>
-            </>
-          ) : (
             <textarea
                 value={taskContent}
                 onChange={(e) => setTaskContent(e.target.value)}
                 className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
-                rows={10}
+                rows={5}
                 maxLength={10000}
-                disabled={isLoading}
+                disabled={!allowedToEdit || isLoading}
               />
-          )}
         </label>
 
         <div className="flex md:flex-nowrap">
@@ -301,12 +301,12 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
                 className="bg-green-500 text-white rounded px-4 py-2 mr-2  flex items-center justify-center w-auto"
                 disabled={isLoading}
               >
-                <span>{(isEditing || isCreating) && <LoadingSpinner size={20} />}Save</span>
+              <span>Save Task</span>
               </button>
           }
           {allowedToDelete && (
             <button 
-            onClick={() => deleteTask({ id: taskToEdit.id, projectId: project.id, userId: session!.user.id })} 
+            onClick={handleDelete} 
             className="bg-red-500 text-white rounded px-4 py-2 mr-2 flex items-center justify-center w-auto"
             disabled={isLoading || isDeleting}
           >
@@ -325,84 +325,151 @@ const useTaskMutation = (projectId: string, { onSuccess }: { onSuccess: () => vo
   
   // Function to run on successful mutations
   const handleSuccess = () => {
-    void apiContext.tasks.getTasksByProjectId.invalidate(); // Invalidate the cache
-    onSuccess(); // Execute any additional onSuccess logic
+    void apiContext.tasks.getTasksByProjectId.invalidate();
+    onSuccess();
   };
-  
-  //We add a mutation for creating a task (with on success)
-  const { mutate: createTaskMutation, isLoading: isCreating }  = api.tasks.create.useMutation({
-    onSuccess: handleSuccess,
-    onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors; 
-      const message = handleZodError(fieldErrors);
-      toast.error(message);
-    }
-  });
 
-  // Mutation for editing a task
-  const { mutate: editTaskMutation, isLoading: isEditing } = api.tasks.edit.useMutation({
-    onSuccess: handleSuccess,
-    onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors; 
-      const message = handleZodError(fieldErrors);
-      toast.error(message);
-    }
-  });
+  // Create Task Mutation
+const { mutate: createTaskMutation, isLoading: isCreating } = api.tasks.create.useMutation({
+  onSuccess: handleSuccess,
+  onError: (e) => {
+    const fieldErrors = e.data?.zodError?.fieldErrors;
+    const message = handleZodError(fieldErrors);
+    toast.error(message);
+  }
+});
 
-    // Mutation for deleting a task
-  const { mutate: deleteTaskMutation, isLoading: isDeleting } = api.tasks.delete.useMutation({
-    onSuccess: handleSuccess,
-    onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors;
-      const message = handleZodError(fieldErrors);
-      toast.error(message);
-    }
+const createTask = (payload: CreateTaskPayload) => {
+  return new Promise<void>((resolve, reject) => {
+    createTaskMutation(payload, {
+      onSuccess: () => { resolve(); },
+      onError: (e) => {
+        const errorMessage = e.data?.zodError?.fieldErrors.content;
+        if (errorMessage?.[0]) {
+          toast.error(errorMessage[0]);
+        } else {
+          toast.error("Failed to create task! Please try again later.");
+        }
+        reject(e);
+      }
+    });
   });
+};
 
-  // Mutation for changing owner of the task
-  const { mutate: changeTaskOwnerMutation, isLoading: isChangingOwner } = api.tasks.changeOwner.useMutation({
-    onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors;
-      const message = handleZodError(fieldErrors);
-      toast.error(message);
-    }
+// Edit Task Mutation
+const { mutate: editTaskMutation, isLoading: isEditing } = api.tasks.edit.useMutation({
+  onSuccess: handleSuccess,
+  onError: (e) => {
+    const fieldErrors = e.data?.zodError?.fieldErrors;
+    const message = handleZodError(fieldErrors);
+    toast.error(message);
+  }
+});
+
+const editTask = (payload: EditTaskPayload) => {
+  return new Promise<void>((resolve, reject) => {
+    editTaskMutation(payload, {
+      onSuccess: () => { resolve(); },
+      onError: (e) => {
+        const errorMessage = e.data?.zodError?.fieldErrors.content;
+        if (errorMessage?.[0]) {
+          toast.error(errorMessage[0]);
+        } else {
+          toast.error("Failed to edit task! Please try again later.");
+        }
+        reject(e);
+      }
+    });
   });
+};
 
+// Mutation for deleting a task
+const { mutate: deleteTaskMutation, isLoading: isDeleting } = api.tasks.delete.useMutation({
+  onSuccess: handleSuccess,
+  onError: (e) => {
+    const fieldErrors = e.data?.zodError?.fieldErrors;
+    const message = handleZodError(fieldErrors);
+    toast.error(message);
+  }
+});
+
+const deleteTask = (payload: DeleteTaskPayload) => {
+  return new Promise<void>((resolve, reject) => {
+    deleteTaskMutation(payload, {
+      onSuccess: () => { resolve(); },
+      onError: (e) => {
+        const errorMessage = e.data?.zodError?.fieldErrors.content;
+        if (errorMessage?.[0]) {
+          toast.error(errorMessage[0]);
+        } else {
+          toast.error("Failed to delete task! Please try again later.");
+        }
+        reject(e);
+      }
+    });
+  });
+};
+
+// Change Task Owner Mutation
+const { mutate: changeTaskOwnerMutation, isLoading: isChangingOwner } = api.tasks.changeOwner.useMutation({
+  onError: (e) => {
+    const fieldErrors = e.data?.zodError?.fieldErrors;
+    const message = handleZodError(fieldErrors);
+    toast.error(message);
+  }
+});
+
+const changeTaskOwner = (payload: ChangeTaskOwnerPayload) => {
+  return new Promise<void>((resolve, reject) => {
+    changeTaskOwnerMutation(payload, {
+      onSuccess: () => { resolve(); },
+      onError: (e) => {
+        const errorMessage = e.data?.zodError?.fieldErrors.content;
+        if (errorMessage?.[0]) {
+          toast.error(errorMessage[0]);
+        } else {
+          toast.error("Failed to change task owner! Please try again later.");
+        }
+        reject(e);
+      }
+    });
+  });
+};
+
+
+  // Edit Status Mutation
   const { mutate: editStatusMutation, isLoading: isEditingStatus } = api.tasks.changeStatus.useMutation({
-    onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors;
-      const message = handleZodError(fieldErrors);
-      toast.error(message);
-    }
+  onError: (e) => {
+    const fieldErrors = e.data?.zodError?.fieldErrors;
+    const message = handleZodError(fieldErrors);
+    toast.error(message);
+  }
+});
+
+const editStatus = (payload: EditStatusPayload) => {
+  return new Promise<void>((resolve, reject) => {
+    editStatusMutation(payload, {
+      onSuccess: () => { resolve(); },
+      onError: (e) => {
+        const errorMessage = e.data?.zodError?.fieldErrors.content;
+        if (errorMessage?.[0]) {
+          toast.error(errorMessage[0]);
+        } else {
+          toast.error("Failed to change task owner! Please try again later.");
+        }
+        reject(e);
+      }
+    });
   });
-
-  const editStatus = (payload: EditStatusPayload) => {  // <-- Added
-    editStatusMutation(payload);
-  };
-
-  const changeTaskOwner = (payload: ChangeTaskOwnerPayload) => {
-    changeTaskOwnerMutation(payload);
-  };
-
-  const deleteTask = (payload: DeleteTaskPayload) => {
-    deleteTaskMutation(payload);
-  };
-
-  const createTask = (payload: CreateTaskPayload) => {
-    createTaskMutation(payload);
-  };
-
-  const editTask = (payload: EditTaskPayload) => {
-    editTaskMutation(payload);
-  };
-
+};
 
   return {
     isCreating,
     isEditing,
     isDeleting,
     isChangingOwner,
-    isEditingStatus, 
+    isEditingStatus,
+    handleSuccess, 
     createTask,
     changeTaskOwner,
     editTask,
@@ -411,4 +478,4 @@ const useTaskMutation = (projectId: string, { onSuccess }: { onSuccess: () => vo
   }
 }
 
-const defaultTemplate = `You can add more details about the task or store knowledge here :)  `
+const defaultTemplate = ``
