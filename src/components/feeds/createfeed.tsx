@@ -32,8 +32,9 @@ export const CreateFeed = () => {
   return ( 
     <div>
       {/* Attractive Project Creation */}
-      <div id="project-collab-create-project-button" className="mt-4 ml-6 mr-6 mb-2 flex items-center grow space-x-4">
+      <div id="project-collab-create-project-entry" className="mt-4 ml-6 mr-6 mb-2 flex items-center grow space-x-4">
         <input 
+          id="project-collab-create-project-input"
           type="text" 
           value={inputValue}  // Controlled input
           onChange={(e) => setInputValue(e.target.value)}  // Update state on change
@@ -41,6 +42,7 @@ export const CreateFeed = () => {
           className="py-2 px-4 rounded grow focus:outline-none focus:border-gray-500 border-2"
         />
         <button 
+          id="project-collab-create-project-button"
           className="bg-green-500 text-white rounded px-4 py-2 hover:bg-green-600 focus:outline-none focus:border-green-700 focus:ring focus:ring-blue-200"
           onClick={() => {
             handleCreateClick();

@@ -15,6 +15,8 @@ export const userRouter = createTRPCRouter({
           emailVerified: true,
           image: true,
           username: true,
+          onBoardingFinished: true,
+          productTourFinished: true
           // ... other fields you want to select
         },
       });
@@ -63,6 +65,27 @@ export const userRouter = createTRPCRouter({
       return {
         user: updatedUser,
       };
+    }),
+
+    getProductTourStatus: protectedProcedure
+    .input(z.object({
+        userId: z.string(),
+    }))
+    .query(async ({ ctx, input }) => {
+        const { userId } = input;
+
+        const user = await ctx.prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                productTourFinished: true
+            }
+        });
+
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        return user;
     }),
     
     deleteUser: protectedProcedure
@@ -129,5 +152,23 @@ export const userRouter = createTRPCRouter({
     return {
       user: deletedUser,
     };
+  }),
+  editProductTourStatus:protectedProcedure
+    .input(
+        z.object({
+            userId: z.string(),
+            productTourFinished: z.boolean(),
+        })
+    )
+    .mutation(async ({ ctx, input }) => {
+        const { userId, productTourFinished } = input;
+  
+        const updatedUser = await ctx.prisma.user.update({
+            where: { id: userId },
+            data: {
+                productTourFinished
+            },
+        });
+        return updatedUser;
   }),
 });

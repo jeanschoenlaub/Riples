@@ -156,10 +156,11 @@ model User {
   sessions      Session[]
 
   //My User Fields
-  username          String  @unique @db.VarChar(255)@default("")
-  password          String  @db.VarChar(255)@default("")
-  following         ProjectFollowers[] 
-  member            ProjectMembers[] 
+  username           String? @unique @db.VarChar(255)
+  onBoardingFinished Boolean @default(false)
+  productTourFinished Boolean @default(false)
+  following          ProjectFollowers[] 
+  member             ProjectMembers[] 
 }
 
 model Account {

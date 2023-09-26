@@ -50,6 +50,8 @@ max-width: 400px; /* Adjust the maximum width as needed */
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+
   
 /* Loading ripple SVG */
 .loading-container {
@@ -66,7 +68,7 @@ max-width: 400px; /* Adjust the maximum width as needed */
     height: auto;
     transform: translate(-50%, -50%);
 }
-  
+
 .ripple {
     position: absolute;
     top: 50%;

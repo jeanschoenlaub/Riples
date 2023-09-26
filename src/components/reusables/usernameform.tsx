@@ -26,10 +26,11 @@ export const UserNameForm: React.FC<{ onSuccess: () => void , onLoadingChange?: 
 
   useEffect(() => {
     if (userQuery.data?.user) {
-      setUsername(userQuery.data.user.username);
+      setUsername(userQuery.data.user.username ?? ""); // Set to empty string if null
     }
-      onLoadingChange?.(isLoading);
-  }, [userQuery.data?.user, onLoadingChange, isLoading]);
+    onLoadingChange?.(isLoading);
+}, [userQuery.data?.user, onLoadingChange, isLoading]);
+
 
   if (session) {
     return (

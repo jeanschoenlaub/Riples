@@ -10,6 +10,7 @@ interface ToggleProps {
   width?: string;
   height?: string;
   background?: string;
+  id? : string;
 }
 
 const ToggleSwitch: React.FC<ToggleProps> = ({
@@ -21,6 +22,7 @@ const ToggleSwitch: React.FC<ToggleProps> = ({
   width = "w-40",
   height = "h-6",
   background ="bg-gray-300",
+  id
 }) => {
   const getBackgroundPosition = () => {
     if (inBetween) return 'left-16 w-1/2';
@@ -47,7 +49,7 @@ const ToggleSwitch: React.FC<ToggleProps> = ({
 
   return (
     <div className="flex items-center justify-center">
-      <div className={`mx-2 ${width} ${height} ${background} rounded-full cursor-pointer relative py-4`}>
+      <div id={id} className={`mx-2 ${width} ${height} ${background} rounded-full cursor-pointer relative py-4`}>
         <div
           className={`absolute top-0 h-full bg-blue-500 ${computedWidth} bg-opacity-50 flex items-center justify-center rounded-full transition-all duration-300 ease-in-out ${getBackgroundPosition()}`}
         ></div>
