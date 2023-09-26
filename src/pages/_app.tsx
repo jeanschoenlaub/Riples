@@ -6,58 +6,62 @@ import { Toaster } from "react-hot-toast";
 import "~/styles/globals.css";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react"
-import { OnboardingWrapper } from "~/components/onboarding";
+import { OnboardingWrapper } from "~/components/onboarding/onboardingwrapper";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import ReactGA from 'react-ga';
+import { useEffect, useState } from "react";
 import { pageview } from "~/utils/googleanalytics";
+import { WizardWrapper } from "~/components/wizard/wizardswrapper";
+
+type TaskStatus = {
+  taskName: string;
+  isCompleted: boolean;
+  actionLink?: string;
+};
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
-}) => {
-  const router = useRouter();
-
-  useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      pageview(url)
-    }
-    //When the component is mounted, subscribe to router changes
-    //and log those page views
-    router.events.on('routeChangeComplete', handleRouteChange)
-
-    // If the component is unmounted, unsubscribe
-    // from the event with the `off` method
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange)
-    }
-  }, [router.events])
+}) => 
+{
+    const router = useRouter();
+    //For Google Analytics
+    useEffect(() => {
+        const handleRouteChange = (url: string) => {
+            pageview(url)
+        }
+        router.events.on('routeChangeComplete', handleRouteChange)
+        return () => {
+            router.events.off('routeChangeComplete', handleRouteChange)
+        }
+    }, [router.events])
 
   
 
-  return (
-    <SessionProvider session={session}>
-      {/* Default Head can be overriden in specific pages */}
-      <Head>
-        <title>Riples - Collaborate on Projects & Join Creative Bubbles</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-          name="description"
-          content="Riples is a social platform where creators share projects, inviting others to join their collaborative circles. Dive into a ripple and make waves together!"
-        />
-        <meta
-          name="keywords"
-          content="Riples, collaboration, projects, social app, create, join, collaborate, bubbles, ripples, community"
-        />
-        <meta name="author" content="Riples Team" />
-        <link rel="icon" href="/images/favicon.ico" />
-      </Head>
-      <Toaster />
-      <OnboardingWrapper />
-      <Component {...pageProps} />
-      <Analytics />
-    </SessionProvider>
-  );
+    return (
+      <SessionProvider session={session}>
+        {/* Default Head can be overriden in specific pages */}
+        <Head>
+            <title>Riples - Get Doing! </title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <meta
+              name="description"
+              content="Riples is a social platform where creators share projects, inviting others to join their collaborative circles. Dive into a ripple and make waves together!"
+            />
+            <meta
+              name="keywords"
+              content="Riples, collaboration, projects, social app, create, join, collaborate, bubbles, ripples, community"
+            />
+            <meta name="author" content="Riples Team" />
+            <link rel="icon" href="/images/favicon.ico" />
+        </Head>
+        <Toaster />
+        <WizardWrapper>
+          <OnboardingWrapper />
+          <Component {...pageProps} />
+        </WizardWrapper>
+        <Analytics />
+        </SessionProvider>
+    );
 };
 
 

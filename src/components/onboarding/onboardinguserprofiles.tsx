@@ -2,10 +2,11 @@ import { api } from "~/utils/api";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Modal } from "~/components/reusables/modaltemplate";  
-import { UserNameForm } from "./reusables/usernameform";
+import { UserNameForm } from "../reusables/usernameform";
 
 
-export const OnboardingWrapper: React.FC = () => {
+
+export const OnboardingUserProfile = () => {
   const { data: session } = useSession();
   const [showUserNameModal, setShowUserNameModal] = useState(false);
   

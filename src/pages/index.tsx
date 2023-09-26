@@ -42,7 +42,7 @@ export default function Home() {
             <SideNavProject></SideNavProject>
           </div>
 
-         <div className="flex flex-col w-full md:w-1/2 g-4 p-1 md:p-4 border border-slate-700">
+         <div id="feed-container" className="flex flex-col w-full md:w-1/2 g-4 p-1 md:p-4 border border-slate-700">
             {/* Different Content Between Social and Create */}
             {activeTab === "Social" ? <SocialFeed /> : <CreateFeed />}
           </div>

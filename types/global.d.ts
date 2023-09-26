@@ -10,3 +10,8 @@ type GAEventParams = {
     value?: number;
     // ... any other specific fields you expect ...
 }
+
+declare module '*.module.css' {
+    const classes: { [key: string]: string };
+    export default classes;
+}

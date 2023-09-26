@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { handleZodError } from "~/utils/error-handling";
 import { NavBarUserNameModal } from "./usernamemodal";
 import ToggleSwitch from "../reusables/toogleswitch";
+import router from "next/router";
 
 interface GlobalNavBarProps {
   activeTab?: string;
@@ -24,6 +25,13 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
+
+  const redirectUserPage = () => {
+    router.push(`/users/${session?.user.id}`).catch(err => {
+        // Handle any errors that might occur during the navigation
+        console.error('Failed to redirect:', err);
+    });
+  };
 
   //We add a mutation for creating a task (with on success)
   const {mutate, isLoading: isDeleting}  = api.users.deleteUser.useMutation({
@@ -97,15 +105,15 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
       <div id="global-nav-mid" className="flex flex-col md:flex-row w-2/5 md:w-1/2 justify-center items-center gap-3 p-2 border border-slate-700">
         {/* Toogle Social / Create if optional parameters active tab otherwise home*/}
         {activeTab && setActiveTab ? 
-            (<ToggleSwitch activeTab={activeTab} setActiveTab={setActiveTab} option1="Social" option2="Create" inBetween={ToogleinBetween}></ToggleSwitch>) :
-            (<ToggleSwitch option1="Social" option2="Create" inBetween={ToogleinBetween}></ToggleSwitch>)
+            (<ToggleSwitch id="navbartoggle" activeTab={activeTab} setActiveTab={setActiveTab} option1="Social" option2="Create" inBetween={ToogleinBetween}></ToggleSwitch>) :
+            (<ToggleSwitch id="navbartoggle" option1="Social" option2="Create" inBetween={ToogleinBetween}></ToggleSwitch>)
         }
       </div>
           <div id="global-nav-right" className="flex w-1/5 md:w-1/4 gap-3 items-center justify-center p-2 border border-slate-700">
           <div className="flex items-center">
             {session && (
               <div className="relative">
-                <div 
+                <div id="userdropdown"
                   onClick={toggleUserDropdown} 
                   style={{ cursor: 'pointer' }} // Make the mouse change to a pointer when hovering
                 >
@@ -115,7 +123,8 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
                   <div ref={dropdownRef}  className="absolute right-0 md:right-auto md:left-0 mt-2 w-48 rounded-md shadow-lg z-30 bg-slate-50">
                     {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
                     <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => signOut()}>Sign Out</button>
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowUserNameModal(true)}>Change User Name</button>
+                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowUserNameModal(true)}>User Settings</button>
+                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectUserPage()}>Your Portofolio</button>
                     <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowDeleteModal(true)}>Delete Account</button>
                   </div>
                 )}
