@@ -70,10 +70,10 @@ export const TaskOneJoyRide = () => {
     ];
 
     const handleTourCallback = (data: CallBackProps) => {
-        if (data.action === 'next' && data.index === 1) {
+        if (data.action === 'next' && data.index === 4) {
             if (isClient && wizardContext) {
                 wizardContext.setShowWizard(false);
-            } // This brace was missing
+            } 
         } else {
             localStorage.setItem('productTourFinished', 'true');
         }
