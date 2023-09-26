@@ -2,6 +2,9 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import ReactJoyride, { CallBackProps, Step } from 'react-joyride';
 import { useWizard } from '../wizard/wizardswrapper';
+import { useSession } from 'next-auth/react';
+import { api } from '~/utils/api';
+import { handleZodError } from '~/utils/error-handling';
 import toast from 'react-hot-toast';
 
 export const OnboardingJoyRideOne = () => {
@@ -9,17 +12,53 @@ export const OnboardingJoyRideOne = () => {
     const [isClient, setIsClient] = useState(false);
     const [screenWidth, setScreenWidth] = useState<number | null>(null);
     const wizardContext = useWizard();
-    const [currentStep, setCurrentStep] = useState(0);
+    const { data: session } = useSession(); 
 
+    //Quite a bit of logic for not displaying tour mutliple times
+    const { completeProductTour } = useProductTourCompletionMutation();
+    let initialProductTourFinished = false;
+    if (typeof localStorage !== 'undefined') {
+         initialProductTourFinished = localStorage.getItem('productTourFinished') === 'true';
+    }
+    const [productTourFinished, setProductTourFinished] = useState(initialProductTourFinished);
+
+    const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user ID exist
+    const userId = session?.user?.id ?? ''; // This will never be empty due to the above check
+
+    // Conditional query using tRPC to fetch the product tour status
+    const { data: productTourStatus, isLoading: productTourStatusLoading, error } = api.users.getProductTourStatus.useQuery(
+        { userId },
+        { enabled: shouldExecuteQuery }
+    );
 
     useEffect(() => {
-        setIsClient(true); // Once component is mounted on the client
+        if (productTourStatus) {
+            setProductTourFinished(productTourStatus.productTourFinished);
+            localStorage.setItem('productTourFinished', productTourStatus.productTourFinished.toString());
+        }
+        if (error) {
+            console.error("Failed to fetch product tour status:", error);
+        }
+    }, [productTourStatus, error]);
+
+    useEffect(() => {
+        setIsClient(true); 
         const tourTimeout = setTimeout(() => {
-            setIsTourOpen(false);//set to true on first time open
+            if (!productTourFinished) {
+                setIsTourOpen(true);
+            }
         }, 5000);
-        
+
         return () => clearTimeout(tourTimeout);
-    }, []);
+    }, [productTourFinished]);
+
+    //If the user as already completed the product tour unsigned in and signs in afterwards
+    useEffect(() => {
+        if (session && localStorage.getItem('productTourFinished') === 'true') {
+            completeProductTour({ userId: session.user.id, productTourFinished: true });
+            setProductTourFinished(true);
+        }
+    }, [session]);
 
     useEffect(() => {
         if (isClient) {
@@ -27,7 +66,8 @@ export const OnboardingJoyRideOne = () => {
         }
     }, [isClient]);
 
-    const tooltipWidthForSidebar = screenWidth ? (screenWidth/4) - 20 : 'auto';
+    const tooltipWidthForSidebar = screenWidth && screenWidth >= 600 ? (screenWidth / 4) - 20 : 'auto';
+    const tooltipplacementForSidebar = screenWidth && screenWidth < 600 ? 'center' : 'right-start';
     const offsetValue = screenWidth ? (screenWidth / 8) : 0;
     const tooltipWidthForMiddle = screenWidth ? (screenWidth/2) - 20 : 'auto';
 
@@ -43,7 +83,7 @@ export const OnboardingJoyRideOne = () => {
             target: "#socialfeed",
             title: "The Feed",
             content: "This is the social feed, where you get the latest project news based on your friends, interests and your current projects!",
-            placement: "right-start",
+            placement: tooltipplacementForSidebar,
             disableBeacon: true,
             styles: {
                 options: {
@@ -66,7 +106,6 @@ export const OnboardingJoyRideOne = () => {
             placement: "left",
             spotlightClicks: true,
             disableBeacon: true,
-            disableScrolling: true,
             offset: offsetValue,
             styles: {
                 options: {
@@ -80,7 +119,7 @@ export const OnboardingJoyRideOne = () => {
         {
             target: "#misterwattbutton",
             title: "First Task",
-            content: "Your first task is to create a project ! If you don't know how to do one task, just click on it for instructions.",
+            content: "Your first task is to create a project ! Get Creating.",
             placement: "left",
             offset: offsetValue,
             styles: {
@@ -98,10 +137,13 @@ export const OnboardingJoyRideOne = () => {
         if (data.action === 'next' && data.index === 4) {
             if (isClient && wizardContext) {
                 wizardContext.setShowWizard(true);
-            }  
-        }
-        if (['completed', 'skipped'].includes(data.status)) {
-            setIsTourOpen(false);
+            }
+            if (session) { 
+                completeProductTour({ userId: session.user.id, productTourFinished : true })
+            }
+            else {
+                localStorage.setItem('productTourFinished', 'true');
+            }
         }
     };
 
@@ -120,6 +162,7 @@ export const OnboardingJoyRideOne = () => {
                 showProgress={true}
                 showSkipButton={true}
                 hideCloseButton={true}
+                disableScrolling={true}
                 callback={handleTourCallback}
                 styles={{
                     options: {
@@ -137,3 +180,23 @@ export const OnboardingJoyRideOne = () => {
         </>
     );
 };
+
+const useProductTourCompletionMutation = () => {
+    const apiContext = api.useContext();
+  
+    const { mutate: completeProductTourMutation } = api.users.editProductTourStatus.useMutation();
+  
+    const completeProductTour = (payload: { userId: string, productTourFinished: boolean;}) => {
+        completeProductTourMutation(payload, {
+            onError: (e) => {
+                const fieldErrors = e.data?.zodError?.fieldErrors;
+                const message = handleZodError(fieldErrors);
+                console.error("Failed to save product tour status:", e);
+            }
+        });
+    };
+  
+    return {
+      completeProductTour,
+    }
+  }

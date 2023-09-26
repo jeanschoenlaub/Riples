@@ -1,4 +1,4 @@
-import { OnboardingJoyRideOne } from "./onboardingjoyride1";
+import { OnboardingJoyRideOne } from "./onboardingjoyride";
 import { OnboardingUserProfile } from "./onboardinguserprofiles";
 
 export const OnboardingWrapper: React.FC = () => {

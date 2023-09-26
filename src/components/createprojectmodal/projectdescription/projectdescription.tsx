@@ -68,38 +68,40 @@ const ProjectDescriptionComponent: React.FC<ProjectDescriptionComponentProps> = 
     <div>
         <div className="container mx-auto ">
             <div className="p-4 rounded-lg shadow-lg bg-gray-100">
-                <div className="text-center mb-4">
-                    <h1 className="text-xl font-semibold"> Create a Project </h1>
-                </div>
-                {/* Project Description */}
-                <div className="mb-6">
-                    <div className="flex items-center mb-4 w-30">
-                        <label htmlFor="projectName" className="text-base font-semibold mr-3 w-30">
-                            Project Name *
-                        </label>
-                        <input
-                            id="projectName"
-                            type="text"
-                            value={projectName}
-                            onChange={(e) => setProjectName(e.target.value)}
-                            className={`flex-grow p-1 rounded border textInput ${isLoading ? 'cursor-not-allowed' : ''}`}
-                            maxLength={50}
-                            disabled={isLoading}
-                        />
+                <div id="create-projec-modal-project-name-and-content">
+                    <div className="text-center mb-4">
+                        <h1 className="text-xl font-semibold"> Create a Project </h1>
                     </div>
-                    <div className="flex items-start w-30">
-                        <label htmlFor="projectDescription" className="text-base font-semibold mr-3">
-                            The Story <span className="text-gray-500 text-sm">	&#40;optional&#41;</span>
-                        </label>
-                        <textarea
-                            id="projectDescription"
-                            value={projectDescription}
-                            onChange={(e) => setProjectDescription(e.target.value)}
-                            className={`w-full p-1 rounded border textareaInput ${isLoading ? 'cursor-not-allowed' : ''}`}
-                            rows={2}
-                            maxLength={10000}
-                            disabled={isLoading}
-                        />
+                    {/* Project Description */}
+                    <div className="mb-6">
+                        <div className="flex items-center mb-4 w-30">
+                            <label htmlFor="projectName" className="text-base font-semibold mr-3 w-30">
+                                Project Name *
+                            </label>
+                            <input
+                                id="projectName"
+                                type="text"
+                                value={projectName}
+                                onChange={(e) => setProjectName(e.target.value)}
+                                className={`flex-grow p-1 rounded border textInput ${isLoading ? 'cursor-not-allowed' : ''}`}
+                                maxLength={50}
+                                disabled={isLoading}
+                            />
+                        </div>
+                        <div className="flex items-start w-30">
+                            <label htmlFor="projectDescription" className="text-base font-semibold mr-3">
+                                The Story <span className="text-gray-500 text-sm">	&#40;optional&#41;</span>
+                            </label>
+                            <textarea
+                                id="projectDescription"
+                                value={projectDescription}
+                                onChange={(e) => setProjectDescription(e.target.value)}
+                                className={`w-full p-1 rounded border textareaInput ${isLoading ? 'cursor-not-allowed' : ''}`}
+                                rows={2}
+                                maxLength={10000}
+                                disabled={isLoading}
+                            />
+                        </div>
                     </div>
                 </div>
                 {/* Project Setting */}

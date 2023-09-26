@@ -1,6 +1,6 @@
 import { useSession } from 'next-auth/react';
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { WizardOnboarding } from "~/components/wizard/onboardingwizard";
+import { WizardOnboarding } from "~/components/onboarding/onboardingwizard/onboardingwizard";
 import styles from '~/styles/WizardWrapper.module.css'; // you can adjust the path based on your folder structure
 import { api } from '~/utils/api';
 
