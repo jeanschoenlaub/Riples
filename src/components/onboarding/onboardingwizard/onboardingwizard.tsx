@@ -18,6 +18,7 @@ export const WizardOnboarding = () => {
     
     const [taskStatuses, setTaskStatuses] = useState([
         { taskName: 'Create a project', isCompleted: false, actionLink: '/?activeTab=Create' },
+        { taskName: 'Create and check off a subtask', isCompleted: false, actionLink: '/?activeTab=create' },
         { taskName: 'Finish your user profile', isCompleted: false, actionLink: '/?activeTab=create' },
         // ... add other tasks
     ]);
@@ -41,7 +42,7 @@ export const WizardOnboarding = () => {
     );
 
     useEffect(() => {
-        if (projectLead) {
+        if (projectLead && projectLead.length > 0) {
             setTaskStatuses(prevStatus => {
                 const updatedStatus = [...prevStatus];
                 const projectTask = updatedStatus.find(task => task.taskName === 'Create a project');

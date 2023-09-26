@@ -1,7 +1,7 @@
 import { api } from "~/utils/api";
 import { useState } from "react";
-import { LoadingPage } from "./reusables/loading";
-import { ProjectCard } from "./cards/projectcard";
+import { LoadingPage } from "../reusables/loading";
+import { ProjectCard } from "../cards/projectcard";
 import { useSession } from "next-auth/react";
 
 export const SideNavProject = () => {

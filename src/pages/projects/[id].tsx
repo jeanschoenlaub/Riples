@@ -18,7 +18,7 @@ import { RipleCard } from "~/components/cards/riplecard";
 import { LoadingPage } from "~/components/reusables/loading";
 import { CollabTab } from "~/components/project-page/collab";
 import { GlobalNavBar } from "~/components/navbar/navbar";
-import { SideNavProject } from "~/components/sidenavproject";
+import { SideNavProject } from "~/components/navbar/sidenavproject";
 
 import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
 import Follow from "~/components/reusables/follow";

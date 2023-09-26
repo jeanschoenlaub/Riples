@@ -6,9 +6,9 @@ import { useSession } from 'next-auth/react';
 
 // Local Imports
 import { api } from "~/utils/api";
-import { Modal } from '../../../reusables/modaltemplate';
-import { LoadingSpinner } from '../../../reusables/loading';
-import { ProfileImage } from '../../../reusables/profileimage';
+import { Modal } from '../../reusables/modaltemplate';
+import { LoadingSpinner } from '../../reusables/loading';
+import { ProfileImage } from '../../reusables/profileimage';
 import type { CreateTaskPayload, EditTaskPayload, TaskModalProps } from './taskmodaltypes';
 import { useTaskMutation } from './taskmodalapi';
 
@@ -168,7 +168,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
               value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
               className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
-              maxLength={50}
+              maxLength={255}
               disabled={!allowedToEdit || isLoading}
             />
         </label>
