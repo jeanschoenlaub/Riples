@@ -29,7 +29,6 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
     isPrivate,
     isLoading
 }) => {
-
       
     return (
       <div>

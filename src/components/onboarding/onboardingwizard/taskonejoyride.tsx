@@ -35,7 +35,7 @@ export const TaskOneJoyRide = () => {
         {
             target: "#project-collab-create-project-entry",
             title: "What do you want to get done ? ",
-            content: "Think of a project you would like to do, either by yourself or with others. Type it in above and click the create button",
+            content: "Think of a project you would like to do, maybe related to sports, learning, creating .... Type it in above and click the create button",
             placement: "bottom",
             spotlightClicks: true,
             disableBeacon: true,
@@ -69,16 +69,6 @@ export const TaskOneJoyRide = () => {
         },
     ];
 
-    const handleTourCallback = (data: CallBackProps) => {
-        if (data.action === 'next' && data.index === 4) {
-            if (isClient && wizardContext) {
-                wizardContext.setShowWizard(false);
-            } 
-        } else {
-            localStorage.setItem('productTourFinished', 'true');
-        }
-    };
-
     if (!isClient) {
         return null;  // Render nothing during server-side rendering
     }
@@ -93,7 +83,6 @@ export const TaskOneJoyRide = () => {
                 showSkipButton={true}
                 hideCloseButton={true}
                 disableScrolling={true}
-                callback={handleTourCallback}
                 styles={{
                     options: {
                         primaryColor: '#0584C7',

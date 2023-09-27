@@ -66,7 +66,7 @@ export const OnboardingJoyRideOne = () => {
         }
     }, [isClient]);
 
-    const tooltipWidthForSidebar = screenWidth && screenWidth >= 600 ? (screenWidth / 4) - 20 : 'auto';
+    const tooltipWidthForSidebar = screenWidth && screenWidth >= 600 ? (screenWidth / 4) - 40 : 'auto';
     const tooltipplacementForSidebar = screenWidth && screenWidth < 600 ? 'center' : 'right-start';
     const offsetValue = screenWidth ? (screenWidth / 8) : 0;
     const tooltipWidthForMiddle = screenWidth ? (screenWidth/2) - 20 : 'auto';

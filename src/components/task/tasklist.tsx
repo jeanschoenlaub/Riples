@@ -31,6 +31,10 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
   //);
   const { data: taskData, isLoading: isLoadingTasks, isError } = api.tasks.getTasksByProjectId.useQuery({ projectId: project.id });
 
+  let headers = ["Task Title", "Status", "Owner", "SubTasks"];
+  if (project.projectType === "solo") {
+    headers = headers.filter(header => header !== "Owner");
+  }
   const handleCreateClick = () => {
     setShowTaskModal(true);
   };
@@ -82,11 +86,11 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
       }
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <StyledTable headers={["Task Title", "Status", "Owner","SubTasks"]}>
+        <StyledTable headers={headers}>
           {taskData.map((taskDetail, index) => (
             <React.Fragment key={index}>
             <tr key={index} className="bg-white border-b items-center dark:bg-gray-800 dark:border-gray-700">
-              <th scope="row" className="px-6 py-2 overflow-x-auto whitespace-nowrap font-medium text-gray-900 dark:text-white no-scrollbar" style={{ width: '40%' }}>
+              <th scope="row" className="px-6 py-2 overflow-x-auto whitespace-nowrap font-medium text-gray-900 dark:text-white no-scrollbar" style={{ width: '50%' }}>
                 <button onClick={() => openEditModal(taskDetail.task)} className="text-blue-600 dark:text-blue-500 hover:underline">
                   <div className="flex items-center">
                     <svg className="w-5 h-5 mr-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -96,8 +100,8 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
                   </div>
                 </button>
               </th>
-              <td className="px-6 justify-center py-2 hidden md:table-cell" style={{ width: '10%' }}>
-                <div className={`text-white text-center items-center rounded w-auto px-2 py-2 ${
+              <td className="px-6 justify-center py-2 hidden md:table-cell" style={{ width: '25%' }}>
+                <div onClick={() => openEditModal(taskDetail.task)} style={{ cursor: 'pointer' }} className={`text-white text-center items-center rounded w-auto px-2 py-2 ${
                   taskDetail.task.status === "Doing" ? "bg-yellow-500" : 
                   taskDetail.task.status === "To-Do" ? "bg-gray-500" : 
                   taskDetail.task.status === "Done" ? "bg-green-500" : ""
@@ -105,8 +109,8 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
                   {taskDetail.task.status}
                 </div>
               </td>
-
-              <td className="px-6 py-4 hidden md:table-cell" style={{ textAlign: 'center', verticalAlign: 'middle',  width: '10%'  }}>
+              {(project.projectType != "solo") ? (
+              <td className="px-6 py-4 hidden md:table-cell" style={{ textAlign: 'center', verticalAlign: 'middle',  width: '25%'  }}>
                 {taskDetail.owner ? (
                   <Link href={`/users/${taskDetail.owner.id}`} className="flex items-center justify-center space-x-2">
                     <ProfileImage user={taskDetail.owner} size={32} showUsernameOnHover={true}/>
@@ -114,9 +118,9 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
                   </Link>
                 ) : (
                   "N/A"
-                )}
-              </td>
-              <td id="task-table-action-column" className="px-14 mt-2 flex items-center justify-center" style={{textAlign: 'center', verticalAlign: 'middle',  width: '10%' }}>
+                )}</td>) : "" }
+              
+              <td id="task-table-action-column" className="px-14 mt-2 flex items-center justify-center" style={{textAlign: 'center', verticalAlign: 'middle',  width: '25%' }}>
                 <button onClick={() => toggleSubtasks(taskDetail.task.id)} className="flex items-center text-blue-600 dark:text-blue-500 ">
                 
                 {displaySubtasks === taskDetail.task.id ? (
@@ -133,7 +137,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
                     );
                   })()}
 
-                  <svg className="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+                  <svg className="w-5 h-5  text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
                     <path stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M13 7 7.674 1.3a.91.91 0 0 0-1.348 0L1 7"/>
                   </svg>
                   </div>
@@ -163,7 +167,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
             {/* Conditionally display subtasks */}
             {displaySubtasks === taskDetail.task.id && (
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <td colSpan={4} className="px-6 py-4">
+                <td colSpan={headers.length} className="px-6 py-4">
                   <SubTasksRows taskData={taskDetail} />
                 </td>
               </tr>

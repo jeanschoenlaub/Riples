@@ -9,10 +9,13 @@ import type { CreateProjectModalProps, CreateProjectPayload } from "./createproj
 import  { Step } from "./createprojecttypes";
 import router from "next/router";
 import { LoadingSpinner } from "../reusables/loading";
+import { useWizard } from "../wizard/wizardswrapper";
+
+
 
 type NewProjecResponse  = RouterOutputs["projects"]["create"] 
 export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModal, inputValue, onClose }) => {
-
+  const wizardContext = useWizard();
   // For the project description component 
   const [projectName, setProjectName] = useState(inputValue ? inputValue : '');
   const [projectDescription, setProjectDescription] = useState('');
@@ -66,6 +69,10 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   const nextStep = () => {
     if (currentStep === Step.ProjectDescription) {
       setCurrentStep(Step.ProjectBuild);
+      wizardContext.setProjectTitle(projectName);
+      wizardContext.setProjectSummary(projectDescription);
+      wizardContext.setWizardName("taskWizard");
+      wizardContext.setShowWizard(true);
     }
   };
 
