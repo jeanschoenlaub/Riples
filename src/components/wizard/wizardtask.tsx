@@ -11,46 +11,53 @@ type WizardTaskProps = {
 
 export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSummary }) => {
      
-    const openai = new OpenAI({
-    apiKey: env.OPENAI_API_KEY
-    });
+    const generateProjectTaskMutation = api.openai.generateProjectTasks.useMutation();
+  
+    async function generateAndLogTasks() {
+        try {
+        const rawData : OpenAI.Chat.Completions.ChatCompletion.Choice[] = await generateProjectTaskMutation.mutateAsync({
+            projectTitle: projectTitle,
+            projectSummary: projectSummary
+        });
+        rawData.forEach(choice => {
+            
+            const messageContent = choice.message.content;
+            if (messageContent){
+            // Split the content based on "Goals:" to separate tasks and goals
+            const [tasksString, goalsString] = messageContent.split("\n\nGoals:\n");
+        
+            if (tasksString && goalsString) {
+                // Split by newline to get individual tasks and goals
+                const tasks = tasksString.replace("Tasks:\n", "").split("\n");
+                const goals = goalsString.split("\n");
 
-    async function main() {
-    console.log(prompt)
-    const chatCompletion = await openai.chat.completions.create({
-        messages: [{ role: 'user', content: 'Say this is a test' }],
-        model: 'gpt-3.5-turbo',
-    });
+                console.log("Tasks:", tasks);
+                console.log("Goals:", goals);
+            } else {
+                console.warn("Unexpected message format: ", messageContent);
+            }
+            }
+        });
 
-    console.log(chatCompletion.choices);
+
+        } catch (error) {
+        console.error('Failed to generate tasks:');
+        }
     }
 
-
-    const handleTaskCreation = async () => {
-            // Create a tailored prompt
-            const prompt = `Given the project titled "${projectTitle}" with the summary "${projectSummary}", suggest tasks and goals suitable for this project.`;
-            console.log(prompt)
-            try {
-                const response =  ""//await api.openAIChatGPT(prompt);
-                
-                if (response) {
-                    // Handle the response. For instance, display it in a modal or another UI element.
-                }
-    
-            } catch (error) {
-                console.error("Failed to get tasks from OpenAI ChatGPT:", error);
-            }
-        }
+    useEffect(() => {
+        generateAndLogTasks();
+    }, []);
 
 
-    return (
-        <div>
-        <div className="onboarding-status-window">
-            <div className="font-semibold"> Task Wizard 👋 </div>
-                <div className="mb-4"> Do you want me to help with creating task and goals for your project ? </div>
-                <button onClick={main}>Yes</button>
-                <div className="mb-4"> check our data privacy </div>
-        </div>
-        </div>
-    );
-};
+        return (
+            <div>
+            <div className="onboarding-status-window">
+                <div className="font-semibold"> Task Wizard 👋 </div>
+                    <div className="mb-4"> Do you want me to help with creating task and goals for your project ? </div>
+                    <button onClick={generateAndLogTasks}>Yes</button>
+                    <div className="mb-4"> check our data privacy </div>
+            </div>
+            </div>
+        );
+    };

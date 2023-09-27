@@ -132,7 +132,7 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
             )}
             {!session && (
               <div>
-                <button className="bg-blue-500 text-white rounded py-1 px-2 text-center text-sm" onClick={() => setShowSignInModal(true)}>Sign In</button>
+                <button className="bg-blue-500 text-white rounded py-1 px-4 text-center text-lg" onClick={() => setShowSignInModal(true)}>Sign In</button>
               </div>
             )}
             <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
