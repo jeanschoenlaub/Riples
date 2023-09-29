@@ -11,6 +11,8 @@ type WizardContextType = {
     setWizardName: React.Dispatch<React.SetStateAction<string>>;
     setProjectTitle: React.Dispatch<React.SetStateAction<string>>;
     setProjectSummary: React.Dispatch<React.SetStateAction<string>>;
+    setTaskNumber: React.Dispatch<React.SetStateAction<string>>;
+    setGoalNumber: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const WizardContext = createContext<WizardContextType | undefined>(undefined);
@@ -32,6 +34,9 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
     const [wizardName, setWizardName] = useState("");
     const [projectTitle, setProjectTitle] = useState("");
     const [projectSummary, setProjectSummary] = useState("");
+    const [taskNumber, setTaskNumber] = useState("3");
+    const [goalNumber, setGoalNumber] = useState("1");
+
 
     const { data: session } = useSession();
     const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user id is not null
@@ -43,14 +48,14 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
     );
 
     return (
-        <WizardContext.Provider value={{ setShowWizard, showWizard, setWizardName, setProjectTitle, setProjectSummary }}>
+        <WizardContext.Provider value={{ setShowWizard, showWizard, setWizardName, setProjectTitle, setProjectSummary, setTaskNumber, setGoalNumber}}>
             {children}
             <button id="misterwattbutton" className={styles.floatingButton} onClick={() => setShowWizard(!showWizard)}>
                 <img src="/images/riple_ai.png" alt="Open Wizard" width={60} height={60} />
             </button>
             {showWizard && (wizardName == "taskWizard") && <div> 
                 <div id="wizardtask" className={styles.floatingWindow}>
-                    <WizardTask projectTitle={projectTitle} projectSummary={projectSummary} />
+                    <WizardTask projectTitle={projectTitle} projectSummary={projectSummary} taskNumber={taskNumber} goalNumber={goalNumber} />
                     <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
             </div>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
 import { Modal } from "~/components/reusables/modaltemplate";  
 import ProjectDescriptionComponent from "./projectdescription/projectdescription";
 import ProjectBuildComponent from "./projectbuild/projectbuild";
@@ -10,7 +9,8 @@ import  { Step } from "./createprojecttypes";
 import router from "next/router";
 import { LoadingSpinner } from "../reusables/loading";
 import { useWizard } from "../wizard/wizardswrapper";
-
+import { useSelector} from 'react-redux';
+import { RootState } from '~/redux/store';
 
 
 type NewProjecResponse  = RouterOutputs["projects"]["create"] 
@@ -22,15 +22,19 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   const [isSolo, setIsSolo] = useState(true);
   const [isPrivate, setIsPrivate] = useState(true);
   const [tags, setTags] = useState<string[]>([]);
+
   const handleTagsChange = (updatedTags: string[]) => {
     setTags(updatedTags);
   };
 
   // For the project Build page 
-  const [tasks, setTasks] = useState<string[]>(new Array(3).fill('')); //Start with 3 enmpty tasks but can add more
+  const [tasks, setTasks] = useState<string[]>(new Array(3).fill(''));// We want to upate this from wizard context but not change exisitng logic
   const [postToFeed, setPostToFeed] = useState(false);
+  const [postContent, setPostContent] = useState('');
+
   const handleTasksChange = (updatedTasks: string[]) => {
-      setTasks(updatedTasks);
+    setTasks(updatedTasks);
+    wizardContext.setTaskNumber(updatedTasks.length.toString()); 
   };
   const handleAddTask = () => {
     handleTasksChange([...tasks, '']);
@@ -39,12 +43,15 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
       if (tasks.length > 0) {
           const updatedTasks = [...tasks];
           updatedTasks.pop();
-          handleGoalsChange(updatedTasks);
+          handleTasksChange(updatedTasks);
       }
   }
-  const [goals, setGoals] = useState<string[]>(new Array(1).fill('')); //Start with 2 enmpty goals but can add more
+  const tasksFromRedux = useSelector((state: RootState) => state.project.tasks);
+
+  const [goals, setGoals] = useState<string[]>(new Array(1).fill('')); // We want to upate this from wizard context but not change exisitng logic
   const handleGoalsChange = (updatedGoals: string[]) => {
     setGoals(updatedGoals);
+    wizardContext.setGoalNumber(updatedGoals.length.toString());
   };
   const handleAddGoal = () => {
     handleGoalsChange([...goals, '']);
@@ -56,12 +63,21 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
           handleGoalsChange(updatedGoals);
       }
   }
+  const goalsFromRedux = useSelector((state: RootState) => state.project.goals);
 
 
-  // Modify handleTasksChange to set task count
+
+  // Fill the project Name form the create feed that the user would have filled
   useEffect(() => {
     setProjectName(inputValue ? inputValue : '');
   }, [inputValue]);
+  // Override task logic and set task from redux 
+  const postFromRedux = useSelector((state: RootState) => state.project.post);
+  useEffect(() => {
+    if (tasksFromRedux.length) setTasks(tasksFromRedux);
+    if (goalsFromRedux.length) setGoals(goalsFromRedux);
+    if (postFromRedux.length) setPostContent(postFromRedux);
+  }, [tasksFromRedux, goalsFromRedux, postFromRedux]);
 
   
   //For the previous and next logic
@@ -143,6 +159,8 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
         onGoalDelete={handleDeleteGoal}
         postToFeed={postToFeed}
         setPostToFeed= {setPostToFeed}
+        postContent={postContent}
+        setPostContent={setPostContent}
         isPrivate={isPrivate}
         isLoading={isLoading}
       />}

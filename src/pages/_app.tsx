@@ -11,6 +11,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { pageview } from "~/utils/googleanalytics";
 import { WizardWrapper } from "~/components/wizard/wizardswrapper";
+import { Provider } from 'react-redux';
+import store from '~/redux/store';
 
 type TaskStatus = {
   taskName: string;
@@ -55,10 +57,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <link rel="icon" href="/images/favicon.ico" />
         </Head>
         <Toaster />
-        <WizardWrapper>
-          <OnboardingWrapper />
-          <Component {...pageProps} />
-        </WizardWrapper>
+        <Provider store={store}>
+          <WizardWrapper>
+            <OnboardingWrapper />
+            <Component {...pageProps} />
+          </WizardWrapper>
+        </Provider>
         <Analytics />
         </SessionProvider>
     );

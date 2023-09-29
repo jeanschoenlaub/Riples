@@ -1,4 +1,4 @@
-import { useState } from "react";
+import type { ChangeEvent } from "react";
 
 interface ProjectBuildComponentProps {
     tasks: string[];
@@ -11,6 +11,8 @@ interface ProjectBuildComponentProps {
     onGoalDelete: () => void;
     postToFeed: boolean;
     setPostToFeed: (value: boolean) => void;
+    postContent: string;
+    setPostContent: React.Dispatch<React.SetStateAction<string>>;
     isPrivate: boolean;
     isLoading: boolean;
 }
@@ -26,10 +28,23 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
     onGoalDelete,
     postToFeed,
     setPostToFeed,
+    postContent,
+    setPostContent,
     isPrivate,
     isLoading
 }) => {
-      
+    
+    function handleContentChange(e: ChangeEvent<HTMLTextAreaElement>) {
+        const textarea = e.target;
+        setPostContent(textarea.value);
+        
+        // Reset the height so scrollHeight can be recalculated
+        textarea.style.height = 'auto';
+    
+        // Set the height to its scroll height (which represents its full content height)
+        textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+
     return (
       <div>
           <div className="container mx-auto ">
@@ -125,7 +140,7 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                             </div>
                         </div>
                     </div>
-                    {/* Checkbox for posting to feed */}
+                    {/* Checkbox & input for posting to feed */}
                     <div className="flex items-center mt-4">
                         <input 
                             type="checkbox" 
@@ -139,10 +154,25 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                             Post this project creation to the feed &#40;only for public projects&#41;
                         </label>
                     </div>
+                    {/* Text input for posting to feed */}
+                    <div className="flex items-center mt-4">
+                        <textarea 
+                            style={{ overflow: 'hidden', resize: 'none' }}  // hide scrollbar and disable manual resize
+                            value={postContent}
+                            id="postToFeed" 
+                            placeholder={`This is the cool new project I am working on, I/we will ...`}
+                            className={`flex-grow p-1 rounded border`}
+                            disabled={isPrivate} 
+                            onChange={handleContentChange} 
+                        />
+                    </div>
+                    <label htmlFor="postToFeed" className={`ml-2 text-sm ${isPrivate ? 'text-gray-400' : 'text-gray-900'}`}>
+                            You can add a text to your post
+                    </label>
                 </div>
             </div>
         </div>
     );
 };
-  
+
 export default ProjectBuildComponent;
