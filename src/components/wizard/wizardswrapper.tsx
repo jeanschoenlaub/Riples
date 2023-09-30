@@ -53,9 +53,9 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
             <button id="misterwattbutton" className={styles.floatingButton} onClick={() => setShowWizard(!showWizard)}>
                 <img src="/images/riple_ai.png" alt="Open Wizard" width={60} height={60} />
             </button>
-            {showWizard && (wizardName == "taskWizard") && <div> 
+            {showWizard && (wizardName == "taskWizard") && session && <div> 
                 <div id="wizardtask" className={styles.floatingWindow}>
-                    <WizardTask projectTitle={projectTitle} projectSummary={projectSummary} taskNumber={taskNumber} goalNumber={goalNumber} />
+                    <WizardTask projectTitle={projectTitle} projectSummary={projectSummary} taskNumber={taskNumber} goalNumber={goalNumber} userId={session?.user.id}/>
                     <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
             </div>

@@ -1,4 +1,5 @@
 import type { ChangeEvent } from "react";
+import { useRef, useEffect } from 'react';
 
 interface ProjectBuildComponentProps {
     tasks: string[];
@@ -33,16 +34,71 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
     isPrivate,
     isLoading
 }) => {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const tasksRefs = useRef<(HTMLTextAreaElement | null)[]>(Array(tasks.length).fill(null));
+    const goalsRefs = useRef<(HTMLTextAreaElement | null)[]>(Array(goals.length).fill(null));
+    
+
+    useEffect(() => {
+        tasksRefs.current = Array(tasks.length).fill(null);
+    }, [tasks.length]);
+    
+    useEffect(() => {
+        goalsRefs.current = Array(goals.length).fill(null);
+    }, [goals.length]);
+    
+    useEffect(() => {
+        tasks.forEach((_, index) => {
+            if (tasksRefs.current[index] !== undefined) {
+                resizeTextarea(tasksRefs.current[index]);
+            }
+        });
+    }, [tasks]);
+    
+    useEffect(() => {
+        goals.forEach((_, index) => {
+            if (goalsRefs.current[index] !== undefined) {
+                resizeTextarea(goalsRefs.current[index]);
+            }
+        });
+    }, [goals]);
+    
+    
+    useEffect(() => {
+        resizeTextarea(textareaRef.current);
+    }, [postContent]);
+    
+
+    useEffect(() => {
+        console.log(tasksRefs.current);
+        console.log(goalsRefs.current);
+    }, [tasks, goals]);
+
+    function resizeTextarea(textarea?: HTMLTextAreaElement | null) {
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
+        }
+    }
+    
+
+    function handleTaskChange(e: ChangeEvent<HTMLTextAreaElement>, index: number) {
+        const updatedTasks = [...tasks];
+        updatedTasks[index] = e.target.value;
+        onTasksChange(updatedTasks);
+        resizeTextarea(tasksRefs.current[index]);
+    }
+    
+    function handleGoalChange(e: ChangeEvent<HTMLTextAreaElement>, index: number) {
+        const updatedGoals = [...goals];
+        updatedGoals[index] = e.target.value;
+        onGoalsChange(updatedGoals);
+        resizeTextarea(goalsRefs.current[index]);
+    }
     
     function handleContentChange(e: ChangeEvent<HTMLTextAreaElement>) {
-        const textarea = e.target;
-        setPostContent(textarea.value);
-        
-        // Reset the height so scrollHeight can be recalculated
-        textarea.style.height = 'auto';
-    
-        // Set the height to its scroll height (which represents its full content height)
-        textarea.style.height = `${textarea.scrollHeight}px`;
+        setPostContent(e.target.value);
+        resizeTextarea(textareaRef.current);
     }
 
     return (
@@ -62,17 +118,15 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                             <div className="flex space-x-4 items-end">  
                                 <div className="flex-grow flex flex-col space-y-2">
                                     {tasks.map((task, index) => (
-                                        <input
+                                        <textarea
                                             key={index}
                                             value={task}
-                                            type="text"
+                                            ref={el => tasksRefs.current[index] = el}
+                                            rows={1}
                                             placeholder={`Task ${index + 1}`}
+                                            style={{ overflow: 'hidden', resize: 'none' }}  // hide scrollbar and disable manual resize
                                             className={`flex-grow p-1 rounded border`}
-                                            onChange={(e) => {
-                                                const updatedTasks = [...tasks];
-                                                updatedTasks[index] = e.target.value;
-                                                onTasksChange(updatedTasks);
-                                            }}
+                                            onChange={(e) => handleTaskChange(e, index)}
                                         />
                                     ))}
                                 </div>
@@ -106,18 +160,16 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                             <div className="flex space-x-4 space-y-2 items-end">  
                                 <div className="flex-grow flex flex-col space-y-2">
                                     {goals.map((goal, index) => (
-                                        <input
-                                            key={index}
-                                            value={goal}
-                                            type="text"
-                                            placeholder={`Goal ${index + 1}`}
-                                            className={`flex-grow p-1 rounded border`}
-                                            onChange={(e) => {
-                                                const updatedGoals = [...goals];
-                                                updatedGoals[index] = e.target.value;
-                                                onGoalsChange(updatedGoals);
-                                            }}
-                                        />
+                                        <textarea
+                                        key={index}
+                                        ref={el => goalsRefs.current[index] = el}
+                                        value={goal}
+                                        rows={1}
+                                        placeholder={`Goal ${index + 1}`}
+                                        style={{ overflow: 'hidden', resize: 'none' }}  // hide scrollbar and disable manual resize
+                                        className={`flex-grow p-1 rounded border`}
+                                        onChange={(e) => handleGoalChange(e, index)}
+                                    />
                                     ))}
                                 </div>
 
@@ -157,9 +209,11 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                     {/* Text input for posting to feed */}
                     <div className="flex items-center mt-4">
                         <textarea 
+                            ref={textareaRef}
                             style={{ overflow: 'hidden', resize: 'none' }}  // hide scrollbar and disable manual resize
                             value={postContent}
                             id="postToFeed" 
+                            rows={1}
                             placeholder={`This is the cool new project I am working on, I/we will ...`}
                             className={`flex-grow p-1 rounded border`}
                             disabled={isPrivate} 

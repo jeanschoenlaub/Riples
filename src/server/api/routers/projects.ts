@@ -138,6 +138,7 @@ export const projRouter = createTRPCRouter({
     goals: z.array(z.string()),  
     tags: z.array(z.string()),  
     postToFeed: z.boolean(),
+    postContent: z.string(),
   }))
   .mutation(async ({ ctx, input }) => {
     const authorID = ctx.session.user.id;
@@ -183,7 +184,6 @@ export const projRouter = createTRPCRouter({
         summary: input.summary,
         projectType: input.isSolo ? "solo" : "collab", 
         projectPrivacy: input.isPrivate ? "private" : "public",
-
         tasks: {
           create: input.tasks.map(taskTitle => ({
             title: taskTitle,
@@ -212,13 +212,12 @@ export const projRouter = createTRPCRouter({
         data: {
           title: "A new Project was created !",   // or any suitable title for the ripple
           ripleType: "creation",
-          content: "", // or any suitable content
+          content: input.postContent, // or any suitable content
           projectId: project.id,
           authorID: authorID,
         }
       });
     }
-
 
     return project;
   }),

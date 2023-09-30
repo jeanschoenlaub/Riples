@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { setTasks, setGoals, setPost } from '~/redux/createprojectslice';
 import { LoadingSpinner } from "../reusables/loading";
 import { generateTasks, generateGoals, generatePost } from "~/server/services/openaicontroller";
+import toast from "react-hot-toast";
 
 
 type WizardTaskProps = {
@@ -12,12 +13,22 @@ type WizardTaskProps = {
     projectSummary: string;
     taskNumber: string;
     goalNumber: string;
+    userId: string;
 };
 
-export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSummary, taskNumber, goalNumber }) => {
-    const generateProjectTaskMutation = api.openai.generateProjectTasks.useMutation();
-    const generateProjectGoalMutation = api.openai.generateProjectGoals.useMutation();
-    const generateProjectPostMutation = api.openai.generateProjectPost.useMutation();
+export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSummary, taskNumber, goalNumber, userId }) => {
+    const handleOpenAiError = (error: any) => {
+        // Extract and transform your error to a human-readable message.
+        // Adjust based on the actual structure of errors from your API.
+        console.log("should trigger error message")
+        const message = error?.message || "An error occurred!";
+        toast.error(message);
+    };
+    
+    // Use the mutation and specify the onError callback directly.
+    const generateProjectTaskMutation = api.openai.generateProjectTasks.useMutation({onError: handleOpenAiError});
+    const generateProjectGoalMutation = api.openai.generateProjectGoals.useMutation({onError: handleOpenAiError});
+    const generateProjectPostMutation = api.openai.generateProjectPost.useMutation({onError: handleOpenAiError});
      // States for the checkboxes
     const [isTasksChecked, setIsTasksChecked] = useState(false);
     const [isGoalsChecked, setIsGoalsChecked] = useState(false);
@@ -34,6 +45,7 @@ export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSum
                     projectTitle: projectTitle,
                     projectSummary: projectSummary,
                     taskNumber:taskNumber,
+                    userId: userId,
                 });
                 const tasks = processRawDataForTasksOrGoals(rawDataTasks);
                 dispatch(setTasks(tasks));
@@ -112,24 +124,24 @@ export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSum
 
                 <div>
                     <label>
-                        <input type="checkbox" checked={isTasksChecked} onChange={() => setIsTasksChecked(!isTasksChecked)} />
+                        <input type="checkbox" className="mr-2" checked={isTasksChecked} onChange={() => setIsTasksChecked(!isTasksChecked)} />
                         Tasks
                     </label>
                 </div>
                 <div>
                     <label>
-                        <input type="checkbox" checked={isGoalsChecked} onChange={() => setIsGoalsChecked(!isGoalsChecked)} />
+                        <input type="checkbox" className="mr-2" checked={isGoalsChecked} onChange={() => setIsGoalsChecked(!isGoalsChecked)} />
                         Goals
                     </label>
                 </div>
                 <div>
                     <label>
-                        <input type="checkbox" checked={isPostChecked} onChange={() => setIsPostChecked(!isPostChecked)} />
+                        <input type="checkbox" className="mr-2" checked={isPostChecked} onChange={() => setIsPostChecked(!isPostChecked)} />
                         Post
                     </label>
                 </div>
 
-                <button onClick={generateAndLogTasks} className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-green-600 focus:outline-none focus:border-green-700 focus:ring focus:ring-blue-200" disabled={isLoading}>
+                <button onClick={generateAndLogTasks} className="bg-blue-500 text-white rounded px-4 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200" disabled={isLoading}>
                     {isLoading ? <div className="flex items-center space-x-2"> <LoadingSpinner size={16}></LoadingSpinner> Generating Content  </div>: "Generate Content"}
                 </button>
 

@@ -1,7 +1,7 @@
 .floatingButton {
     position: fixed;
     bottom: 50px;
-    right: 50px;
+    right: 20px;
     background-color: #fafafa; /* or whatever color you like */
     color: white;
     border: none;
@@ -20,7 +20,7 @@
   .floatingWindow {
     position: fixed;
     bottom: 120px; /* Height of button + some spacing */
-    right: 50px;
+    right: 20px;
     background-color: white;
     border-radius: 10px;
     width: 300px;

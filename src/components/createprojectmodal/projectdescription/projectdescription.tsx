@@ -1,7 +1,7 @@
 import MultiSelect from "~/components/reusables/multiselect";
 import ToggleSwitch from "~/components/reusables/toogleswitch";
 import Tooltip from "~/components/reusables/tooltip";
-import projectClassifications from "~/utils/constants/projectclassifications";
+import projectClassifications, {sortedProjectClassifications} from "~/utils/constants/projectclassifications";
 
 interface ProjectDescriptionComponentProps {
       projectName: string;
@@ -176,7 +176,7 @@ const ProjectDescriptionComponent: React.FC<ProjectDescriptionComponentProps> = 
                             Project Tags <span className="text-gray-500 text-sm">	&#40;optional&#41;</span>
                         </label>
                         <MultiSelect
-                          options={projectClassifications}
+                          options={sortedProjectClassifications}
                           value={selectedTags}
                           onChange={(selected) => {
                           // Convert OptionType[] back to string[] for onTagsChange
@@ -190,7 +190,6 @@ const ProjectDescriptionComponent: React.FC<ProjectDescriptionComponentProps> = 
                           placeholder="Add tags..."
                       />
                   </div>
-                
             </div>
         </div>
     </div>

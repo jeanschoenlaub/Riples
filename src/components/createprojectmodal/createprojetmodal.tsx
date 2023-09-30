@@ -23,6 +23,20 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   const [isPrivate, setIsPrivate] = useState(true);
   const [tags, setTags] = useState<string[]>([]);
 
+
+  const resetForm = () => {
+    setProjectName('');
+    setProjectDescription('');
+    setIsPrivate(true);
+    setIsSolo(true);
+    setTags([]);
+    setTasks(new Array(3).fill(''));
+    setPostToFeed(false);
+    setPostContent("");
+    setCurrentStep(Step.ProjectDescription);
+    onClose();
+  };
+
   const handleTagsChange = (updatedTags: string[]) => {
     setTags(updatedTags);
   };
@@ -98,10 +112,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
     }
   };
 
-  const resetForm = () => {
-    setProjectDescription('');
-    onClose();
-  };
+ 
 
   const generateCreatePayload = (): CreateProjectPayload => ({
     title: projectName,
@@ -112,6 +123,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
     tasks: tasks.filter(task => task.trim() !== ""),  // filtering tasks with empty titles
     goals: goals.filter(goal => goal.trim() !== ""),  // filtering goals with empty titles
     postToFeed: postToFeed,
+    postContent: postContent,
   });
 
   const handleCreateProject = async  () => {
@@ -126,9 +138,9 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   const isLoading = isCreating;
 
   const closeModal = () => {
+    wizardContext.setWizardName("");
     resetForm();
   };
-
 
   return (
     <>
