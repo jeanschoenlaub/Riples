@@ -13,7 +13,7 @@ import superjson from 'superjson';
 
 //My components
 import { Tabs } from "~/components/reusables/tabs";
-import { AboutTab } from "~/components/project-page/about";
+import { AboutTab } from "~/components/project-page/about/about";
 import { RipleCard } from "~/components/cards/riplecard";
 import { LoadingPage } from "~/components/reusables/loading";
 import { CollabTab } from "~/components/project-page/collab";

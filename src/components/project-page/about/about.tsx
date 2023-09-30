@@ -1,67 +1,129 @@
-import React from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
-import { api, type RouterOutputs } from '~/utils/api';
 import Link from 'next/link';
-import { ProfileImage } from '../reusables/profileimage';
+import { ProfileImage } from '../../reusables/profileimage';
 import toast from 'react-hot-toast';
-
-type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"] & {
-  members?: RouterOutputs["projectMembers"]["getMembersByProjectId"];
-};
-
-interface AboutTabProps {
-    project: ProjectData;
-    isMember: boolean;
-    isPending: boolean;
-    isProjectLead: boolean;
-    userId: string | undefined;
-  }
+import { EditSVG } from '../../reusables/svg';
+import { AboutTabProps, EditProjectPayload, ProjectMemberMutationPayload } from './abouttypes';
+import { useProjectMutation } from './aboutapi';
+import { LoadingSpinner } from '~/components/reusables/loading';
 
 
 export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPending, isProjectLead, userId }) => {
-  const ctx = api.useContext();
-    const {mutate: applyToProjectMutation, isLoading: isApplying}  = api.projectMembers.applyToProject.useMutation({
-        onError: (e) => {
-          console.error("Mutation error: ", e);
-          toast.error("Application failed ! Please try again later")
-        },
-        onSuccess: () => {
-            void ctx.projectMembers.getMembersByProjectId.invalidate()
-        }
-    })
+    //All for editing below
+    const [isEditMode, setIsEditMode] = useState(false);
+    const toggleEditMode = () => {
+      setIsEditMode(!isEditMode);
+    }
+    const handleSave = () => {
+      editProject(generateEditPayload()).then(() => {
+        toast.success('Project modifications saved successfully!');
+        toggleEditMode();
+      })
+      .catch(() => {
+        toast.error('Error saving project modification');
+        toggleEditMode();
+      });
+    }
+    const [projectSummary, setProjectSummary ] = useState(project.project.summary)
+    const [projectStatus, setProjectStatus] = useState(project.project.status);
 
-    const {mutate: deleteProjectMember, isLoading: isDeleting}  = api.projectMembers.deleteProjectMember.useMutation({
-        onError: (e) => {
-          console.error("Mutation error: ", e);
-          toast.error("Application failed ! Please try again later")
-        },
-        onSuccess: () => {
-            void ctx.projectMembers.getMembersByProjectId.invalidate()
-        }
-    })
+     // Helper function to generate edit payload
+    const generateEditPayload = (): EditProjectPayload => ({
+      projectId: project.project.id,
+      title: project.project.title,
+      summary: projectSummary,
+      status: projectStatus,
+    });
+
+    const {  isEditing, isApplying,  isDeleting, applyToProject, deleteMember, editProject } = useProjectMutation(project.project.id)
     
-  return (
-      <div id="proj-about-html" className="mt-4 ml-2 mb-2 space-y-4">
-        <div>
-          {project.project.summary}
-        </div>
+    return (
+        <div id="proj-about-html" className="mt-4 ml-2 mb-2 space-y-4">
+          {(isProjectLead && !isEditMode) && (
+            <div className="flex space-x-2">
+                <button 
+                  onClick={toggleEditMode}
+                  className="bg-blue-500 text-white text-sm rounded px-4 py-1 ml-2 flex items-center justify-center w-auto"
+                >
+                    <span className='flex items-center'>
+                        Edit 
+                        <EditSVG width='4' height='4' marginLeft='2'/>
+                  </span>
+              </button>
+             
+           </div>
+        )}
+
+        {(isProjectLead && isEditMode) && (
+            <div className="flex space-x-2">
+              <button 
+                onClick={handleSave}
+                className="bg-green-500 text-white text-sm rounded px-4 py-1 ml-2 flex items-center justify-center w-auto"
+              >
+                  <span className='flex items-center space-x-2'>
+                      Save 
+                      {isEditing && (<LoadingSpinner size={16} />) }
+                  </span>
+              </button>
+               <button 
+               onClick={toggleEditMode}  
+               className="bg-red-500 text-white text-sm rounded px-4 py-1 flex items-center justify-center w-auto"
+           >
+               Cancel
+           </button>
+          </div>
+        )}
+
+        <label className="block text-sm mb-3 justify-br" aria-label="Task Content">
+          Project Story:
+          {!isEditMode ? (
+            <>
+              <div className="w-full p-2 mt-1 rounded border bg-gray-100">
+                {project.project.summary}
+              </div>
+            </>
+          ) : (
+            <input
+              type="text"
+              value={projectSummary}
+              onChange={(e) => setProjectSummary(e.target.value)}
+              className={`w-full p-2 mt-1 rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
+              maxLength={50}
+              disabled={isEditing}
+            />
+          )}
+        </label>
     
         <p className="italic text-sm text-gray-600">
           Created {dayjs(project.project.createdAt).format('DD/MM/YYYY')}
         </p>
     
         {/* Project Status */}
-        <div>
-          <span className={`inline-block px-2 py-1 rounded text-white ${
-            project.project.status === "In Progress" ? "bg-green-500" : 
-            project.project.status === "Planning" ? "bg-yellow-500" : 
-            project.project.status === "Finished" ? "bg-red-500" : ""
-          }`}>
-            {project.project.status}
-          </span>
+        <div className="block text-sm mb-3 justify-br" aria-label="Project Status">
+            Project Status:
+            {!isEditMode ? (
+                <span className={`inline-block px-2 py-1 rounded text-white ${
+                    project.project.status === "Doing" ? "bg-yellow-500" : 
+                    project.project.status === "To-Do" ? "bg-gray-500" : 
+                    project.project.status === "Done" ? "bg-green-500" : ""
+                }`}>
+                    {project.project.status}
+                </span>
+            ) : (
+                <select 
+                    value={projectStatus}
+                    onChange={(e) => setProjectStatus(e.target.value)}
+                    className={`w-auto p-2 mt-1 rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
+                    disabled={isEditing}
+                >
+                    <option value="To-Do">To-Do</option>
+                    <option value="Doing">Doing</option>
+                    <option value="Done">Done</option>
+                </select>
+            )}
         </div>
 
-        
     
         {/* About the project Type */}
         <div id="project-about-project-type" className="flex items-center space-x-3 mb-4">
@@ -104,10 +166,10 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
                                     projectId: project.project.id,
                                 };
                                 if (isMember || isPending || isProjectLead){ // To-Do better logic for isProjetLead
-                                    deleteProjectMember(Application);
+                                    deleteMember(Application);
                                 }
                                 else { 
-                                    applyToProjectMutation(Application);
+                                    applyToProject(Application);
                                 }
                             }
                         }}
@@ -158,5 +220,5 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
             ))}
           </div>
         </div>
-</div>
+  </div>
 )};

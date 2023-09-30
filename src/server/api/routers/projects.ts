@@ -82,6 +82,7 @@ export const projRouter = createTRPCRouter({
   .query(async ({ ctx, input }) => {
     const project = await ctx.prisma.project.findUnique({
       where: { id: input.projectId },
+      include: { goals: true },
     });
 
     if (!project) {
@@ -222,6 +223,36 @@ export const projRouter = createTRPCRouter({
     return project;
   }),
 
+edit: protectedProcedure
+.input(z.object({
+  projectId: z.string(),
+  title: z.string()
+    .min(5, { message: "Project title must be 5 or more characters long" })
+    .max(255, { message: "Project title must be 255 or less characters long" }),
+  summary: z.string()
+    .max(5000, { message: "Project Description must be 5000 or less characters long" }),
+  status: z.string(),
+}))
+.mutation(async ({ ctx, input }) => {
+  const authorID = ctx.session.user.id;
+  const projectId = input.projectId;
+
+  const { success } = await ratelimit.limit(authorID);
+  if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+
+  // ... (tag logic remains the same)
+
+  // Now update the project with tasks and tags
+  const updatedProject = await ctx.prisma.project.update({
+    where: { id: projectId },
+    data: {
+      title: input.title,
+      summary: input.summary,
+      status: input.status,
+    },
+  });
+  return updatedProject;
+  }),
   
   delete: protectedProcedure
   .input(z.object({

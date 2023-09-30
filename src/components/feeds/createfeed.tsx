@@ -60,7 +60,7 @@ export const CreateFeed = () => {
 
       {/* Project Cards */}
       <div className="mt-4 flex justify-center">
-        Creat Feed is Coming 
+        Create Feed is Coming 
       </div>
 
       {/*  Modals Opening on logic */}
