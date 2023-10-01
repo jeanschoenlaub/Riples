@@ -3,10 +3,11 @@ import dayjs from 'dayjs';
 import Link from 'next/link';
 import { ProfileImage } from '../../reusables/profileimage';
 import toast from 'react-hot-toast';
-import { EditSVG } from '../../reusables/svg';
+import { EditSVG} from '../../reusables/svg';
 import type { AboutTabProps, EditProjectPayload} from './abouttypes';
 import { useProjectMutation } from './aboutapi';
 import { LoadingSpinner } from '~/components/reusables/loading';
+import { ProjectAboutGoal } from './goals/goals';
 
 
 export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPending, isProjectLead, userId }) => {
@@ -35,11 +36,11 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
     const handleApplicationJoin = () => {
       if (userId){
         applyToProject(Application).then(() => {
-          toast.success('Project modifications saved successfully!');
+          toast.success('Project application submited successfully!');
           toggleEditMode();
         })
         .catch(() => {
-          toast.error('Error saving project modification');
+          toast.error('Error submitting project application');
           toggleEditMode();
         });
       }
@@ -91,7 +92,8 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
              
            </div>
         )}
-
+        <hr></hr>
+        <span className='text-lg font-semibold'> Project  Info </span>
         {(isProjectLead && isEditMode) && (
             <div className="flex space-x-2">
               <button 
@@ -112,7 +114,7 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
           </div>
         )}
 
-        <label className="block text-sm mb-3 justify-br" aria-label="Task Content">
+        <label className="block text-sm text-gray-500 mb-3 justify-br" aria-label="Task Content">
           Project Story:
           {!isEditMode ? (
             <>
@@ -131,10 +133,15 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
             />
           )}
         </label>
-    
-        <p className="italic text-sm text-gray-600">
-          Created {dayjs(project.project.createdAt).format('DD/MM/YYYY')}
-        </p>
+
+
+        <ProjectAboutGoal 
+            goals={project.project.goals}
+            projectPrivacy={project.project.projectPrivacy}
+            isProjectLead={isProjectLead}
+            isMember={isMember}
+            isEditMode={isEditMode}
+        />
     
         {/* Project Status */}
         <div className="block text-sm mb-3 justify-br" aria-label="Project Status">
@@ -161,7 +168,8 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
             )}
         </div>
 
-    
+        <hr></hr>
+        <span className='text-lg font-semibold'> Project Members Info </span>
         {/* About the project Type */}
         <div id="project-about-project-type" className="flex items-center space-x-3 mb-4">
           <div id="project-about-project-type-icon" className="flex items-center justify-center">
@@ -180,15 +188,39 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
           </div>
     
           <span className="text-sm text-gray-500">
-            This is a <span className="font-medium text-sky-500">{project.project.projectType}</span> project  &nbsp;&#40;<Link href="/about/collaborate-on-a-riple-project" className="text-blue-500"> How to collaborate on Riples </Link> &#41;
+            This is a <span className="font-medium text-sky-500">{project.project.projectType}</span> project  
+          </span>
+        </div>
+
+         {/* About the project Visibility */}
+         <div id="project-about-project-type" className="flex items-center space-x-3 mb-4">
+          <div id="project-about-project-type-icon" className="flex items-center justify-center">
+            <svg
+              className="w-4 h-4 mr-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="#2563eb"  // Blue and Gray colors
+              viewBox="0 0 20 20"
+            >
+              {project.project.projectType === "collab" 
+                ? <path d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z"/> 
+                : <path d="M7 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm2 1H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"/>}
+            </svg>
+            {project.project.projectPrivacy === "private" ? "Private" : "Public"}
+          </div>
+    
+          <span className="text-sm text-gray-500">
+            This is a <span className="font-medium text-sky-500">{project.project.projectPrivacy}</span> project  
           </span>
         </div>
 
           {/* JOIN / LEAVE PROJECT SECTION AND BUTTON */}
+          { (project.project.projectType === "collab") &&
+          <div>
           <div id="project-collab-how-to-apply" className="mt-4 ml-2 mb-2 space-y-4">
                 <section>
                     <ol className="list-decimal list-inside">
-                    <li> Read this info page about what to expect:</li>
+                    <Link href="/about/collaborate-on-a-riple-project" className="text-blue-500"> How to collaborate on Riples </Link> 
                     </ol>
                 </section>
             </div>
@@ -212,9 +244,14 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
                     </button>
                 </>
                 ) : (
-                   <div className="bg-blue-500 text-white rounded py-1 px-2 text-center"> {!isProjectLead ? 'You must be signed in to apply.' : ''} </div>
+                  !isProjectLead && (
+                    <div className="bg-blue-500 text-white rounded py-1 px-2 text-center">
+                        You must be signed in to apply.
+                    </div>)
                 )}
             </div>
+          </div>
+          }
     
         <span className="text-sm text-gray-500 flex items-center">
         Project Lead:  
@@ -236,7 +273,7 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
           <span className="text-sm text-gray-500">Project Members:</span>
 
           <div className="mt-2 flex flex-wrap items-center">
-            {project.project.members?.map((user, index) => (
+            {project.project.members.filter(user => user.status === "APPROVED").map((user, index) => (
               <div key={index} className="flex items-center ml-2">
                 {index > 0 && <span className="text-sm font-medium">, </span>}
                 <div id={`riple-card-metadata-auth-profile-image-${index}`} className="flex items-center">
@@ -253,5 +290,32 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
             ))}
           </div>
         </div>
+        
+        <hr></hr>
+        <span className='text-lg font-semibold'> Project Stats </span>
+        {/* Project Tasks and Subtasks Stats */}
+{(project.project.projectPrivacy === "public" || isProjectLead || isMember) &&
+    <div id="project-tasks-stats" className="mb-4">
+        <span className="text-sm text-gray-500 mb-2 block">Tasks and Subtasks Stats:</span>
+
+        <div className="mt-2">
+            {/* Completed Tasks */}
+            <div className="flex items-center mb-2">
+                <span className="mr-2">Completed Tasks: 2/2</span>
+            </div>
+
+            
+            {/* Completed Subtasks */}
+            <div className="flex items-center mb-2">
+                <span className="mr-2">Completed SubTasks: 2/2</span>
+            </div>
+            </div>
+        </div>
+}
+
+
+        <p className="italic text-sm text-gray-600">
+          Created {dayjs(project.project.createdAt).format('DD/MM/YYYY')}
+        </p>
   </div>
 )};

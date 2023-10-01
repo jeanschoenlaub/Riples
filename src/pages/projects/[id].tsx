@@ -23,6 +23,7 @@ import { SideNavProject } from "~/components/navbar/sidenavproject";
 import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
 import Follow from "~/components/reusables/follow";
 import { AdminTab } from "~/components/project-page/admin";
+import Tooltip from "~/components/reusables/tooltip";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -104,15 +105,34 @@ export default function Project(
             </div>
 
             <div id="project-main" className="relative flex flex-col w-full md:w-3/4 border border-slate-700">
-              <div id="project-main-cover-image" className="relative w-full h-[30vh] overflow-hidden">
-                <Image 
-                    src={projectData?.project.coverImageUrl} 
-                    alt="Project cover image" 
-                    layout="fill" 
-                    objectFit="cover"
-                />
-              </div>
-              <div id="project-main-metadata" className="mt-4 ml-5 mr-5">
+              <div id="project-main-cover-image" className="group relative w-full h-[30vh] overflow-hidden">
+                  <Image 
+                      src={projectData?.project.coverImageUrl} 
+                      alt="Project cover image" 
+                      layout="fill" 
+                      objectFit="cover"
+                  />
+
+                  {/* Hover buttons */}
+                  <div className="absolute bottom-0 right-0 flex flex-col items-end mb-2 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Tooltip content="The feature of uploading your own picture is coming." width="200px">
+                          <span className="mb-2">
+                              <button className="m-2 py-1 px-2 bg-sky-100 opacity-70 text-black cursor-not-allowed" disabled>
+                                  Replace image
+                              </button>
+                          </span>
+                      </Tooltip>
+                      <Tooltip content="The feature of repositioning picture is coming." width="200px">
+                          <span>
+                              <button className="m-2 py-1 px-2 bg-sky-100 opacity-70 text-black cursor-not-allowed" disabled>
+                                  Reposition
+                              </button>
+                          </span>
+                      </Tooltip>
+                  </div>
+            </div>
+
+            <div id="project-main-metadata" className="mt-4 ml-5 mr-5">
                 <div id="project-metadata" className="flex items-center justify-between"> 
                   <h1 className="text-2xl font-bold">{projectData?.project.title}</h1>
                   <Follow projectId={projectId} />
@@ -154,7 +174,7 @@ export default function Project(
 
               </div>
             </div>
-        </div>
+            </div>
       </main>
     </>
   );

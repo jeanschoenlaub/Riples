@@ -69,6 +69,7 @@ model Goals {
   createdAt    DateTime @default(now())
   editedAt     DateTime @default(now())
   progress     Int @default(0)
+  progressFinalValue     Int @default(100)
 
   // Relations
   projectId    String  
