@@ -10,7 +10,7 @@ export const useProjectMutation =  ({ onSuccess }: { onSuccess: () => void }) =>
     
     // Function to run on successful mutations
     const handleSuccess = async (data: ProjectCreateData) => {
-      if (data && data.id) {
+      if (data.id) {
         await router.push(`/projects/${data.id}`);
         onSuccess(); // Execute any additional onSuccess logic
       }

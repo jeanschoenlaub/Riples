@@ -79,6 +79,14 @@ export const OnboardingJoyRideOne = () => {
             disableBeacon: true
         },
         {
+            target: "#navbartoggle",
+            title: "Social / Create",
+            content: "Click this button to toggle between the Social feed and Create feed. Try it!",
+            placement: "bottom",
+            spotlightClicks: true,
+            disableBeacon: true,
+        },
+        {
             target: "#socialfeed",
             title: "The Feed",
             content: "This is the social feed, where you get the latest project news based on your friends, interests and your current projects!",
@@ -89,14 +97,6 @@ export const OnboardingJoyRideOne = () => {
                     width: tooltipWidthForSidebar,
                 },
             }
-        },
-        {
-            target: "#navbartoggle",
-            title: "Social / Create",
-            content: "Click this button to toggle between the Social feed and Create feed. Try it!",
-            placement: "bottom",
-            spotlightClicks: true,
-            disableBeacon: true,
         },
         {
             target: "#misterwattbutton",
