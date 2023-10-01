@@ -1,8 +1,7 @@
 import type { RouterOutputs } from "~/utils/api";
 
-export type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"] & {
-    members?: RouterOutputs["projectMembers"]["getMembersByProjectId"];
-  };
+export type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"] 
+export type ProjectCreateData = RouterOutputs["projects"]["create"] 
   
 export  interface ProjectMemberMutationPayload {
     userId: string;

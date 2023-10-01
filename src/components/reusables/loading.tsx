@@ -36,11 +36,11 @@ export const LoadingRiplesLogo: React.FC<LoadingProps> = ({ isLoading }) => {
     return (
       <div className={`loading-container ${isLoading ? 'ripple-active' : ''}`}>
         <Image
-            src="/images/logo_128x128.png" 
+            src="/images/logo_256x256.png" 
             className="droplet" 
             alt="Riple logo" 
-            width={32}
-            height={32}
+            width={256}
+            height={256}
         />
         <div className="ripple"></div> 
         <div className="ripple"></div>

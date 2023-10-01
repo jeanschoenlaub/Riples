@@ -53,7 +53,7 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
         <WizardContext.Provider value={{ setShowWizard, showWizard, setWizardName, setProjectTitle, setProjectSummary, setTaskNumber, setGoalNumber}}>
             {children}
             <button id="misterwattbutton" className={styles.floatingButton} onClick={() => setShowWizard(!showWizard)}>
-                <Image src="/images/riple_ai.png" alt="Open Wizard" width={60} height={60} />
+                <Image src="/images/riple_ai.png" alt="Open Wizard" width={256} height={256} />
             </button>
             {showWizard && (wizardName == "taskWizard") && session && <div> 
                 <div id="wizardtask" className={styles.floatingWindow}>

@@ -5,6 +5,7 @@ import { setTasks, setGoals, setPost } from '~/redux/createprojectslice';
 import { LoadingSpinner } from "../../reusables/loading";
 import type { WizardTaskProps } from "./wizardtasktype";
 import { useOpenAIMutation } from "./wizardtaskapi";
+import toast from "react-hot-toast";
 
 export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSummary, taskNumber, goalNumber, userId }) => {
     // Use the mutation and specify the onError callback directly.
@@ -61,6 +62,8 @@ export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSum
                 const post = processRawDataForPost(rawDataPost);
                 dispatch(setPost(post));
             }
+            else if (!isPostChecked && !isGoalsChecked && !isTasksChecked)
+            {toast.error("Please tick an option")}
         } catch (error) {
             console.error('Failed to generate content:', error);
         }
@@ -129,7 +132,7 @@ export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSum
                 </div>
 
                 <button 
-                    className="bg-blue-500 text-white rounded px-4 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200"
+                    className="bg-blue-500 text-white rounded px-4 mt-2 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200"
                     disabled={isLoading}
                     onClick={() => {
                         generateProjectAIData().catch(error => {
@@ -137,10 +140,8 @@ export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSum
                         });
                     }}
                 >
-                    {isLoading ? <div className="flex items-center space-x-2"> <LoadingSpinner size={16}></LoadingSpinner> Generating Content  </div>: "Generate Content"}
+                    {isLoading ? <div className="flex items-center "> <LoadingSpinner size={16}></LoadingSpinner> Generating Content  </div>: "Generate Content"}
                 </button>
-
-                <div className="mb-4"> Check our data privacy </div>
             </div>
         </div>
     );

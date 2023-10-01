@@ -25,6 +25,8 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
         toggleEditMode();
       });
     }
+
+    console.log(project.project.members)
     //For appliaction mutations
     const Application = {
       userId: userId ?? "",
@@ -234,11 +236,11 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
           <span className="text-sm text-gray-500">Project Members:</span>
 
           <div className="mt-2 flex flex-wrap items-center">
-            {project.members?.map((user, index) => (
+            {project.project.members?.map((user, index) => (
               <div key={index} className="flex items-center ml-2">
                 {index > 0 && <span className="text-sm font-medium">, </span>}
                 <div id={`riple-card-metadata-auth-profile-image-${index}`} className="flex items-center">
-                  <Link href={`/users/${user.user.id}`}>
+                  <Link href={`/users/${user.id}`}>
                     <ProfileImage user={user.user} size={32} />
                   </Link>
                 </div>

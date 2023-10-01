@@ -89,14 +89,16 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
       {/* LEFT NAV */}
       {/* Show on large screens */}
       <div id="global-nav-left-large-screen" className="hidden md:flex w-1/4 gap-3 justify-center items-center p-2 border border-slate-700">
+        <div className="w-8 h-8">
         <Link href="/about/riples">
           <Image 
-              src="/images/logo_128x128.png" 
+              src="/images/logo_256x256.png" 
               alt="Riple logo" 
-              width={32}
-              height={32}
+              width={256}
+              height={256}
           />
         </Link>
+        </div>
         <div>
           <Link href="/about/riples">
               {'About Riples'}
