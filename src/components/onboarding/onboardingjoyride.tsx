@@ -1,11 +1,10 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import ReactJoyride, { CallBackProps, Step } from 'react-joyride';
+import ReactJoyride from 'react-joyride';
+import type { CallBackProps, Step } from 'react-joyride';
 import { useWizard } from '../wizard/wizardswrapper';
 import { useSession } from 'next-auth/react';
-import { api } from '~/utils/api';
-import { handleZodError } from '~/utils/error-handling';
-import toast from 'react-hot-toast';
+import { api } from '~/utils/api'; 
 
 export const OnboardingJoyRideOne = () => {
     const [isTourOpen, setIsTourOpen] = useState(false);
@@ -26,7 +25,7 @@ export const OnboardingJoyRideOne = () => {
     const userId = session?.user?.id ?? ''; // This will never be empty due to the above check
 
     // Conditional query using tRPC to fetch the product tour status
-    const { data: productTourStatus, isLoading: productTourStatusLoading, error } = api.users.getProductTourStatus.useQuery(
+    const { data: productTourStatus, error } = api.users.getProductTourStatus.useQuery(
         { userId },
         { enabled: shouldExecuteQuery }
     );
@@ -66,7 +65,7 @@ export const OnboardingJoyRideOne = () => {
         }
     }, [isClient]);
 
-    const tooltipWidthForSidebar = screenWidth && screenWidth >= 600 ? (screenWidth / 4) - 20 : 'auto';
+    const tooltipWidthForSidebar = screenWidth && screenWidth >= 600 ? (screenWidth / 4) - 40 : 'auto';
     const tooltipplacementForSidebar = screenWidth && screenWidth < 600 ? 'center' : 'right-start';
     const offsetValue = screenWidth ? (screenWidth / 8) : 0;
     const tooltipWidthForMiddle = screenWidth ? (screenWidth/2) - 20 : 'auto';
@@ -182,15 +181,11 @@ export const OnboardingJoyRideOne = () => {
 };
 
 const useProductTourCompletionMutation = () => {
-    const apiContext = api.useContext();
-  
     const { mutate: completeProductTourMutation } = api.users.editProductTourStatus.useMutation();
   
     const completeProductTour = (payload: { userId: string, productTourFinished: boolean;}) => {
         completeProductTourMutation(payload, {
             onError: (e) => {
-                const fieldErrors = e.data?.zodError?.fieldErrors;
-                const message = handleZodError(fieldErrors);
                 console.error("Failed to save product tour status:", e);
             }
         });

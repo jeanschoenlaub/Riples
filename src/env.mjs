@@ -23,6 +23,7 @@ const server = z.object({
   //DISCORD_CLIENT_SECRET: z.string(),
   NEXT_PUBLIC_GOOGLE_ANALYTICS: z.string(),
   EMAIL_SERVER: z.string(),
+  OPENAI_API_KEY: z.string(),
   EMAIL_FROM: z.string(),
 });
 
@@ -48,6 +49,7 @@ const processEnv = {
   NEXT_PUBLIC_GOOGLE_ANALYTICS: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS,
   EMAIL_SERVER: process.env.EMAIL_SERVER,
   EMAIL_FROM: process.env.EMAIL_FROM,
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

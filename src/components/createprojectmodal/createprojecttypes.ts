@@ -13,6 +13,7 @@ export interface CreateProjectPayload {
     tasks: string[];
     goals: string[];
     postToFeed: boolean;
+    postContent: string;
 }
 
 export enum Step {

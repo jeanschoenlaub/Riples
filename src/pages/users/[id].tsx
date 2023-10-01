@@ -11,7 +11,7 @@ import superjson from 'superjson';
 import { getSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { GlobalNavBar } from '~/components/navbar/navbar';
-import { SideNavProject } from '~/components/sidenavproject';
+import { SideNavProject } from '~/components/navbar/sidenavproject';
 import { Tabs } from '~/components/reusables/tabs';
 import { ProjectCard } from '~/components/cards/projectcard';
 import { ProfileImage } from '~/components/reusables/profileimage';

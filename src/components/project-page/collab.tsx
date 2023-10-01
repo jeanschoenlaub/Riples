@@ -1,8 +1,5 @@
-import Link from "next/link"
-import toast from "react-hot-toast";
-import { api } from "~/utils/api";
 import type { RouterOutputs } from '~/utils/api';
-import { TaskList } from "~/components/project-page/task/tasklist";
+import { TaskList } from "~/components/task/tasklist";
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"]
 interface CollabTabProps {
@@ -10,10 +7,9 @@ interface CollabTabProps {
     isMember: boolean;
     isPending: boolean;
     isProjectLead: boolean;
-    userId: string | undefined;
-  }
+}
 
-export const CollabTab: React.FC<CollabTabProps> = ({ project, isMember, isPending, isProjectLead, userId }) => {
+export const CollabTab: React.FC<CollabTabProps> = ({ project, isMember, isPending, isProjectLead}) => {
     
     return (
         <div>

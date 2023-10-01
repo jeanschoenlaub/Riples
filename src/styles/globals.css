@@ -39,6 +39,35 @@ body {
     border-radius: 20px;
 }
 
+#project-nav-container,
+#future-content
+{
+    max-height: calc(100vh - 15px); /* Adjust 60px based on your navigation bar's height */
+}
+
+#feed-container
+{
+    max-height: calc(100vh - 15px); /* Adjust 60px based on your navigation bar's height */
+    overflow-y: auto;
+}
+
+#side-bar-project-list{
+    max-height: calc(100vh - 200px); /* AManually adjusted but should be Size of Following / Doing toggle +bottom margin */
+    overflow-y: auto;
+}
+
+#side-bar-project-list,
+#feed-container {
+    scrollbar-width: none; /* for Firefox */
+    -ms-overflow-style: none;  /* for Internet Explorer and Edge */
+}
+
+#project-side-bar-container::-webkit-scrollbar,
+#feed-container::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+}
+
+
 /* Custom rule to limit the growth effect */
 .search-max-growth {
 max-width: 400px; /* Adjust the maximum width as needed */
@@ -49,6 +78,19 @@ max-width: 400px; /* Adjust the maximum width as needed */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
 }
 
 

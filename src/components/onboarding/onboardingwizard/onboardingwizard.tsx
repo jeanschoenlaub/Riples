@@ -1,23 +1,13 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
-import Joyride from 'react-joyride';
 import { TaskOneJoyRide as TaskOneJoyRideComponent } from "./taskonejoyride";
-
-type WizardProps = {
-    tasks: TaskStatus[];
-};
-
-type TaskStatus = {
-    taskName: string;
-    isCompleted: boolean;
-    actionLink?: string;
-};
 
 export const WizardOnboarding = () => {
     
     const [taskStatuses, setTaskStatuses] = useState([
         { taskName: 'Create a project', isCompleted: false, actionLink: '/?activeTab=Create' },
+        { taskName: 'Create and check off a subtask', isCompleted: false, actionLink: '/?activeTab=create' },
         { taskName: 'Finish your user profile', isCompleted: false, actionLink: '/?activeTab=create' },
         // ... add other tasks
     ]);
@@ -35,13 +25,13 @@ export const WizardOnboarding = () => {
     const { data: session } = useSession(); 
     const shouldExecuteQuery = !!session?.user?.id;
     const userId = session?.user?.id ?? '';
-    const { data: projectLead, isLoading: projectLeadLoading } = api.projects.getProjectByAuthorId.useQuery(
+    const { data: projectLead } = api.projects.getProjectByAuthorId.useQuery(
       { authorId: userId },
       { enabled: shouldExecuteQuery }
     );
 
     useEffect(() => {
-        if (projectLead) {
+        if (projectLead && projectLead.length > 0) {
             setTaskStatuses(prevStatus => {
                 const updatedStatus = [...prevStatus];
                 const projectTask = updatedStatus.find(task => task.taskName === 'Create a project');
@@ -68,7 +58,7 @@ export const WizardOnboarding = () => {
                         onClick={() => setActiveJoyrideIndex(index)}
                     >
                         <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="#2563eb" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.529 7.988a2.502 2.502 0 0 1 5 .191A2.441 2.441 0 0 1 10 10.582V12m-.01 3.008H10M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                            <path stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7.529 7.988a2.502 2.502 0 0 1 5 .191A2.441 2.441 0 0 1 10 10.582V12m-.01 3.008H10M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                         </svg>
                     </span>
                 </div>

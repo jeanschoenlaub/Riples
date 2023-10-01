@@ -1,12 +1,20 @@
 import { useSession } from 'next-auth/react';
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState } from 'react';
+import type { ReactNode } from 'react';
 import { WizardOnboarding } from "~/components/onboarding/onboardingwizard/onboardingwizard";
 import styles from '~/styles/WizardWrapper.module.css'; // you can adjust the path based on your folder structure
 import { api } from '~/utils/api';
+import { WizardTask } from './wizardtask/wizardtask';
+import Image from 'next/image';
 
 type WizardContextType = {
     setShowWizard: React.Dispatch<React.SetStateAction<boolean>>;
     showWizard: boolean;
+    setWizardName: React.Dispatch<React.SetStateAction<string>>;
+    setProjectTitle: React.Dispatch<React.SetStateAction<string>>;
+    setProjectSummary: React.Dispatch<React.SetStateAction<string>>;
+    setTaskNumber: React.Dispatch<React.SetStateAction<string>>;
+    setGoalNumber: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const WizardContext = createContext<WizardContextType | undefined>(undefined);
@@ -25,6 +33,12 @@ interface WizardWrapperProps {
 
 export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
     const [showWizard, setShowWizard] = useState(false);
+    const [wizardName, setWizardName] = useState("");
+    const [projectTitle, setProjectTitle] = useState("");
+    const [projectSummary, setProjectSummary] = useState("");
+    const [taskNumber, setTaskNumber] = useState("3");
+    const [goalNumber, setGoalNumber] = useState("1");
+
 
     const { data: session } = useSession();
     const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user id is not null
@@ -36,12 +50,19 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
     );
 
     return (
-        <WizardContext.Provider value={{ setShowWizard, showWizard }}>
+        <WizardContext.Provider value={{ setShowWizard, showWizard, setWizardName, setProjectTitle, setProjectSummary, setTaskNumber, setGoalNumber}}>
             {children}
             <button id="misterwattbutton" className={styles.floatingButton} onClick={() => setShowWizard(!showWizard)}>
-                <img src="/images/riple_ai.png" alt="Open Wizard" width={60} height={60} />
+                <Image src="/images/riple_ai.png" alt="Open Wizard" width={256} height={256} />
             </button>
-            {showWizard && (!shouldExecuteQuery || userQuery.data?.user?.onBoardingFinished === false) && 
+            {showWizard && (wizardName == "taskWizard") && session && <div> 
+                <div id="wizardtask" className={styles.floatingWindow}>
+                    <WizardTask projectTitle={projectTitle} projectSummary={projectSummary} taskNumber={taskNumber} goalNumber={goalNumber} userId={session?.user.id}/>
+                    <button onClick={() => setShowWizard(false)}>Close</button>
+                </div>
+            </div>
+            }
+            {showWizard && (wizardName == "")  && (!shouldExecuteQuery || userQuery.data?.user?.onBoardingFinished === false) && 
                 <div id="wizardonboarding" className={styles.floatingWindow}>
                     {/* If no logged in users or the logged in user hasn't finished the tutorial, show onboarding Mister Watt */}
                     <WizardOnboarding />

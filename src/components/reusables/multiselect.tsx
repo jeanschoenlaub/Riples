@@ -1,6 +1,5 @@
 import React from 'react';
 import Select from 'react-select';
-import type { ActionMeta } from 'react-select';
 
 interface OptionType {
     value: string;
@@ -27,7 +26,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
 }) => {
   type ReadonlyValueType = readonly OptionType[];
 
-  const handleChange = (selectedOptions: ReadonlyValueType | null, actionMeta: ActionMeta<OptionType>) => {
+  const handleChange = (selectedOptions: ReadonlyValueType | null) => {
     if (!selectedOptions) {
         onChange(null);
         return;

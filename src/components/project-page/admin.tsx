@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import dayjs from 'dayjs';
 import { api, type RouterOutputs } from '~/utils/api';
 import Link from 'next/link';
 import { ProfileImage } from '../reusables/profileimage';
@@ -37,7 +36,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members }) => {
     refuseUser({ userId, projectId });
   };
 
-  const handleDeleteProject = async (projectId: string) => {
+  const handleDeleteProject = async () => {
       try {
         await deleteProject({ projectId: project.id });
         setShowDeleteModal(false);
@@ -133,7 +132,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members }) => {
               <div className="flex items-center justify-center space-x-2">
               {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
               <button className="bg-green-500 text-white rounded px-4 py-2 mb-2" 
-                onClick={() => { void handleDeleteProject(project.id); }}
+                onClick={() => { void handleDeleteProject(); }}
                 disabled={isDeleting}
                 > {isDeleting && <LoadingSpinner size={20} />} Yes 
               </button>

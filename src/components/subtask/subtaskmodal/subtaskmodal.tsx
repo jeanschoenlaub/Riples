@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
-import { Modal } from '../../../reusables/modaltemplate';
+import { Modal } from '../../reusables/modaltemplate';
 import { handleZodError } from '~/utils/error-handling';
 
 interface SubTaskModalProps {

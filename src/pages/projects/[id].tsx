@@ -13,12 +13,12 @@ import superjson from 'superjson';
 
 //My components
 import { Tabs } from "~/components/reusables/tabs";
-import { AboutTab } from "~/components/project-page/about";
+import { AboutTab } from "~/components/project-page/about/about";
 import { RipleCard } from "~/components/cards/riplecard";
 import { LoadingPage } from "~/components/reusables/loading";
 import { CollabTab } from "~/components/project-page/collab";
 import { GlobalNavBar } from "~/components/navbar/navbar";
-import { SideNavProject } from "~/components/sidenavproject";
+import { SideNavProject } from "~/components/navbar/sidenavproject";
 
 import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
 import Follow from "~/components/reusables/follow";
@@ -147,7 +147,7 @@ export default function Project(
                 )}
 
                 {/* SHOWN IF COLLAB*/}
-                {activeTab === 'collab' && <CollabTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} userId={userId}/>}
+                {activeTab === 'collab' && <CollabTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} />}
 
                 {/* SHOWN IF ADMIN */}
                 {activeTab === 'admin' && <AdminTab project={projectData.project} members={projectMemberData} ></AdminTab>}

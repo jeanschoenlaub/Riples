@@ -1,7 +1,7 @@
 import MultiSelect from "~/components/reusables/multiselect";
 import ToggleSwitch from "~/components/reusables/toogleswitch";
 import Tooltip from "~/components/reusables/tooltip";
-import projectClassifications from "~/utils/constants/projectclassifications";
+import {sortedProjectClassifications} from "~/utils/constants/projectclassifications";
 
 interface ProjectDescriptionComponentProps {
       projectName: string;
@@ -108,9 +108,13 @@ const ProjectDescriptionComponent: React.FC<ProjectDescriptionComponentProps> = 
                 <div id="project-access-and-visibility" className="flex flex-col md:flex-row  items-center justify-between border-t py-4 border-gray-300">
                     <div id="project-access-label-and-toogle" className="flex items-center justify-between mb-4 md:mb-0">
                         <div id="project-access-label" className="flex mr-2 items-center">
-                              <svg className="w-5 h-5 mr-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                                <path d="M6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Zm11-3h-2V5a1 1 0 0 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 0 0 2 0V9h2a1 1 0 1 0 0-2Z"/>
-                              </svg>
+                        {isSolo ? (
+                                    <svg className="w-5 h-5 mr-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                                        <path d="M7 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm2 1H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"/>
+                                    </svg>):
+                                    ( <svg className="w-5 h-5 mr-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                                        <path d="M6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Zm11-3h-2V5a1 1 0 0 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 0 0 2 0V9h2a1 1 0 1 0 0-2Z"/>
+                                    </svg> )}
                             Access
                             <Tooltip content="Impacts the accessibility of collaboration tabs (like tasks). Can be changed later." width="200px">
                                 <span>
@@ -127,16 +131,23 @@ const ProjectDescriptionComponent: React.FC<ProjectDescriptionComponentProps> = 
                                 option1="Solo" 
                                 option2="Collab" 
                                 background="bg-gray-100"
+                                width="w-40"
                             />
                         </div>
                     </div>
 
                     <div id="project-visibility-label-and-toggle" className="flex items-center justify-between">
                         <div id="project-visibility-label" className="flex mr-2 items-center">
+                            {isPrivate ? (
+                            <svg className="w-5 h-5 mr-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="m2 13.587 3.055-3.055A4.913 4.913 0 0 1 5 10a5.006 5.006 0 0 1 5-5c.178.008.356.026.532.054l1.744-1.744A8.973 8.973 0 0 0 10 3C4.612 3 0 8.336 0 10a6.49 6.49 0 0 0 2 3.587Z"/>
+                                <path d="m12.7 8.714 6.007-6.007a1 1 0 1 0-1.414-1.414L11.286 7.3a2.98 2.98 0 0 0-.588-.21l-.035-.01a2.981 2.981 0 0 0-3.584 3.583c0 .012.008.022.01.033.05.204.12.401.211.59l-6.007 6.007a1 1 0 1 0 1.414 1.414L8.714 12.7c.189.091.386.162.59.211.011 0 .021.007.033.01a2.981 2.981 0 0 0 3.584-3.584c0-.012-.008-.023-.011-.035a3.05 3.05 0 0 0-.21-.588Z"/>
+                                <path d="M17.821 6.593 14.964 9.45a4.952 4.952 0 0 1-5.514 5.514L7.665 16.75c.767.165 1.55.25 2.335.251 6.453 0 10-5.258 10-7 0-1.166-1.637-2.874-2.179-3.407Z"/>
+                            </svg> ): (
                             <svg className="w-5 h-5 mr-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 14">
-                                <path d="M10 0C4.612 0 0 5.336 0 7c0 1.742 3.546 7 10 7 6.454 0 10-5.258 10-7 0-1.664-4.612-7-10-7Zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/>
-                            </svg>
-                            Visibility
+                            <path d="M10 0C4.612 0 0 5.336 0 7c0 1.742 3.546 7 10 7 6.454 0 10-5.258 10-7 0-1.664-4.612-7-10-7Zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/>
+                        </svg>)}
+                             Visibility
                             <Tooltip content="Impacts who can see your projects. Can be changed later." width="200px">
                                 <span>
                                     <svg className="w-4 h-4 ml-1 mb-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -165,7 +176,7 @@ const ProjectDescriptionComponent: React.FC<ProjectDescriptionComponentProps> = 
                             Project Tags <span className="text-gray-500 text-sm">	&#40;optional&#41;</span>
                         </label>
                         <MultiSelect
-                          options={projectClassifications}
+                          options={sortedProjectClassifications}
                           value={selectedTags}
                           onChange={(selected) => {
                           // Convert OptionType[] back to string[] for onTagsChange
@@ -179,7 +190,6 @@ const ProjectDescriptionComponent: React.FC<ProjectDescriptionComponentProps> = 
                           placeholder="Add tags..."
                       />
                   </div>
-                
             </div>
         </div>
     </div>

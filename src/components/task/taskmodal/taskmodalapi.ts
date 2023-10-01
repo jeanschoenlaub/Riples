@@ -4,12 +4,11 @@ import { handleZodError } from "~/utils/error-handling";
 import toast from "react-hot-toast";
 
 // Custom hook to handle mutations and their state
-export const useTaskMutation = (projectId: string) => {
+export const useTaskMutation = () => {
     const apiContext = api.useContext();
     const handleSuccess = async () => {
       await apiContext.tasks.getTasksByProjectId.invalidate();
     };
-  
   
     // Create Task Mutation
     const { mutate: createTaskMutation, isLoading: isCreating } = api.tasks.create.useMutation({

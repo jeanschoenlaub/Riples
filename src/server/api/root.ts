@@ -6,6 +6,7 @@ import { projMemberRouter } from "~/server/api/routers/project-members";
 import { projFollowerRouter } from "~/server/api/routers/project-follower";
 import { taskRouter } from "~/server/api/routers/tasks";
 import { userRouter } from "./routers/user";
+import { openAiRouter } from "./routers/openai";
 
 /**
  * 
@@ -20,6 +21,7 @@ import { userRouter } from "./routers/user";
   
  */
 export const appRouter = createTRPCRouter({
+  openai: openAiRouter,
   projects: projRouter,
   riples: ripleRouter,
   projectMembers: projMemberRouter,

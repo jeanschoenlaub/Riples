@@ -1,5 +1,3 @@
-import { env } from "~/env.mjs";
-
 export const event = ({ action, params }: { action: string, params: GAEventParams }) => {
   window.gtag('event', action, params);
 }

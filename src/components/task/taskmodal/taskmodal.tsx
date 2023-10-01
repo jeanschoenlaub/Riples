@@ -6,9 +6,9 @@ import { useSession } from 'next-auth/react';
 
 // Local Imports
 import { api } from "~/utils/api";
-import { Modal } from '../../../reusables/modaltemplate';
-import { LoadingSpinner } from '../../../reusables/loading';
-import { ProfileImage } from '../../../reusables/profileimage';
+import { Modal } from '../../reusables/modaltemplate';
+import { LoadingSpinner } from '../../reusables/loading';
+import { ProfileImage } from '../../reusables/profileimage';
 import type { CreateTaskPayload, EditTaskPayload, TaskModalProps } from './taskmodaltypes';
 import { useTaskMutation } from './taskmodalapi';
 
@@ -83,6 +83,17 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
         toast.error('Error claiming task');
       });
   };
+
+  const enhancedOnClose = () => {
+    resetForm();
+    onClose();
+  }
+
+  const resetForm = () =>{
+    setTaskTitle("");
+    setTaskStatus("To-Do");
+    setTaskContent(defaultTemplate);
+  }
     
 
   // Helper function to generate edit payload
@@ -112,7 +123,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     taskAction
       .then(() => {
         toast.success('Task saved successfully!');
-        onClose();
+        enhancedOnClose();
       })
       .catch(() => {
         toast.error('Error saving task');
@@ -125,7 +136,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
       deleteTask({ id: taskToEdit.id, projectId: project.id, userId: session!.user.id })
         .then(() => {
           toast.success('Task deleted successfully!');
-          onClose();
+          enhancedOnClose();
         })
         .catch(() => {
           toast.error('Error deleting task');
@@ -151,7 +162,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   
 
   //Custom Hooks
-  const { isCreating, isEditing, isDeleting, isChangingOwner, isEditingStatus, editStatus, changeTaskOwner, createTask, editTask, deleteTask } = useTaskMutation(project.id);
+  const { isCreating, isEditing, isDeleting, isChangingOwner, isEditingStatus, editStatus, changeTaskOwner, createTask, editTask, deleteTask } = useTaskMutation();
   const isLoading = isCreating || isEditing || isDeleting || isChangingOwner || isEditingStatus;
 
   return (
@@ -168,7 +179,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
               value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
               className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
-              maxLength={50}
+              maxLength={255}
               disabled={!allowedToEdit || isLoading}
             />
         </label>

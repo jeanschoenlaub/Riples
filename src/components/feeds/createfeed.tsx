@@ -1,6 +1,5 @@
 import { api } from "~/utils/api";
 import { LoadingPage } from "~/components/reusables/loading";
-import { ProjectCard } from '~/components/cards/projectcard';
 import { CreateProjectModal } from "../createprojectmodal/createprojetmodal";
 import { useState } from "react";
 import { NavBarSignInModal } from "../navbar/signinmodal";
@@ -38,7 +37,7 @@ export const CreateFeed = () => {
           type="text" 
           value={inputValue}  // Controlled input
           onChange={(e) => setInputValue(e.target.value)}  // Update state on change
-          placeholder="I want to ..." 
+          placeholder="Create a project" 
           className="py-2 px-4 rounded grow focus:outline-none focus:border-gray-500 border-2"
         />
         <button 
@@ -60,7 +59,7 @@ export const CreateFeed = () => {
 
       {/* Project Cards */}
       <div className="mt-4 flex justify-center">
-        Creat Feed is Coming 
+        Create Feed is Coming 
       </div>
 
       {/*  Modals Opening on logic */}

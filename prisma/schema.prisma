@@ -159,6 +159,7 @@ model User {
   username           String? @unique @db.VarChar(255)
   onBoardingFinished Boolean @default(false)
   productTourFinished Boolean @default(false)
+  password          String  @db.VarChar(255)@default("")
   following          ProjectFollowers[] 
   member             ProjectMembers[] 
 }

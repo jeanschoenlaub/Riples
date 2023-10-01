@@ -8,15 +8,12 @@ import Head from "next/head";
 import { SessionProvider } from "next-auth/react"
 import { OnboardingWrapper } from "~/components/onboarding/onboardingwrapper";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { pageview } from "~/utils/googleanalytics";
 import { WizardWrapper } from "~/components/wizard/wizardswrapper";
+import { Provider } from 'react-redux';
+import store from '~/redux/store';
 
-type TaskStatus = {
-  taskName: string;
-  isCompleted: boolean;
-  actionLink?: string;
-};
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -41,7 +38,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <SessionProvider session={session}>
         {/* Default Head can be overriden in specific pages */}
         <Head>
-            <title>Riples - Get Doing! </title>
+            <title>Riples - Collaborate on Projects & Join Creative Bubbles </title>
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <meta
               name="description"
@@ -55,10 +52,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <link rel="icon" href="/images/favicon.ico" />
         </Head>
         <Toaster />
-        <WizardWrapper>
-          <OnboardingWrapper />
-          <Component {...pageProps} />
-        </WizardWrapper>
+        <Provider store={store}>
+          <WizardWrapper>
+            <OnboardingWrapper />
+            <Component {...pageProps} />
+          </WizardWrapper>
+        </Provider>
         <Analytics />
         </SessionProvider>
     );

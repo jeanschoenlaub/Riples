@@ -27,7 +27,6 @@ export const RipleCard = (props: RipleWithUser) => {
   const cardBackgroundColor = riple.ripleType == "creation" ? "bg-orange-50" : "bg-white";
   const cardBorderClass = riple.ripleType == "creation" ? "" : "border border-slate-300";
 
-
   // Calculate max height based on whether the content is expanded.
   const maxHeightClass = isExpanded ? 'max-h-40' : 'max-h-200';
 
@@ -99,15 +98,16 @@ export const RipleCard = (props: RipleWithUser) => {
       </div>
   </div>
 
-      {/* Horizontal Divider */}
-      <hr className={`border-t mt-4 border-slate-200 ${riple.ripleType == "creation" ? "hidden" : ""}`} />
-
+    
      {/* Post Content */}
-     {riple.ripleType !== "creation" && (
+     {cleanHTML != "" && (
         <div 
             id="riple-content" 
             className={`text-gray-700 mt-2 overflow-hidden transition-all duration-500 ${maxHeightClass}`}
         >
+            {/* Horizontal Divider */}
+            <hr className="border-t mb-4 border-slate-200"/>
+
             <div dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
         </div>
       )}

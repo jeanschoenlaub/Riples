@@ -1,7 +1,7 @@
 import { api } from "~/utils/api";
 import { useState } from "react";
-import { LoadingPage } from "./reusables/loading";
-import { ProjectCard } from "./cards/projectcard";
+import { LoadingPage } from "../reusables/loading";
+import { ProjectCard } from "../cards/projectcard";
 import { useSession } from "next-auth/react";
 
 export const SideNavProject = () => {
@@ -67,7 +67,7 @@ export const SideNavProject = () => {
 
     
         {/*  List of projects */}
-        <div className="flow-root w-full border-t">
+        <div id="side-bar-project-list" className="flow-root w-full border-t">
           <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
             {SideBarToggle === "Following" 
             ? projectFollowed?.map((fullProject) => (

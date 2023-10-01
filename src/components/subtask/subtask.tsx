@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { LoadingSpinner } from '../../reusables/loading';
+import { LoadingSpinner } from '../reusables/loading';
 import toast from 'react-hot-toast';
-import { SubTaskModal } from '~/components/project-page/subtask/subtaskmodal/subtaskmodal';
+import { SubTaskModal } from '~/components/subtask/subtaskmodal/subtaskmodal';
 import { useSession } from 'next-auth/react';
 import type { SubTaskData, SubTasksRowsProps } from './subtasktypes';
 import { useSubTaskMutation } from './subtaskapi';

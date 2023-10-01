@@ -1,11 +1,14 @@
 import router from 'next/router';
 import React from 'react';
+import type { ReactNode } from 'react';
 
 interface ToggleProps {
   activeTab?: string;
   setActiveTab?: (value: string) => void;
   option1: string;
   option2: string;
+  option1Node?: ReactNode;
+  option2Node?: ReactNode;
   inBetween?: boolean; // Optional middle option
   width?: string;
   height?: string;
@@ -18,6 +21,8 @@ const ToggleSwitch: React.FC<ToggleProps> = ({
   setActiveTab,
   option1,
   option2,
+  option1Node,
+  option2Node,
   inBetween,
   width = "w-40",
   height = "h-6",
@@ -40,6 +45,7 @@ const ToggleSwitch: React.FC<ToggleProps> = ({
   
 
   const handleOptionClick = (option: string) => {
+    console.log("as")
     if (activeTab && setActiveTab) {
       setActiveTab(option);
     } else {
@@ -57,13 +63,13 @@ const ToggleSwitch: React.FC<ToggleProps> = ({
           onClick={() => handleOptionClick(option1)}
           className={`absolute top-0 left-0 w-1/2 h-full flex items-center justify-center rounded-full cursor-pointer text-gray-500 p-2 ${activeTab === option1 && !inBetween ? "text-blue-500" : ""}`}
         >
-          {option1}
+          {option1Node ? option1Node : option1}
         </div>
         <div
           onClick={() => handleOptionClick(option2)}
           className={`absolute top-0 left-1/2 w-1/2 h-full flex items-center justify-center rounded-full cursor-pointer text-gray-500 p-2 ${activeTab === option2 && !inBetween ? "text-blue-500" : ""}`}
         >
-          {option2}
+          {option2Node ? option2Node : option2}
         </div>
       </div>
     </div>
