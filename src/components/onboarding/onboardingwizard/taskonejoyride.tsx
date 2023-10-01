@@ -1,14 +1,12 @@
 
 import { useEffect, useState } from 'react';
-import { useWizard } from '../../wizard/wizardswrapper';
-import ReactJoyride, { CallBackProps, Step } from 'react-joyride';
+import ReactJoyride from 'react-joyride';
+import type { Step } from 'react-joyride';
 
 export const TaskOneJoyRide = () => {
     const [isTourOpen, setIsTourOpen] = useState(false);
     const [isClient, setIsClient] = useState(false);
     const [screenWidth, setScreenWidth] = useState<number | null>(null);
-    const wizardContext = useWizard();
-
 
     useEffect(() => {
         setIsClient(true); 

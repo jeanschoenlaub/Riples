@@ -1,9 +1,11 @@
 import { useSession } from 'next-auth/react';
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState } from 'react';
+import type { ReactNode } from 'react';
 import { WizardOnboarding } from "~/components/onboarding/onboardingwizard/onboardingwizard";
 import styles from '~/styles/WizardWrapper.module.css'; // you can adjust the path based on your folder structure
 import { api } from '~/utils/api';
-import { WizardTask } from './wizardtask';
+import { WizardTask } from './wizardtask/wizardtask';
+import Image from 'next/image';
 
 type WizardContextType = {
     setShowWizard: React.Dispatch<React.SetStateAction<boolean>>;
@@ -51,7 +53,7 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
         <WizardContext.Provider value={{ setShowWizard, showWizard, setWizardName, setProjectTitle, setProjectSummary, setTaskNumber, setGoalNumber}}>
             {children}
             <button id="misterwattbutton" className={styles.floatingButton} onClick={() => setShowWizard(!showWizard)}>
-                <img src="/images/riple_ai.png" alt="Open Wizard" width={60} height={60} />
+                <Image src="/images/riple_ai.png" alt="Open Wizard" width={60} height={60} />
             </button>
             {showWizard && (wizardName == "taskWizard") && session && <div> 
                 <div id="wizardtask" className={styles.floatingWindow}>

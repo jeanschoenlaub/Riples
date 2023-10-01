@@ -15,7 +15,6 @@ interface ProjectBuildComponentProps {
     postContent: string;
     setPostContent: React.Dispatch<React.SetStateAction<string>>;
     isPrivate: boolean;
-    isLoading: boolean;
 }
   
 const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
@@ -31,34 +30,37 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
     setPostToFeed,
     postContent,
     setPostContent,
-    isPrivate,
-    isLoading
+    isPrivate
 }) => {
+    //Quite complexe logic for dynamically resizing textarea on programmatic input of text (via taskWizard)
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const tasksRefs = useRef<(HTMLTextAreaElement | null)[]>(Array(tasks.length).fill(null));
-    const goalsRefs = useRef<(HTMLTextAreaElement | null)[]>(Array(goals.length).fill(null));
-    
+    const tasksRefs = useRef<(HTMLTextAreaElement | null)[]>(
+        Array(tasks.length).fill(null) as (HTMLTextAreaElement | null)[]
+    );
+    const goalsRefs = useRef<(HTMLTextAreaElement | null)[]>(
+        Array(goals.length).fill(null) as (HTMLTextAreaElement | null)[]
+    );
+    useEffect(() => {
+        tasksRefs.current = Array(tasks.length).fill(null) as (HTMLTextAreaElement | null)[];
+    }, [tasks.length]);
+    useEffect(() => {
+        goalsRefs.current = Array(goals.length).fill(null) as (HTMLTextAreaElement | null)[];
+    }, [goals.length]);
 
     useEffect(() => {
-        tasksRefs.current = Array(tasks.length).fill(null);
-    }, [tasks.length]);
-    
-    useEffect(() => {
-        goalsRefs.current = Array(goals.length).fill(null);
-    }, [goals.length]);
-    
-    useEffect(() => {
         tasks.forEach((_, index) => {
-            if (tasksRefs.current[index] !== undefined) {
-                resizeTextarea(tasksRefs.current[index]);
+            const ref = tasksRefs.current[index];
+            if (ref instanceof HTMLTextAreaElement) {
+                resizeTextarea(ref);
             }
         });
     }, [tasks]);
     
     useEffect(() => {
         goals.forEach((_, index) => {
-            if (goalsRefs.current[index] !== undefined) {
-                resizeTextarea(goalsRefs.current[index]);
+            const ref = tasksRefs.current[index];
+            if (ref instanceof HTMLTextAreaElement) {
+                resizeTextarea(ref);
             }
         });
     }, [goals]);

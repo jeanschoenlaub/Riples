@@ -1,4 +1,4 @@
-import { RouterOutputs } from "~/utils/api";
+import type { RouterOutputs } from "~/utils/api";
 
 export type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"] & {
     members?: RouterOutputs["projectMembers"]["getMembersByProjectId"];

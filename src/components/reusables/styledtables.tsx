@@ -17,7 +17,7 @@ export const StyledTable: React.FC<StyledTableProps> = ({ headers, columnWidths,
                 key={index}
                 scope="col"
                 className={`px-6 border-r py-3 ${index !== 1 ? 'text-center' : ''} ${index !== 0 && index !== headers.length - 1 ? 'hidden md:table-cell' : ''}`}
-                style={{ width: columnWidths && columnWidths[index] ? columnWidths[index] : 'auto' }} // Use provided width or default to 'auto'
+                style={{ width: columnWidths?.[index] ?? 'auto' }} // Use provided width or default to 'auto'
               >
                 {header}
               </th>

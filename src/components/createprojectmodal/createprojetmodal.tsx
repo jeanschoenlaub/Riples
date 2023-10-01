@@ -10,7 +10,7 @@ import router from "next/router";
 import { LoadingSpinner } from "../reusables/loading";
 import { useWizard } from "../wizard/wizardswrapper";
 import { useSelector} from 'react-redux';
-import { RootState } from '~/redux/store';
+import type { RootState } from '~/redux/store';
 
 
 type NewProjecResponse  = RouterOutputs["projects"]["create"] 
@@ -174,7 +174,6 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
         postContent={postContent}
         setPostContent={setPostContent}
         isPrivate={isPrivate}
-        isLoading={isLoading}
       />}
       
       <div className="flex justify-between">

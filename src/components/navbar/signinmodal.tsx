@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { signIn, getSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { Modal} from "~/components/reusables/modaltemplate";
 
 interface SignInModalProps {
@@ -20,7 +20,6 @@ export const NavBarSignInModal: React.FC<SignInModalProps> = ({ showModal, onClo
         toast.error(result.error);
         return; // return early if an error occurred
       }
-      const newSession = await getSession(); // Use await here to satisfy ESLint
       onClose();
     } catch (error) {
       console.error("An error occurred during sign-in:", error);

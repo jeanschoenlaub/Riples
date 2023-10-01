@@ -1,9 +1,9 @@
 import { api } from "~/utils/api";
-import { EditProjectPayload, ProjectMemberMutationPayload } from "./abouttypes";
+import type { EditProjectPayload, ProjectMemberMutationPayload } from "./abouttypes";
 import { handleZodError } from "~/utils/error-handling";
 import toast from "react-hot-toast";
 
-export const useProjectMutation = (projectId: string) => {
+export const useProjectMutation = () => {
     const apiContext = api.useContext();
     const handleSuccess = async () => {
         await apiContext.projects.getProjectByProjectId.invalidate();

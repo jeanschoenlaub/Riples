@@ -1,5 +1,6 @@
 import router from 'next/router';
-import React, { ReactNode } from 'react';
+import React from 'react';
+import type { ReactNode } from 'react';
 
 interface ToggleProps {
   activeTab?: string;

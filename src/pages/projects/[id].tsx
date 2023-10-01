@@ -147,7 +147,7 @@ export default function Project(
                 )}
 
                 {/* SHOWN IF COLLAB*/}
-                {activeTab === 'collab' && <CollabTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} userId={userId}/>}
+                {activeTab === 'collab' && <CollabTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} />}
 
                 {/* SHOWN IF ADMIN */}
                 {activeTab === 'admin' && <AdminTab project={projectData.project} members={projectMemberData} ></AdminTab>}

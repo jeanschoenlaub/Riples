@@ -1,4 +1,3 @@
-import { on } from "events";
 import { Modal } from "~/components/reusables/modaltemplate";
 
 interface DeleteModalProps {

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ProfileImage } from '../../reusables/profileimage';
 import toast from 'react-hot-toast';
 import { EditSVG } from '../../reusables/svg';
-import { AboutTabProps, EditProjectPayload, ProjectMemberMutationPayload } from './abouttypes';
+import type { AboutTabProps, EditProjectPayload} from './abouttypes';
 import { useProjectMutation } from './aboutapi';
 import { LoadingSpinner } from '~/components/reusables/loading';
 
@@ -25,10 +25,45 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
         toggleEditMode();
       });
     }
+    //For appliaction mutations
+    const Application = {
+      userId: userId ?? "",
+      projectId: project.project.id,
+    };
+    const handleApplicationJoin = () => {
+      if (userId){
+        applyToProject(Application).then(() => {
+          toast.success('Project modifications saved successfully!');
+          toggleEditMode();
+        })
+        .catch(() => {
+          toast.error('Error saving project modification');
+          toggleEditMode();
+        });
+      }
+      else {
+        toast.error('Must be signed-in to apply');
+      }
+    }
+    const handleApplicationQuit = () => {
+      if (userId){
+        deleteMember(Application).then(() => {
+          toast.success('Project modifications saved successfully!');
+          toggleEditMode();
+        })
+        .catch(() => {
+          toast.error('Error saving project modification');
+          toggleEditMode();
+        });
+      }
+      else {
+        toast.error('Must be signed-in to apply');
+      }
+    }
     const [projectSummary, setProjectSummary ] = useState(project.project.summary)
     const [projectStatus, setProjectStatus] = useState(project.project.status);
 
-     // Helper function to generate edit payload
+    // Helper function to generate edit payload
     const generateEditPayload = (): EditProjectPayload => ({
       projectId: project.project.id,
       title: project.project.title,
@@ -36,7 +71,7 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
       status: projectStatus,
     });
 
-    const {  isEditing, isApplying,  isDeleting, applyToProject, deleteMember, editProject } = useProjectMutation(project.project.id)
+    const {  isEditing, isApplying,  isDeleting, applyToProject, deleteMember, editProject } = useProjectMutation()
     
     return (
         <div id="proj-about-html" className="mt-4 ml-2 mb-2 space-y-4">
@@ -161,19 +196,15 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
                     <button className={`text-white rounded py-1 px-2 text-center ${isMember ? 'bg-red-500' : 'bg-blue-500'}`} //This is a Aplly Quit button and the logic is handled in router
                         onClick={() => {
                             if (userId) {  // Adding this check ensures userId is not null for typescript
-                                const Application = {
-                                    userId: userId,
-                                    projectId: project.project.id,
-                                };
                                 if (isMember || isPending || isProjectLead){ // To-Do better logic for isProjetLead
-                                    deleteMember(Application);
+                                   handleApplicationQuit();
                                 }
                                 else { 
-                                    applyToProject(Application);
+                                   handleApplicationJoin();
                                 }
                             }
                         }}
-                        disabled={isApplying || isPending}
+                        disabled={isApplying || isDeleting || isPending}
                     >
                         {isApplying ? 'Updating...' : (isMember ? 'Quit the project' : (isPending ? 'Application submitted' : 'Join the project'))}
                     </button>

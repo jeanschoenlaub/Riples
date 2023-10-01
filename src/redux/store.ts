@@ -1,6 +1,7 @@
 // store.ts
 import { configureStore } from '@reduxjs/toolkit';
-import projectReducer, { ProjectState } from './createprojectslice';
+import projectReducer from './createprojectslice';
+import type { ProjectState } from './createprojectslice';
 
 const store = configureStore({
   reducer: {

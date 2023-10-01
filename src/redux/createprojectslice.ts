@@ -1,5 +1,6 @@
-// projectSlice.ts
-import { createSlice } from '@reduxjs/toolkit';
+
+import {  createSlice } from '@reduxjs/toolkit';
+import type {  PayloadAction } from '@reduxjs/toolkit';
 
 export interface ProjectState {
   tasks: string[];
@@ -15,23 +16,20 @@ const initialState: ProjectState = {
 
 const projectSlice = createSlice({
   name: 'project',
-  initialState: {
-    tasks: [],
-    goals: [],
-    post:"",
-  },
+  initialState,  // <-- Use the typed initialState here
   reducers: {
-    setTasks: (state, action) => {
+    setTasks: (state, action: PayloadAction<string[]>) => {
       state.tasks = action.payload;
     },
-    setGoals: (state, action) => {
+    setGoals: (state, action: PayloadAction<string[]>) => {
       state.goals = action.payload;
     },
-    setPost: (state, action) => {
-      state.post= action.payload;
+    setPost: (state, action: PayloadAction<string>) => {
+      state.post = action.payload;
     }
   },
 });
+
 
 export const { setTasks, setGoals, setPost } = projectSlice.actions;
 export default projectSlice.reducer;

@@ -1,7 +1,7 @@
 import MultiSelect from "~/components/reusables/multiselect";
 import ToggleSwitch from "~/components/reusables/toogleswitch";
 import Tooltip from "~/components/reusables/tooltip";
-import projectClassifications, {sortedProjectClassifications} from "~/utils/constants/projectclassifications";
+import {sortedProjectClassifications} from "~/utils/constants/projectclassifications";
 
 interface ProjectDescriptionComponentProps {
       projectName: string;

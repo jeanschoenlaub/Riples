@@ -83,6 +83,17 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
         toast.error('Error claiming task');
       });
   };
+
+  const enhancedOnClose = () => {
+    resetForm();
+    onClose();
+  }
+
+  const resetForm = () =>{
+    setTaskTitle("");
+    setTaskStatus("To-Do");
+    setTaskContent(defaultTemplate);
+  }
     
 
   // Helper function to generate edit payload
@@ -112,7 +123,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     taskAction
       .then(() => {
         toast.success('Task saved successfully!');
-        onClose();
+        enhancedOnClose();
       })
       .catch(() => {
         toast.error('Error saving task');
@@ -125,7 +136,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
       deleteTask({ id: taskToEdit.id, projectId: project.id, userId: session!.user.id })
         .then(() => {
           toast.success('Task deleted successfully!');
-          onClose();
+          enhancedOnClose();
         })
         .catch(() => {
           toast.error('Error deleting task');
@@ -151,7 +162,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   
 
   //Custom Hooks
-  const { isCreating, isEditing, isDeleting, isChangingOwner, isEditingStatus, editStatus, changeTaskOwner, createTask, editTask, deleteTask } = useTaskMutation(project.id);
+  const { isCreating, isEditing, isDeleting, isChangingOwner, isEditingStatus, editStatus, changeTaskOwner, createTask, editTask, deleteTask } = useTaskMutation();
   const isLoading = isCreating || isEditing || isDeleting || isChangingOwner || isEditingStatus;
 
   return (
