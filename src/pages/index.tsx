@@ -34,7 +34,8 @@ export default function Home() {
       
       <main className="flex flex-col items-center w-full h-screen">
         <div id="nav-container" className="w-full">
-          <GlobalNavBar activeTab={activeTab} setActiveTab={setActiveTab} />
+          <GlobalNavBar activeTab={activeTab} setActiveTab={setActiveTab
+          } />
         </div>
 
         <div className="flex justify-center w-full bg-sky-50">
@@ -42,7 +43,7 @@ export default function Home() {
             <SideNavProject></SideNavProject>
           </div>
 
-         <div id="feed-container" className="flex flex-col w-full md:w-1/2 g-4 p-1 md:p-4 border border-slate-700">
+         <div id="feed-container" className="flex flex-col  w-full md:w-1/2 g-4 p-4 border border-slate-700">
             {/* Different Content Between Social and Create */}
             {activeTab === "Social" ? <SocialFeed /> : <CreateFeed />}
           </div>

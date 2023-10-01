@@ -43,7 +43,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <SessionProvider session={session}>
         {/* Default Head can be overriden in specific pages */}
         <Head>
-            <title>Riples - Get Doing! </title>
+            <title>Riples - Collaborate on Projects & Join Creative Bubbles </title>
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <meta
               name="description"
