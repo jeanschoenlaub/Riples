@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import ReactJoyride from 'react-joyride';
 import type { Step } from 'react-joyride';

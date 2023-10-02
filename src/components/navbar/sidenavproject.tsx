@@ -4,7 +4,12 @@ import { LoadingPage } from "../reusables/loading";
 import { ProjectCard } from "../cards/projectcard";
 import { useSession } from "next-auth/react";
 
-export const SideNavProject = () => {
+interface SideNavProjectProps {
+  onClose?: () => void; // `onClose` is an optional prop, which if provided, should be a function returning void.
+}
+
+
+export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
     const [SideBarToggle, setSideBarToggle] = useState('Doing');
     const { data: session } = useSession(); 
 
@@ -76,6 +81,7 @@ export const SideNavProject = () => {
                   project={fullProject.project}
                   author={fullProject.author}
                   borderColor={'border-blue-500'}
+                  onClick={onClose}
                 />
               ))
             : combinedProjectsForWorking?.map((fullProject) => (
@@ -84,6 +90,7 @@ export const SideNavProject = () => {
                   project={fullProject.project}
                   author={fullProject.author}
                   borderColor={fullProject.author.id == session.user.id ?  'border-green-500':'border-purple-500'}
+                  onClick={onClose}
                 />
               ))}
           </ul>

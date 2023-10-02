@@ -22,7 +22,8 @@ import { SideNavProject } from "~/components/navbar/sidenavproject";
 
 import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
 import Follow from "~/components/reusables/follow";
-import { AdminTab } from "~/components/project-page/admin";
+import { AdminTab } from "~/components/project-page/admin/admin";
+import Tooltip from "~/components/reusables/tooltip";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -104,21 +105,40 @@ export default function Project(
             </div>
 
             <div id="project-main" className="relative flex flex-col w-full md:w-3/4 border border-slate-700">
-              <div id="project-main-cover-image" className="relative w-full h-[30vh] overflow-hidden">
-                <Image 
-                    src={projectData?.project.coverImageUrl} 
-                    alt="Project cover image" 
-                    layout="fill" 
-                    objectFit="cover"
-                />
-              </div>
-              <div id="project-main-metadata" className="mt-4 ml-5 mr-5">
+              <div id="project-main-cover-image" className=" hidden md:flex group relative w-full h-[30vh] overflow-hidden">
+                  <Image 
+                      src={projectData?.project.coverImageUrl} 
+                      alt="Project cover image" 
+                      layout="fill" 
+                      objectFit="cover"
+                  />
+
+                  {/* Hover buttons */}
+                  <div className="absolute bottom-0 right-0 flex flex-col items-end mb-2 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Tooltip content="The feature of uploading your own picture is coming." width="200px">
+                          <span className="mb-2">
+                              <button className="m-2 py-1 px-2 bg-sky-100 opacity-70 text-black cursor-not-allowed" disabled>
+                                  Replace image
+                              </button>
+                          </span>
+                      </Tooltip>
+                      <Tooltip content="The feature of repositioning picture is coming." width="200px">
+                          <span>
+                              <button className="m-2 py-1 px-2 bg-sky-100 opacity-70 text-black cursor-not-allowed" disabled>
+                                  Reposition
+                              </button>
+                          </span>
+                      </Tooltip>
+                  </div>
+            </div>
+
+            <div id="project-main-metadata" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-5">
                 <div id="project-metadata" className="flex items-center justify-between"> 
                   <h1 className="text-2xl font-bold">{projectData?.project.title}</h1>
                   <Follow projectId={projectId} />
                 </div>
 
-                <div id="project-main-tabs" className="border-b border-gray-200 dark:border-gray-700">
+                <div id="project-main-tabs" className="border-b mt-2 border-gray-200 dark:border-gray-700">
                   <Tabs 
                     activeTab={activeTab} 
                     setActiveTab={setActiveTab} 
@@ -135,26 +155,34 @@ export default function Project(
 
                 {/* SHOWN IF RIPLES TAB */}
                 {activeTab === 'riples' && (
-                  <div className="mt-4 space-y-2">
-                      <div className="font text-gray-800"> 
-                        <div>
-                          {ripleData?.map((fullRiple) => (
-                            <RipleCard key={fullRiple.riple.id} {...fullRiple}></RipleCard>
-                          ))}
-                      </div>
+                    <div className="mt-4 space-y-2">
+                        <div className="font text-gray-800">
+                            {/* Check if riplesData is available and has at least one entry */}
+                            {ripleData && ripleData.length > 0 ? (
+                                <div>
+                                    {ripleData.map((fullRiple) => (
+                                        <RipleCard key={fullRiple.riple.id} {...fullRiple}></RipleCard>
+                                    ))}
+                                </div>
+                            ) : (
+                                // Display the message if no entries are found
+                                <div className="flex justify-center items-center h-full text-center">
+                                    Your Riples (project updates) will be displayed here once you start posting for this project.
+                                </div>
+                            )}
+                        </div>
                     </div>
-                  </div>
                 )}
 
                 {/* SHOWN IF COLLAB*/}
                 {activeTab === 'collab' && <CollabTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} />}
 
                 {/* SHOWN IF ADMIN */}
-                {activeTab === 'admin' && <AdminTab project={projectData.project} members={projectMemberData} ></AdminTab>}
+                {activeTab === 'admin' && <AdminTab project={projectData.project} members={projectMemberData} isProjectLead={isProjectLead} ></AdminTab>}
 
               </div>
             </div>
-        </div>
+            </div>
       </main>
     </>
   );

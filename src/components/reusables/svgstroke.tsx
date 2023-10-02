@@ -1,0 +1,60 @@
+
+
+export const TaskSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+            <svg
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none" 
+            width="18" 
+            height="20"
+            viewBox="0 0 18 20"
+        >
+        <path 
+          stroke={colorStrokeHex}  // Blue and Gray colors
+          strokeLinecap="round" 
+          strokeWidth="2"
+          d="M12 2h4a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h4m6 0v3H6V2m6 0a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1M5 5h8m-5 5h5m-8 0h.01M5 14h.01M8 14h5" />
+        </svg>
+    );
+};
+
+export const StarSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+            <svg
+                className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none" 
+                viewBox="0 0 21 20"
+            >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="2"
+                strokeLinejoin="round"
+                d="m11.479 1.712 2.367 4.8a.532.532 0 0 0 .4.292l5.294.769a.534.534 0 0 1 .3.91l-3.83 3.735a.534.534 0 0 0-.154.473l.9 5.272a.535.535 0 0 1-.775.563l-4.734-2.49a.536.536 0 0 0-.5 0l-4.73 2.487a.534.534 0 0 1-.775-.563l.9-5.272a.534.534 0 0 0-.154-.473L2.158 8.48a.534.534 0 0 1 .3-.911l5.294-.77a.532.532 0 0 0 .4-.292l2.367-4.8a.534.534 0 0 1 .96.004Z"/>
+            </svg>
+    );
+};
+
+
+export const RocketSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+            <svg
+                className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none" 
+                viewBox="0 0 21 20"
+            >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="2"
+                strokeLinejoin="round"
+                d="m8.806 5.614-4.251.362-2.244 2.243a1.058 1.058 0 0 0 .6 1.8l3.036.356m9.439 1.819-.362 4.25-2.243 2.245a1.059 1.059 0 0 1-1.795-.6l-.449-2.983m9.187-12.57a1.536 1.536 0 0 0-1.26-1.26c-1.818-.313-5.52-.7-7.179.96-1.88 1.88-5.863 9.016-7.1 11.275a1.05 1.05 0 0 0 .183 1.25l.932.939.937.936a1.049 1.049 0 0 0 1.25.183c2.259-1.24 9.394-5.222 11.275-7.1 1.66-1.663 1.275-5.365.962-7.183Zm-3.332 4.187a2.115 2.115 0 1 1-4.23 0 2.115 2.115 0 0 1 4.23 0Z"/>
+                  </svg>
+    );
+};

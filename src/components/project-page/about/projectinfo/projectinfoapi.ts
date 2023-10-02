@@ -1,22 +1,22 @@
 import { api } from "~/utils/api";
-import type { EditProjectPayload, ProjectMemberMutationPayload } from "./abouttypes";
 import { handleZodError } from "~/utils/error-handling";
 import toast from "react-hot-toast";
+import type { EditProjectPayload, ProjectMemberMutationPayload } from "./projectinfotype";
 
-export const useProjectMutation = () => {
+export const useProjectInfoMutation = () => {
     const apiContext = api.useContext();
     const handleSuccess = async () => {
         await apiContext.projects.getProjectByProjectId.invalidate();
     };
 
     // Create Task Mutation
-    const { mutate: editProjectMutation, isLoading: isEditing } = api.projects.edit.useMutation({
+    const { mutate: editProjectInfoMutation, isLoading: isEditing } = api.projects.editInfo.useMutation({
         onSuccess: handleSuccess,
     });
 
-    const editProject = (payload: EditProjectPayload) => {
+    const editProjectInfo = (payload: EditProjectPayload) => {
         return new Promise<void>((resolve, reject) => {
-          editProjectMutation(payload, {
+          editProjectInfoMutation(payload, {
             onSuccess: () => { resolve(); },
             onError: (e) => {
               const fieldErrors = e.data?.zodError?.fieldErrors;
@@ -70,7 +70,7 @@ export const useProjectMutation = () => {
       isApplying,
       isDeleting,
       deleteMember,
-      editProject,
+      editProjectInfo,
       applyToProject,
     };
   };

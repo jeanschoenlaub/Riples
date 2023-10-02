@@ -50,15 +50,23 @@ export const taskRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const createdById = ctx.session.user.id;
+      const createdById = ctx.session.user?.id;
+  
+      if (!createdById) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Could not access session id" });
+      }
+
+      
+  
       const task = await ctx.prisma.tasks.create({
         data: {
-          createdById,
+          createdById: createdById,
           title: input.title,
           content: input.content,
           projectId: input.projectId,
         },
       });
+  
       return task;
     }),
 

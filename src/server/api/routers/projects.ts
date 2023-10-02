@@ -88,7 +88,12 @@ export const projRouter = createTRPCRouter({
           include: {
             user: true
           }
-        }
+        },
+        tasks: {
+          include: {
+            subTasks: true
+          }
+        },
       },
     });
 
@@ -230,7 +235,7 @@ export const projRouter = createTRPCRouter({
     return project;
   }),
 
-edit: protectedProcedure
+editInfo: protectedProcedure
 .input(z.object({
   projectId: z.string(),
   title: z.string()
@@ -256,6 +261,32 @@ edit: protectedProcedure
       title: input.title,
       summary: input.summary,
       status: input.status,
+    },
+  });
+  return updatedProject;
+  }),
+
+editAdmin: protectedProcedure
+.input(z.object({
+  projectId: z.string(),
+  projectPrivacy: z.string(),
+  projectType: z.string(),
+}))
+.mutation(async ({ ctx, input }) => {
+  const authorID = ctx.session.user.id;
+  const projectId = input.projectId;
+
+  const { success } = await ratelimit.limit(authorID);
+  if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+
+  // ... (tag logic remains the same)
+
+  // Now update the project with tasks and tags
+  const updatedProject = await ctx.prisma.project.update({
+    where: { id: projectId },
+    data: {
+      projectPrivacy: input.projectPrivacy,
+      projectType: input.projectType,
     },
   });
   return updatedProject;

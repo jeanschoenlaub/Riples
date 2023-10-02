@@ -1,37 +1,36 @@
 .floatingButton {
-    position: fixed;
-    bottom: 50px;
-    right: 20px;
-    background-color: #fafafa; /* or whatever color you like */
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    cursor: pointer;
-    z-index: 1000;
-    box-shadow: 0 2px 10px rgba(12, 11, 20, 0.2);
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  position: fixed;
+  bottom: 50px;
+  right: 20px;
+  background-color: #fafafa; /* or whatever color you like */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(12, 11, 20, 0.2);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .floatingWindow {
-    position: fixed;
-    bottom: 120px; /* Height of button + some spacing */
-    right: 20px;
-    background-color: white;
-    border-radius: 10px;
-    width: 300px;
-    max-height: 400px;
-    overflow-y: auto;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    z-index: 999; /* Below the button */
-    padding: 10px;
-  }
-  
-  .floatingButton:hover {
-    background-color: #094764; /* Slightly darker shade for hover */
-  }
-  
+.floatingWindow {
+  position: fixed;
+  bottom: 120px; /* Height of button + some spacing */
+  right: 20px;
+  background-color: white;
+  border-radius: 10px;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 999; /* Below the button */
+  padding: 10px;
+}
+
+.floatingButton:hover {
+  background-color: #094764; /* Slightly darker shade for hover */
+}

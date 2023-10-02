@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
 import Link from 'next/link'; // import Next.js Link component
-import { TaskModal } from '~/components/task/taskmodal/taskmodal';
-import { ProfileImage } from '../reusables/profileimage';
-import { LoadingRiplesLogo } from '../reusables/loading';
-import { StyledTable } from '../reusables/styledtables';
-import { SubTasksRows } from '../subtask/subtask';
+import { TaskModal } from '~/components/project-page/task/taskmodal/taskmodal';
+import { ProfileImage } from '../../reusables/profileimage';
+import { LoadingRiplesLogo } from '../../reusables/loading';
+import { StyledTable } from '../../reusables/styledtables';
+import { SubTasksRows } from '../../subtask/subtask';
 
 
 interface TaskListProps {
@@ -30,14 +30,29 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
   //  { enabled: taskIdToFetch !== null }
   //);
   const { data: taskData, isLoading: isLoadingTasks, isError } = api.tasks.getTasksByProjectId.useQuery({ projectId: project.id });
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);  // Assuming mobile devices have a width of 768px or less
 
-  let headers = ["", "Task Title", "Status", "Owner", ];
-  let columnWidths =["4%","30%","8%","8%"]
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    }
+  
+    window.addEventListener('resize', handleResize);
+  
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
+  let headers = isMobile ? ["Sub", "Task"] : ["Sub", "Task Title", "Status", "Owner"];
+  let columnWidths = isMobile ? ["8%", "50%"] : ["4%", "30%", "8%", "8%"];
   if (project.projectType === "solo") {
     headers = headers.filter(header => header !== "Owner");
-    columnWidths =["4%","50%","10%"]
+    isMobile ? columnWidths =["8%","50%"] :columnWidths =["4%","50%","8%"]
   }
+
   const handleCreateClick = () => {
+    setSelectedTask(null); //Notna task to edit 
     setShowTaskModal(true);
   };
 
@@ -60,9 +75,10 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
   if (isError || !taskData) return <p>Error loading tasks.</p>;
 
   return (
-    <div>
+    <div className=''>
       {(isMember || isProjectLead) &&
-        <div id="project-collab-task-create-button" className="mt-4 mb-2 flex items-center grow space-x-2">
+        <div id="project-collab-task-create-button" className="mb-2 flex">
+          <div className='mt-2 ml-2 mr-2 flex flex-grow space-x-2 items-center'> 
           <input 
             type="text" 
             value={inputValue}  // Controlled input
@@ -72,10 +88,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
           />
           <button 
             className="bg-green-500 text-white text-xs md:text-base rounded px-4 py-2 hover:bg-green-600 focus:outline-none focus:border-green-700 focus:ring focus:ring-blue-200"
-            onClick={() => {
-              handleCreateClick();
-              //setInputValue('');  // Reset the input value
-            }}
+            onClick={() => {handleCreateClick();}}
           >
             <span className='flex items-center'>
              Create Task
@@ -85,9 +98,10 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
             </span>
           </button>
         </div>
+      </div> 
       }
 
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="relative overflow-x-auto ml-2 mb-2  mr-2 shadow-md sm:rounded-lg">
         <StyledTable headers={headers} columnWidths={columnWidths}>
           {taskData.map((taskDetail, index) => (
             <React.Fragment key={index}>
@@ -189,6 +203,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
           showModal={showTaskModal}
           onClose={() => {
             setSelectedTask(null);
+            setInputValue('');
             setShowTaskModal(false); // Hide the modal when closing
           }}
         />

@@ -8,7 +8,7 @@ export  interface ProjectMemberMutationPayload {
     projectId: string;
 };
   
-export interface AboutTabProps {
+export interface ProjectAboutInfoProps {
     project: ProjectData;
     isMember: boolean;
     isPending: boolean;
@@ -16,10 +16,9 @@ export interface AboutTabProps {
     userId: string | undefined;
   }
   
-export  interface EditProjectPayload {
+export type EditProjectPayload = {
     projectId: string;
     title: string;
     summary: string;
     status: string;
-  }
-  
+};

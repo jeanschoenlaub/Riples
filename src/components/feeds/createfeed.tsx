@@ -31,7 +31,7 @@ export const CreateFeed = () => {
   return ( 
     <div>
       {/* Attractive Project Creation */}
-      <div id="project-collab-create-project-entry" className="mt-4 ml-6 mr-6 mb-2 flex items-center grow space-x-4">
+      <div id="project-collab-create-project-entry" className="mt-4 mr-2 md:ml-6 md:mr-6 mb-2 flex items-center grow space-x-4">
         <input 
           id="project-collab-create-project-input"
           type="text" 
@@ -65,7 +65,7 @@ export const CreateFeed = () => {
       {/*  Modals Opening on logic */}
       <div>
         <CreateProjectModal showModal={showCreateProjModal} inputValue={inputValue} onClose={() => setShowCreateProjModal(false)} />
-         <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
+        <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
       </div>
 
       

@@ -99,7 +99,7 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
                   onChange={() => { handleChangeSubTaskStatus(subTask.id, !subTask.status); }}
               />)}
             {/*Sub task title */}
-            <span className="text-sm text-gray-600 hover:text-blue-500 hover:underline underline-blue-500 flex-grow"
+            <span className="text-sm text-gray-700 hover:text-blue-500 hover:underline underline-blue-500 flex-grow"
                   onClick={() => {
                     setShowSubTaskModal(true);
                     setSelectedSubTask(subTask);
