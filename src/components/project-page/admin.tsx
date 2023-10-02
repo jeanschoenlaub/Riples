@@ -51,6 +51,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members }) => {
   return (
     <div id="proj-admin" className="mt-4 ml-2 mb-2 space-y-4">
         {/*  Application list */}
+        <div> This is where you will be able to manage project applications if this is public. </div>
         <div id="application-table" className="mt-2">
             <StyledTable headers={["Applications", "Status", "Action"]}>
                 {members

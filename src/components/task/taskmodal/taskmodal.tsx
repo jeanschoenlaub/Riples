@@ -112,6 +112,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   });
 
   const handleSave = () => {
+    console.log(taskToEdit)
     const payload = isEditMode && taskToEdit 
       ? generateEditPayload() 
       : generateCreatePayload();
@@ -200,7 +201,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
 
 
         <div id="task-modal-owner-info" className="flex flex-wrap items-center space-x-5 mb-2 md:flex-nowrap">
-        {taskToEdit && ( // If taskToEdit exists (in edit mode)
+        {(taskToEdit && project.projectType === "collab") && ( // If taskToEdit exists (in edit mode)
           <span className="text-sm flex items-center space-x-4 w-auto" aria-label="Task Title">Task Owner:
             {taskOwnerId ? (
               <Link href={`/users/${taskOwnerId}`} className="flex items-center space-x-4">
@@ -244,7 +245,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
       </div>
 
         <label className="block text-sm mb-2" aria-label="Task Content">
-          Task Content:
+          Notes:
             <textarea
                 value={taskContent}
                 onChange={(e) => setTaskContent(e.target.value)}

@@ -77,12 +77,12 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
     const {  isEditing, isApplying,  isDeleting, applyToProject, deleteMember, editProject } = useProjectMutation()
     
     return (
-        <div id="proj-about-html" className="mt-4 ml-2 mb-2 space-y-4">
+        <div id="proj-about-html" className="border-r-2 border-l-2 border-gray-200 dark:border-gray-700 mb-2 space-y-4">
           {(isProjectLead && !isEditMode) && (
             <div className="flex space-x-2">
                 <button 
                   onClick={toggleEditMode}
-                  className="bg-blue-500 text-white text-sm rounded px-4 py-1 ml-2 flex items-center justify-center w-auto"
+                  className="bg-blue-500 text-white mt-2 text-sm rounded px-4 py-1 ml-2 flex items-center justify-center w-auto"
                 >
                     <span className='flex items-center'>
                         Edit 
@@ -93,7 +93,7 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
            </div>
         )}
         <hr></hr>
-        <span className='text-lg font-semibold'> Project  Info </span>
+        <span className='text-lg ml-2 font-semibold'> Project  Info </span>
         {(isProjectLead && isEditMode) && (
             <div className="flex space-x-2">
               <button 
@@ -114,7 +114,7 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
           </div>
         )}
 
-        <label className="block text-sm text-gray-500 mb-3 justify-br" aria-label="Task Content">
+        <label className="block ml-2 text-sm text-gray-500 mb-3 justify-br" aria-label="Task Content">
           Project Story:
           {!isEditMode ? (
             <>
@@ -144,13 +144,13 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
         />
     
         {/* Project Status */}
-        <div className="block text-sm mb-3 justify-br" aria-label="Project Status">
+        <div className="block ml-2 text-sm mb-3 justify-br" aria-label="Project Status">
             Project Status:
             {!isEditMode ? (
-                <span className={`inline-block px-2 py-1 rounded text-white ${
-                    project.project.status === "Doing" ? "bg-yellow-500" : 
-                    project.project.status === "To-Do" ? "bg-gray-500" : 
-                    project.project.status === "Done" ? "bg-green-500" : ""
+                <span className={`inline-block ml-2 px-2 py-1 text-base font-semibold rounded ${
+                    project.project.status === "Doing" ? "text-yellow-500" : 
+                    project.project.status === "To-Do" ? "text-gray-500" : 
+                    project.project.status === "Done" ? "text-green-500" : ""
                 }`}>
                     {project.project.status}
                 </span>
@@ -158,7 +158,7 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
                 <select 
                     value={projectStatus}
                     onChange={(e) => setProjectStatus(e.target.value)}
-                    className={`w-auto p-2 mt-1 rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
+                    className={`w-auto ml-2 p-2 mt-1 rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
                     disabled={isEditing}
                 >
                     <option value="To-Do">To-Do</option>
@@ -169,7 +169,7 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
         </div>
 
         <hr></hr>
-        <span className='text-lg font-semibold'> Project Members Info </span>
+        <span className='text-lg ml-2 font-semibold'> Project Members Info </span>
         {/* About the project Type */}
         <div id="project-about-project-type" className="flex items-center space-x-3 mb-4">
           <div id="project-about-project-type-icon" className="flex items-center justify-center">

@@ -38,6 +38,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
     columnWidths =["4%","50%","10%"]
   }
   const handleCreateClick = () => {
+    setSelectedTask(null); //Notna task to edit 
     setShowTaskModal(true);
   };
 
@@ -72,10 +73,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
           />
           <button 
             className="bg-green-500 text-white text-xs md:text-base rounded px-4 py-2 hover:bg-green-600 focus:outline-none focus:border-green-700 focus:ring focus:ring-blue-200"
-            onClick={() => {
-              handleCreateClick();
-              //setInputValue('');  // Reset the input value
-            }}
+            onClick={() => {handleCreateClick();}}
           >
             <span className='flex items-center'>
              Create Task
@@ -189,6 +187,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
           showModal={showTaskModal}
           onClose={() => {
             setSelectedTask(null);
+            setInputValue('');
             setShowTaskModal(false); // Hide the modal when closing
           }}
         />

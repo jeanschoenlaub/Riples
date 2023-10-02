@@ -22,7 +22,6 @@ export const useTaskMutation = () => {
             const fieldErrors = e.data?.zodError?.fieldErrors;
             const message = handleZodError(fieldErrors);
             toast.error(message);
-            reject(e);
           }
         });
       });
@@ -41,7 +40,6 @@ export const useTaskMutation = () => {
             const fieldErrors = e.data?.zodError?.fieldErrors;
             const message = handleZodError(fieldErrors);
             toast.error(message);
-            reject(e);
           }
         });
       });
@@ -59,7 +57,6 @@ export const useTaskMutation = () => {
             const fieldErrors = e.data?.zodError?.fieldErrors;
             const message = handleZodError(fieldErrors);
             toast.error(message);
-            reject(e);
           }
         });
       });
@@ -77,7 +74,6 @@ export const useTaskMutation = () => {
             const fieldErrors = e.data?.zodError?.fieldErrors;
             const message = handleZodError(fieldErrors);
             toast.error(message);
-            reject(e);
           }
         });
       });
@@ -96,7 +92,6 @@ export const useTaskMutation = () => {
             const fieldErrors = e.data?.zodError?.fieldErrors;
             const message = handleZodError(fieldErrors);
             toast.error(message);
-            reject(e);
           }
         });
       });
