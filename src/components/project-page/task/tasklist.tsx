@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
 import Link from 'next/link'; // import Next.js Link component
-import { TaskModal } from '~/components/task/taskmodal/taskmodal';
-import { ProfileImage } from '../reusables/profileimage';
-import { LoadingRiplesLogo } from '../reusables/loading';
-import { StyledTable } from '../reusables/styledtables';
-import { SubTasksRows } from '../subtask/subtask';
+import { TaskModal } from '~/components/project-page/task/taskmodal/taskmodal';
+import { ProfileImage } from '../../reusables/profileimage';
+import { LoadingRiplesLogo } from '../../reusables/loading';
+import { StyledTable } from '../../reusables/styledtables';
+import { SubTasksRows } from '../../subtask/subtask';
 
 
 interface TaskListProps {
@@ -61,9 +61,10 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
   if (isError || !taskData) return <p>Error loading tasks.</p>;
 
   return (
-    <div>
+    <div className=''>
       {(isMember || isProjectLead) &&
-        <div id="project-collab-task-create-button" className="mt-4 mb-2 flex items-center grow space-x-2">
+        <div id="project-collab-task-create-button" className="mb-2 flex">
+          <div className='mt-2 ml-2 mr-2 flex flex-grow space-x-2 items-center'> 
           <input 
             type="text" 
             value={inputValue}  // Controlled input
@@ -83,9 +84,10 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
             </span>
           </button>
         </div>
+      </div> 
       }
 
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="relative overflow-x-auto ml-2 mb-2  mr-2 shadow-md sm:rounded-lg">
         <StyledTable headers={headers} columnWidths={columnWidths}>
           {taskData.map((taskDetail, index) => (
             <React.Fragment key={index}>

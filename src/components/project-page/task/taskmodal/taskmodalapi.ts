@@ -15,7 +15,7 @@ export const useTaskMutation = () => {
         onSuccess: handleSuccess,
     });
     const createTask = (payload: CreateTaskPayload) => {
-      return new Promise<void>((resolve, reject) => {
+      return new Promise<void>((resolve) => {
         createTaskMutation(payload, {
           onSuccess: () => { resolve(); },
           onError: (e) => {
@@ -33,7 +33,7 @@ export const useTaskMutation = () => {
     });
   
     const editTask = (payload: EditTaskPayload) => {
-      return new Promise<void>((resolve, reject) => {
+      return new Promise<void>((resolve) => {
         editTaskMutation(payload, {
           onSuccess: () => { resolve(); },
           onError: (e) => {
@@ -50,7 +50,7 @@ export const useTaskMutation = () => {
         onSuccess: handleSuccess,
     });
     const deleteTask = (payload: DeleteTaskPayload) => {
-      return new Promise<void>((resolve, reject) => {
+      return new Promise<void>((resolve) => {
         deleteTaskMutation(payload, {
           onSuccess: () => { resolve(); },
           onError: (e) => {
@@ -67,7 +67,7 @@ export const useTaskMutation = () => {
         onSuccess: handleSuccess,
     });
     const changeTaskOwner = (payload: ChangeTaskOwnerPayload) => {
-      return new Promise<void>((resolve, reject) => {
+      return new Promise<void>((resolve) => {
         changeTaskOwnerMutation(payload, {
           onSuccess: () => { resolve(); },
           onError: (e) => {
@@ -85,7 +85,7 @@ export const useTaskMutation = () => {
     });
   
     const editStatus = (payload: EditStatusPayload) => {
-      return new Promise<void>((resolve, reject) => {
+      return new Promise<void>((resolve) => {
         editStatusMutation(payload, {
           onSuccess: () => { resolve(); },
           onError: (e) => {

@@ -22,7 +22,7 @@ import { SideNavProject } from "~/components/navbar/sidenavproject";
 
 import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
 import Follow from "~/components/reusables/follow";
-import { AdminTab } from "~/components/project-page/admin";
+import { AdminTab } from "~/components/project-page/admin/admin";
 import Tooltip from "~/components/reusables/tooltip";
 
 export async function getServerSideProps(
@@ -167,7 +167,7 @@ export default function Project(
                             ) : (
                                 // Display the message if no entries are found
                                 <div className="flex justify-center items-center h-full text-center">
-                                    "Your Riples (project updates) will be displayed here once you start posting for this project."
+                                    Your Riples (project updates) will be displayed here once you start posting for this project.
                                 </div>
                             )}
                         </div>
@@ -178,7 +178,7 @@ export default function Project(
                 {activeTab === 'collab' && <CollabTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} />}
 
                 {/* SHOWN IF ADMIN */}
-                {activeTab === 'admin' && <AdminTab project={projectData.project} members={projectMemberData} ></AdminTab>}
+                {activeTab === 'admin' && <AdminTab project={projectData.project} members={projectMemberData} isProjectLead={isProjectLead} ></AdminTab>}
 
               </div>
             </div>

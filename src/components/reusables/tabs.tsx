@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Dispatch, SetStateAction } from 'react';
-import { AboutSVG, AdminSVG, ProjectsSVG, RiplesSVG, TaskSVG } from './svg';
+import { AboutSVG, AdminSVG, ProjectsSVG, RiplesSVG } from './svg';
+import { TaskSVG } from './svgstroke';
 
 interface TabsProps {
   activeTab: string;
@@ -14,10 +15,9 @@ interface TabsProps {
 export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, projects, collab, admin}) => {
   return (
     <div id="project-main-tabs" className="border-b border-gray-200 dark:border-gray-700">
-      <ul className="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
-        
+       <ul className="flex whitespace-nowrap overflow-x-auto -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
         {/* ABOUT TAB */}
-        <li className="mr-2">
+        <li className="mr-1">
           <button
             onClick={() => setActiveTab('about')}
             className={`inline-flex items-center justify-center p-3 border-b-2 rounded-t-xl ${activeTab === 'about' ? 'text-blue-600 bg-sky-200 border-blue-300' : 'text-gray-500 bg-gray-200 border-transparent'}`}>
@@ -30,7 +30,7 @@ export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, pro
         </li>
 
         {/*  CONDITIONAL RIPLES TAB */}
-        {riples && ( <li className="mr-2">
+        {riples && ( <li className="mr-1">
           <button
             onClick={() => setActiveTab('riples')}
             className={`inline-flex items-center justify-center p-3 border-b-2 rounded-t-xl ${activeTab === 'riples' ? 'text-blue-600 bg-sky-200 border-blue-300' : 'text-gray-500 bg-gray-200 border-transparent'}`}>
@@ -44,7 +44,7 @@ export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, pro
         )}
 
         {/*  CONDITIONAL PROJECTS TAB */}
-        {projects && ( <li className="mr-2">
+        {projects && ( <li className="mr-1">
           <button
             onClick={() => setActiveTab('projects')}
             className={`inline-flex items-center justify-center p-3 border-b-2 rounded-t-xl ${activeTab === 'projects' ? 'text-blue-600 bg-sky-200 border-blue-300' : 'text-gray-500 bg-gray-200 border-transparent'}`}>
@@ -59,7 +59,7 @@ export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, pro
 
         {/* CONDITIONAL TAB COLLAB */}
         {collab && (
-            <li className="mr-2">
+            <li className="mr-1">
                 <button
                       onClick={() => setActiveTab('collab')}
                       className={`inline-flex items-center justify-center p-3 border-b-2 rounded-t-xl ${activeTab === 'collab' ? 'text-blue-600 bg-sky-200 border-blue-300' : 'text-gray-500 bg-gray-200 border-transparent'}`}>
@@ -74,7 +74,7 @@ export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, pro
 
         {/* CONDITIONAL TAB ADMIN */}
         {admin&& (
-            <li className="mr-2">
+            <li className="mr-1">
                 <button
                       onClick={() => setActiveTab('admin')}
                       className={`inline-flex items-center justify-center p-3 border-b-2 rounded-t-xl ${activeTab === 'admin' ? 'text-blue-600 bg-sky-200 border-blue-300' : 'text-gray-500 bg-gray-200 border-transparent'}`}>

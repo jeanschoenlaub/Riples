@@ -1,3 +1,5 @@
+export type ProjectCreateData = RouterOutputs["projects"]["create"] 
+
 export interface CreateProjectModalProps {
     showModal: boolean;
     inputValue? : string;

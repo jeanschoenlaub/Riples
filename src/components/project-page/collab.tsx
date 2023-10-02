@@ -1,5 +1,5 @@
 import type { RouterOutputs } from '~/utils/api';
-import { TaskList } from "~/components/task/tasklist";
+import { TaskList } from "~/components/project-page/task/tasklist";
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"]
 interface CollabTabProps {
@@ -12,14 +12,10 @@ interface CollabTabProps {
 export const CollabTab: React.FC<CollabTabProps> = ({ project, isMember, isPending, isProjectLead}) => {
     
     return (
-        <div>
-            {/* TASK TABLE DIV ONLY FOR PROJECT MEMBERS + CREATE TASK */}
-            <div id="project-collab-task-table" className="mt-4 ml-2 mb-2 space-y-4">
+        <div id="project-collab-task-table" className="border-r-2 border-l-2 border-b-2 border-gray-200 dark:border-gray-700 mb-2 space-y-4">
                 { (project.projectPrivacy === "public" || isMember || isProjectLead) && ( 
                     <TaskList project={project} isMember={isMember} isProjectLead={isProjectLead} isPending={isPending}/>
                  )} 
-            </div>
-            
         </div>
     )
 }
