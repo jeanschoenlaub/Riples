@@ -62,26 +62,42 @@ export const goalRouter = createTRPCRouter({
 
             return updatedGoal;
         }),
-    finish: protectedProcedure
+        finish: protectedProcedure
         .input(z.object({
-            goalId: z.string(),
+          goalId: z.string(),
+          goalTitle: z.string(),
+          postToFeed: z.boolean().optional(),
+          postContent: z.string().optional()
         }))
         .mutation(async ({ ctx, input }) => {
-            const createdById = ctx.session.user?.id;
-            if (!createdById) {
-                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Could not access session id" });
-            }
-    
-            const updatedGoal = await ctx.prisma.goals.update({
-                where: { id: input.goalId },
-                data: {
-                    status: "finished",
-                },
+          const createdById = ctx.session.user?.id;
+          if (!createdById) {
+            throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Could not access session id" });
+          }
+          
+          // Update the goal status to "finished"
+          const updatedGoal = await ctx.prisma.goals.update({
+            where: { id: input.goalId },
+            data: {
+              status: "finished",
+            },
+          });
+      
+          // Check if postToFeed is true, and if so, create a ripple
+          if (input.postToFeed) {
+            await ctx.prisma.riple.create({
+              data: {
+                title: `Goal: "${input.goalTitle}" was just completed`, 
+                ripleType: "goalFinished",
+                content: input.postContent || "A goal has been successfully completed!", // default content if none provided
+                projectId: updatedGoal.projectId, // Assuming goals have a relation to projects, you might need to adjust this
+                authorID: createdById,
+              }
             });
-    
-            return updatedGoal;
-        }),
-    
+          }
+      
+          return updatedGoal;
+    }),      
 
     delete: protectedProcedure
         .input(

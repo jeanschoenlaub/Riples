@@ -82,9 +82,7 @@ export const useProjectGoalMutation = () => {
         });
     };
 
-
     // (Keep the other mutations for project members here...)
-
     return {
     isCreating,
     isEditing,

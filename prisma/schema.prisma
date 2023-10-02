@@ -36,12 +36,12 @@ model Project {
 }
 
 model ProjectTags {
-    tag       Tag     @relation(fields: [tagId], references: [id])
-    tagId     String
-    project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-    projectId String
+  tag       Tag     @relation(fields: [tagId], references: [id])
+  tagId     String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
 
-    @@id([tagId, projectId])
+  @@id([tagId, projectId])
 }
 
 model Tasks {
@@ -71,7 +71,7 @@ model Goals {
   progress     Int @default(0)
   progressFinalValue     Int @default(100)
   status       String @default("todo")
-  notes         String @default("")
+  notes        String @db.VarChar(10000)@default("")
 
   // Relations
   projectId    String  

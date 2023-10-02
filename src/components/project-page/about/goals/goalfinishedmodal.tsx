@@ -7,16 +7,20 @@ import { useProjectGoalMutation } from './goalsapi';
 import { LoadingSpinner } from '~/components/reusables/loading';
 import { GoalSVG } from '~/components/reusables/svg';
 import type { FinishGoalPayload, GoalFinishedModalType } from './goaltypes';
+import { useState } from 'react';
 
 
 // Main React Functional Component
-export const GoalFinishedModal: React.FC<GoalFinishedModalType> = ({ goalFinished, showModal, isProjectLead, onClose }) => {
+export const GoalFinishedModal: React.FC<GoalFinishedModalType> = ({ goalFinished, showModal, isProjectLead, isPrivate, onClose }) => {
 
   const { isFinishing, finishProjectGoal } = useProjectGoalMutation();
+  const [postToFeed, setPostToFeed] = useState(false);
+  const [postContent, setPostContent] = useState('');
+
   const isLoading = isFinishing
 
   const handleSave = () => {
-    const payload = generateEditPayload();
+    const payload = generateFinishPayload();
     finishProjectGoal(payload)
       .then(() => {
         toast.success('Goal status changed to "Finished"');
@@ -28,8 +32,11 @@ export const GoalFinishedModal: React.FC<GoalFinishedModalType> = ({ goalFinishe
   };
   
   // Helper function to generate edit payload
-  const generateEditPayload = (): FinishGoalPayload => ({
+  const generateFinishPayload = (): FinishGoalPayload => ({
     goalId: goalFinished.id,
+    goalTitle: goalFinished.title,
+    postToFeed: postToFeed,
+    postContent: postContent,
   });
 
   return (
@@ -64,26 +71,56 @@ export const GoalFinishedModal: React.FC<GoalFinishedModalType> = ({ goalFinishe
                   </div>
               </div>
         </div>
-        <div className="flex md:flex-nowrap space-x-4 mt-4">
-        {isProjectLead && (
-            <>
-                <button 
-                    onClick={handleSave}
-                    className="bg-green-500 text-white rounded px-4 py-2 flex items-center justify-center w-auto"
-                    disabled={isLoading}
-                >
-                  {isFinishing && <LoadingSpinner size={20} />}  Save Goal
-                </button>
-                <button 
-                    onClick={onClose}
-                    className="bg-gray-300 text-gray-600 rounded px-4 py-2 flex items-center justify-center w-auto"
-                    disabled={isLoading}
-                >
-                    Cancel
-                </button>
-                </>
-            )}
-        </div>
+        {/* Checkbox & input for posting to feed */}
+        <div className="flex items-center mt-4">
+            <input 
+              type="checkbox" 
+              id="postToFeed" 
+              className={`form-checkbox h-4 w-4 ${isPrivate == "private" ? 'text-gray-400' : 'text-indigo-600'}`}
+              checked={postToFeed}
+              disabled={isPrivate == "private"}
+              onChange={(e) => setPostToFeed(e.target.checked)} 
+            />
+            <label htmlFor="postToFeed" className={`ml-2 text-sm ${isPrivate == "private" ? 'text-gray-400' : 'text-gray-900'}`}>
+              Post this project creation to the feed &#40;only for public projects&#41;
+            </label>
+          </div>
+            {/* Text input for posting to feed */}
+            <div className="flex items-center mt-4">
+                <textarea 
+                    style={{ overflow: 'hidden', resize: 'none' }}  // hide scrollbar and disable manual resize
+                    value={postContent}
+                    id="postToFeed" 
+                    rows={1}
+                    placeholder={`I am happy to share that I completed the long awaited goal ..`}
+                    className={`flex-grow p-1 rounded border`}
+                    disabled={isPrivate == "private"} 
+                    onChange={(e) => setPostContent(e.target.value)} 
+                />
+            </div>
+            <label htmlFor="postToFeed" className={`ml-2 text-sm ${isPrivate ? 'text-gray-400' : 'text-gray-900'}`}>
+                    You can add a text to your post
+            </label>
+            <div className="flex md:flex-nowrap space-x-4 mt-4">
+            {isProjectLead && (
+                <>
+                    <button 
+                        onClick={handleSave}
+                        className="bg-green-500 text-white rounded px-4 py-2 flex items-center justify-center w-auto"
+                        disabled={isLoading}
+                    >
+                      {isFinishing && <LoadingSpinner size={20} />}  Save Goal
+                    </button>
+                    <button 
+                        onClick={onClose}
+                        className="bg-gray-300 text-gray-600 rounded px-4 py-2 flex items-center justify-center w-auto"
+                        disabled={isLoading}
+                    >
+                        Cancel
+                    </button>
+                    </>
+                )}
+            </div>
     </Modal>
     </div>
   );

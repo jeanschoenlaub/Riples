@@ -9,10 +9,11 @@ import Image from 'next/image';
 import type { RouterOutputs } from "~/utils/api";
 import Follow from "../reusables/follow";
 
+type RipleWithUser = RouterOutputs["riples"]["getAll"][number]&{
+    onDelete?: (rippleId: string) => void;
+}
 
-type RipleWithUser = RouterOutputs["riples"]["getAll"][number]
-export const RipleCard = (props: RipleWithUser) => {
-  const {riple, author} = props;
+export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const rawHTML = riple.content;
   
@@ -24,7 +25,10 @@ export const RipleCard = (props: RipleWithUser) => {
   }
 
   const showReadMore = cleanHTML.length > 500; // If the content is longer than 500 characters
-  const cardBackgroundColor = riple.ripleType == "creation" ? "bg-orange-50" : "bg-white";
+  const cardBackgroundColor = 
+    riple.ripleType === "creation" ? "bg-orange-50" :
+    riple.ripleType === "goalFinished" ? "bg-green-50" :
+    "bg-white";
   const cardBorderClass = riple.ripleType == "creation" ? "" : "border border-slate-300";
 
   // Calculate max height based on whether the content is expanded.
@@ -67,6 +71,9 @@ export const RipleCard = (props: RipleWithUser) => {
                 <div id="riple-card-header-title" className="font-semibold text-gray-800 mr-2">
                     {riple.title}
                 </div>
+                <div id="riple-card-header-delete-optional">
+                    {onDelete ? <button  className="bg-red-500 px-2 py-1 rounded-lg" onClick={() => onDelete(riple.id)}>Delete</button> : null}
+                </div>
                 <div id="riple-card-header-follow">
                     <Follow projectId={riple.projectId} />
                 </div>
@@ -75,7 +82,7 @@ export const RipleCard = (props: RipleWithUser) => {
             {/* Metadata */}
             <div className="space-y-1">
                 <div className="text-sm text-gray-500">
-                    {riple.ripleType == "update" ? `Update on` : `Check out`}
+                    {riple.ripleType == "update" ? `Update on` : `Check out project`}
                     <span className="font-medium text-sky-500 ml-1">
                         <Link href={`/projects/${riple.projectId}`}>
                             {riple.project.title}
@@ -85,7 +92,7 @@ export const RipleCard = (props: RipleWithUser) => {
               </div>
 
               <div className="text-sm text-gray-500">
-                  By&nbsp;
+                  By user &nbsp;
                   <span className="font-medium text-black">
                       <Link href={`/users/${riple.authorID}`}>
                           {author?.username}

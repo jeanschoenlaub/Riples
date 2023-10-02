@@ -23,18 +23,25 @@ export type DeleteProjectGoalPayload = {
 
 export type FinishProjectGoalPayload = {
     goalId: string;
+    goalTitle: string;
+    postToFeed: boolean;
+    postContent: string;
 };
 
 export type Goal = RouterOutputs["projects"]["getProjectByProjectId"]["project"]["goals"][0]
 
 export type FinishGoalPayload = {
     goalId: string;
+    goalTitle: string;
+    postToFeed: boolean;
+    postContent: string;
 };
 
 export interface GoalFinishedModalType {
     goalFinished: Goal; 
     showModal: boolean;
     isProjectLead: boolean;
+    isPrivate: string;
     onClose: () => void;
 }
 

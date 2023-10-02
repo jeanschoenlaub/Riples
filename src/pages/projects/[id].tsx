@@ -2,6 +2,7 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 import Image from 'next/image';
 import React, { useState } from 'react';
+import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
 
 //From https://trpc.io/docs/client/nextjs/server-side-helpers
 import { createServerSideHelpers } from '@trpc/react-query/server';
@@ -19,11 +20,10 @@ import { LoadingPage } from "~/components/reusables/loading";
 import { CollabTab } from "~/components/project-page/collab";
 import { GlobalNavBar } from "~/components/navbar/navbar";
 import { SideNavProject } from "~/components/navbar/sidenavproject";
-
-import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
 import Follow from "~/components/reusables/follow";
 import { AdminTab } from "~/components/project-page/admin/admin";
 import Tooltip from "~/components/reusables/tooltip";
+import { RiplesTab } from "~/components/project-page/riples";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -155,24 +155,9 @@ export default function Project(
 
                 {/* SHOWN IF RIPLES TAB */}
                 {activeTab === 'riples' && (
-                    <div className="mt-4 space-y-2">
-                        <div className="font text-gray-800">
-                            {/* Check if riplesData is available and has at least one entry */}
-                            {ripleData && ripleData.length > 0 ? (
-                                <div>
-                                    {ripleData.map((fullRiple) => (
-                                        <RipleCard key={fullRiple.riple.id} {...fullRiple}></RipleCard>
-                                    ))}
-                                </div>
-                            ) : (
-                                // Display the message if no entries are found
-                                <div className="flex justify-center items-center h-full text-center">
-                                    Your Riples (project updates) will be displayed here once you start posting for this project.
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                    <RiplesTab ripleData={ripleData} ></RiplesTab>
                 )}
+
 
                 {/* SHOWN IF COLLAB*/}
                 {activeTab === 'collab' && <CollabTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} />}

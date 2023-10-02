@@ -28,6 +28,9 @@ export const GoalModal: React.FC<GoalModalProps> = ({ goalToEdit, projectId, sho
       setGoalTitle(goalToEdit.title);
       setGoalProgress(goalToEdit.progress);
       setGoalFinalValue(goalToEdit.progressFinalValue);
+      setGoalNotes(goalToEdit.notes);
+      setGoalStatus(goalToEdit.status);
+      console.log(goalStatus)
     }
   }, [goalToEdit]);
 
@@ -109,7 +112,7 @@ export const GoalModal: React.FC<GoalModalProps> = ({ goalToEdit, projectId, sho
             </div>
         </div>
 
-        { goalToEdit.status == "finished" ?? <div className="flex text-sm mb-2 items-center justify-br" aria-label="Goal Progress">
+        { goalStatus === "finished" ?? <div className="flex text-sm mb-2 items-center justify-br" aria-label="Goal Progress">
           Goal Status:
             <div className="px-2 py-1 ml-1 w-auto">
             <select 
