@@ -26,6 +26,7 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
         />
         <hr/>
         <ProjectAboutGoal 
+            projectId={project.project.id}
             goals={project.project.goals}
             projectPrivacy={project.project.projectPrivacy}
             isProjectLead={isProjectLead}

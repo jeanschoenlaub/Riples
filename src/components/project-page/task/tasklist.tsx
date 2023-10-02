@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
 import Link from 'next/link'; // import Next.js Link component
@@ -30,13 +30,27 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
   //  { enabled: taskIdToFetch !== null }
   //);
   const { data: taskData, isLoading: isLoadingTasks, isError } = api.tasks.getTasksByProjectId.useQuery({ projectId: project.id });
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);  // Assuming mobile devices have a width of 768px or less
 
-  let headers = ["", "Task Title", "Status", "Owner", ];
-  let columnWidths =["4%","30%","8%","8%"]
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    }
+  
+    window.addEventListener('resize', handleResize);
+  
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
+  let headers = isMobile ? ["Sub", "Task"] : ["Sub", "Task Title", "Status", "Owner"];
+  let columnWidths = isMobile ? ["8%", "50%"] : ["4%", "30%", "8%", "8%"];
   if (project.projectType === "solo") {
     headers = headers.filter(header => header !== "Owner");
-    columnWidths =["4%","50%","10%"]
+    isMobile ? columnWidths =["8%","50%"] :columnWidths =["4%","50%","8%"]
   }
+
   const handleCreateClick = () => {
     setSelectedTask(null); //Notna task to edit 
     setShowTaskModal(true);
