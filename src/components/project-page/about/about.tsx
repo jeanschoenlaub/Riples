@@ -15,6 +15,10 @@ export interface AboutTabProps {
 
 
 export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPending, isProjectLead, userId }) => {
+    const tasks = project.project.tasks;
+    const completedTasksCount = tasks.filter(task => task.status === "Done").length;
+    const allSubtasks = project.project.tasks.flatMap(task => task.subTasks);
+    const completedSubtasksCount = allSubtasks.filter(subtask => subtask?.status).length;
     return (
       <div id="proj-about-html" className="border-r-2 border-l-2 border-gray-200 dark:border-gray-700 mb-2 space-y-4">
         <ProjectAboutInfo
@@ -40,17 +44,21 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
 
                 <div className="mt-2">
                     {/* Completed Tasks */}
-                    <div className="flex items-center mb-2">
-                        <span className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 ml-2 mr-2">Completed Tasks:</span>
-                        2/2
+                    <div className="mt-2">
+                        <div className="flex items-center mb-2">
+                            <span className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 ml-2 mr-2">Completed Tasks:</span>
+                            {`${completedTasksCount}/${tasks.length}`}
+                        </div>
                     </div>
                     
                     {/* Completed Subtasks */}
-                    <div className="flex items-center mb-2">
-                        <span className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 ml-2 mr-2">Completed Sub-Tasks:</span>
-                        2/2
+                    <div className="mt-2">
+                      <div className="flex items-center mb-2">
+                          <span className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 ml-2 mr-2">Completed Subtasks:</span>
+                          {`${completedSubtasksCount}/${allSubtasks.length}`}
+                      </div>
                     </div>
-                    </div>
+                </div>
                 </div>
         }
 

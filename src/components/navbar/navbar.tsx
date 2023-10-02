@@ -157,7 +157,7 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
               </div>
               <div className="text-base text-black">
                   Your projects:
-                  <SideNavProject />
+                  <SideNavProject onClose={() => setShowSideNav(false)}  />
               </div>
           </div>
         </div>

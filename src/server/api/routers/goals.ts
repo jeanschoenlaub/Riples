@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 
 export const goalRouter = createTRPCRouter({
@@ -39,6 +39,8 @@ export const goalRouter = createTRPCRouter({
                 title: z.string().min(5).max(255),
                 progress: z.number(),
                 progressFinalValue: z.number(),
+                notes: z.string(),
+                status: z.string(),
             })
         )
         .mutation(async ({ ctx, input }) => {
@@ -53,11 +55,33 @@ export const goalRouter = createTRPCRouter({
                     title: input.title,
                     progress: input.progress,
                     progressFinalValue: input.progressFinalValue,
+                    notes: input.notes,
+                    status: input.status,
                 },
             });
 
             return updatedGoal;
         }),
+    finish: protectedProcedure
+        .input(z.object({
+            goalId: z.string(),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            const createdById = ctx.session.user?.id;
+            if (!createdById) {
+                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Could not access session id" });
+            }
+    
+            const updatedGoal = await ctx.prisma.goals.update({
+                where: { id: input.goalId },
+                data: {
+                    status: "finished",
+                },
+            });
+    
+            return updatedGoal;
+        }),
+    
 
     delete: protectedProcedure
         .input(

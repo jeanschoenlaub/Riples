@@ -89,7 +89,11 @@ export const projRouter = createTRPCRouter({
             user: true
           }
         },
-        tasks: true,
+        tasks: {
+          include: {
+            subTasks: true
+          }
+        },
       },
     });
 

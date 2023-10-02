@@ -1,3 +1,5 @@
+import type  { RouterOutputs } from "~/utils/api";
+
 export type ProjectCreateData = RouterOutputs["projects"]["create"] 
 
 export interface CreateProjectModalProps {

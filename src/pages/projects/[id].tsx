@@ -132,7 +132,7 @@ export default function Project(
                   </div>
             </div>
 
-            <div id="project-main-metadata" className="mt-3 ml-5 mr-5">
+            <div id="project-main-metadata" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-5">
                 <div id="project-metadata" className="flex items-center justify-between"> 
                   <h1 className="text-2xl font-bold">{projectData?.project.title}</h1>
                   <Follow projectId={projectId} />

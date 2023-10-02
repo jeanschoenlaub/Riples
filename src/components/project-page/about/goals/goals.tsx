@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { EditSVG, GoalSVG } from '~/components/reusables/svg';
+import { GoalSVG } from '~/components/reusables/svg';
 import { StarSVG } from '~/components/reusables/svgstroke';
 import type { RouterOutputs } from '~/utils/api';
 import { useProjectGoalMutation } from './goalsapi';
 import { LoadingSpinner } from '~/components/reusables/loading';
 import { GoalModal } from './goalmodal';
+import { GoalFinishedModal } from './goalfinishedmodal';
 
 type Goal = RouterOutputs["projects"]["getProjectByProjectId"]["project"]["goals"][0]
 
@@ -26,7 +27,6 @@ type CreateProjectGoalPayload = {
 };
 
 // Main React Functional Component
-
 export const ProjectAboutGoal: React.FC<ProjectAboutGoalProps> = ({
     projectId,
     goals,
@@ -37,11 +37,13 @@ export const ProjectAboutGoal: React.FC<ProjectAboutGoalProps> = ({
     const [inputValue, setInputValue] = useState('');
     const [showGoalModal, setShowGoalModal] = useState(false);
     const [goalToEdit, setGoalToEdit] = useState<Goal| undefined>(undefined);
+    const [goalFinished, setGoalFinished] = useState<Goal| undefined>(undefined);
+    const [showGoalFinishedModal, setShowGoalFinishedModal] = useState(false);
 
-const startEditing = (index: number) => {
-    setGoalToEdit(goals[index]);
-    setShowGoalModal(true);
-};
+    const startEditing = (index: number) => {
+        setGoalToEdit(goals[index]);
+        setShowGoalModal(true);
+    };
     
     const {
         isCreating,
@@ -52,7 +54,6 @@ const startEditing = (index: number) => {
         return null;
     }
 
-    
     const generateCreatePayload = ():CreateProjectGoalPayload => ({
         projectId: projectId,
         title: inputValue,
@@ -69,6 +70,11 @@ const startEditing = (index: number) => {
             setInputValue('');
         });
     }
+
+    const GoalFinished = (index: number) => {
+        setGoalFinished(goals[index]);
+        setShowGoalFinishedModal(true);
+    };
         
     return (
         <div>
@@ -76,19 +82,17 @@ const startEditing = (index: number) => {
             <div className='text-lg mt-2 ml-2 font-semibold'>Project Goals </div>
                 <div className="mt-2">
                     {goals.map((goal, index) => (
-                        <div key={index} className="block md:flex items-center mb-2">
+                        <div key={index} className="flex items-center mb-2">
                             <div className="flex flex-col items-bottom justify-center ml-2 mr-4">
-                            {index === 0 && <label htmlFor={`goalStar_${index}`} className="mb-1 text-sm text-gray-500"><br></br></label>}
-                                <GoalSVG />
+                                {goal.status != "finished" ? <GoalSVG />:<GoalSVG colorFillHex='#22c55e'/>}
                             </div>
 
-                            <div className="flex flex-col w-3/5 mr-2">
-                                {index === 0 && <label htmlFor={`goalTitle_${index}`} className="mb-1 text-sm text-gray-500">Goal:</label>}
+                            <div className="flex flex-col w-1/8 md:w-3/5 mr-2">
+
                                 <div>{goal.title}</div>
                             </div>
                     
                             <div className="flex flex-col ml-2">
-                                {index === 0 && <label htmlFor={`goalProgress_${index}`} className="mb-1 text-sm text-gray-500">Goals progress:</label>}
                                 <div className="flex items-center">
                                         <div className="border rounded px-2 py-1 mr-1 w-auto">
                                             {goal.progress}
@@ -105,18 +109,23 @@ const startEditing = (index: number) => {
                                             >
                                                 Edit
                                             </button>
+                                            {goal.status != "finished" && <button 
+                                                onClick={() => GoalFinished(index)}
+                                                className="bg-green-500 text-white text-base rounded ml-2 px-4 py-1 justify-center w-auto"
+                                            >
+                                                Done
+                                            </button>}
                                             </div>
                                         )}
+                                        </div>
                                     </div>
-                                   
                                 </div>
-                            </div>
                     ))}
                 </div>
             </div>
             {(isMember || isProjectLead) &&
                 <div id="project-collab-task-create-button" className="mb-2 flex">
-                    <div className='mt-2 ml-6 mr-6 flex flex-grow space-x-2 items-center'> 
+                    <div className='mt-2 ml-2 mr-2 md:ml-6 md:mr-6 flex flex-grow space-x-2 items-center'> 
                     <input 
                         type="text" 
                         value={inputValue}  // Controlled input
@@ -145,7 +154,15 @@ const startEditing = (index: number) => {
                         isProjectLead={isProjectLead}
                         onClose={() => setShowGoalModal(false)}
                     />
-        )}
+                )}
+                {showGoalFinishedModal && goalFinished && (
+                    <GoalFinishedModal 
+                        goalFinished={goalFinished}
+                        showModal={showGoalFinishedModal}
+                        isProjectLead={isProjectLead}
+                        onClose={() => setShowGoalFinishedModal(false)}
+                    />
+                )}
         </div>
     );    
 }

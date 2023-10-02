@@ -8,10 +8,11 @@ interface ModalProps {
   children: React.ReactNode;
   isLoading?: boolean;
   Logo?: boolean;
+  Success?: boolean;
   onClose: () => void;  // <-- Add this prop
 }
 
-export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medium', children, Logo, onClose }) => {
+export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medium', children, Logo, Success, onClose }) => {
   const sizeClass = {
     small: 'w-2/3 sm:w-2/3 md:w-1/4 max-h-full sm:max-h-[80vh]',
     medium: 'w-full sm:w-2/3 md:w-1/2 max-h-full sm:max-h-[80vh]',
@@ -19,7 +20,8 @@ export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medi
   };
 
   Modal.defaultProps = {
-    Logo: true
+    Logo: true,
+    Success: false,
   };
   
 
@@ -34,7 +36,7 @@ export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medi
               className="fixed text-red-600 hover:text-red-800 text-xl z-10">
               &times; {/* This is an HTML entity representing a multiplication symbol (looks like 'x') */}
             </button>
-            {Logo ? (
+            {(Logo && !Success)  ? (
             <div className="flex justify-center my-4">
               {isLoading ? (
                 <LoadingRiplesLogo isLoading={isLoading}/>
@@ -50,6 +52,8 @@ export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medi
                 </div>
               )}
             </div>) : <div className="flex justify-center my-4"></div> }
+            {/* Increase the font-size for the emoji */}
+            {Success ?  <div className="flex justify-center my-4 text-6xl"> 🎉 </div> : null}
 
             {children}
           </div>

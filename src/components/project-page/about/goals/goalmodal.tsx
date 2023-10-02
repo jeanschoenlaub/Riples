@@ -1,32 +1,12 @@
 // External Imports
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useSession } from 'next-auth/react';
 
 // Local Imports
 import { Modal } from '../../../reusables/modaltemplate';
 import { useProjectGoalMutation } from './goalsapi';
-import { RouterOutputs } from '~/utils/api';
 import { LoadingSpinner } from '~/components/reusables/loading';
-
-type Goal = RouterOutputs["projects"]["getProjectByProjectId"]["project"]["goals"][0]
-
-type EditGoalPayload = {
-    goalId: string;
-    projectId: string;
-    title: string;
-    progress: number;
-    progressFinalValue: number;
-};
-
-interface GoalModalProps {
-    goalToEdit: Goal; 
-    projectId: string;
-    showModal: boolean;
-    isMember: boolean;
-    isProjectLead: boolean;
-    onClose: () => void;
-}
+import type { EditGoalPayload, GoalModalProps } from './goaltypes';
 
 
 // Main React Functional Component
@@ -35,6 +15,9 @@ export const GoalModal: React.FC<GoalModalProps> = ({ goalToEdit, projectId, sho
   const [goalTitle, setGoalTitle] = useState(goalToEdit ? goalToEdit.title : "");
   const [goalProgress, setGoalProgress] = useState(goalToEdit ? goalToEdit.progress : 0);
   const [goalFinalValue, setGoalFinalValue] = useState(goalToEdit ? goalToEdit.progressFinalValue : 0);
+  const [goalNotes, setGoalNotes] = useState<string>(goalToEdit?.notes || ''); // Assuming note is the field in goalToEdit that stores the notes.
+  const [goalStatus, setGoalStatus] = useState<string>(goalToEdit?.status || 'To-Do');
+
   
   const { isEditing, isDeleting, editProjectGoal, deleteProjectGoal } = useProjectGoalMutation();
 
@@ -75,11 +58,13 @@ export const GoalModal: React.FC<GoalModalProps> = ({ goalToEdit, projectId, sho
 
   // Helper function to generate edit payload
   const generateEditPayload = (): EditGoalPayload => ({
-    goalId: goalToEdit!.id,
+    goalId: goalToEdit.id,
     projectId: projectId,
     title: goalTitle,
     progress: goalProgress,
-    progressFinalValue: goalFinalValue
+    progressFinalValue: goalFinalValue,
+    status: goalStatus,
+    notes: goalNotes
   });
 
   return (
@@ -101,8 +86,9 @@ export const GoalModal: React.FC<GoalModalProps> = ({ goalToEdit, projectId, sho
             />
         </label>
 
-        <label className="block text-sm mb-3 justify-br" aria-label="Goal Progress">
+        <div className="flex text-sm mb-3 items-center justify-br" aria-label="Goal Progress">
             Goal Progress:
+            <div className="px-2 py-1 ml-1 w-auto">
             <input 
                 type="number" 
                 value={goalProgress}
@@ -110,15 +96,42 @@ export const GoalModal: React.FC<GoalModalProps> = ({ goalToEdit, projectId, sho
                 className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
                 disabled={isLoading}
             />
-        </label>
+            </div>
+            <span>/</span>
+            <div className="px-2 py-1 ml-1 w-auto">
+                <input 
+                    type="number" 
+                    value={goalFinalValue}
+                    onChange={(e) => setGoalFinalValue(Number(e.target.value))}
+                    className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
+                    disabled={isLoading}
+                />
+            </div>
+        </div>
 
-        <label className="block text-sm mb-3 justify-br" aria-label="Goal Final Value">
-            Goal Final Value:
-            <input 
-                type="number" 
-                value={goalFinalValue}
-                onChange={(e) => setGoalFinalValue(Number(e.target.value))}
+        { goalToEdit.status == "finished" ?? <div className="flex text-sm mb-2 items-center justify-br" aria-label="Goal Progress">
+          Goal Status:
+            <div className="px-2 py-1 ml-1 w-auto">
+            <select 
+                value={goalStatus}
+                onChange={(e) => setGoalStatus(e.target.value)}
                 className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
+                disabled={isLoading}
+            >
+                <option value="todo">To-Do</option>
+                <option value="finished">Finished</option>
+            </select>
+            </div>
+        </div>}
+
+        <label className="block text-sm mb-3" aria-label="Goal Notes">
+            Notes:
+            <textarea
+                value={goalNotes}
+                onChange={(e) => setGoalNotes(e.target.value)}
+                className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
+                rows={5}
+                maxLength={10000}
                 disabled={isLoading}
             />
         </label>

@@ -8,15 +8,15 @@ type ProjectWithUser = RouterOutputs["projects"]["getProjectByAuthorId"][number]
 
 type ProjectCardProps = ProjectWithUser & {
   borderColor?: string;
+  onClick?: () => void;  
 }
 
 export const ProjectCard = (props: ProjectCardProps) => {
-  const { data: session } = useSession(); 
   const {project, author} = props;
  
   return (
     <li className="py-3 sm:py-4">
-      <div className="flex items-center space-x-2">
+      <div onClick={props.onClick} className="flex items-center space-x-2">
         <div className="flex-shrink-0">
           <Image
             className={`rounded-full border-2 ${props.borderColor ?? "border-gray-300"}`}

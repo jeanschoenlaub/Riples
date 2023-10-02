@@ -70,6 +70,8 @@ model Goals {
   editedAt     DateTime @default(now())
   progress     Int @default(0)
   progressFinalValue     Int @default(100)
+  status       String @default("todo")
+  notes         String @default("")
 
   // Relations
   projectId    String  

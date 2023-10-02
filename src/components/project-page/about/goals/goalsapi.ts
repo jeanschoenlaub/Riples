@@ -1,25 +1,8 @@
 import { api } from "~/utils/api";
 import { handleZodError } from "~/utils/error-handling";
 import toast from "react-hot-toast";
+import type { CreateProjectGoalPayload, DeleteProjectGoalPayload, EditProjectGoalPayload, FinishProjectGoalPayload } from "./goaltypes";
 
-type CreateProjectGoalPayload = {
-    projectId: string;
-    title: string;
-    progress: number;
-    progressFinalValue: number;
-};
-
-type EditProjectGoalPayload = {
-    goalId: string;
-    projectId: string;
-    title: string;
-    progress: number;
-    progressFinalValue: number;
-};
-
-type DeleteProjectGoalPayload = {
-    goalId: string;
-};
 
 export const useProjectGoalMutation = () => {
     const apiContext = api.useContext();
@@ -33,14 +16,13 @@ export const useProjectGoalMutation = () => {
     });
 
     const createProjectGoal = (payload: CreateProjectGoalPayload) => {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve) => {
         createProjectGoalMutation(payload, {
         onSuccess: () => { resolve(); },
         onError: (e) => {
             const fieldErrors = e.data?.zodError?.fieldErrors;
             const message = handleZodError(fieldErrors);
             toast.error(message);
-            reject(e);
         },
         });
     });
@@ -52,14 +34,13 @@ export const useProjectGoalMutation = () => {
     });
 
     const editProjectGoal = (payload: EditProjectGoalPayload) => {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve) => {
         editProjectGoalMutation(payload, {
         onSuccess: () => { resolve(); },
         onError: (e) => {
             const fieldErrors = e.data?.zodError?.fieldErrors;
             const message = handleZodError(fieldErrors);
             toast.error(message);
-            reject(e);
         },
         });
     });
@@ -71,18 +52,36 @@ export const useProjectGoalMutation = () => {
     });
 
     const deleteProjectGoal = (payload: DeleteProjectGoalPayload) => {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve) => {
         deleteProjectGoalMutation(payload, {
         onSuccess: () => { resolve(); },
         onError: (e) => {
             const fieldErrors = e.data?.zodError?.fieldErrors;
             const message = handleZodError(fieldErrors);
             toast.error(message);
-            reject(e);
         },
         });
     });
     };
+
+    // Finish Goal Mutation
+    const { mutate: finishProjectGoalMutation, isLoading: isFinishing } = api.goals.finish.useMutation({
+        onSuccess: handleSuccess,
+    });
+
+    const finishProjectGoal = (payload: FinishProjectGoalPayload) => {
+        return new Promise<void>((resolve) => {
+            finishProjectGoalMutation(payload, {
+                onSuccess: () => { resolve(); },
+                onError: (e) => {
+                    const fieldErrors = e.data?.zodError?.fieldErrors;
+                    const message = handleZodError(fieldErrors);
+                    toast.error(message);
+                },
+            });
+        });
+    };
+
 
     // (Keep the other mutations for project members here...)
 
@@ -90,6 +89,8 @@ export const useProjectGoalMutation = () => {
     isCreating,
     isEditing,
     isDeleting,
+    isFinishing,
+    finishProjectGoal,
     createProjectGoal,
     editProjectGoal,
     deleteProjectGoal,
