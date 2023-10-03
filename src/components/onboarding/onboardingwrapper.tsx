@@ -29,7 +29,9 @@ const TASK_MESSAGES: Record<number, TaskMessage> = {
     subMessage: "Now, feel free to have a look at your newly created project tabs and move on to the next onboarding task"
   },
   1: {
-    //... other task messages
+    title: "As simple as that ! ",
+    message: "That's all the main features required to manage a solo project 💪",
+    subMessage: "Now, feel free to continue adding data to your project or move on to the next onboarding task"
   },
   // add other tasks here
 };

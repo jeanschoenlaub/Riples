@@ -60,7 +60,7 @@ export const OnboardingJoyRideOne = () => {
             completeProductTour({ userId: session.user.id});
             setProductTourFinished(true);
         }
-    }, [session]);
+    }, [session]); //To-Do figure out why bug if including completeProductTour
 
     useEffect(() => {
         if (isClient) {
@@ -140,6 +140,8 @@ export const OnboardingJoyRideOne = () => {
             if (isClient && wizardContext) {
                 wizardContext.setShowWizard(true);
             }
+        }
+        if (data.status === 'finished' || data.status === 'skipped'){
             if (session) { 
                 completeProductTour({userId: session.user.id})
             }

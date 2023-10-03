@@ -35,49 +35,32 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
     });
   };
 
-  //We add a mutation for creating a task (with on success)
-  const {mutate, isLoading: isDeleting}  = api.users.deleteUser.useMutation({
-    onSuccess: async () => {
-      await signOut();
-      setShowDeleteModal(false);
-    },
-    onError: (e) => {
-      const fieldErrors = e.data?.zodError?.fieldErrors; 
-      const message = handleZodError(fieldErrors);
-      toast.error(message);
-    }
-    });
+  // Mutation for deleting a user
+  const { mutateAsync: deleteUserAsyncMutation, isLoading: isDeleting } = api.users.deleteUser.useMutation({
+      onSuccess: () => {
+        toast.success("User Deleted successfully");
+      },
+      onError: (e) => {
+        const fieldErrors = e.data?.zodError?.fieldErrors;
+        const message = handleZodError(fieldErrors);
+        toast.error(message);
+      }
+  });
 
-    const deleteUserMutation = (): Promise<void> => {
+  const handleDeleteUserMutation = async () => {
       if (!session?.user?.id) {
           toast.error("User ID not found in session");
-          return Promise.reject(new Error("User ID not found in session"));
+          return;
       }
-  
-      return new Promise((resolve, reject) => {
-          mutate({ userId: session.user.id }, {
-              onSuccess: async () => {
-                  await signOut();
-                  setShowDeleteModal(false);
-                  toast.success("Project Deleted successfully");
-                  resolve();
-              },
-              onError: (e) => {
-                  const fieldErrors = e.data?.zodError?.fieldErrors;
-                  const message = handleZodError(fieldErrors);
-                  toast.error(message);
-                  reject(e);
-              }
-          });
-      });
-  };
-  
-  
 
-    const handleDeleteUserMutation = () => {
-      deleteUserMutation()
-      .then(() => router.push('/'))
-      .catch(error => console.error("Failed to delete user", error));
+      try {
+          await deleteUserAsyncMutation({ userId: session.user.id });
+          await signOut();
+          setShowDeleteModal(false);
+          await router.push('/');
+      } catch (error) {
+          toast.error("Failed to delete user");
+      }
   };
   
 
@@ -172,7 +155,7 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
               </div>
             )}
             <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
-            <NavBarUserDeleteModal showDeleteModal={showDeleteModal} isLoading={isDeleting} onClose={() => setShowDeleteModal(false)} onDelete={handleDeleteUserMutation} />
+            <NavBarUserDeleteModal showDeleteModal={showDeleteModal} isLoading={isDeleting} onClose={() => setShowDeleteModal(false)} onDelete={() => {void handleDeleteUserMutation();}}  />
             <NavBarUserNameModal showModal={showUserNameModal} onClose={() => setShowUserNameModal(false)} />
             <div className={`fixed top-0 left-0 h-full text-red-600 hover:text-red-800 text-xl transition-transform transform ${showSideNav ? 'translate-x-0' : '-translate-x-full'} w-3/4 bg-white shadow-md z-50 md:hidden flex flex-col`}>
               <div className="flex justify-end p-4">

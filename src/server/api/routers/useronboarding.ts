@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { createTRPCRouter, publicProcedure, protectedProcedure } from '~/server/api/trpc';
-import { TRPCError } from '@trpc/server';
+import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
 
 export const userOnboardingRouter = createTRPCRouter({
     getOnboardingStatus: protectedProcedure
@@ -10,7 +9,7 @@ export const userOnboardingRouter = createTRPCRouter({
       .query(async ({ ctx, input }) => {
             const { userId } = input;
     
-            let userOnboarding = await ctx.prisma.userOnboarding.findUnique({
+            const userOnboarding = await ctx.prisma.userOnboarding.findUnique({
             where: {
                 userId: userId
             }
@@ -37,7 +36,7 @@ export const userOnboardingRouter = createTRPCRouter({
       .mutation(async ({ ctx, input }) => {
         const { userId } = input;
 
-        let userOnboarding = await ctx.prisma.userOnboarding.findUnique({
+        const userOnboarding = await ctx.prisma.userOnboarding.findUnique({
           where: {
               userId: userId
           }
