@@ -25,7 +25,7 @@ model Project {
   
   //Relations
   authorID        String
-  riples          Riple[]  // This establishes the one-to-many relation
+  riples          Riple[]  
   owner           User    @relation("ProjectOwner", fields: [authorID], references: [id], onDelete: Cascade)
   members         ProjectMembers[] 
   tasks           Tasks[] 

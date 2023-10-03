@@ -4,8 +4,6 @@ import { useSession } from "next-auth/react";
 import { Modal } from "~/components/reusables/modaltemplate";  
 import { UserNameForm } from "../reusables/usernameform";
 
-
-
 export const OnboardingUserProfile = () => {
   const { data: session } = useSession();
   const [showUserNameModal, setShowUserNameModal] = useState(false);

@@ -4,9 +4,10 @@ import { api } from "~/utils/api";
 import { QuestionSVG } from "~/components/reusables/svgstroke";
 import { useWizard } from "~/components/wizard/wizardswrapper";
 import Tooltip from "~/components/reusables/tooltip";
+import { useOnboarding } from "../onboardingwrapper";
 
 export const WizardOnboarding = () => {
-    const wizardContext = useWizard();
+    const onboarding = useOnboarding();
     const [taskStatuses, setTaskStatuses] = useState([
         { taskName: 'Create a project', isCompleted: false, actionLink: '/?activeTab=Create' },
         { taskName: 'Create and check off a subtask', isCompleted: false, actionLink: '/?activeTab=create' },
@@ -49,7 +50,7 @@ export const WizardOnboarding = () => {
                     <span>{task.taskName}</span>
                     <span 
                         className="ml-2 text-blue-600 cursor-pointer"
-                        onClick={() => { wizardContext.setActiveJoyrideIndex(index)}}
+                        onClick={() => { onboarding.setActiveJoyrideIndex(index)}}
                     >
                         <Tooltip content="Click me for help with a guided tour and explanations" shiftRight={true} width="150px">
                             <QuestionSVG width="4" height="4" colorStrokeHex="#2563eb"></QuestionSVG>

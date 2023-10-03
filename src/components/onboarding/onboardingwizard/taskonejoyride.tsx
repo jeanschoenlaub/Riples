@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import ReactJoyride from 'react-joyride';
 import type { CallBackProps, Step } from 'react-joyride';
-import { useWizard } from '~/components/wizard/wizardswrapper';
+import { useOnboarding } from '../onboardingwrapper';
 
 export const TaskOneJoyRide = () => {
     const [isTourOpen, setIsTourOpen] = useState(false);
     const [isClient, setIsClient] = useState(false);
     const [screenWidth, setScreenWidth] = useState<number | null>(null);
-    const wizardContext = useWizard();
+    
    
 
     useEffect(() => {
@@ -21,9 +21,9 @@ export const TaskOneJoyRide = () => {
         }
     }, [isClient]);
 
-
+    const OnboardingContext = useOnboarding();
     const handleJoyrideCompletion = (data: CallBackProps) => {
-        if (data.status === 'finished' || data.status === 'skipped') {wizardContext.setActiveJoyrideIndex(null);}
+        if (data.status === 'finished' || data.status === 'skipped') {OnboardingContext.setActiveJoyrideIndex(null);}
     }
 
     const tooltipWidthForSidebar = screenWidth && screenWidth >= 600 ? (screenWidth / 4) - 20 : 'auto';
@@ -109,7 +109,37 @@ export const TaskOneJoyRide = () => {
                     width: tooltipWidthForSidebar,
                 },
             }
-        }
+        },
+        {
+            target: "#project-build-tasks",
+            title: "Task",
+            content: "Break down your projects into tasks. You can use the + and - buttonsto add or remove task. Also you can use AI to create task for you (next)",
+            placement: "right",
+            spotlightClicks: true,
+            disableBeacon: true,
+            styles: {
+                options: {
+                    width: tooltipWidthForSidebar,
+                },
+            }
+        },
+        {
+            target: "#wizardtask",
+            title: "AI Project Manager",
+            content: "Mister Watt turned into a proffessional PM, to help you out. ",
+            placement: "left",
+            spotlightClicks: true,
+            disableBeacon: true,
+            offset: offsetValue,
+            styles: {
+                options: {
+                    width: tooltipWidthForMiddle,
+                },
+                tooltipContent: {
+                    padding: '3px 1px',
+                },
+            },
+        },
     ];
 
     if (!isClient) {
