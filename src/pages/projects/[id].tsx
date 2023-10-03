@@ -2,6 +2,7 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 import Image from 'next/image';
 import React, { useState } from 'react';
+import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
 
 //From https://trpc.io/docs/client/nextjs/server-side-helpers
 import { createServerSideHelpers } from '@trpc/react-query/server';
@@ -14,16 +15,14 @@ import superjson from 'superjson';
 //My components
 import { Tabs } from "~/components/reusables/tabs";
 import { AboutTab } from "~/components/project-page/about/about";
-import { RipleCard } from "~/components/cards/riplecard";
 import { LoadingPage } from "~/components/reusables/loading";
 import { CollabTab } from "~/components/project-page/collab";
 import { GlobalNavBar } from "~/components/navbar/navbar";
 import { SideNavProject } from "~/components/navbar/sidenavproject";
-
-import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
 import Follow from "~/components/reusables/follow";
 import { AdminTab } from "~/components/project-page/admin/admin";
 import Tooltip from "~/components/reusables/tooltip";
+import { RiplesTab } from "~/components/project-page/riples";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -115,14 +114,14 @@ export default function Project(
 
                   {/* Hover buttons */}
                   <div className="absolute bottom-0 right-0 flex flex-col items-end mb-2 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Tooltip content="The feature of uploading your own picture is coming." width="200px">
+                      <Tooltip content="The feature of uploading your own picture is coming." shiftRight={true} width="200px">
                           <span className="mb-2">
                               <button className="m-2 py-1 px-2 bg-sky-100 opacity-70 text-black cursor-not-allowed" disabled>
                                   Replace image
                               </button>
                           </span>
                       </Tooltip>
-                      <Tooltip content="The feature of repositioning picture is coming." width="200px">
+                      <Tooltip content="The feature of repositioning picture is coming." shiftRight={true} width="200px">
                           <span>
                               <button className="m-2 py-1 px-2 bg-sky-100 opacity-70 text-black cursor-not-allowed" disabled>
                                   Reposition
@@ -155,24 +154,9 @@ export default function Project(
 
                 {/* SHOWN IF RIPLES TAB */}
                 {activeTab === 'riples' && (
-                    <div className="mt-4 space-y-2">
-                        <div className="font text-gray-800">
-                            {/* Check if riplesData is available and has at least one entry */}
-                            {ripleData && ripleData.length > 0 ? (
-                                <div>
-                                    {ripleData.map((fullRiple) => (
-                                        <RipleCard key={fullRiple.riple.id} {...fullRiple}></RipleCard>
-                                    ))}
-                                </div>
-                            ) : (
-                                // Display the message if no entries are found
-                                <div className="flex justify-center items-center h-full text-center">
-                                    Your Riples (project updates) will be displayed here once you start posting for this project.
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                    <RiplesTab ripleData={ripleData} ></RiplesTab>
                 )}
+
 
                 {/* SHOWN IF COLLAB*/}
                 {activeTab === 'collab' && <CollabTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} />}

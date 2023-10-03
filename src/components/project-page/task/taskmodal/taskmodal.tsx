@@ -65,7 +65,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   }, [taskToEdit, session, inputValue, allowedToEdit]); 
 
   const handleToogleOwnership = () => {
-    if (!isMember) {
+    if (!isMember && isProjectLead) {
       toast.error("Apply to join the project to claim task");
       return;
     }

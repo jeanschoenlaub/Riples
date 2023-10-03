@@ -113,8 +113,6 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
     }
   };
 
- 
-
   const generateCreatePayload = (): CreateProjectPayload => ({
     title: projectName,
     summary: projectDescription,
@@ -128,6 +126,8 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   });
 
   const handleCreateProject = async  () => {
+    wizardContext.setWizardName("");
+    wizardContext.setShowWizard(false)
     const payload = generateCreatePayload();
     const newProject: NewProjecResponse | undefined = await createProjectAsyncMutation(payload);
     if (newProject) {
@@ -140,8 +140,6 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   const isLoading = isCreating;
 
   const closeModal = () => {
-    console.log("should reset Wizard")
-    wizardContext.setWizardName("");
     resetForm();
   };
 
@@ -200,6 +198,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
         <span className="text-lg flex justify-center items-center space-x-4 mt-4 w-auto">
           {currentStep !== Step.ProjectBuild ? (
             <button 
+              id="next-button-project-create-modal"
               onClick={nextStep}
               className="bg-blue-500 text-white text-lg rounded px-4 py-1  flex items-center justify-center w-auto"
               disabled={isLoading}

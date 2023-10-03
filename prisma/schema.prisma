@@ -25,7 +25,8 @@ model Project {
   
   //Relations
   authorID        String
-  riples          Riple[]  // This establishes the one-to-many relation
+  riples          Riple[]  
+  owner           User    @relation("ProjectOwner", fields: [authorID], references: [id], onDelete: Cascade)
   members         ProjectMembers[] 
   tasks           Tasks[] 
   goals           Goals[] 
@@ -36,12 +37,12 @@ model Project {
 }
 
 model ProjectTags {
-    tag       Tag     @relation(fields: [tagId], references: [id])
-    tagId     String
-    project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-    projectId String
+  tag       Tag     @relation(fields: [tagId], references: [id])
+  tagId     String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
 
-    @@id([tagId, projectId])
+  @@id([tagId, projectId])
 }
 
 model Tasks {
@@ -71,7 +72,7 @@ model Goals {
   progress     Int @default(0)
   progressFinalValue     Int @default(100)
   status       String @default("todo")
-  notes         String @default("")
+  notes        String @db.VarChar(10000)@default("")
 
   // Relations
   projectId    String  
@@ -112,7 +113,8 @@ model ProjectMembers {
   projectId    String 
   project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   userID       String 
-  user         User @relation(fields: [userID], references: [id], onDelete: Cascade) 
+  user         User @relation(fields: [userID], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now()) 
 
   @@index([projectId])
   @@index([userID])
@@ -127,17 +129,20 @@ model ProjectFollowers {
   projectId    String 
   project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   userId       String
-  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)  
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())  
 
   @@index([projectId])
   @@index([userId])
 }
 
 model SubTasks {
-  id          String  @id @default(cuid())
-  title       String  @db.VarChar(255)
-  content     String  @db.VarChar(10000)@default("")
-  status      Boolean @default(false) // You could use a boolean to represent status; false for To-Do, true for Done
+  id           String  @id @default(cuid())
+  title        String  @db.VarChar(255)
+  content      String  @db.VarChar(10000)@default("")
+  status       Boolean @default(false) // You could use a boolean to represent status; false for To-Do, true for Done
+  createdAt    DateTime @default(now())
+  editedAt     DateTime @default(now())
 
   // Relations
   taskId      String
@@ -159,12 +164,31 @@ model User {
   sessions      Session[]
 
   //My User Fields
-  username           String? @unique @db.VarChar(255)
-  onBoardingFinished Boolean @default(false)
+  username            String? @unique @db.VarChar(255)
+  onBoardingFinished  Boolean @default(false)  // depreciated delete in next clean up
+  productTourFinished Boolean @default(false)  // depreciated delete in next clean up
+  password            String  @db.VarChar(255)@default("")
+  createdAt           DateTime @default(now())
+  following           ProjectFollowers[] 
+  member              ProjectMembers[] 
+  ownedProjects       Project[] @relation("ProjectOwner")
+  // Relation to UserOnboarding
+  userOnboarding     UserOnboarding? 
+}
+
+
+model UserOnboarding {
+  id                  String  @id @default(cuid())
+  user                User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String  @unique 
+  
+  onBoardingFinished  Boolean @default(false)
   productTourFinished Boolean @default(false)
-  password          String  @db.VarChar(255)@default("")
-  following          ProjectFollowers[] 
-  member             ProjectMembers[] 
+  stepOneCompleted    Boolean @default(false)
+  stepTwoCompleted    Boolean @default(false)
+  stepThreeCompleted  Boolean @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 model Account {

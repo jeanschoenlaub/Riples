@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import ReactJoyride from 'react-joyride';
-import type { Step } from 'react-joyride';
+import type { CallBackProps, Step } from 'react-joyride';
+import { useOnboarding } from '../onboardingwrapper';
 
 export const TaskOneJoyRide = () => {
     const [isTourOpen, setIsTourOpen] = useState(false);
     const [isClient, setIsClient] = useState(false);
     const [screenWidth, setScreenWidth] = useState<number | null>(null);
-
+    
     useEffect(() => {
         setIsClient(true); 
         setIsTourOpen(true);
@@ -17,6 +18,11 @@ export const TaskOneJoyRide = () => {
             setScreenWidth(window.innerWidth);
         }
     }, [isClient]);
+
+    const OnboardingContext = useOnboarding();
+    const handleJoyrideCompletion = (data: CallBackProps) => {
+        if (data.status === 'finished' || data.status === 'skipped') {OnboardingContext.setActiveJoyrideIndex(null);}
+    }
 
     const tooltipWidthForSidebar = screenWidth && screenWidth >= 600 ? (screenWidth / 4) - 20 : 'auto';
 
@@ -39,6 +45,15 @@ export const TaskOneJoyRide = () => {
 
         },
         {
+            target: "#project-collab-create-project-button",
+            title: "Click that button",
+            content: "Click create",
+            placement: "bottom",
+            spotlightClicks: true,
+            disableBeacon: true,
+
+        },
+        {
             target: "#create-projec-modal-project-name-and-content",
             title: " Project Info ",
             content: "You can add some context (optional). Don't worry, you can change the title and the story easily later !",
@@ -52,11 +67,38 @@ export const TaskOneJoyRide = () => {
             }
         },
         {
-            target: "#project-access-and-visibility",
+            target: "#project-access-and-visibility-with-text",
             title: " Project Access and Visibility ",
-            content: "These concepts might be new to you, but it's pretty easy ! Click on the toggles and the sentence below will explain what the settings imply. Again you can change these later.",
+            content: "Choose who can see and participate in this project (can be changed later.)",
             placement: "right",
             spotlightClicks: true,
+            disableBeacon: true,
+            styles: {
+                options: {
+                    width: tooltipWidthForSidebar,
+                },
+            }
+        },
+        {
+            target: "#project-tags",
+            title: "Project Tags ",
+            content: "Tag your project for your riples to get published to to the relevant crowd",
+            placement: "top",
+            spotlightClicks: true,
+            disableBeacon: true,
+            styles: {
+                options: {
+                    width: tooltipWidthForSidebar,
+                },
+            }
+        },
+        {
+            target: "#next-button-project-create-modal",
+            title: "Click Next",
+            content: "",
+            placement: "top",
+            spotlightClicks: true,
+            disableOverlay: true,
             disableBeacon: true,
             styles: {
                 options: {
@@ -69,7 +111,7 @@ export const TaskOneJoyRide = () => {
     if (!isClient) {
         return null;  // Render nothing during server-side rendering
     }
-
+ 
     return (
             <ReactJoyride
                 steps={tourSteps}
@@ -78,6 +120,8 @@ export const TaskOneJoyRide = () => {
                 scrollToFirstStep={false}
                 showProgress={true}
                 showSkipButton={true}
+                disableOverlayClose={true}
+                callback={handleJoyrideCompletion}
                 hideCloseButton={true}
                 disableScrolling={true}
                 styles={{

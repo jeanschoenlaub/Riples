@@ -111,7 +111,7 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                         <h1 className="text-xl font-semibold"> Break it Down! </h1>
                     </div>
                     {/* Project Tasks */}
-                    <div className="flex items-start mb-1 w-30 ">
+                    <div id="project-build-tasks" className="flex items-start mb-1 w-30 ">
                         <div className="flex-grow flex-col space-y-3 mb-4">
                             <label htmlFor="projectTasks" className="text-base font-semibold mb-2">  
                                 Project Tasks <span className="text-gray-500 text-sm">	&#40;optional&#41;</span>

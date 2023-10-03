@@ -18,7 +18,6 @@ export const GoalModal: React.FC<GoalModalProps> = ({ goalToEdit, projectId, sho
   const [goalNotes, setGoalNotes] = useState<string>(goalToEdit?.notes || ''); // Assuming note is the field in goalToEdit that stores the notes.
   const [goalStatus, setGoalStatus] = useState<string>(goalToEdit?.status || 'To-Do');
 
-  
   const { isEditing, isDeleting, editProjectGoal, deleteProjectGoal } = useProjectGoalMutation();
 
   const isLoading =isDeleting || isEditing
@@ -28,8 +27,11 @@ export const GoalModal: React.FC<GoalModalProps> = ({ goalToEdit, projectId, sho
       setGoalTitle(goalToEdit.title);
       setGoalProgress(goalToEdit.progress);
       setGoalFinalValue(goalToEdit.progressFinalValue);
+      setGoalNotes(goalToEdit.notes);
+      setGoalStatus(goalToEdit.status);
+      console.log(goalStatus)
     }
-  }, [goalToEdit]);
+  }, [goalToEdit, goalStatus]);
 
   const handleSave = () => {
     const payload = generateEditPayload();
@@ -109,7 +111,7 @@ export const GoalModal: React.FC<GoalModalProps> = ({ goalToEdit, projectId, sho
             </div>
         </div>
 
-        { goalToEdit.status == "finished" ?? <div className="flex text-sm mb-2 items-center justify-br" aria-label="Goal Progress">
+        { goalToEdit.status === "finished" ? (<div className="flex text-sm mb-2 items-center justify-br" aria-label="Goal Progress">
           Goal Status:
             <div className="px-2 py-1 ml-1 w-auto">
             <select 
@@ -122,7 +124,7 @@ export const GoalModal: React.FC<GoalModalProps> = ({ goalToEdit, projectId, sho
                 <option value="finished">Finished</option>
             </select>
             </div>
-        </div>}
+        </div>) : (<div></div>)}
 
         <label className="block text-sm mb-3" aria-label="Goal Notes">
             Notes:

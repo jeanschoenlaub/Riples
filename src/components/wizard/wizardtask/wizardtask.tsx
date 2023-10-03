@@ -6,6 +6,9 @@ import { LoadingSpinner } from "../../reusables/loading";
 import type { WizardTaskProps } from "./wizardtasktype";
 import { useOpenAIMutation } from "./wizardtaskapi";
 import toast from "react-hot-toast";
+import Tooltip from "~/components/reusables/tooltip";
+import { QuestionSVG } from "~/components/reusables/svgstroke";
+import { useOnboarding } from "~/components/onboarding/onboardingwrapper";
 
 export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSummary, taskNumber, goalNumber, userId }) => {
     // Use the mutation and specify the onError callback directly.
@@ -16,6 +19,7 @@ export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSum
     const [isPostChecked, setIsPostChecked] = useState(false);
     const isLoading = isGeneratingGoals || isGeneratingTasks || isGeneratingPost
     const dispatch = useDispatch();
+    const onboarding = useOnboarding()
   
     async function generateProjectAIData() {
 
@@ -109,7 +113,18 @@ export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSum
     return (
         <div>
             <div className="onboarding-status-window">
-                <div className="font-semibold"> Task Wizard 👋 </div>
+                <div className="font-semibold"> AI Project Manager 👋 
+
+                <span 
+                        className="ml-2 text-blue-600 cursor-pointer"
+                        onClick={() => { onboarding.setActiveJoyrideIndex(2)}}
+                    >
+                        <Tooltip content="Click me for help with a guided tour and explanations" shiftRight={true} width="150px">
+                            <QuestionSVG width="4" height="4" colorStrokeHex="#2563eb"></QuestionSVG>
+                        </Tooltip>
+                    </span>
+                
+                </div>
                 <div className="mb-4"> Do you want me to help with creating tasks and goals for your project? </div>
 
                 <div>
@@ -142,6 +157,7 @@ export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSum
                 >
                     {isLoading ? <div className="flex items-center "> <LoadingSpinner size={16}></LoadingSpinner> Generating Content  </div>: "Generate Content"}
                 </button>
+                <div className="italic text-sm"> By clicking this will overide the selected fields in the &apos;Create Project&apos; popup  </div>
             </div>
         </div>
     );

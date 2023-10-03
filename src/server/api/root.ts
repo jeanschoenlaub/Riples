@@ -7,7 +7,8 @@ import { projFollowerRouter } from "~/server/api/routers/project-follower";
 import { taskRouter } from "~/server/api/routers/tasks";
 import { userRouter } from "./routers/user";
 import { openAiRouter } from "./routers/openai"
-import { goalRouter } from "./routers/goals";;
+import { goalRouter } from "./routers/goals";import { userOnboardingRouter } from "./routers/useronboarding";
+;
 
 /**
  * 
@@ -29,6 +30,7 @@ export const appRouter = createTRPCRouter({
   projectFollowers: projFollowerRouter,
   tasks : taskRouter,
   users : userRouter,
+  userOnboarding: userOnboardingRouter,
   goals: goalRouter,
 });
 

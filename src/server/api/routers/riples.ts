@@ -38,6 +38,31 @@ export const ripleRouter = createTRPCRouter({
         });
       }),
 
+      delete: protectedProcedure
+      .input(z.object({ripleId: z.string()}))
+      .mutation(async ({ ctx, input }) => {
+          // Find the riple by its unique ID to ensure it exists
+          const riple = await ctx.prisma.riple.findUnique({
+              where: {
+                  id: input.ripleId
+              }
+          });
+  
+          // If the riple does not exist, throw an error
+          if (!riple) {
+              throw new TRPCError({code: "NOT_FOUND", message: "Riple not found"});
+          }
+  
+          // If the riple exists, delete it
+          await ctx.prisma.riple.delete({
+              where: {
+                  id: input.ripleId
+              }
+          });
+  
+          return { message: "Riple successfully deleted" };
+      }),
+  
 
     getRipleByRipleId: publicProcedure
     .input(z.object({ripleId: z.string()}))

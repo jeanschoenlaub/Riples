@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { GoalSVG } from '~/components/reusables/svg';
 import { StarSVG } from '~/components/reusables/svgstroke';
@@ -105,13 +105,13 @@ export const ProjectAboutGoal: React.FC<ProjectAboutGoalProps> = ({
                                             <div>
                                             <button 
                                                 onClick={() => startEditing(index)}
-                                                className="bg-blue-500 text-white text-base rounded ml-2 px-4 py-1 justify-center w-auto"
+                                                className="bg-blue-500 text-white text-base rounded ml-2 px-2 py-1 justify-center w-auto"
                                             >
                                                 Edit
                                             </button>
                                             {goal.status != "finished" && <button 
                                                 onClick={() => GoalFinished(index)}
-                                                className="bg-green-500 text-white text-base rounded ml-2 px-4 py-1 justify-center w-auto"
+                                                className="bg-green-500 text-white text-base rounded ml-2 px-2 py-1 justify-center w-auto"
                                             >
                                                 Done
                                             </button>}
@@ -123,7 +123,7 @@ export const ProjectAboutGoal: React.FC<ProjectAboutGoalProps> = ({
                     ))}
                 </div>
             </div>
-            {(isMember || isProjectLead) &&
+            {(isProjectLead) &&
                 <div id="project-collab-task-create-button" className="mb-2 flex">
                     <div className='mt-2 ml-2 mr-2 md:ml-6 md:mr-6 flex flex-grow space-x-2 items-center'> 
                     <input 
@@ -160,6 +160,7 @@ export const ProjectAboutGoal: React.FC<ProjectAboutGoalProps> = ({
                         goalFinished={goalFinished}
                         showModal={showGoalFinishedModal}
                         isProjectLead={isProjectLead}
+                        isPrivate={projectPrivacy}
                         onClose={() => setShowGoalFinishedModal(false)}
                     />
                 )}
