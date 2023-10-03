@@ -1,13 +1,11 @@
 import { useSession } from 'next-auth/react';
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
-import { WizardOnboarding } from "~/components/onboarding/onboardingwizard/onboardingwizard";
+import { WizardOnboarding } from "~/components/wizard/onboardingwizard";
 import styles from '~/styles/WizardWrapper.module.css'; // you can adjust the path based on your folder structure
 import { api } from '~/utils/api';
 import { WizardTask } from './wizardtask/wizardtask';
 import Image from 'next/image';
-import { TaskOneJoyRide } from '../onboarding/onboardingwizard/taskonejoyride';
-import { TaskOneJoyRidePartTwo } from '../onboarding/onboardingwizard/tasktwojoyride';
 
 type WizardContextType = {
     showWizard: boolean;
@@ -49,7 +47,6 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
         { userId: session?.user?.id ?? "" },
         { enabled: shouldExecuteQuery }
     );
-
 
     return (
         <WizardContext.Provider value={{ setShowWizard, showWizard, setWizardName, setProjectTitle, setProjectSummary, setTaskNumber, setGoalNumber}}>

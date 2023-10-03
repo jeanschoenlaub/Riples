@@ -8,8 +8,6 @@ export const TaskOneJoyRide = () => {
     const [isClient, setIsClient] = useState(false);
     const [screenWidth, setScreenWidth] = useState<number | null>(null);
     
-   
-
     useEffect(() => {
         setIsClient(true); 
         setIsTourOpen(true);
@@ -109,36 +107,6 @@ export const TaskOneJoyRide = () => {
                     width: tooltipWidthForSidebar,
                 },
             }
-        },
-        {
-            target: "#project-build-tasks",
-            title: "Task",
-            content: "Break down your projects into tasks. You can use the + and - buttonsto add or remove task. Also you can use AI to create task for you (next)",
-            placement: "right",
-            spotlightClicks: true,
-            disableBeacon: true,
-            styles: {
-                options: {
-                    width: tooltipWidthForSidebar,
-                },
-            }
-        },
-        {
-            target: "#wizardtask",
-            title: "AI Project Manager",
-            content: "Mister Watt turned into a proffessional PM, to help you out. ",
-            placement: "left",
-            spotlightClicks: true,
-            disableBeacon: true,
-            offset: offsetValue,
-            styles: {
-                options: {
-                    width: tooltipWidthForMiddle,
-                },
-                tooltipContent: {
-                    padding: '3px 1px',
-                },
-            },
         },
     ];
 

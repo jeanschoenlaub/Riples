@@ -122,6 +122,14 @@ export const projRouter = createTRPCRouter({
       where: { authorID: input.authorId },
       take: 100,
       orderBy: [{ createdAt: "desc" }],
+      include: {
+        tasks: {
+          include: {
+            subTasks: true
+          }
+        },
+        goals: true,
+      }
     });
 
     const author = await ctx.prisma.user.findUnique({

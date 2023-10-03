@@ -113,7 +113,8 @@ model ProjectMembers {
   projectId    String 
   project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   userID       String 
-  user         User @relation(fields: [userID], references: [id], onDelete: Cascade) 
+  user         User @relation(fields: [userID], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now()) 
 
   @@index([projectId])
   @@index([userID])
@@ -128,17 +129,18 @@ model ProjectFollowers {
   projectId    String 
   project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   userId       String
-  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)  
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())  
 
   @@index([projectId])
   @@index([userId])
 }
 
 model SubTasks {
-  id          String  @id @default(cuid())
-  title       String  @db.VarChar(255)
-  content     String  @db.VarChar(10000)@default("")
-  status      Boolean @default(false) // You could use a boolean to represent status; false for To-Do, true for Done
+  id           String  @id @default(cuid())
+  title        String  @db.VarChar(255)
+  content      String  @db.VarChar(10000)@default("")
+  status       Boolean @default(false) // You could use a boolean to represent status; false for To-Do, true for Done
   createdAt    DateTime @default(now())
   editedAt     DateTime @default(now())
 
@@ -163,13 +165,30 @@ model User {
 
   //My User Fields
   username            String? @unique @db.VarChar(255)
-  onBoardingFinished  Boolean @default(false)
-  productTourFinished Boolean @default(false)
+  onBoardingFinished  Boolean @default(false)  // depreciated delete in next clean up
+  productTourFinished Boolean @default(false)  // depreciated delete in next clean up
   password            String  @db.VarChar(255)@default("")
   createdAt           DateTime @default(now())
   following           ProjectFollowers[] 
   member              ProjectMembers[] 
   ownedProjects       Project[] @relation("ProjectOwner")
+  // Relation to UserOnboarding
+  userOnboarding     UserOnboarding? 
+}
+
+
+model UserOnboarding {
+  id                  String  @id @default(cuid())
+  user                User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String  @unique 
+  
+  onBoardingFinished  Boolean @default(false)
+  productTourFinished Boolean @default(false)
+  stepOneCompleted    Boolean @default(false)
+  stepTwoCompleted    Boolean @default(false)
+  stepThreeCompleted  Boolean @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 model Account {

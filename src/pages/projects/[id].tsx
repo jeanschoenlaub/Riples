@@ -115,14 +115,14 @@ export default function Project(
 
                   {/* Hover buttons */}
                   <div className="absolute bottom-0 right-0 flex flex-col items-end mb-2 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Tooltip content="The feature of uploading your own picture is coming." width="200px">
+                      <Tooltip content="The feature of uploading your own picture is coming." shiftRight={true} width="200px">
                           <span className="mb-2">
                               <button className="m-2 py-1 px-2 bg-sky-100 opacity-70 text-black cursor-not-allowed" disabled>
                                   Replace image
                               </button>
                           </span>
                       </Tooltip>
-                      <Tooltip content="The feature of repositioning picture is coming." width="200px">
+                      <Tooltip content="The feature of repositioning picture is coming." shiftRight={true} width="200px">
                           <span>
                               <button className="m-2 py-1 px-2 bg-sky-100 opacity-70 text-black cursor-not-allowed" disabled>
                                   Reposition

@@ -2,9 +2,10 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import ReactJoyride from 'react-joyride';
 import type { CallBackProps, Step } from 'react-joyride';
-import { useWizard } from '../wizard/wizardswrapper';
+import { useWizard } from '../../wizard/wizardswrapper';
 import { useSession } from 'next-auth/react';
 import { api } from '~/utils/api'; 
+import { useOnboardingMutation } from './onboardingapi';
 
 export const OnboardingJoyRideOne = () => {
     const [isTourOpen, setIsTourOpen] = useState(false);
@@ -14,7 +15,7 @@ export const OnboardingJoyRideOne = () => {
     const { data: session } = useSession(); 
 
     //Quite a bit of logic for not displaying tour mutliple times
-    const { completeProductTour } = useProductTourCompletionMutation();
+    const { completeProductTour } = useOnboardingMutation();
     let initialProductTourFinished = false;
     if (typeof localStorage !== 'undefined') {
          initialProductTourFinished = localStorage.getItem('productTourFinished') === 'true';
@@ -25,7 +26,7 @@ export const OnboardingJoyRideOne = () => {
     const userId = session?.user?.id ?? ''; // This will never be empty due to the above check
 
     // Conditional query using tRPC to fetch the product tour status
-    const { data: productTourStatus, error } = api.users.getProductTourStatus.useQuery(
+    const { data: productTourStatus, error } = api.userOnboarding.getProductTourStatus.useQuery(
         { userId },
         { enabled: shouldExecuteQuery }
     );
@@ -180,18 +181,3 @@ export const OnboardingJoyRideOne = () => {
     );
 };
 
-const useProductTourCompletionMutation = () => {
-    const { mutate: completeProductTourMutation } = api.users.editProductTourStatus.useMutation();
-  
-    const completeProductTour = (payload: { userId: string, productTourFinished: boolean;}) => {
-        completeProductTourMutation(payload, {
-            onError: (e) => {
-                console.error("Failed to save product tour status:", e);
-            }
-        });
-    };
-  
-    return {
-      completeProductTour,
-    }
-  }
