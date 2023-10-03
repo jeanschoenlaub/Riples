@@ -25,8 +25,6 @@ export const TaskOneJoyRide = () => {
     }
 
     const tooltipWidthForSidebar = screenWidth && screenWidth >= 600 ? (screenWidth / 4) - 20 : 'auto';
-    const offsetValue = screenWidth ? (screenWidth / 8) : 0;
-    const tooltipWidthForMiddle = screenWidth ? (screenWidth/2) - 20 : 'auto';
 
     const tourSteps: Step[] = [
         {
@@ -84,7 +82,7 @@ export const TaskOneJoyRide = () => {
         {
             target: "#project-tags",
             title: "Project Tags ",
-            content: "Optional, allows Riples to recommend you project to the user with matching interest and skillsets. Only for public",
+            content: "Tag your project for your riples to get published to to the relevant crowd",
             placement: "top",
             spotlightClicks: true,
             disableBeacon: true,

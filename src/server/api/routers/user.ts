@@ -66,7 +66,26 @@ export const userRouter = createTRPCRouter({
         user: updatedUser,
       };
     }),
+    getProductTourStatus: protectedProcedure
+    .input(z.object({
+        userId: z.string(),
+    }))
+    .query(async ({ ctx, input }) => {
+        const { userId } = input;
 
+        const user = await ctx.prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                productTourFinished: true
+            }
+        });
+
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        return user;
+    }),
   deleteUser: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .mutation(async ({ ctx, input }) => {

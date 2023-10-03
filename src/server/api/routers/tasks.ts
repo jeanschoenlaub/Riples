@@ -156,14 +156,9 @@ export const taskRouter = createTRPCRouter({
       id: z.string(),
       projectId: z.string(),
       userId: z.string().nullable(),
-    }))    .mutation(async ({ ctx, input }) => {
+    }))
+    .mutation(async ({ ctx, input }) => {
       const { id, userId } = input;
-
-      // Optionally, check if the user has permissions to change the owner of this task
-      // Your logic here...
-
-      // Validate if the user is a part of the project before changing ownership
-      // Your logic here...
 
       const updatedTask = await ctx.prisma.tasks.update({
         where: { id },

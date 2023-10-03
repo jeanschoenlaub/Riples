@@ -89,7 +89,7 @@ export const goalRouter = createTRPCRouter({
               data: {
                 title: `Goal: "${input.goalTitle}" was just completed`, 
                 ripleType: "goalFinished",
-                content: input.postContent || "A goal has been successfully completed!", // default content if none provided
+                content: input.postContent ?? "A goal has been successfully completed!", // default content if none provided
                 projectId: updatedGoal.projectId, // Assuming goals have a relation to projects, you might need to adjust this
                 authorID: createdById,
               }

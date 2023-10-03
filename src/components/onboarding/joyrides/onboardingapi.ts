@@ -1,12 +1,12 @@
 import { api } from "~/utils/api";
 
 export const useOnboardingMutation = () => {
-    const { mutate: completeProductTourMutation } = api.userOnboarding.editProductTourStatus.useMutation();
+    const { mutate: completeProductTourMutation } = api.userOnboarding.setProductTourCompleted.useMutation();
     const { mutate: setStepOneCompletedMutation } = api.userOnboarding.setStepOneCompleted.useMutation();
     const { mutate: setStepTwoCompletedMutation } = api.userOnboarding.setStepTwoCompleted.useMutation();
 
 
-    const completeProductTour = (payload: { userId: string; productTourFinished: boolean; }) => {
+    const completeProductTour = (payload: { userId: string }) => {
         completeProductTourMutation(payload, {
             onError: (e) => {
                 console.error("Failed to save product tour status:", e);

@@ -2,10 +2,10 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import ReactJoyride from 'react-joyride';
 import type { CallBackProps, Step } from 'react-joyride';
-import { useWizard } from '../../wizard/wizardswrapper';
 import { useSession } from 'next-auth/react';
 import { api } from '~/utils/api'; 
 import { useOnboardingMutation } from './onboardingapi';
+import { useWizard } from '~/components/wizard/wizardswrapper';
 
 export const OnboardingJoyRideOne = () => {
     const [isTourOpen, setIsTourOpen] = useState(false);
@@ -17,32 +17,34 @@ export const OnboardingJoyRideOne = () => {
     //Quite a bit of logic for not displaying tour mutliple times
     const { completeProductTour } = useOnboardingMutation();
     let initialProductTourFinished = false;
+
+    // If local storage is available, check if tour is finished
     if (typeof localStorage !== 'undefined') {
          initialProductTourFinished = localStorage.getItem('productTourFinished') === 'true';
     }
     const [productTourFinished, setProductTourFinished] = useState(initialProductTourFinished);
-
     const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user ID exist
     const userId = session?.user?.id ?? ''; // This will never be empty due to the above check
 
     // Conditional query using tRPC to fetch the product tour status
-    const { data: productTourStatus, error } = api.userOnboarding.getProductTourStatus.useQuery(
+    const { data: productTourStatus, error } = api.userOnboarding.getOnboardingStatus.useQuery(
         { userId },
         { enabled: shouldExecuteQuery }
     );
 
     useEffect(() => {
-        if (productTourStatus) {
+        console.log(productTourStatus)
+        if (productTourStatus?.productTourFinished) {
             setProductTourFinished(productTourStatus.productTourFinished);
             localStorage.setItem('productTourFinished', productTourStatus.productTourFinished.toString());
         }
         if (error) {
             console.error("Failed to fetch product tour status:", error);
         }
-    }, [productTourStatus, error]);
+    }, [ productTourStatus, error]);
 
     useEffect(() => {
-        setIsClient(true); 
+        setIsClient(true);
         const tourTimeout = setTimeout(() => {
             if (!productTourFinished) {
                 setIsTourOpen(true);
@@ -55,7 +57,7 @@ export const OnboardingJoyRideOne = () => {
     //If the user as already completed the product tour unsigned in and signs in afterwards
     useEffect(() => {
         if (session && localStorage.getItem('productTourFinished') === 'true') {
-            completeProductTour({ userId: session.user.id, productTourFinished: true });
+            completeProductTour({ userId: session.user.id});
             setProductTourFinished(true);
         }
     }, [session]);
@@ -139,7 +141,7 @@ export const OnboardingJoyRideOne = () => {
                 wizardContext.setShowWizard(true);
             }
             if (session) { 
-                completeProductTour({ userId: session.user.id, productTourFinished : true })
+                completeProductTour({userId: session.user.id})
             }
             else {
                 localStorage.setItem('productTourFinished', 'true');
@@ -180,4 +182,3 @@ export const OnboardingJoyRideOne = () => {
         </>
     );
 };
-

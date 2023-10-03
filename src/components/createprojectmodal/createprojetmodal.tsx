@@ -126,6 +126,8 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   });
 
   const handleCreateProject = async  () => {
+    wizardContext.setWizardName("");
+    wizardContext.setShowWizard(false)
     const payload = generateCreatePayload();
     const newProject: NewProjecResponse | undefined = await createProjectAsyncMutation(payload);
     if (newProject) {
@@ -138,8 +140,6 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   const isLoading = isCreating;
 
   const closeModal = () => {
-    console.log("should reset Wizard")
-    wizardContext.setWizardName("");
     resetForm();
   };
 

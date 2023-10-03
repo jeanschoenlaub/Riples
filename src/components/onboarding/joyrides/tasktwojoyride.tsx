@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import ReactJoyride from 'react-joyride';
 import type { CallBackProps, Step } from 'react-joyride';
-import { useWizard } from '~/components/wizard/wizardswrapper';
 import { useOnboarding } from '../onboardingwrapper';
 
 export const TaskTwoJoyRide = () => {
@@ -27,8 +26,6 @@ export const TaskTwoJoyRide = () => {
     }
 
     const tooltipWidthForSidebar = screenWidth && screenWidth >= 600 ? (screenWidth / 4) - 20 : 'auto';
-    const offsetValue = screenWidth ? (screenWidth / 8) : 0;
-    const tooltipWidthForMiddle = screenWidth ? (screenWidth/2) - 20 : 'auto';
 
     const tourSteps: Step[] = [
         {

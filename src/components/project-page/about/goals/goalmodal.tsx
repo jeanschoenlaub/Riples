@@ -31,7 +31,7 @@ export const GoalModal: React.FC<GoalModalProps> = ({ goalToEdit, projectId, sho
       setGoalStatus(goalToEdit.status);
       console.log(goalStatus)
     }
-  }, [goalToEdit]);
+  }, [goalToEdit, goalStatus]);
 
   const handleSave = () => {
     const payload = generateEditPayload();

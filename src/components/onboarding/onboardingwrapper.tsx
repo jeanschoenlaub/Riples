@@ -1,6 +1,6 @@
 import { OnboardingJoyRideOne } from "./joyrides/onboardingjoyride";
 import { OnboardingUserProfile } from "./onboardinguserprofiles";
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, type ReactNode, useEffect } from 'react';
 import { TaskOneJoyRide } from "./joyrides/taskonejoyride";
 import { TaskTwoJoyRide } from "./joyrides/tasktwojoyride";
 import { useSession } from "next-auth/react";
@@ -90,7 +90,7 @@ export const OnboardingWrapper: React.FC = () => {
           // Execute the mutation to update step one status
           setStepOneCompleted({ userId: userId }); // Assuming you have currentUserId
       }
-  }, [projectLead]);
+  }, [projectLead, setStepOneCompleted , completedTasks, userOnboardingStatus, userId, userOnboardingStatus?.stepOneCompleted]);
 
   ////step2 check 
   const { setStepTwoCompleted } = useOnboardingMutation();
@@ -110,7 +110,7 @@ export const OnboardingWrapper: React.FC = () => {
       // Execute the mutation to update step one status
       setStepTwoCompleted({ userId: userId });
     }
-  }, [isAuthorOfRelevantProject]);
+  }, [isAuthorOfRelevantProject, completedTasks, userOnboardingStatus, userId, setStepTwoCompleted]);
   
   
   const onClose = () => {

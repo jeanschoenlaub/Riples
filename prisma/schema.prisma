@@ -179,7 +179,7 @@ model User {
 
 model UserOnboarding {
   id                  String  @id @default(cuid())
-  user                User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId              String  @unique 
   
   onBoardingFinished  Boolean @default(false)
