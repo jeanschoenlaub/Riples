@@ -75,7 +75,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
   if (isError || !taskData) return <p>Error loading tasks.</p>;
 
   return (
-    <div className=''>
+    <div className='mb-10'>
       {(isMember || isProjectLead) &&
         <div id="project-collab-task-create-button" className="mb-2 flex">
           <div className='mt-2 ml-2 mr-2 flex flex-grow space-x-2 items-center'> 
@@ -192,7 +192,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
             </React.Fragment>
           ))}
         </StyledTable>
-      
+        
       </div>
         <TaskModal 
           project={project} 
@@ -208,6 +208,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
           }}
         />
       </div>
+
   );
 };
 

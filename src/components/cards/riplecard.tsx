@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { RouterOutputs } from "~/utils/api";
 import Follow from "../reusables/follow";
+import { TrashSVG } from "../reusables/svgstroke";
 
 type RipleWithUser = RouterOutputs["riples"]["getAll"][number]&{
     onDelete?: (rippleId: string) => void;
@@ -72,7 +73,7 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
                     {riple.title}
                 </div>
                 <div id="riple-card-header-delete-optional">
-                    {onDelete ? <button  className="bg-red-500 px-2 py-1 rounded-lg" onClick={() => onDelete(riple.id)}>Delete</button> : null}
+                    {onDelete ? <button  className="bg-red-500 px-2 py-1 rounded-lg" onClick={() => onDelete(riple.id)}><TrashSVG width="4" height="4"></TrashSVG></button> : null}
                 </div>
                 <div id="riple-card-header-follow">
                     <Follow projectId={riple.projectId} />

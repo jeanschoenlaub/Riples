@@ -26,6 +26,7 @@ model Project {
   //Relations
   authorID        String
   riples          Riple[]  // This establishes the one-to-many relation
+  owner           User    @relation("ProjectOwner", fields: [authorID], references: [id], onDelete: Cascade)
   members         ProjectMembers[] 
   tasks           Tasks[] 
   goals           Goals[] 
@@ -138,6 +139,8 @@ model SubTasks {
   title       String  @db.VarChar(255)
   content     String  @db.VarChar(10000)@default("")
   status      Boolean @default(false) // You could use a boolean to represent status; false for To-Do, true for Done
+  createdAt    DateTime @default(now())
+  editedAt     DateTime @default(now())
 
   // Relations
   taskId      String
@@ -159,12 +162,14 @@ model User {
   sessions      Session[]
 
   //My User Fields
-  username           String? @unique @db.VarChar(255)
-  onBoardingFinished Boolean @default(false)
+  username            String? @unique @db.VarChar(255)
+  onBoardingFinished  Boolean @default(false)
   productTourFinished Boolean @default(false)
-  password          String  @db.VarChar(255)@default("")
-  following          ProjectFollowers[] 
-  member             ProjectMembers[] 
+  password            String  @db.VarChar(255)@default("")
+  createdAt           DateTime @default(now())
+  following           ProjectFollowers[] 
+  member              ProjectMembers[] 
+  ownedProjects       Project[] @relation("ProjectOwner")
 }
 
 model Account {

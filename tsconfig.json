@@ -29,6 +29,6 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs"
-, "src/utils/error-handling.ts", "src/utils/googleanalytics/index.ts"  ],
+, "src/utils/error-handling.ts", "src/utils/googleanalytics/index.ts", "src/components/onboarding/onboardingwizard/taskonejoyrideparttwo"  ],
   "exclude": ["node_modules"]
 }

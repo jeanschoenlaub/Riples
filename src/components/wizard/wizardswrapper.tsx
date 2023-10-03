@@ -6,10 +6,14 @@ import styles from '~/styles/WizardWrapper.module.css'; // you can adjust the pa
 import { api } from '~/utils/api';
 import { WizardTask } from './wizardtask/wizardtask';
 import Image from 'next/image';
+import { TaskOneJoyRide } from '../onboarding/onboardingwizard/taskonejoyride';
+import { TaskOneJoyRidePartTwo } from '../onboarding/onboardingwizard/taskonejoyrideparttwo';
 
 type WizardContextType = {
-    setShowWizard: React.Dispatch<React.SetStateAction<boolean>>;
     showWizard: boolean;
+    setShowWizard: React.Dispatch<React.SetStateAction<boolean>>;
+    activeJoyrideIndex: number | null;
+    setActiveJoyrideIndex: React.Dispatch<React.SetStateAction<number | null>>;
     setWizardName: React.Dispatch<React.SetStateAction<string>>;
     setProjectTitle: React.Dispatch<React.SetStateAction<string>>;
     setProjectSummary: React.Dispatch<React.SetStateAction<string>>;
@@ -39,7 +43,6 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
     const [taskNumber, setTaskNumber] = useState("3");
     const [goalNumber, setGoalNumber] = useState("1");
 
-
     const { data: session } = useSession();
     const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user id is not null
   
@@ -49,8 +52,22 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
         { enabled: shouldExecuteQuery }
     );
 
+
+    const [activeJoyrideIndex, setActiveJoyrideIndex] = useState<number | null>(null);
+    const TaskJoyride = ({ isActive, index }: { isActive: boolean, index: number, wizardName: string }) => {
+        if (index === 0 && isActive && wizardName=="") {
+            return <TaskOneJoyRide />;
+        }
+        if (index === 0 && isActive && wizardName=="wizardtask") {
+            return <TaskOneJoyRidePartTwo />;
+        }
+        // Add conditions for other tasks as needed.
+        return null;
+    };
+
     return (
-        <WizardContext.Provider value={{ setShowWizard, showWizard, setWizardName, setProjectTitle, setProjectSummary, setTaskNumber, setGoalNumber}}>
+        <WizardContext.Provider value={{ setShowWizard, showWizard, activeJoyrideIndex, 
+            setActiveJoyrideIndex, setWizardName, setProjectTitle, setProjectSummary, setTaskNumber, setGoalNumber}}>
             {children}
             <button id="misterwattbutton" className={styles.floatingButton} onClick={() => setShowWizard(!showWizard)}>
                 <Image src="/images/riple_ai.png" alt="Open Wizard" width={256} height={256} />
@@ -62,8 +79,8 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
                 </div>
             </div>
             }
-            {showWizard && (wizardName == "")  && (!shouldExecuteQuery || userQuery.data?.user?.onBoardingFinished === false) && 
-                <div id="wizardonboarding" className={styles.floatingWindow}>
+            {showWizard && (activeJoyrideIndex==null) && (wizardName == "")  && (!shouldExecuteQuery || userQuery.data?.user?.onBoardingFinished === false) &&
+                <div id="wizardonboarding" className={`${styles.floatingWindow}`}>
                     {/* If no logged in users or the logged in user hasn't finished the tutorial, show onboarding Mister Watt */}
                     <WizardOnboarding />
                     <button onClick={() => setShowWizard(false)}>Close</button>
@@ -74,6 +91,8 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
                     {/* If  finished the tutorial, show real Mister Watt */}
                 </div>
             }
+            <TaskJoyride isActive={activeJoyrideIndex !== null} index={activeJoyrideIndex ?? -1} wizardName={wizardName} />
         </WizardContext.Provider>
+        
     );
 };

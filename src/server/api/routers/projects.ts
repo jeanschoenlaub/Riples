@@ -223,7 +223,7 @@ export const projRouter = createTRPCRouter({
     if (input.postToFeed) {
       await ctx.prisma.riple.create({
         data: {
-          title: "A new Project was created !",   // or any suitable title for the ripple
+          title: "New Project !",   // or any suitable title for the ripple
           ripleType: "creation",
           content: input.postContent, // or any suitable content
           projectId: project.id,

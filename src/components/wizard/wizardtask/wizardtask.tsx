@@ -109,7 +109,7 @@ export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSum
     return (
         <div>
             <div className="onboarding-status-window">
-                <div className="font-semibold"> Task Wizard 👋 </div>
+                <div className="font-semibold"> AI Project Manager 👋 </div>
                 <div className="mb-4"> Do you want me to help with creating tasks and goals for your project? </div>
 
                 <div>

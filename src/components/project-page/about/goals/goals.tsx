@@ -105,13 +105,13 @@ export const ProjectAboutGoal: React.FC<ProjectAboutGoalProps> = ({
                                             <div>
                                             <button 
                                                 onClick={() => startEditing(index)}
-                                                className="bg-blue-500 text-white text-base rounded ml-2 px-4 py-1 justify-center w-auto"
+                                                className="bg-blue-500 text-white text-base rounded ml-2 px-2 py-1 justify-center w-auto"
                                             >
                                                 Edit
                                             </button>
                                             {goal.status != "finished" && <button 
                                                 onClick={() => GoalFinished(index)}
-                                                className="bg-green-500 text-white text-base rounded ml-2 px-4 py-1 justify-center w-auto"
+                                                className="bg-green-500 text-white text-base rounded ml-2 px-2 py-1 justify-center w-auto"
                                             >
                                                 Done
                                             </button>}

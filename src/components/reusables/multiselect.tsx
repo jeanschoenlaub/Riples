@@ -12,6 +12,7 @@ type ValueType = OptionType[];
 interface MultiSelectProps {
   options: OptionType[];
   onChange: (selected: ValueType | null) => void;
+  disabled? : boolean;
   maxSelection?: number;
   placeholder?: string;
   value?: ValueType;
@@ -20,6 +21,7 @@ interface MultiSelectProps {
 const MultiSelect: React.FC<MultiSelectProps> = ({
   options,
   onChange,
+  disabled,
   maxSelection = 5,
   placeholder = "Select...",
   value,
@@ -47,6 +49,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       isMulti
       options={options}
       onChange={handleChange}  // Using "as any" here to bypass potential type issues.
+      isDisabled={disabled}
       placeholder={placeholder}
       value={value}
     />
