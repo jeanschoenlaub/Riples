@@ -116,7 +116,7 @@ const ProjectDescriptionComponent: React.FC<ProjectDescriptionComponentProps> = 
                                 Visibility
                                 <Tooltip content="Impacts who can see your projects. Can be changed later." width="200px">
                                     <span>
-                                        <svg className="w-4 h-4 ml-1 mb-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <svg className="w-4 h-4 ml-1 mb-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9h2v5m-2 0h4M9.408 5.5h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                         </svg>
                                     </span>
@@ -141,7 +141,7 @@ const ProjectDescriptionComponent: React.FC<ProjectDescriptionComponentProps> = 
                                 Access
                                 <Tooltip content="Impacts the accessibility of collaboration tabs (like tasks). Can be changed later." width="200px">
                                     <span>
-                                        <svg className="w-4 h-4 ml-1 mb-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <svg className="w-4 h-4 ml-1 mb-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9h2v5m-2 0h4M9.408 5.5h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                         </svg>
                                     </span>
