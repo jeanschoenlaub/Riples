@@ -71,7 +71,7 @@ export const OnboardingWrapper: React.FC = () => {
   const { data: session } = useSession(); 
   const shouldExecuteQuery = !!session?.user?.id;
   const userId = session?.user?.id ?? '';
-  const { data: projectLead } = api.projects.getProjectByAuthorId.useQuery(
+  const { data: projectLead } = api.projects.getFullProjectByAuthorId.useQuery(
     { authorId: userId },
     { enabled: shouldExecuteQuery }
   );
