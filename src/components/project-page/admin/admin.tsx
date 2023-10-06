@@ -73,7 +73,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectL
   const {  isEditing, editProjectAdmin } = useProjectAdminMutation()
 
   return (
-    <div className='flex border-r-2 border-l-2 border-gray-200 dark:border-gray-700'>
+    <div className='flex border-r-2 border-l-2 border-gray-200'>
         <div id="proj-admin" className="mb-2 mt-2 space-y-4">
             <div className='flex items-center space-x-4'>
                 <div className='text-lg mt-2 font-semibold'>Manage Accessibility</div>   
@@ -174,7 +174,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectL
                 {members
                     .filter(member => member.member.status === "PENDING")
                     .map((member, index) => (
-                        <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <tr key={index} className="bg-white border-b  ">
                         <td className="px-6 py-4">
                             <div className="flex items-center">
                             <Link href={`/users/${member.user.id}`}>
@@ -190,12 +190,12 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectL
                         </td>
                         <td className="px-6 py-4 space-x-6">
                             <button onClick={() => handleApprove(member.user.id,project.id)} disabled={isLoading}>
-                                <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                <svg className="w-4 h-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
                                     <path stroke="#008000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5.917 5.724 10.5 15 1.5"/>
                                 </svg>
                             </button>
                             <button onClick={() => handleRefuse(member.user.id,project.id)} disabled={isLoading}>
-                                <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <svg className="w-4 h-4 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                     <path stroke="#FF0000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                                 </svg>
                             </button>
@@ -213,7 +213,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectL
                     {members
                         .filter(member => member.member.status === "APPROVED")
                         .map((member, index) => (
-                            <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <tr key={index} className="bg-white border-b">
                             <td className="px-6 py-4">
                                 <div className="flex items-center">
                                 <Link href={`/users/${member.user.id}`}>
@@ -229,7 +229,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectL
                                   onClick={() => handleRefuse(member.user.id,project.id)} 
                                   disabled={isDeleting}
                                 >
-                                    <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                    <svg className="w-4 h-4 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                         <path stroke="#FF0000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                                     </svg>
                                 </button>

@@ -137,7 +137,7 @@ export default function Project(
                   <Follow projectId={projectId} />
                 </div>
 
-                <div id="project-main-tabs" className="border-b mt-2 border-gray-200 dark:border-gray-700">
+                <div id="project-main-tabs" className="border-b mt-2 border-gray-200 ">
                   <Tabs 
                     activeTab={activeTab} 
                     setActiveTab={setActiveTab} 

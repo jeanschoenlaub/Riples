@@ -14,8 +14,8 @@ interface TabsProps {
 
 export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, projects, collab, admin}) => {
   return (
-    <div id="project-main-tabs" className="border-b border-gray-200 dark:border-gray-700">
-       <ul className="flex whitespace-nowrap overflow-x-auto -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
+    <div id="project-main-tabs" className="border-b border-gray-200 ">
+       <ul className="flex whitespace-nowrap overflow-x-auto -mb-px text-sm font-medium text-center text-gray-500 ">
         {/* ABOUT TAB */}
         <li className="mr-1">
           <button

@@ -29,7 +29,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
           <Link href={`/projects/${project.id}`} className="text-sm font-medium text-sky-500 truncate dark:text-white underline">
             {project.title}
           </Link>
-          <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+          <p className="text-sm text-gray-500 truncate ">
             {author.username}
           </p>
         </div>

@@ -15,6 +15,7 @@ export const userRouter = createTRPCRouter({
           emailVerified: true,
           image: true,
           username: true,
+          createdAt: true,
           onBoardingFinished: true,
           productTourFinished: true
           // ... other fields you want to select
