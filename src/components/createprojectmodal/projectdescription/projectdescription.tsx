@@ -167,16 +167,13 @@ const ProjectDescriptionComponent: React.FC<ProjectDescriptionComponentProps> = 
                 <div id="project-tags" className="mt-6 space-y-2 border-t py-2 border-gray-300">
                         <label htmlFor="projectTaGs" className="text-base font-semibold mb-2">  
                             Project Tags 
-                            {isPrivate ?  
-                                <span className="text-gray-500 text-sm"> &#40;Only available for public projects &#41;</span> 
-                                : <span className="text-gray-500 text-sm"> &#40;optional&#41; </span>  }
-                            
+                            <span className="text-gray-500 text-sm"> &#40;optional&#41; </span>  
                         </label>
                        
                         <MultiSelect
                           options={sortedProjectClassifications}
                           value={selectedTags}
-                          disabled={isPrivate}
+                          disabled={isLoading}
                           onChange={(selected) => {
                           // Convert OptionType[] back to string[] for onTagsChange
                           if (selected) {

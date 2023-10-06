@@ -185,7 +185,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
             />
         </label>
    
-        <div id="task-modal-owner-info" className="flex flex-wrap items-center space-x-5 mb-2 md:flex-nowrap">
+        <div id="task-modal-status" className="flex flex-wrap items-center space-x-5 mb-2 md:flex-nowrap">
             <span className="text-sm flex items-center space-x-4 w-auto mr-2" aria-label="Task Title">Task Status:
               <select 
                 value={taskStatus} 

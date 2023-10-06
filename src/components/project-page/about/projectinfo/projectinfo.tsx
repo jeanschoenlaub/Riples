@@ -182,27 +182,39 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
         </span>
 
         {/* About the Project Members */}
-        <div id="project-about-members" className="mb-4 ml-2 mt-3  flex flex-wrap items-center">
+        <div id="project-about-members" className="mb-4 ml-2 mt-3 flex flex-wrap items-center">
           <span className="text-sm font-semibold text-gray-500">Project Members:</span>
 
-          <div className="mt-2 flex flex-wrap items-center">
-            {project.project.members.filter(user => user.status === "APPROVED").map((user, index) => (
-              <div key={index} className="flex items-center ml-2">
-                {index > 0 && <span className="text-sm font-medium">, </span>}
-                <div id={`riple-card-metadata-auth-profile-image-${index}`} className="flex items-center">
-                  <Link href={`/users/${user.id}`}>
-                    <ProfileImage user={user.user} size={32} />
-                  </Link>
+          { 
+            project.project.members.filter(user => user.status === "APPROVED").length === 0
+              ? (
+                // Render a message or any other component to indicate that there are no members
+                <div className="ml-2 items-center text-center py-2 text-gray-600">
+                  No members.
                 </div>
-                <span className="font-medium ml-1 flex items-center">
-                  <Link href={`/users/${user.user.id}`} className="text-sm font-medium ml-2">
-                    {user.user.username}
-                  </Link>
-                </span>
-              </div>
-            ))}
-          </div>
+              )
+              : (
+                <div className="flex flex-wrap items-center">
+                  {project.project.members.filter(user => user.status === "APPROVED").map((user, index) => (
+                    <div key={index} className="flex items-center ml-2">
+                      {index > 0 && <span className="text-sm font-medium">, </span>}
+                      <div id={`riple-card-metadata-auth-profile-image-${index}`} className="flex items-center">
+                        <Link href={`/users/${user.id}`}>
+                          <ProfileImage user={user.user} size={32} />
+                        </Link>
+                      </div>
+                      <span className="font-medium ml-1 flex items-center">
+                        <Link href={`/users/${user.user.id}`} className="text-sm font-medium ml-2">
+                          {user.user.username}
+                        </Link>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )
+          }
         </div>
+
 
          {/* JOIN / LEAVE PROJECT SECTION AND BUTTON */}
          { (project.project.projectType === "collab") &&

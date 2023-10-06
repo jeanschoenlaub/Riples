@@ -73,4 +73,4 @@ export const useProjectInfoMutation = () => {
       editProjectInfo,
       applyToProject,
     };
-  };
+};
