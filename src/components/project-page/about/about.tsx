@@ -20,7 +20,7 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
     const allSubtasks = project.project.tasks.flatMap(task => task.subTasks);
     const completedSubtasksCount = allSubtasks.filter(subtask => subtask?.status).length;
     return (
-      <div id="proj-about-html" className="border-r-2 border-l-2 border-gray-200 dark:border-gray-700 mb-2 space-y-4">
+      <div id="proj-about-html" className="border-r-2 border-l-2 border-gray-20 mb-2 space-y-4">
         <ProjectAboutInfo
             project={project}
             isProjectLead={isProjectLead}

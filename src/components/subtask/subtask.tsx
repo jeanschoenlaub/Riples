@@ -108,14 +108,14 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
             </span>
             {/*Sub task delete */}
             <button 
-              className="text-blue-600 dark:text-blue-500 hover:underline ml-2"
+              className="text-blue-600  hover:underline ml-2"
               onClick={() => handleDeleteSubTask(subTask.id)}
               disabled={isLoading}
               >
               {(LoadingSubTaskId === subTask.id && isDeleting )?
                     (<LoadingSpinner size={16} />) 
                     :(
-                  <svg className="w-4 h-4 text-gray-800  dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                  <svg className="w-4 h-4 text-gray-800  " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                   <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
                   </svg>)
               }
@@ -141,7 +141,7 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
           { isCreating? (
               <div className="ml-2"> <LoadingSpinner size={16} /> </div>
               ) : (
-                  <svg className="w-4 h-4 ml-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                  <svg className="w-4 h-4 ml-2 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                   <path stroke="#008000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
                   </svg>
           )}

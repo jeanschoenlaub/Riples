@@ -9,8 +9,8 @@ interface StyledTableProps {
 export const StyledTable: React.FC<StyledTableProps> = ({ headers, columnWidths, children }) => {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400" style={{ tableLayout: 'fixed' }}>
-        <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+      <table className="w-full text-sm text-left text-gray-500" style={{ tableLayout: 'fixed' }}>
+        <thead className="text-xs text-gray-700 uppercase bg-gray-200">
           <tr>
             {headers.map((header, index) => (
               <th

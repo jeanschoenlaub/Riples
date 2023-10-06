@@ -1,6 +1,7 @@
 //From https://trpc.io/docs/client/nextjs/server-side-helpers
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import type{ GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import dayjs from 'dayjs';
 
 import Head from "next/head";
 import { api } from "~/utils/api";
@@ -85,7 +86,7 @@ export default function UserPage(
                   </span>
               </div>
 
-              <div id="project-main-tabs" className="ml-5 border-b border-gray-200 dark:border-gray-700">
+              <div id="project-main-tabs" className="ml-5 border-b border-gray-200 ">
                 <Tabs activeTab={activeTab} setActiveTab={setActiveTab} projects="y"/>
               </div>
 
@@ -95,6 +96,9 @@ export default function UserPage(
                     <div className="font text-gray-800"> 
                       Username : {user.user.username}
                    </div>
+                   <div className="font text-gray-800"> 
+                      Member since  :  Created {dayjs(user.user.createdAt).format('DD/MM/YYYY')}
+                   </div>
                 </div>
               )}
               
@@ -103,9 +107,10 @@ export default function UserPage(
                 <div className="mt-4 space-y-2">
                     <div className="font text-gray-800"> 
                       <div>
-                        {projectData?.map((fullProject) => (
-                          <ProjectCard key={fullProject.project.id} {...fullProject}></ProjectCard>
-                        ))}
+                        Only your public project 
+                        {projectData?.filter(project => project.project.projectPrivacy  === "public").map((fullProject) => (
+                              <ProjectCard key={fullProject.project.id} {...fullProject}></ProjectCard>
+                          ))}
                     </div>
                   </div>
                 </div>

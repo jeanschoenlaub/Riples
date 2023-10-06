@@ -137,14 +137,14 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                                     <button 
                                         onClick={onTaskAdd} 
                                         className="p-2 focus:outline-none  text-white rounded transition duration-150">
-                                            <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                            <svg className="w-4 h-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                                                 <path stroke="#008000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
                                             </svg>
                                     </button>
                                     <button 
                                         onClick={onTaskDelete} 
                                         className="p-2 focus:outline-none text-white rounded transition duration-150">
-                                        <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+                                        <svg className="w-4 h-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                                             <path stroke="#FF0000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h16"/>
                                         </svg>
                                     </button>
@@ -179,14 +179,14 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                                     <button 
                                         onClick={onGoalAdd} 
                                         className="p-2 focus:outline-none  text-white rounded transition duration-150">
-                                            <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                            <svg className="w-4 h-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                                                 <path stroke="#008000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
                                             </svg>
                                     </button>
                                     <button 
                                         onClick={onGoalDelete} 
                                         className="p-2 focus:outline-none text-white rounded transition duration-150">
-                                        <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+                                        <svg className="w-4 h-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                                             <path stroke="#FF0000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h16"/>
                                         </svg>
                                     </button>
