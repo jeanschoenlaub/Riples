@@ -18,6 +18,8 @@ jobs:
       NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
       EMAIL_SERVER: ${{ secrets.EMAIL_SERVER }}
       EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+      NEXT_PUBLIC_GOOGLE_ANALYTICS: ${{ secrets.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     strategy:
       matrix:
