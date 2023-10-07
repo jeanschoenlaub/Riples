@@ -21,9 +21,10 @@ type TaskData = RouterOutputs["tasks"]["edit"];
 
 export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProjectLead}) => {
   const [selectedTask, setSelectedTask] = useState<TaskData | null>(null);
-  const [showTaskModal, setShowTaskModal] = useState(false); 
+  const [showTaskModal, setShowTaskModal] = useState(false);
   const [displaySubtasks, setDisplaySubtasks] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
+  const [isEditMode, setIsEditMode] = useState(false); //If the task is being created --> edit mode
 
   //const { data: subTaskData, isLoading: isLoadingSubTasks, isError: isErrorSubTasks } = api.tasks.getSubTasksByTaskId.useQuery(
   //  { taskId: taskIdToFetch ?? "" },
@@ -105,8 +106,8 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
         <StyledTable headers={headers} columnWidths={columnWidths}>
           {taskData.map((taskDetail, index) => (
             <React.Fragment key={index}>
-            <tr key={index} className="bg-white border-b items-center ">
-              <th scope="row" id="task-table-action-column" className="px-10 mt-2 flex items-center justify-center" style={{textAlign: 'center', verticalAlign: 'middle',  width: columnWidths[0] }}>
+            <tr key={index} id={`project-tasklist-task-${index}`}  className="bg-white border-b items-center ">
+              <th scope="row" id={`task-${index}-table-action-column`} className="px-10 mt-2 flex items-center justify-center" style={{textAlign: 'center', verticalAlign: 'middle',  width: columnWidths[0] }}>
                 <button onClick={() => toggleSubtasks(taskDetail.task.id)} className="flex items-center text-blue-600 ">
                 {displaySubtasks === taskDetail.task.id ? (
                 <div>

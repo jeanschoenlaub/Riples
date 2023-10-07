@@ -169,11 +169,13 @@ model User {
   productTourFinished Boolean @default(false)  // depreciated delete in next clean up
   password            String  @db.VarChar(255)@default("")
   createdAt           DateTime @default(now())
+  description         String @db.VarChar(10000)@default("")
+
+  // Relations
   following           ProjectFollowers[] 
   member              ProjectMembers[] 
   ownedProjects       Project[] @relation("ProjectOwner")
-  // Relation to UserOnboarding
-  userOnboarding     UserOnboarding? 
+  userOnboarding      UserOnboarding? 
 }
 
 
@@ -187,6 +189,7 @@ model UserOnboarding {
   stepOneCompleted    Boolean @default(false)
   stepTwoCompleted    Boolean @default(false)
   stepThreeCompleted  Boolean @default(false)
+  stepFourCompleted   Boolean @default(false)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 }

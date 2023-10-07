@@ -26,7 +26,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
           />
         </div>
         <div className="flex-1 min-w-0">
-          <Link href={`/projects/${project.id}`} className="text-sm font-medium text-sky-500 truncate dark:text-white underline">
+          <Link href={`/projects/${project.id}`} className="text-sm font-medium text-sky-500 truncate">
             {project.title}
           </Link>
           <p className="text-sm text-gray-500 truncate ">

@@ -126,8 +126,6 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   });
 
   const handleCreateProject = async  () => {
-    wizardContext.setWizardName("");
-    wizardContext.setShowWizard(false)
     const payload = generateCreatePayload();
     const newProject: NewProjecResponse | undefined = await createProjectAsyncMutation(payload);
     if (newProject) {
@@ -140,6 +138,8 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   const isLoading = isCreating;
 
   const closeModal = () => {
+    wizardContext.setWizardName("");
+    wizardContext.setShowWizard(false)
     resetForm();
   };
 
@@ -229,3 +229,25 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   );
 };
 
+
+<style jsx>{`
+    .filters-bar {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .filter-label,
+    .order-by-label {
+        display: inline-block;
+        position: relative; // For tooltip positioning
+        margin-right: 20px;
+        cursor: not-allowed; // Disabled mouse indicator
+    }
+
+    .filter-dropdown,
+    .order-by-dropdown {
+        margin-left: 10px;
+        cursor: not-allowed; // Disabled mouse indicator
+    }
+`}</style>

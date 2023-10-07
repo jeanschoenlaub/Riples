@@ -122,6 +122,29 @@ export const projRouter = createTRPCRouter({
       where: { authorID: input.authorId },
       take: 100,
       orderBy: [{ createdAt: "desc" }],
+    });
+
+    const author = await ctx.prisma.user.findUnique({
+      where: { id: input.authorId },
+    });
+
+    if (!author) {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Riple author not found" });
+    }
+
+    return projects.map((project) => ({
+      project,
+      author,
+    }));
+  }),
+
+  getFullProjectByAuthorId: publicProcedure
+  .input(z.object({ authorId: z.string() }))
+  .query(async ({ ctx, input }) => {
+    const projects = await ctx.prisma.project.findMany({
+      where: { authorID: input.authorId },
+      take: 100,
+      orderBy: [{ createdAt: "desc" }],
       include: {
         tasks: {
           include: {

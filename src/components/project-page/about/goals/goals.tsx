@@ -124,7 +124,7 @@ export const ProjectAboutGoal: React.FC<ProjectAboutGoalProps> = ({
                 </div>
             </div>
             {(isProjectLead) &&
-                <div id="project-collab-task-create-button" className="mb-2 flex">
+                <div id="project-collab-goal-create-button" className="mb-2 flex">
                     <div className='mt-2 ml-2 mr-2 md:ml-6 md:mr-6 flex flex-grow space-x-2 items-center'> 
                     <input 
                         type="text" 

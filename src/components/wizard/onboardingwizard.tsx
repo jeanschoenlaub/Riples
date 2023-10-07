@@ -4,14 +4,16 @@ import { api } from "~/utils/api";
 import { QuestionSVG } from "~/components/reusables/svgstroke";
 import Tooltip from "~/components/reusables/tooltip";
 import { useOnboarding } from "../onboarding/onboardingwrapper";
+import { useWizard } from "./wizardswrapper";
 
 export const WizardOnboarding = () => {
     const onboarding = useOnboarding();
+    const wizardContext = useWizard();
     const [taskStatuses, setTaskStatuses] = useState([
-        { taskName: 'Create a project', onboardingField: 'stepOneCompleted', isCompleted: false, actionLink: '/?activeTab=Create' },
-        { taskName: 'Complete a Task, Subtask and a Goal', onboardingField: 'stepTwoCompleted', isCompleted: false, actionLink: '/?activeTab=create' },
-        { taskName: 'Finish your user profile', onboardingField: 'stepThreeCompleted', isCompleted: false, actionLink: '/?activeTab=create' },
-        // ... add other tasks
+        { taskName: 'Create a project', onboardingField: 'stepOneCompleted', isCompleted: false },
+        { taskName: 'Complete a Task & a Subtask', onboardingField: 'stepTwoCompleted', isCompleted: false },
+        { taskName: 'Finish your user profile', onboardingField: 'stepThreeCompleted', isCompleted: false},
+        { taskName: 'Share a goal completion', onboardingField: 'stepFourCompleted', isCompleted: false},
     ]);    
 
     const { data: session } = useSession(); 
@@ -50,7 +52,17 @@ export const WizardOnboarding = () => {
                         <span>{task.taskName}</span>
                         <span 
                             className="ml-2 text-blue-600 cursor-pointer"
-                            onClick={() => { onboarding.setActiveJoyrideIndex(index)}}
+                            onClick={() => { 
+                                // First, reset the active index
+                                onboarding.setActiveJoyrideIndex(null);
+
+                                // Use a setTimeout to let React process the previous update
+                                setTimeout(() => {
+                                onboarding.setActiveJoyrideIndex(index);
+                                });
+
+                                wizardContext.setShowWizard(false)
+                            }}
                         >
                             <Tooltip content="Click me for help with a guided tour and explanations" shiftRight={true} width="150px">
                                 <QuestionSVG width="4" height="4" colorStrokeHex="#2563eb"></QuestionSVG>

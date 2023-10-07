@@ -16,6 +16,7 @@ export const userRouter = createTRPCRouter({
           image: true,
           username: true,
           createdAt: true,
+          description: true,
           onBoardingFinished: true,
           productTourFinished: true
           // ... other fields you want to select
@@ -86,7 +87,41 @@ export const userRouter = createTRPCRouter({
         }
 
         return user;
-    }),
+  }),
+
+  editUserInfo: protectedProcedure
+    .input(z.object({
+      userId: z.string(),
+      name: z.string()
+        .min(2, { message: "User name must be 2 or more characters long" })
+        .max(255, { message: "User name must be 255 or fewer characters long" }),
+      description: z.string()
+        .max(5000, { message: "Description must be 5000 or fewer characters long" }),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const currentUserId = ctx.session.user.id;
+      const userIdToUpdate = input.userId;
+    
+      // You might want to check if the current user is allowed to update this user profile.
+      if (currentUserId !== userIdToUpdate) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+    
+      // You can have additional logic for other user details here if needed.
+    
+      // Now update the user info in the database.
+      const updatedUser = await ctx.prisma.user.update({
+        where: { id: userIdToUpdate },
+        data: {
+          name: input.name,
+          description: input.description,
+        },
+      });
+    
+      return updatedUser;
+  }),
+
+    
   deleteUser: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .mutation(async ({ ctx, input }) => {

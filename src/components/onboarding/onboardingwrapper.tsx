@@ -8,6 +8,7 @@ import { api } from "~/utils/api";
 import { Modal } from "../reusables/modaltemplate";
 import { ProjectManagerAIJoyRide } from "./joyrides/pmjoyride";
 import { useOnboardingMutation } from "./joyrides/onboardingapi";
+import { TaskThreeJoyRide } from "./joyrides/taskthreejoyride";
 
 
 type OnboardingContextType = {
@@ -71,7 +72,7 @@ export const OnboardingWrapper: React.FC = () => {
   const { data: session } = useSession(); 
   const shouldExecuteQuery = !!session?.user?.id;
   const userId = session?.user?.id ?? '';
-  const { data: projectLead } = api.projects.getProjectByAuthorId.useQuery(
+  const { data: projectLead } = api.projects.getFullProjectByAuthorId.useQuery(
     { authorId: userId },
     { enabled: shouldExecuteQuery }
   );
@@ -100,8 +101,7 @@ export const OnboardingWrapper: React.FC = () => {
     project.project.tasks.some(task => 
       task.status === 'Done' &&
       task.subTasks.some(subTask => subTask.status === true)
-    ) &&
-    project.project.goals.some(goal => goal.status === 'finished')
+    ) 
   ));
   useEffect(() => {
     if (isAuthorOfRelevantProject && !completedTasks.includes(1) && !userOnboardingStatus?.stepTwoCompleted) {
@@ -125,6 +125,9 @@ export const OnboardingWrapper: React.FC = () => {
     JoyrideComponent = TaskOneJoyRide;
   } else if (activeJoyrideIndex === 1) {
     JoyrideComponent = TaskTwoJoyRide;
+  }
+  else if (activeJoyrideIndex === 2) {
+    JoyrideComponent = TaskThreeJoyRide;
   } else if (activeJoyrideIndex === 3) {
     JoyrideComponent = ProjectManagerAIJoyRide;
   }

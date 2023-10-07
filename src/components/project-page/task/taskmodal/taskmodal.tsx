@@ -91,7 +91,9 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
 
   const resetForm = () =>{
     setTaskTitle("");
+    setIsEditMode(false)
     setTaskStatus("To-Do");
+    setTaskOwnerId(null)
     setTaskContent(defaultTemplate);
   }
     
@@ -112,7 +114,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   });
 
   const handleSave = () => {
-    console.log(taskToEdit)
     const payload = isEditMode && taskToEdit 
       ? generateEditPayload() 
       : generateCreatePayload();
@@ -168,7 +169,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
 
   return (
     <div>
-      <Modal showModal={showModal} isLoading={isLoading} size="medium" onClose={onClose}>
+      <Modal showModal={showModal} isLoading={isLoading} size="medium" onClose={enhancedOnClose}>
       <span className="text-lg flex justify-center items-center space-x-4 mb-2w-auto">
         {taskToEdit ? (isEditMode ? "Edit Task" : "View Task") : "Create New Task"}
       </span>
@@ -185,7 +186,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
             />
         </label>
    
-        <div id="task-modal-owner-info" className="flex flex-wrap items-center space-x-5 mb-2 md:flex-nowrap">
+        <div id="task-modal-status" className="flex flex-wrap items-center space-x-5 mb-2 md:flex-nowrap">
             <span className="text-sm flex items-center space-x-4 w-auto mr-2" aria-label="Task Title">Task Status:
               <select 
                 value={taskStatus} 
