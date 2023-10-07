@@ -6,12 +6,22 @@ interface TooltipProps {
     width?: string;
     shiftLeft?: boolean;
     shiftRight?: boolean;
+    shiftDown?: boolean;  // New prop
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ content, children, width, shiftLeft = false, shiftRight = false }) => {
+const Tooltip: React.FC<TooltipProps> = ({ 
+    content, 
+    children, 
+    width, 
+    shiftLeft = false, 
+    shiftRight = false,
+    shiftDown = false   // Default value set to false 
+}) => {
     const [showTooltip, setShowTooltip] = useState(false);
 
     let leftValue = '50%';
+    let topValue: string | undefined = '100%';
+    let bottomValue: string | undefined = undefined;
     let transformValue = 'translateX(-50%)';
 
     if (shiftLeft) {
@@ -19,7 +29,12 @@ const Tooltip: React.FC<TooltipProps> = ({ content, children, width, shiftLeft =
         transformValue = 'none';
     } else if (shiftRight) {
         leftValue = '100%';
-        transformValue = 'translateX(-100%)';  // This will shift the tooltip fully to the left, effectively making it appear to the right of the target
+        transformValue = 'translateX(-100%)';
+    }
+
+    if (shiftDown) {
+        topValue = '0';
+        bottomValue = '100%';
     }
 
     return (
@@ -31,7 +46,8 @@ const Tooltip: React.FC<TooltipProps> = ({ content, children, width, shiftLeft =
             {showTooltip && (
                 <div style={{
                     position: 'absolute',
-                    bottom: '100%',
+                    top: topValue,
+                    bottom: bottomValue,
                     left: leftValue,
                     transform: transformValue,
                     padding: '4px',

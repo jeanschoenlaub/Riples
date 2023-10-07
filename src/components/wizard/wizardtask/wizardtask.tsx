@@ -111,13 +111,13 @@ export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSum
     return (
         <div>
             <div className="onboarding-status-window">
-                <div className="font-semibold"> AI Project Manager 👋 
+                <div className="flex font-semibold"> AI Project Manager 👋 
 
-                <span 
+                    <span 
                         className="ml-2 text-blue-600 cursor-pointer"
                         onClick={() => { onboarding.setActiveJoyrideIndex(2)}}
                     >
-                        <Tooltip content="Click me for help with a guided tour and explanations" shiftRight={true} width="150px">
+                        <Tooltip content="Click me for help with a guided tour for using Mister Watt Project Manager Instance" width="150px">
                             <QuestionSVG width="4" height="4" colorStrokeHex="#2563eb"></QuestionSVG>
                         </Tooltip>
                     </span>
