@@ -22,14 +22,13 @@ interface GlobalNavBarProps {
 export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActiveTab, ToogleinBetween }) => {
   const { data: session } = useSession();
   const [showSignInModal, setShowSignInModal] = useState(false);
-  const [showUserNameModal, setShowUserNameModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSideNav, setShowSideNav] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
 
-  const redirectUserPage = () => {
-    router.push(`/users/${session?.user.id}`).catch(err => {
+  const redirectUserPage = (option: string) => {
+    router.push(`/users/${session?.user.id}/?activeTab=${option}`).catch(err => {
         // Handle any errors that might occur during the navigation
         console.error('Failed to redirect:', err);
     });
@@ -139,11 +138,11 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
                   <ProfileImage user={ session.user } size={32} />
                 </div>
                 {showDropdown && (
-                  <div ref={dropdownRef}  className="absolute right-0 md:right-auto md:left-0 mt-2 w-48 rounded-md shadow-lg z-30 bg-slate-50">
+                  <div ref={dropdownRef}  className="absolute right-0 md:right-auto md:left-0 mt-2 w-40 rounded-md shadow-lg z-30 bg-slate-50">
                     {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
                     <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => signOut()}>Sign Out</button>
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowUserNameModal(true)}>User Settings</button>
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectUserPage()}>Your Portofolio</button>
+                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectUserPage("about")}>Your Profile</button>
+                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectUserPage("project")}>Your Portofolio</button>
                     <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowDeleteModal(true)}>Delete Account</button>
                   </div>
                 )}
@@ -156,7 +155,7 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
             )}
             <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
             <NavBarUserDeleteModal showDeleteModal={showDeleteModal} isLoading={isDeleting} onClose={() => setShowDeleteModal(false)} onDelete={() => {void handleDeleteUserMutation();}}  />
-            <NavBarUserNameModal showModal={showUserNameModal} onClose={() => setShowUserNameModal(false)} />
+
             <div className={`fixed top-0 left-0 h-full text-red-600 hover:text-red-800 text-xl transition-transform transform ${showSideNav ? 'translate-x-0' : '-translate-x-full'} w-3/4 bg-white shadow-md z-50 md:hidden flex flex-col`}>
               <div className="flex justify-end p-4">
                   <button onClick={() => setShowSideNav(false)}>&times;</button>

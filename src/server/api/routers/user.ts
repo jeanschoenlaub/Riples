@@ -93,7 +93,6 @@ export const userRouter = createTRPCRouter({
     .input(z.object({
       userId: z.string(),
       name: z.string()
-        .min(2, { message: "User name must be 2 or more characters long" })
         .max(255, { message: "User name must be 255 or fewer characters long" }),
       description: z.string()
         .max(5000, { message: "Description must be 5000 or fewer characters long" }),

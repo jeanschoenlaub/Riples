@@ -41,7 +41,6 @@
     "react-select": "^5.7.5",
     "redux": "^4.2.1",
     "superjson": "^1.13.1",
-    "unique-names-generator": "^4.7.1",
     "zod": "^3.21.4"
   },
   "devDependencies": {

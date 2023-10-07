@@ -18,6 +18,7 @@ import { ProfileImage } from '~/components/reusables/profileimage';
 import { UserAbout } from '~/components/user-page/userinfo';
 import Tooltip from '~/components/reusables/tooltip';
 import { UserStats } from '~/components/user-page/userstats';
+import { useRouter } from 'next/router';
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -57,7 +58,17 @@ export default function UserPage(
     const { authorId } = props; //author id is the user id from url slug
   
   
-    const [activeTab, setActiveTab] = useState('projects');
+    const router = useRouter();
+    //We either have initial state on first land or can be changed from childs or via router pushes
+    const [activeTab, setActiveTab] = useState<string>(() => {
+      const tabFromQuery = Array.isArray(router.query.activeTab)
+        ? router.query.activeTab[0]
+        : router.query.activeTab;
+
+      return tabFromQuery ?? "about";
+    });
+
+    const [showUserNameModal, setShowUserNameModal] = useState(false);
 
     const { data: projectData } = api.projects.getProjectByAuthorId.useQuery({ authorId });
     const { data: user} = api.users.getUserByUserId.useQuery({ userId: authorId });
