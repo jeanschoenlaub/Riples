@@ -62,7 +62,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     else {
       setTaskTitle(inputValue);
     }
-  }, [taskToEdit, session, inputValue, allowedToEdit]); 
+  }, [taskToEdit, inputValue, allowedToEdit]); 
 
   const handleToogleOwnership = () => {
     if (!isMember && isProjectLead) {
@@ -131,7 +131,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
         toast.error('Error saving task');
       });
   };
-  
+
 
   const handleDelete = () => {
     if (taskToEdit) {

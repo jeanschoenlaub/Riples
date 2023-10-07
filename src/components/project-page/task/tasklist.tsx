@@ -24,8 +24,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [displaySubtasks, setDisplaySubtasks] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
-  const [isEditMode, setIsEditMode] = useState(false); //If the task is being created --> edit mode
-
+  
   //const { data: subTaskData, isLoading: isLoadingSubTasks, isError: isErrorSubTasks } = api.tasks.getSubTasksByTaskId.useQuery(
   //  { taskId: taskIdToFetch ?? "" },
   //  { enabled: taskIdToFetch !== null }
@@ -44,6 +43,8 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
       window.removeEventListener('resize', handleResize);
     }
   }, []);
+
+  
 
   let headers = isMobile ? ["Sub", "Task"] : ["Sub", "Task Title", "Status", "Owner"];
   let columnWidths = isMobile ? ["8%", "50%"] : ["4%", "30%", "8%", "8%"];

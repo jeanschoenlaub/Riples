@@ -30,22 +30,23 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
 
     const { isEditing, editUserInfo } = useUserInfoMutation()
 
-    const handleSave = async () => {
-        try {
-            await editUserInfo({
-                userId: user.id,
-                name,
-                username,
-                description,
-                // interestTags, // Uncomment this when you're ready to handle interest tags
-            });
+    const handleSave = () => {
+        editUserInfo({
+            userId: user.id,
+            name,
+            username,
+            description,
+            // interestTags, // Uncomment this when you're ready to handle interest tags
+        })
+        .then(() => {
             toast.success('User modifications saved successfully!');
             toggleEditMode();
-        } catch (error) {
-            // The error toast is already handled inside the `editUserInfo` function.
+        })
+        .catch((error) => {
+            // Assuming the error toast is already handled inside the `editUserInfo` function.
             // If you want additional error handling, you can add it here.
             toggleEditMode();
-        }
+        });
     };
     
 

@@ -71,11 +71,6 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
     }, [postContent]);
     
 
-    useEffect(() => {
-        console.log(tasksRefs.current);
-        console.log(goalsRefs.current);
-    }, [tasks, goals]);
-
     function resizeTextarea(textarea?: HTMLTextAreaElement | null) {
         if (textarea) {
             textarea.style.height = 'auto';

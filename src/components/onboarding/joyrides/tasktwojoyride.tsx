@@ -25,8 +25,6 @@ export const TaskTwoJoyRide = () => {
         if (data.status === 'finished' || data.status === 'skipped') {OnboardingContext.setActiveJoyrideIndex(null);}
     }
 
-    const tooltipWidthForSidebar = screenWidth && screenWidth >= 600 ? (screenWidth / 4) - 20 : 'auto';
-
     const tourSteps: Step[] = [
         {
             target: "#project-main-tabs",

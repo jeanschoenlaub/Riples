@@ -29,7 +29,6 @@ export const GoalModal: React.FC<GoalModalProps> = ({ goalToEdit, projectId, sho
       setGoalFinalValue(goalToEdit.progressFinalValue);
       setGoalNotes(goalToEdit.notes);
       setGoalStatus(goalToEdit.status);
-      console.log(goalStatus)
     }
   }, [goalToEdit, goalStatus]);
 
