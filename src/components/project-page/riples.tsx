@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { Modal } from '../reusables/modaltemplate';
 import { LoadingSpinner } from '../reusables/loading';
+import Tooltip from '../reusables/tooltip';
 
 type RipleData = RouterOutputs["riples"]["getAll"]
 interface RipleTabProps {
@@ -43,7 +44,8 @@ export const RiplesTab: React.FC<RipleTabProps> = ({ ripleData }) => {
     };
 
     return (
-        <div className="mt-4 space-y-2">
+        <div className=" space-y-4 border-r-2 border-l-2 border-b-2 border-gray-200 text-gray-800">
+        <div className="mb-4">
             <Modal showModal={showDeleteModal} onClose={handleCancelDelete} size="small">
                 <p>Are you sure you want to delete this riple?</p>
                 <div className="flex justify-end">
@@ -52,10 +54,28 @@ export const RiplesTab: React.FC<RipleTabProps> = ({ ripleData }) => {
                 </div>
             </Modal>
             
-            <div className="font text-gray-800">
-                {/* Check if riplesData is available and has at least one entry */}
+            <div>
+                {/* Post Content Bar */}
+                <div className="p-3 mt-4 ml-2 mr-2 bg-gray-200 rounded-lg shadow-md mb-5">
+                    <div className="flex justify-between items-center">
+                        {/* Post Content Input */}
+                        <Tooltip content="Feature is coming soon" width="200px">
+                            <div className="flex flex-grow items-center">
+                                <input type="text" disabled placeholder="What's on your mind?" className="p-2 flex-grow bg-white w-full rounded cursor-not-allowed border border-gray-300 shadow-sm mr-2" />
+                            </div>
+                        </Tooltip>
+                        
+                        {/* Post Button */}
+                        <Tooltip content="Feature is coming soon" width="200px">
+                            <button disabled className="p-2 bg-gray-500 text-white rounded cursor-not-allowed">
+                                Post
+                            </button>
+                        </Tooltip>
+                    </div>
+                </div>
+                {/* Display ripples */}
                 {ripleData && ripleData.length > 0 ? (
-                    <div>
+                    <div className='space-y-2'>
                         {ripleData.map((fullRiple) => (
                             <RipleCard 
                             key={fullRiple.riple.id} 
@@ -65,14 +85,15 @@ export const RiplesTab: React.FC<RipleTabProps> = ({ ripleData }) => {
                         ))}
                     </div>
                 ) : (
-                    // Display the message if no entries are found
                     <div className="flex justify-center items-center h-full text-center">
                         Your Riples (project updates) will be displayed here once you start posting for this project.
                     </div>
                 )}
             </div>
         </div>
+        </div>
     )
+
 }
 
 export type DeleteRiplePayload = {

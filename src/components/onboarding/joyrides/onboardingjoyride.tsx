@@ -75,7 +75,7 @@ export const OnboardingJoyRideOne = () => {
     const tourSteps: Step[] = [
         {
             target: "#global-nav-mid",
-            title: "Welcome to Riples !",
+            title: "Welcome to Riples Beta!",
             content: "A platform for hosting, sharing, and collaborating on your projects. Follow along for a super quick product tour 🏄‍♂️",
             placement: "center",
             disableBeacon: true
