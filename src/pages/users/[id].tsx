@@ -1,7 +1,6 @@
 //From https://trpc.io/docs/client/nextjs/server-side-helpers
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import type{ GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import dayjs from 'dayjs';
 
 import Head from "next/head";
 import { api } from "~/utils/api";
@@ -115,8 +114,8 @@ export default function UserPage(
                           <UserAbout 
                               user={{
                                   id: user.user.id,
-                                  name: user.user.name || "",
-                                  username: user.user.username || "",
+                                  name: user.user.name ?? "",
+                                  username: user.user.username ?? "",
                                   description: user.user.description,  // This assumes that 'description' isn't part of the original user object, so we default it to an empty string.
                                   // interestTags: [], // Uncomment this when you're ready to handle interest tags
                               }}

@@ -45,7 +45,6 @@ const ToggleSwitch: React.FC<ToggleProps> = ({
   
 
   const handleOptionClick = (option: string) => {
-    console.log("as")
     if (activeTab && setActiveTab) {
       setActiveTab(option);
     } else {

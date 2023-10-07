@@ -47,7 +47,8 @@ export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
     return(
       <div id="project-side-bar-container" className="flex flex-col justify-center items-center gap-y-4 border bg-white border-slate-300 rounded-lg mx-2 md:mx-2 p-4 mt-4 mb-4 shadow-md" style={{ backdropFilter: 'blur(10px)' }}> 
         {/* Toggle Following / Working */}
-        <div id="project-side-bar-container-internal" className="flex items-center justify-center">
+        <div id="project-side-bar-container-internal" className="flex flex-col items-center justify-center">
+          <div className="mb-2 text-gray-500 font-semibold"> Quick Project Access </div>
           <div className="mx-2 w-40 h-auto bg-white rounded-full cursor-pointer relative py-3">
             <div
               className={`absolute top-0 h-full bg-blue-400 bg-opacity-50 flex items-center justify-center rounded-full transition-all duration-300 ease-in-out ${SideBarToggle === "Following" ? "left-0 w-1/2" : "left-1/2 w-1/2"}`}
@@ -68,9 +69,6 @@ export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
           </div>
         </div>
 
-
-
-    
         {/*  List of projects */}
         <div id="side-bar-project-list" className="flow-root w-full border-t">
           <ul role="list" className="divide-y divide-gray-200">

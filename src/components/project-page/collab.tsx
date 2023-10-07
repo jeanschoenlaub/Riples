@@ -10,7 +10,7 @@ interface CollabTabProps {
 }
 
 export const CollabTab: React.FC<CollabTabProps> = ({ project, isMember, isPending, isProjectLead}) => {
-    
+
     return (
         <div id="project-collab-task-table" className="border-r-2 border-l-2 border-b-2 border-gray-200 ">
                 { (project.projectPrivacy === "public" || isMember || isProjectLead) && ( 

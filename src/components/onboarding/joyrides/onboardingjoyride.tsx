@@ -33,7 +33,6 @@ export const OnboardingJoyRideOne = () => {
     );
 
     useEffect(() => {
-        console.log(productTourStatus)
         if (productTourStatus?.productTourFinished) {
             setProductTourFinished(productTourStatus.productTourFinished);
             localStorage.setItem('productTourFinished', productTourStatus.productTourFinished.toString());

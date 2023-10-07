@@ -21,7 +21,6 @@ export const userOnboardingRouter = createTRPCRouter({
             await ctx.prisma.userOnboarding.create({
                 data: { userId: userId }
             });
-            console.log("should create")
         }
 
     return userOnboarding;
@@ -48,7 +47,6 @@ export const userOnboardingRouter = createTRPCRouter({
           await ctx.prisma.userOnboarding.create({
               data: { userId: userId }
           });
-          console.log("should create")
       }
   
         const updatedOnboarding = await ctx.prisma.userOnboarding.upsert({

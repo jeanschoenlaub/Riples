@@ -76,7 +76,6 @@ export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSum
     
     function processRawDataForTasksOrGoals(rawData: OpenAI.Chat.Completions.ChatCompletion.Choice[]): string[] {
         const results: string[] = [];
-        console.log(rawData);
     
         rawData.forEach(choice => {
             const messageContent = choice.message.content;
@@ -92,7 +91,6 @@ export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSum
                 }
             }
         });
-        console.log(results);
         return results;
     }
     

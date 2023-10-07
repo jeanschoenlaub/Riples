@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { LoadingSpinner } from '../reusables/loading';
 import toast from 'react-hot-toast';
 import { SubTaskModal } from '~/components/subtask/subtaskmodal/subtaskmodal';
@@ -68,11 +68,6 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
             });
     }
   };
-
-
-  useEffect(() => {
-    console.log(showSubTaskModal)
-  }, [showSubTaskModal]); 
 
   const { data: session } = useSession();
   const allowedToEdit = session?.user.id === taskData.task.ownerId || session?.user.id === taskData.task.createdById
@@ -155,7 +150,6 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
                 onClose={() => {
                     setShowSubTaskModal(false); // Hide the modal when closing
                     setSelectedSubTask(null);
-                    console.log("called")
                 }}
             />
         )}
