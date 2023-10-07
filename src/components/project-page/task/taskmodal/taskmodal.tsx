@@ -91,7 +91,9 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
 
   const resetForm = () =>{
     setTaskTitle("");
+    setIsEditMode(false)
     setTaskStatus("To-Do");
+    setTaskOwnerId(null)
     setTaskContent(defaultTemplate);
   }
     
@@ -112,7 +114,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   });
 
   const handleSave = () => {
-    console.log(taskToEdit)
     const payload = isEditMode && taskToEdit 
       ? generateEditPayload() 
       : generateCreatePayload();
@@ -168,7 +169,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
 
   return (
     <div>
-      <Modal showModal={showModal} isLoading={isLoading} size="medium" onClose={onClose}>
+      <Modal showModal={showModal} isLoading={isLoading} size="medium" onClose={enhancedOnClose}>
       <span className="text-lg flex justify-center items-center space-x-4 mb-2w-auto">
         {taskToEdit ? (isEditMode ? "Edit Task" : "View Task") : "Create New Task"}
       </span>

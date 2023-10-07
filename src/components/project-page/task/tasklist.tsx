@@ -21,9 +21,10 @@ type TaskData = RouterOutputs["tasks"]["edit"];
 
 export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProjectLead}) => {
   const [selectedTask, setSelectedTask] = useState<TaskData | null>(null);
-  const [showTaskModal, setShowTaskModal] = useState(false); 
+  const [showTaskModal, setShowTaskModal] = useState(false);
   const [displaySubtasks, setDisplaySubtasks] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
+  const [isEditMode, setIsEditMode] = useState(false); //If the task is being created --> edit mode
 
   //const { data: subTaskData, isLoading: isLoadingSubTasks, isError: isErrorSubTasks } = api.tasks.getSubTasksByTaskId.useQuery(
   //  { taskId: taskIdToFetch ?? "" },
