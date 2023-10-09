@@ -112,7 +112,7 @@ export default function UserPage(
                   </span>
               </div>
 
-              <div id="project-main-tabs" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-5 border-b border-gray-200">
+              <div id="user-main-tabs" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-5 border-b border-gray-200">
                   <Tabs activeTab={activeTab} setActiveTab={setActiveTab} projects="y" />
               </div>
 

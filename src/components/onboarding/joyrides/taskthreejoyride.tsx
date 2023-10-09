@@ -43,10 +43,10 @@ export const TaskThreeJoyRide = () => {
             }
         },
         {
-            target: "#userdropdown",
-            title: "Profile",
-            content: "Cool",
-            placement: "left",
+            target: "#user-page-public-profile-section",
+            title: "Public Profile",
+            content: "Fill in (at least) your username and interests",
+            placement: "right",
             spotlightClicks: true,
             disableBeacon: true,
             disableOverlay: true,
@@ -55,7 +55,7 @@ export const TaskThreeJoyRide = () => {
                     width: tooltipWidthForSidebar,  
                 },
             }
-        },
+        }
     ];
 
     if (!isClient) {

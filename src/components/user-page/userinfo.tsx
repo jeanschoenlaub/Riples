@@ -65,7 +65,7 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
 
     return (
         <div>
-            <div className="flex items-center space-x-4 ml-2">
+            <div id="user-page-public-profile-section" className="flex items-center space-x-4 ml-2">
                 <div className='text-lg mt-2 font-semibold'>Public Profile</div>
                 
                 {(isUserOwner && !isEditMode) && (

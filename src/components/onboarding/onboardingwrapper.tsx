@@ -10,6 +10,7 @@ import { ProjectManagerAIJoyRide } from "./joyrides/pmjoyride";
 import { useOnboardingMutation } from "./joyrides/onboardingapi";
 import { TaskThreeJoyRide } from "./joyrides/taskthreejoyride";
 import { useWizard } from "../wizard/wizardswrapper";
+import { TaskFourJoyRide } from "./joyrides/taskfourjoyride";
 
 
 type OnboardingContextType = {
@@ -36,6 +37,16 @@ const TASK_MESSAGES: Record<number, TaskMessage> = {
     title: "As simple as that ! ",
     message: " Tasks are how you breakdown and update you progress on Riples 💪",
     subMessage: "Now, feel free to continue adding data to your project or move on to the next onboarding task"
+  },
+  2: {
+    title: "Now we're talking",
+    message: "Your profile allows other user to know about you and what you have done",
+    subMessage: "You can also check out the protofolio part of your profile."
+  },
+  3: {
+    title: "Well Done",
+    message: "Sharing your progress will attract other relevant users to your project",
+    subMessage: "You can also share project creation, or update riples. If you want to delete posts, you can do soby navigating to Riples of the relevant project"
   },
   // add other tasks here
 };
@@ -85,11 +96,6 @@ export const OnboardingWrapper: React.FC = () => {
   const { data: session } = useSession(); 
   const shouldExecuteQuery = !!session?.user?.id;
 
-  useEffect(() => {
-    console.log(userId)
-    console.log(shouldExecuteQuery)
-  }, []);
-
   const userId = session?.user?.id ?? '';
   const projectLeadQuery = api.projects.getFullProjectByAuthorId.useQuery(
     { authorId: userId },
@@ -100,16 +106,32 @@ export const OnboardingWrapper: React.FC = () => {
     { userId: userId },
     { enabled: shouldExecuteQuery }
   );
+
+  const userDataQuery = api.users.getUserByUserId.useQuery(
+    { userId: userId },
+    { enabled: shouldExecuteQuery }
+  );
+
+  // Conditional query using tRPC
+  const riplesDataQuery = api.riples.getRiplesByUserId.useQuery(
+    { userId: session?.user?.id ?? "" },
+    { enabled: shouldExecuteQuery }
+  );
   
   const { data: projectLead } =  projectLeadQuery;
+  const { data: userData } =  userDataQuery;
+  const { data: riplesData } =  riplesDataQuery;
   const { data: userOnboardingStatus } = userOnboardingStatusQuery;
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log(userOnboardingStatus)
       try {
         if (shouldExecuteQuery) {
-          await projectLeadQuery.refetch();
           await userOnboardingStatusQuery.refetch();
+          await projectLeadQuery.refetch();
+          await userDataQuery.refetch();
+          await riplesDataQuery.refetch();
         }
       } catch (error) {
         console.error("Error refetching data:", error);
@@ -132,7 +154,7 @@ export const OnboardingWrapper: React.FC = () => {
           setStepOneCompleted({ userId: userId });
           //open up the wizard for people to try and do next task
       }
-  }, [projectLeadQuery]);
+  }, [projectLead, ]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
 
   //step2 check - this only works if completing tasks on you own project
@@ -148,19 +170,57 @@ export const OnboardingWrapper: React.FC = () => {
       setCompletedTasks(prev => [...prev, 1]);
       setCurrentTask(1);
       setShowModal(true);
+
+      console.log("step2" +userOnboardingStatus)
   
       // Execute the mutation to update step one status
       setStepTwoCompleted({ userId: userId });
       //open up the wizard for people to try and do next task
     }
-  }, [projectLeadQuery]);
+  }, [projectLead, userOnboardingStatus]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
+
+  //step3 check user has a username
+  const { setStepThreeCompleted } = useOnboardingMutation();
+  useEffect(() => {
+    if (!userDataQuery.isLoading && userData?.user.username && !completedTasks.includes(2) && !userOnboardingStatus?.stepThreeCompleted) {
+      setCompletedTasks(prev => [...prev, 2]);
+      setCurrentTask(2);
+      setShowModal(true);
+
+      console.log("step3"+userOnboardingStatus)
+  
+      // Execute the mutation to update step one status
+      setStepThreeCompleted({ userId: userId });
+      //open up the wizard for people to try and do next task
+    }
+  }, [userData, userOnboardingStatus]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+  //step3 check - this only works if completing tasks on you own project
+  const { setStepFourCompleted } = useOnboardingMutation();
+  const isAuthorOfRelevantRiples = riplesData?.some(ripleData => 
+    ripleData.riple.ripleType === 'goalFinished'
+);
+
+  useEffect(() => {
+    if (isAuthorOfRelevantRiples && !completedTasks.includes(3) && !userOnboardingStatus?.stepFourCompleted) {
+      setCompletedTasks(prev => [...prev, 3]);
+      setCurrentTask(3);
+      setShowModal(true);
+  
+      // Execute the mutation to update step one status
+      setStepFourCompleted({ userId: userId });
+      //open up the wizard for people to try and do next task
+    }
+  }, [riplesData]);
+  
   
   
   const onClose = () => {
       setCurrentTask(null);
       setShowModal(false);
-      wizardContext.setShowWizard(true);
+      wizardContext.setShowWizard(true);//Aftr completing a task open the onboarding wizard for next task or real wizard
   };
 
   // Map activeJoyrideIndex to the correct component
@@ -171,7 +231,11 @@ export const OnboardingWrapper: React.FC = () => {
   }
   else if (activeJoyrideIndex === 2) {
     JoyrideComponent = TaskThreeJoyRide;
-  } else if (activeJoyrideIndex === 3) {
+  }
+  else if (activeJoyrideIndex === 3) {
+    JoyrideComponent = TaskFourJoyRide;
+  } 
+  else if (activeJoyrideIndex === 4) {
     JoyrideComponent = ProjectManagerAIJoyRide;
   }
 

@@ -46,6 +46,7 @@ export const taskRouter = createTRPCRouter({
       z.object({
         title: z.string().min(5, { message: "Task title must be 5 or more characters long" }).max(255, { message: "Task title must be 255 or less characters long" }),
         content: z.string().max(10000, { message: "Task title must be 10,000 or less characters long" }),
+        status: z.string(),
         projectId: z.string(),
       })
     )
@@ -63,6 +64,7 @@ export const taskRouter = createTRPCRouter({
           createdById: createdById,
           title: input.title,
           content: input.content,
+          status: input.status,
           projectId: input.projectId,
         },
       });

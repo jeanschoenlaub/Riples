@@ -102,6 +102,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   const generateEditPayload = (): EditTaskPayload => ({
     projectId: project.id,
     title: taskTitle,
+    status: taskStatus,
     content: taskContent,
     id: taskToEdit!.id
   });
@@ -110,6 +111,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   const generateCreatePayload = (): CreateTaskPayload => ({
     projectId: project.id,
     title: taskTitle,
+    status: taskStatus,
     content: taskContent
   });
 

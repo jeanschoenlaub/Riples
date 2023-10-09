@@ -38,7 +38,7 @@ export default function Home() {
           } />
         </div>
 
-        <div className="flex justify-center w-full bg-sky-50">
+        <div id="main-body-container" className="flex justify-center w-full bg-sky-50">
           <div id="project-nav-container" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
             <SideNavProject></SideNavProject>
           </div>

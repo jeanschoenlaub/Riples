@@ -20,7 +20,7 @@ export const OnboardingUserProfile = () => {
 
   useEffect(() => {
     if (userQuery.data?.user.username === "") {
-      setShowUserNameModal(true);
+      setShowUserNameModal(false);//disabled for now 
     }
   }, [userQuery.data]);
 

@@ -28,6 +28,7 @@ export const UserNameForm: React.FC<{ onSuccess: () => void , onLoadingChange?: 
       setUsername(userQuery.data.user.username ?? ""); // Set to empty string if null
     }
     onLoadingChange?.(isLoading);
+    console.log("aa")
 }, [userQuery.data?.user, onLoadingChange, isLoading]);
 
 

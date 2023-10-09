@@ -98,6 +98,47 @@ export const userOnboardingRouter = createTRPCRouter({
         }
   
         return updatedOnboarding;
+    }),
+
+    setStepThreeCompleted: protectedProcedure
+      .input(z.object({
+        userId: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { userId } = input;
+  
+        const updatedOnboarding = await ctx.prisma.userOnboarding.update({
+          where: { userId: userId },
+          data: {
+            stepThreeCompleted: true
+          }
+        });
+  
+        if (!updatedOnboarding) {
+          throw new Error("Failed to update step one status");
+        }
+  
+        return updatedOnboarding;
+    }),
+    setStepFourCompleted: protectedProcedure
+      .input(z.object({
+        userId: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { userId } = input;
+  
+        const updatedOnboarding = await ctx.prisma.userOnboarding.update({
+          where: { userId: userId },
+          data: {
+            stepFourCompleted: true
+          }
+        });
+  
+        if (!updatedOnboarding) {
+          throw new Error("Failed to update step one status");
+        }
+  
+        return updatedOnboarding;
       })
   
   });

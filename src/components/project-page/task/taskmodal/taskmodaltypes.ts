@@ -13,6 +13,7 @@ export interface TaskModalProps {
 export  interface CreateTaskPayload {
     projectId: string;
     title: string;
+    status: string;
     content: string;
 }
   

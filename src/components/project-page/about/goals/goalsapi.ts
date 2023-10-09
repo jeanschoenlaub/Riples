@@ -2,10 +2,13 @@ import { api } from "~/utils/api";
 import { handleZodError } from "~/utils/error-handling";
 import toast from "react-hot-toast";
 import type { CreateProjectGoalPayload, DeleteProjectGoalPayload, EditProjectGoalPayload, FinishProjectGoalPayload } from "./goaltypes";
+import { useOnboarding } from "~/components/onboarding/onboardingwrapper";
 
 
 export const useProjectGoalMutation = () => {
     const apiContext = api.useContext();
+    const { triggerOnboardingWatch } = useOnboarding();
+
     const handleSuccess = async () => {
     await apiContext.projects.getProjectByProjectId.invalidate();
     };
@@ -18,7 +21,10 @@ export const useProjectGoalMutation = () => {
     const createProjectGoal = (payload: CreateProjectGoalPayload) => {
     return new Promise<void>((resolve) => {
         createProjectGoalMutation(payload, {
-        onSuccess: () => { resolve(); },
+        onSuccess: () => { 
+            triggerOnboardingWatch();
+            resolve(); 
+        },
         onError: (e) => {
             const fieldErrors = e.data?.zodError?.fieldErrors;
             const message = handleZodError(fieldErrors);

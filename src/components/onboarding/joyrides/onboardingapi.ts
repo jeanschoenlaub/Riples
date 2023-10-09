@@ -4,7 +4,8 @@ export const useOnboardingMutation = () => {
     const { mutate: completeProductTourMutation } = api.userOnboarding.setProductTourCompleted.useMutation();
     const { mutate: setStepOneCompletedMutation } = api.userOnboarding.setStepOneCompleted.useMutation();
     const { mutate: setStepTwoCompletedMutation } = api.userOnboarding.setStepTwoCompleted.useMutation();
-
+    const { mutate: setStepThreeCompletedMutation } = api.userOnboarding.setStepThreeCompleted.useMutation();
+    const { mutate: setStepFourCompletedMutation } = api.userOnboarding.setStepFourCompleted.useMutation();
 
     const completeProductTour = (payload: { userId: string }) => {
         completeProductTourMutation(payload, {
@@ -30,9 +31,27 @@ export const useOnboardingMutation = () => {
         });
     };
 
+    const setStepThreeCompleted = (payload: { userId: string; }) => {
+        setStepThreeCompletedMutation(payload, {
+            onError: (e) => {
+                console.error("Failed to save step one status:", e);
+            }
+        });
+    };
+
+    const setStepFourCompleted = (payload: { userId: string; }) => {
+        setStepFourCompletedMutation(payload, {
+            onError: (e) => {
+                console.error("Failed to save step two status:", e);
+            }
+        });
+    };
+
     return {
         completeProductTour,
         setStepOneCompleted,
-        setStepTwoCompleted  // make sure to return it
+        setStepTwoCompleted,
+        setStepThreeCompleted,
+        setStepFourCompleted,
     }
 }
