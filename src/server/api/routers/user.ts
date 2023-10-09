@@ -121,7 +121,7 @@ export const userRouter = createTRPCRouter({
   }),
 
     
-  deleteUser: protectedProcedure
+  deleteUser: publicProcedure
     .input(z.object({ userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUnique({

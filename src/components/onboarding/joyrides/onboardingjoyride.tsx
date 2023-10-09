@@ -55,7 +55,7 @@ export const OnboardingJoyRideOne = () => {
 
     //If the user as already completed the product tour unsigned in and signs in afterwards
     useEffect(() => {
-        if (session && localStorage.getItem('productTourFinished') === 'true') {
+        if (session?.user.id && localStorage.getItem('productTourFinished') === 'true') {
             completeProductTour({ userId: session.user.id});
             setProductTourFinished(true);
         }
@@ -141,7 +141,7 @@ export const OnboardingJoyRideOne = () => {
             }
         }
         if (data.status === 'finished' || data.status === 'skipped'){
-            if (session) { 
+            if (session?.user.id) { 
                 completeProductTour({userId: session.user.id})
             }
             else {

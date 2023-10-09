@@ -30,17 +30,17 @@ export const RiplesTab: React.FC<RipleTabProps> = ({ ripleData }) => {
         if (ripleToDelete) {
             deleteRiple({ ripleId: ripleToDelete }).then(() => {
                 toast.success('Riples Deleted Successfully');
+                setShowDeleteModal(false);
             })
             .catch(() => {
                 toast.error('Error deleting Riples');
+                setShowDeleteModal(false);
             });
         }
-        setShowDeleteModal(false);
     };
 
     const handleCancelDelete = () => {
         setRipleToDelete(null);
-        setShowDeleteModal(false);
     };
 
     return (
@@ -103,7 +103,7 @@ export type DeleteRiplePayload = {
 export const UseRiplesMutations  = () => {
     const apiContext = api.useContext();
     const handleSuccess = async () => {
-    await apiContext.projects.getProjectByProjectId.invalidate();
+        await apiContext.riples.getRiplebyProjectId.invalidate();
     };
 
     // Delete Riple Mutation

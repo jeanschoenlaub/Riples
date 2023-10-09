@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { Modal } from '../../../reusables/modaltemplate';
 import { useProjectGoalMutation } from './goalsapi';
 import { LoadingSpinner } from '~/components/reusables/loading';
-import { GoalSVG } from '~/components/reusables/svg';
+import { GoalSVG } from '~/components/reusables/svgstroke';
 import type { FinishGoalPayload, GoalFinishedModalType } from './goaltypes';
 import { useState } from 'react';
 
@@ -52,7 +52,7 @@ export const GoalFinishedModal: React.FC<GoalFinishedModalType> = ({ goalFinishe
 
         <div className="flex items-center mb-2">
               <div className="flex flex-col items-bottom justify-center ml-2 mr-4">
-                  <GoalSVG colorFillHex='#22c55e'/>
+                  <GoalSVG colorStrokeHex='#22c55e'/>
               </div>
 
               <div className="flex flex-col w-1/8 md:w-3/5 mr-2">

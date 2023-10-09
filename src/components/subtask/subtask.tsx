@@ -5,6 +5,7 @@ import { SubTaskModal } from '~/components/subtask/subtaskmodal/subtaskmodal';
 import { useSession } from 'next-auth/react';
 import type { SubTaskData, SubTasksRowsProps } from './subtasktypes';
 import { useSubTaskMutation } from './subtaskapi';
+import { useOnboarding } from '../onboarding/onboardingwrapper';
 
 
   
@@ -13,6 +14,7 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
     const [LoadingSubTaskId, setLoadingSubTaskId] = useState<string | null>(null);
     const [showSubTaskModal, setShowSubTaskModal] = useState(false);
     const [selectedSubTask, setSelectedSubTask] = useState<SubTaskData | null>(null);
+    const { triggerOnboardingWatch } = useOnboarding();
 
     const resetSubTasks = () => {
         setLoadingSubTaskId(null)
@@ -29,6 +31,7 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
   
       editStatus(payload)
         .then(() => {
+          triggerOnboardingWatch();
           toast.success('Subtask status updated successfully!');
         })
         .catch(() => {

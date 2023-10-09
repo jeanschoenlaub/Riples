@@ -9,11 +9,14 @@ import { Modal } from "../reusables/modaltemplate";
 import { ProjectManagerAIJoyRide } from "./joyrides/pmjoyride";
 import { useOnboardingMutation } from "./joyrides/onboardingapi";
 import { TaskThreeJoyRide } from "./joyrides/taskthreejoyride";
+import { useWizard } from "../wizard/wizardswrapper";
 
 
 type OnboardingContextType = {
   activeJoyrideIndex: number | null;
   setActiveJoyrideIndex: React.Dispatch<React.SetStateAction<number | null>>;
+  watchOnboarding: number;
+  triggerOnboardingWatch: () => void;
 };
 
 type TaskMessage = {
@@ -31,7 +34,7 @@ const TASK_MESSAGES: Record<number, TaskMessage> = {
   },
   1: {
     title: "As simple as that ! ",
-    message: "That's all the main features required to manage a solo project 💪",
+    message: " Tasks are how you breakdown and update you progress on Riples 💪",
     subMessage: "Now, feel free to continue adding data to your project or move on to the next onboarding task"
   },
   // add other tasks here
@@ -49,11 +52,18 @@ export const useOnboarding = () => {
 
 export const OnboardingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 const [activeJoyrideIndex, setActiveJoyrideIndex] = useState<number | null>(null);
+const [watchOnboarding, setWatchOnboarding] = useState(0);
 
+const triggerOnboardingWatch = () => {
+   setWatchOnboarding(prev => prev + 1);
+   console.log(watchOnboarding);
+};
 return (
     <OnboardingContext.Provider value={{
         activeJoyrideIndex,
         setActiveJoyrideIndex,
+        watchOnboarding,
+        triggerOnboardingWatch,
     }}>
         {children}
     </OnboardingContext.Provider>
@@ -66,21 +76,49 @@ export const OnboardingWrapper: React.FC = () => {
   const [completedTasks, setCompletedTasks] = useState<number[]>([]);
   const [currentTask, setCurrentTask] = useState<number | null>(null);
   const currentMessage = TASK_MESSAGES[currentTask ?? 0] ?? {};
+  const wizardContext = useWizard();
+
+  const { watchOnboarding } = useOnboarding();
 
   let JoyrideComponent = null;
 
   const { data: session } = useSession(); 
   const shouldExecuteQuery = !!session?.user?.id;
+
+  useEffect(() => {
+    console.log(userId)
+    console.log(shouldExecuteQuery)
+  }, []);
+
   const userId = session?.user?.id ?? '';
-  const { data: projectLead } = api.projects.getFullProjectByAuthorId.useQuery(
+  const projectLeadQuery = api.projects.getFullProjectByAuthorId.useQuery(
     { authorId: userId },
     { enabled: shouldExecuteQuery }
   );
-  // The query above will also create the Onboarding table if it doesn't exist 
-  const { data: userOnboardingStatus } = api.userOnboarding.getOnboardingStatus.useQuery(
+  
+  const userOnboardingStatusQuery = api.userOnboarding.getOnboardingStatus.useQuery(
     { userId: userId },
     { enabled: shouldExecuteQuery }
-  );  
+  );
+  
+  const { data: projectLead } =  projectLeadQuery;
+  const { data: userOnboardingStatus } = userOnboardingStatusQuery;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (shouldExecuteQuery) {
+          await projectLeadQuery.refetch();
+          await userOnboardingStatusQuery.refetch();
+        }
+      } catch (error) {
+        console.error("Error refetching data:", error);
+      }
+    };
+
+    void fetchData();
+  }, [watchOnboarding, shouldExecuteQuery, userId]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   ////step1 check 
   const { setStepOneCompleted } = useOnboardingMutation();
@@ -91,11 +129,13 @@ export const OnboardingWrapper: React.FC = () => {
           setShowModal(true);
 
           // Execute the mutation to update step one status
-          setStepOneCompleted({ userId: userId }); // Assuming you have currentUserId
+          setStepOneCompleted({ userId: userId });
+          //open up the wizard for people to try and do next task
       }
-  }, [projectLead, setStepOneCompleted , completedTasks, userOnboardingStatus, userId, userOnboardingStatus?.stepOneCompleted]);
+  }, [projectLeadQuery]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 
-  ////step2 check 
+  //step2 check - this only works if completing tasks on you own project
   const { setStepTwoCompleted } = useOnboardingMutation();
   const isAuthorOfRelevantProject = projectLead?.some(project => (
     project.project.tasks.some(task => 
@@ -111,13 +151,16 @@ export const OnboardingWrapper: React.FC = () => {
   
       // Execute the mutation to update step one status
       setStepTwoCompleted({ userId: userId });
+      //open up the wizard for people to try and do next task
     }
-  }, [isAuthorOfRelevantProject, completedTasks, userOnboardingStatus, userId, setStepTwoCompleted]);
+  }, [projectLeadQuery]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   
   
   const onClose = () => {
       setCurrentTask(null);
       setShowModal(false);
+      wizardContext.setShowWizard(true);
   };
 
   // Map activeJoyrideIndex to the correct component

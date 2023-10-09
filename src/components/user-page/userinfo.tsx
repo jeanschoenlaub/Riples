@@ -5,7 +5,14 @@ import { LoadingSpinner } from '~/components/reusables/loading';
 import { api } from '~/utils/api';
 import { handleZodError } from '~/utils/error-handling';
 import { NavBarUserNameModal } from '../navbar/usernamemodal';
+import MultiSelect from '../reusables/multiselect';
+import { sortedProjectClassifications } from '~/utils/constants/projectclassifications';
 
+
+interface OptionType {
+    value: string;
+    label: string;
+  }
 
 type UserAboutInfoProps = {
     user: {
@@ -22,7 +29,13 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
     const [name, setName] = useState(user.name);
     const [description, setDescription] = useState(user.description);
     const [showUserNameModal, setShowUserNameModal] = useState(false);
-    // const [interestTags, setInterestTags] = useState(user.interestTags); // Commented out as per your request
+
+    //For interest tags
+    const [tags, setTags] = useState<string[]>([]);
+    const handleTagsChange = (updatedTags: string[]) => {
+        setTags(updatedTags);
+      };
+    const selectedTags: OptionType[] = tags.map(tag => ({ value: tag, label: tag }));
 
     const [isEditMode, setIsEditMode] = useState(false);
     const toggleEditMode = () => {
@@ -53,7 +66,7 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
     return (
         <div>
             <div className="flex items-center space-x-4 ml-2">
-                <div className='text-lg mt-2 font-semibold'>User Info</div>
+                <div className='text-lg mt-2 font-semibold'>Public Profile</div>
                 
                 {(isUserOwner && !isEditMode) && (
                     <button 
@@ -90,14 +103,14 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
 
             {/* User Name */}
             <div className="flex items-center ml-2 mr-2 mt-3 mb-3 space-x-2">
-                <label htmlFor="user-name" className="text-sm" aria-label="Username">
+                <label htmlFor="user-name" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="Username">
                     Username:
                 </label>
                 <div className="flex-grow w-full p-2 rounded border bg-gray-100 cursor-pointer">
                     {user.username}
                 </div>
                 <div>
-                {(isUserOwner &&
+                {((isUserOwner && isEditMode) &&
                     <button 
                         className="bg-blue-500 text-white text-sm rounded px-4 py-2 flex items-center justify-center w-auto"
                         onClick={() => setShowUserNameModal(true)}>
@@ -107,10 +120,9 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
                 </div>
             </div>
 
-
             {/* User Description */}
             <div className="flex ml-2 mr-2 mt-4 mb-3 space-x-2">
-                <label htmlFor="user-description" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-24" aria-label="User Description">
+                <label htmlFor="user-description" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="User Description">
                     Bio:
                 </label>
                     <textarea
@@ -124,29 +136,46 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
                     />
             </div>
 
-             {/* User Name */}
-             <div className="flex items-center ml-2 mr-2 mt-3 mb-3 space-x-2">
-                <label htmlFor="user-name" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-24" aria-label="User Name">
+            {/* User Name */}
+            <div className="flex items-center ml-2 mr-2 mt-3 mb-3 space-x-2">
+                <label htmlFor="user-name" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="User Name">
                     Name:
                 </label>
-                {!isEditMode ? (
-                    <div 
-                        className="flex-grow w-full p-2 rounded border bg-gray-100 cursor-pointer"
-                        onClick={toggleEditMode}
-                    >
-                        {user.name}
-                    </div>
-                ) : (
-                    <input
-                        id="user-name"
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="flex-grow w-full p-2 rounded border"
-                        maxLength={50}
-                    />
-                )}
+                <input
+                    id="user-name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="flex-grow w-full p-2 rounded border"
+                    maxLength={50}
+                    disabled={!isEditMode}
+                />
             </div>
+
+            {/* User Interests */}
+            <div className="flex items-center ml-2 mr-2 mt-3 mb-3 space-x-2">
+                <label htmlFor="user-name" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="User Name">
+                    Interests:
+                </label>
+                <div className="flex-grow w-full">
+                <MultiSelect
+                          options={sortedProjectClassifications}
+                          value={selectedTags}
+                          disabled={!isEditMode}
+                          onChange={(selected) => {
+                          // Convert OptionType[] back to string[] for onTagsChange
+                          if (selected) {
+                              handleTagsChange(selected.map(option => option.value));
+                          } else {
+                              handleTagsChange([]);
+                          }
+                          }}
+                          maxSelection={5}
+                          placeholder="Add tags..."
+                      />
+                    </div>
+            </div>
+
             <NavBarUserNameModal showModal={showUserNameModal} onClose={() => setShowUserNameModal(false)} />
         </div>
     );

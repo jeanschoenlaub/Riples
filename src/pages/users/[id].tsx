@@ -68,8 +68,6 @@ export default function UserPage(
       return tabFromQuery ?? "about";
     });
 
-    const [showUserNameModal, setShowUserNameModal] = useState(false);
-
     const { data: projectData } = api.projects.getProjectByAuthorId.useQuery({ authorId });
     const { data: user} = api.users.getUserByUserId.useQuery({ userId: authorId });
     const { data: session } = useSession();

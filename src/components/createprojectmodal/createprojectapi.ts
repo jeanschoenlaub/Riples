@@ -3,9 +3,11 @@ import toast from "react-hot-toast";
 import { api } from "~/utils/api";
 import router from "next/router";
 import type { ProjectCreateData } from "./createprojecttypes";
+import { useOnboarding } from "../onboarding/onboardingwrapper";
 
 // Custom hook to handle mutations and their state
-export const useProjectMutation =  ({ onSuccess }: { onSuccess: () => void }) => {    
+export const useProjectMutation =  ({ onSuccess }: { onSuccess: () => void }) => {   
+    const { triggerOnboardingWatch } = useOnboarding();
     // Function to run on successful mutations
     const handleSuccess = async (data: ProjectCreateData) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -19,7 +21,10 @@ export const useProjectMutation =  ({ onSuccess }: { onSuccess: () => void }) =>
     
     //We add a mutation for creating a task (with on success)
     const { mutateAsync: createProjectAsyncMutation, isLoading: isCreating } = api.projects.create.useMutation({
-      onSuccess: handleSuccess,
+      onSuccess: () => {
+        triggerOnboardingWatch(); // for step 1 checks
+        handleSuccess
+      },
       onError: (e) => {
         const fieldErrors = e.data?.zodError?.fieldErrors; 
         const message = handleZodError(fieldErrors);

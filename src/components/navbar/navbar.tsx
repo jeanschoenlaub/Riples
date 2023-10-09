@@ -8,10 +8,10 @@ import { NavBarUserDeleteModal } from "./userdeletemodal";
 import { api } from "~/utils/api";
 import toast from "react-hot-toast";
 import { handleZodError } from "~/utils/error-handling";
-import { NavBarUserNameModal } from "./usernamemodal";
 import ToggleSwitch from "../reusables/toogleswitch";
 import router from "next/router";
 import { SideNavProject } from "./sidenavproject";
+import { rejects } from "assert";
 
 interface GlobalNavBarProps {
   activeTab?: string;
@@ -26,6 +26,7 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSideNav, setShowSideNav] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
+  const { deleteUser, isDeleting } = UseUserMutations();
 
   const redirectUserPage = (option: string) => {
     router.push(`/users/${session?.user.id}/?activeTab=${option}`).catch(err => {
@@ -34,32 +35,19 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
     });
   };
 
-  // Mutation for deleting a user
-  const { mutateAsync: deleteUserAsyncMutation, isLoading: isDeleting } = api.users.deleteUser.useMutation({
-      onSuccess: () => {
-        toast.success("User Deleted successfully");
-      },
-      onError: (e) => {
-        const fieldErrors = e.data?.zodError?.fieldErrors;
-        const message = handleZodError(fieldErrors);
-        toast.error(message);
-      }
-  });
-
-  const handleDeleteUserMutation = async () => {
+  const handleDeleteUserMutation = () => {
       if (!session?.user?.id) {
-          toast.error("User ID not found in session");
-          return;
+        toast.error("User ID not found in session");
+        return;
       }
-
-      try {
-          await deleteUserAsyncMutation({ userId: session.user.id });
-          await signOut();
+      deleteUser({ userId: session.user.id}).then(() => {
+          toast.success('User Deleted Successfully');
           setShowDeleteModal(false);
-          await router.push('/');
-      } catch (error) {
-          toast.error("Failed to delete user");
-      }
+      })
+      .catch(() => {
+          toast.error('Error deleting User');
+          setShowDeleteModal(false);
+      });
   };
   
 
@@ -154,7 +142,7 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
               </div>
             )}
             <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
-            <NavBarUserDeleteModal showDeleteModal={showDeleteModal} isLoading={isDeleting} onClose={() => setShowDeleteModal(false)} onDelete={() => {void handleDeleteUserMutation();}}  />
+            <NavBarUserDeleteModal showDeleteModal={showDeleteModal} isLoading={isDeleting} onClose={() => setShowDeleteModal(false)} onDelete={handleDeleteUserMutation}  />
 
             <div className={`fixed top-0 left-0 h-full text-red-600 hover:text-red-800 text-xl transition-transform transform ${showSideNav ? 'translate-x-0' : '-translate-x-full'} w-3/4 bg-white shadow-md z-50 md:hidden flex flex-col`}>
               <div className="flex justify-end p-4">
@@ -170,3 +158,42 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
   </div>
   )
 } 
+
+type DeleteUserPayload = {
+  userId: string;
+}
+
+export const UseUserMutations  = () => {
+  const apiContext = api.useContext();
+  const handleSuccess = async () => {
+      await apiContext.users.getUserByUserId.invalidate();
+  };
+
+  // Delete User Mutation
+  const { mutate: deleteUserMutation, isLoading: isDeleting } = api.users.deleteUser.useMutation({
+      onSuccess: handleSuccess,
+  });
+
+  const deleteUser = (payload: DeleteUserPayload): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        deleteUserMutation(payload, {
+            onSuccess: () => { 
+                void signOut();
+                void router.push("/")
+                resolve(); 
+            },
+            onError: (e) => {
+                const fieldErrors = e.data?.zodError?.fieldErrors;
+                const message = handleZodError(fieldErrors);
+                toast.error(message);
+                reject(e);
+            },
+        });
+    });
+};
+
+return {
+  isDeleting,
+  deleteUser,
+};
+}
