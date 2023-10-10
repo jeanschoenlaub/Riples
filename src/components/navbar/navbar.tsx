@@ -123,7 +123,7 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
                   onClick={toggleUserDropdown} 
                   style={{ cursor: 'pointer' }} // Make the mouse change to a pointer when hovering
                 >
-                  <ProfileImage user={ session.user } size={32} />
+                  <ProfileImage  username={session.user.username ?? ""} email={session.user.email ?? ""} image={session.user.image ?? "" } name={session.user.name ?? ""}  size={32} />
                 </div>
                 {showDropdown && (
                   <div ref={dropdownRef}  className="absolute right-0 md:right-auto md:left-0 mt-2 w-40 rounded-md shadow-lg z-30 bg-slate-50">

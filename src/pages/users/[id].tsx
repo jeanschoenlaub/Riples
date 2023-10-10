@@ -97,7 +97,7 @@ export default function UserPage(
                   <span className="flex space-x-10 gap-5 items-center font-medium text-gray-500">  
                       {/* User Profile Image Hover buttons */}
                       <div className="group relative">
-                          <ProfileImage user={user.user} size={80} />
+                          <ProfileImage username={user.user.username} email={user.user.email} image={user.user.image} name={user.user.name} size={80} />
 
                           {/* Hover buttons for user's profile image */}
                           <div className="absolute bottom-0 right-0 flex flex-col items-end mb-2 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

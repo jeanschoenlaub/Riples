@@ -5,16 +5,11 @@ import Image from 'next/image';
 import Tooltip from './tooltip';
 
 
-interface SessionUserType {
-  id: string;
-  username: string;
-  name?: string | null;
-  email?: string | null;
-  image?: string | null; 
-}
-
 type ProfileImageProps = {
-  user?: RouterOutputs["users"]["getUserByUserId"]["user"] | SessionUserType;
+  username: string | null;
+  name: string | null;
+  email: string | null;
+  image?: string | null; 
   size?: number;
   showUsernameOnHover?: boolean;
 };
@@ -38,12 +33,10 @@ const getColorFromName = (name: string) => {
   return tailwindColors[colorIndex];
 };
 
-export const ProfileImage: FC<ProfileImageProps> = ({ user, size = 80, showUsernameOnHover = false}) => {
-  const email = user?.email ?? '';
-  const username = user?.username ?? 'Unknown User';
-  const initial = (email[0] ?? '?').toUpperCase();
-  const colorClass = getColorFromName(email);
-  const imageUrl = user?.image;
+export const ProfileImage: FC<ProfileImageProps> = ({ username, name, email, image, size = 80, showUsernameOnHover = false}) => {
+  const initial = (email && email[0] ? email[0] : '?').toUpperCase();
+  const colorClass = getColorFromName(email ?? "?");
+  const imageUrl = image;
 
   const content = (
     imageUrl ? (
@@ -75,7 +68,7 @@ export const ProfileImage: FC<ProfileImageProps> = ({ user, size = 80, showUsern
 
   return (
     showUsernameOnHover
-      ? <Tooltip content={username}>{content}</Tooltip>
+      ? <Tooltip content={username ?? ""}>{content}</Tooltip>
       : content
   );
 };

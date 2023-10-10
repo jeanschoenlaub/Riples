@@ -17,7 +17,7 @@ export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
     const userId = session?.user?.id ?? ''; //will never be empty 
   
   // Conditional query using tRPC to avoid no user error if not signed-in
-    const { data: projectLead, isLoading: projectLeadLoading } = api.projects.getProjectByAuthorId.useQuery(
+    const { data: projectLead, isLoading: projectLeadLoading } = api.projects.getProjectByAuthorIdForSideBar.useQuery(
       { authorId: userId },
       { enabled: shouldExecuteQuery }
     )
@@ -70,7 +70,7 @@ export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
         </div>
 
         {/*  List of projects */}
-        <div id="side-bar-project-list" className="flow-root w-full border-t">
+        <div id="side-bar-project-list" className="flow-root space-y-2 w-full border-t">
           <ul role="list" className="divide-y divide-gray-200">
             {SideBarToggle === "Following" 
             ? projectFollowed?.map((fullProject) => (

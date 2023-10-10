@@ -66,7 +66,6 @@ const [watchOnboarding, setWatchOnboarding] = useState(0);
 
 const triggerOnboardingWatch = () => {
    setWatchOnboarding(prev => prev + 1);
-   console.log(watchOnboarding);
 };
 
 return (
@@ -171,8 +170,6 @@ export const OnboardingWrapper: React.FC = () => {
       setCompletedTasks(prev => [...prev, 1]);
       setCurrentTask(1);
       setShowModal(true);
-
-      console.log("step2" +userOnboardingStatus)
   
       // Execute the mutation to update step one status
       setStepTwoCompleted({ userId: userId });
@@ -188,8 +185,6 @@ export const OnboardingWrapper: React.FC = () => {
       setCompletedTasks(prev => [...prev, 2]);
       setCurrentTask(2);
       setShowModal(true);
-
-      console.log("step3"+userOnboardingStatus)
   
       // Execute the mutation to update step one status
       setStepThreeCompleted({ userId: userId });

@@ -12,7 +12,7 @@ import { sortedProjectClassifications } from '~/utils/constants/projectclassific
 interface OptionType {
     value: string;
     label: string;
-  }
+}
 
 type UserAboutInfoProps = {
     user: {

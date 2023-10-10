@@ -23,6 +23,23 @@ export const taskRouter = createTRPCRouter({
         where: {
           id: { in: userIds },
         },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+          username: true,
+          createdAt: true,
+          description: true,
+          onBoardingFinished: true,
+          productTourFinished: true,
+          tags: {
+            select: {
+              tag: true  // Select the tag field inside the UserInterestTags model
+            }
+          },
+        }
       });
     };
 
