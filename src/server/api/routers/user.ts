@@ -6,7 +6,7 @@ export const userRouter = createTRPCRouter({
   getUserByUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findUnique({
+      const userFromDb = await ctx.prisma.user.findUnique({
         where: { id: input.userId },
         select: {
           id: true,
@@ -18,14 +18,26 @@ export const userRouter = createTRPCRouter({
           createdAt: true,
           description: true,
           onBoardingFinished: true,
-          productTourFinished: true
-          // ... other fields you want to select
+          productTourFinished: true,
+          tags: {
+            select: {
+              tag: true  // Select the tag field inside the UserInterestTags model
+            }
+          },          
         },
       });
 
-      if (!user) {
+      if (!userFromDb) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
       }
+
+      // Flatten the tags structure to match frontend's expectation
+      const interestTags = userFromDb.tags.map(rel => rel.tag);
+      const user = {
+        ...userFromDb,
+        interestTags: interestTags,
+        tags: undefined
+      };
 
       return {
         user,
@@ -90,35 +102,84 @@ export const userRouter = createTRPCRouter({
   }),
 
   editUserInfo: protectedProcedure
-    .input(z.object({
-      userId: z.string(),
-      name: z.string()
-        .max(255, { message: "User name must be 255 or fewer characters long" }),
-      description: z.string()
-        .max(5000, { message: "Description must be 5000 or fewer characters long" }),
-    }))
-    .mutation(async ({ ctx, input }) => {
-      const currentUserId = ctx.session.user.id;
-      const userIdToUpdate = input.userId;
-    
-      // You might want to check if the current user is allowed to update this user profile.
-      if (currentUserId !== userIdToUpdate) {
-        throw new TRPCError({ code: "FORBIDDEN" });
+  .input(z.object({
+    userId: z.string(),
+    name: z.string()
+      .max(255, { message: "User name must be 255 or fewer characters long" }),
+    description: z.string()
+      .max(5000, { message: "Description must be 5000 or fewer characters long" }),
+    tags: z.array(z.string()),  // Add tags to the input
+  }))
+  .mutation(async ({ ctx, input }) => {
+    const currentUserId = ctx.session.user.id;
+    const userIdToUpdate = input.userId;
+  
+    // You might want to check if the current user is allowed to update this user profile.
+    if (currentUserId !== userIdToUpdate) {
+      throw new TRPCError({ code: "FORBIDDEN" });
+    }
+
+    // Check existing tags
+    const existingTags = await ctx.prisma.tag.findMany({
+      where: {
+        name: {
+          in: input.tags
+        }
       }
-    
-      // You can have additional logic for other user details here if needed.
-    
-      // Now update the user info in the database.
-      const updatedUser = await ctx.prisma.user.update({
-        where: { id: userIdToUpdate },
-        data: {
-          name: input.name,
-          description: input.description,
-        },
+    });
+
+    const existingTagNames = existingTags.map(t => t.name);
+    const newTagNames = input.tags.filter(tag => !existingTagNames.includes(tag));
+
+    if (newTagNames.length > 0) {
+      await ctx.prisma.tag.createMany({
+        data: newTagNames.map(tagName => ({ name: tagName })),
+        skipDuplicates: true
       });
-    
-      return updatedUser;
-  }),
+    }
+
+    // Get all tag IDs, including the ones we just created
+    const allTags = await ctx.prisma.tag.findMany({
+      where: {
+        name: {
+          in: input.tags
+        }
+      }
+    });
+
+    const allTagIds = allTags.map(t => t.id);
+
+    // First, let's ensure all required UserInterestTags records exist
+    await Promise.all(
+      allTagIds.map(tagId => {
+        return ctx.prisma.userInterestTags.upsert({
+          where: {
+            tagId_userId: { tagId, userId: userIdToUpdate }
+          },
+          update: {}, // No updates required, just ensure it exists
+          create: {
+            tagId,
+            userId: userIdToUpdate
+          }
+        });
+      })
+    );
+
+    // Once all UserInterestTags records are ensured, you can proceed with user update
+    const updatedUser = await ctx.prisma.user.update({
+      where: { id: userIdToUpdate },
+      data: {
+        name: input.name,
+        description: input.description,
+        // Connecting tags might be redundant here, since the relation is already established by creating/updating UserInterestTags records
+      }
+    });
+  
+    return updatedUser;
+}),
+
+
+  
 
     
   deleteUser: publicProcedure

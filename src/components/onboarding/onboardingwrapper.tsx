@@ -1,5 +1,4 @@
 import { OnboardingJoyRideOne } from "./joyrides/onboardingjoyride";
-import { OnboardingUserProfile } from "./onboardinguserprofiles";
 import { createContext, useContext, useState, type ReactNode, useEffect } from 'react';
 import { TaskOneJoyRide } from "./joyrides/taskonejoyride";
 import { TaskTwoJoyRide } from "./joyrides/tasktwojoyride";
@@ -69,6 +68,7 @@ const triggerOnboardingWatch = () => {
    setWatchOnboarding(prev => prev + 1);
    console.log(watchOnboarding);
 };
+
 return (
     <OnboardingContext.Provider value={{
         activeJoyrideIndex,
@@ -142,10 +142,11 @@ export const OnboardingWrapper: React.FC = () => {
   }, [watchOnboarding, shouldExecuteQuery, userId]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
 
-  ////step1 check 
+  // Onboarding step1 check 
   const { setStepOneCompleted } = useOnboardingMutation();
   useEffect(() => {
-      if (projectLead && projectLead.length > 0 && !completedTasks.includes(0) && !userOnboardingStatus?.stepOneCompleted) {
+      //Same logic everytime we want to have the Onboarding status Say it's not already done +check 
+      if (projectLead && projectLead.length > 0 && !completedTasks.includes(0) && userOnboardingStatus &&  !userOnboardingStatus?.stepOneCompleted) {
           setCompletedTasks(prev => [...prev, 0]);
           setCurrentTask(0);
           setShowModal(true);
@@ -154,7 +155,7 @@ export const OnboardingWrapper: React.FC = () => {
           setStepOneCompleted({ userId: userId });
           //open up the wizard for people to try and do next task
       }
-  }, [projectLead, ]);
+  }, [projectLead, userOnboardingStatus ]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
 
   //step2 check - this only works if completing tasks on you own project
@@ -166,7 +167,7 @@ export const OnboardingWrapper: React.FC = () => {
     ) 
   ));
   useEffect(() => {
-    if (isAuthorOfRelevantProject && !completedTasks.includes(1) && !userOnboardingStatus?.stepTwoCompleted) {
+    if (isAuthorOfRelevantProject && !completedTasks.includes(1) && userOnboardingStatus &&  !userOnboardingStatus?.stepTwoCompleted) {
       setCompletedTasks(prev => [...prev, 1]);
       setCurrentTask(1);
       setShowModal(true);
@@ -183,7 +184,7 @@ export const OnboardingWrapper: React.FC = () => {
   //step3 check user has a username
   const { setStepThreeCompleted } = useOnboardingMutation();
   useEffect(() => {
-    if (!userDataQuery.isLoading && userData?.user.username && !completedTasks.includes(2) && !userOnboardingStatus?.stepThreeCompleted) {
+    if (!userDataQuery.isLoading && userData?.user.username && !completedTasks.includes(2) && userOnboardingStatus && !userOnboardingStatus?.stepThreeCompleted) {
       setCompletedTasks(prev => [...prev, 2]);
       setCurrentTask(2);
       setShowModal(true);
@@ -201,10 +202,9 @@ export const OnboardingWrapper: React.FC = () => {
   const { setStepFourCompleted } = useOnboardingMutation();
   const isAuthorOfRelevantRiples = riplesData?.some(ripleData => 
     ripleData.riple.ripleType === 'goalFinished'
-);
-
+  );
   useEffect(() => {
-    if (isAuthorOfRelevantRiples && !completedTasks.includes(3) && !userOnboardingStatus?.stepFourCompleted) {
+    if (isAuthorOfRelevantRiples && !completedTasks.includes(3) && userOnboardingStatus && !userOnboardingStatus?.stepFourCompleted) {
       setCompletedTasks(prev => [...prev, 3]);
       setCurrentTask(3);
       setShowModal(true);
@@ -243,7 +243,6 @@ export const OnboardingWrapper: React.FC = () => {
     <OnboardingProvider>
       {JoyrideComponent && <JoyrideComponent />}
       <OnboardingJoyRideOne />
-      <OnboardingUserProfile />
       <Modal showModal={showModal} Success={true} size="medium" onClose={onClose}>
           <div className="flex flex-col">
             <div className="text-lg flex justify-center items-center space-x-4 mb-2 w-auto">

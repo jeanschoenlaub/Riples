@@ -20,7 +20,7 @@ type UserAboutInfoProps = {
         name: string;
         username: string;
         description: string;
-        // interestTags: string[];
+        interestTags: string[];
     };
     isUserOwner: boolean;
 };
@@ -31,14 +31,15 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
     const [showUserNameModal, setShowUserNameModal] = useState(false);
 
     //For interest tags
-    const [tags, setTags] = useState<string[]>([]);
+    const [interestTags, setInterestTags] = useState<string[]>(user.interestTags || []);
     const handleTagsChange = (updatedTags: string[]) => {
-        setTags(updatedTags);
+        setInterestTags(updatedTags);
       };
-    const selectedTags: OptionType[] = tags.map(tag => ({ value: tag, label: tag }));
+    const selectedTags: OptionType[] = interestTags.map(tag => ({ value: tag, label: tag }));
 
     const [isEditMode, setIsEditMode] = useState(false);
     const toggleEditMode = () => {
+        console.log(user)
         setIsEditMode(!isEditMode);
     }
 
@@ -49,7 +50,7 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
             userId: user.id,
             name,
             description,
-            // interestTags, // Uncomment this when you're ready to handle interest tags
+            tags: interestTags, 
         })
         .then(() => {
             toast.success('User modifications saved successfully!');
@@ -175,7 +176,6 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
                       />
                     </div>
             </div>
-
             <NavBarUserNameModal showModal={showUserNameModal} onClose={() => setShowUserNameModal(false)} />
         </div>
     );
@@ -185,7 +185,7 @@ export type EditUserPayload = {
     userId: string;
     name: string;
     description: string;
-    // interestTags: string[]; // Uncomment this when you're ready to handle interest tags
+    tags: string[]; 
 };
 
 export const useUserInfoMutation = () => {

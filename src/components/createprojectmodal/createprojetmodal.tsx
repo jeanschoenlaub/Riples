@@ -24,7 +24,6 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   const [isPrivate, setIsPrivate] = useState(true);
   const [tags, setTags] = useState<string[]>([]);
 
-
   const resetForm = () => {
     setProjectName('');
     setProjectDescription('');
@@ -79,8 +78,6 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
       }
   }
   const goalsFromRedux = useSelector((state: RootState) => state.project.goals);
-
-
 
   // Fill the project Name form the create feed that the user would have filled
   useEffect(() => {

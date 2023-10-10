@@ -9,7 +9,7 @@ import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
 
 import { getSession, useSession } from 'next-auth/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GlobalNavBar } from '~/components/navbar/navbar';
 import { SideNavProject } from '~/components/navbar/sidenavproject';
 import { Tabs } from '~/components/reusables/tabs';
@@ -19,6 +19,7 @@ import { UserAbout } from '~/components/user-page/userinfo';
 import Tooltip from '~/components/reusables/tooltip';
 import { UserStats } from '~/components/user-page/userstats';
 import { useRouter } from 'next/router';
+import { UserPortofolio } from '~/components/user-page/userportofolio';
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -125,8 +126,8 @@ export default function UserPage(
                                   id: user.user.id,
                                   name: user.user.name ?? "",
                                   username: user.user.username ?? "",
-                                  description: user.user.description,  // This assumes that 'description' isn't part of the original user object, so we default it to an empty string.
-                                  // interestTags: [], // Uncomment this when you're ready to handle interest tags
+                                  description: user.user.description,  
+                                  interestTags: user.user.interestTags?.map(tag => tag.name) || [], 
                               }}
                               isUserOwner={isUserOwner}  
                           />
@@ -140,15 +141,8 @@ export default function UserPage(
 
                   {/* SHOWN IF PROJECTS TAB */}
                   {activeTab === 'projects' && (
-                      <div className="font text-gray-800"> 
-                          <div>
-                              Only your public project 
-                              {projectData?.filter(project => project.project.projectPrivacy === "public").map((fullProject) => (
-                                  <ProjectCard key={fullProject.project.id} {...fullProject} />
-                              ))}
-                          </div>
-                      </div>
-                  )}
+                    <UserPortofolio projectData={projectData}></UserPortofolio>
+                )}
               </div>
           </div>
 
