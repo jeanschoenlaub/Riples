@@ -141,7 +141,7 @@ export default function UserPage(
 
                   {/* SHOWN IF PROJECTS TAB */}
                   {activeTab === 'projects' && (
-                    <UserPortofolio projectData={projectData}></UserPortofolio>
+                    <UserPortofolio projectData={projectData} isUserOwner={isUserOwner}  ></UserPortofolio>
                 )}
               </div>
           </div>
