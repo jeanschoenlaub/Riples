@@ -131,7 +131,7 @@ export const OnboardingWrapper: React.FC = () => {
           setCurrentMessage({
             title: "Congratulations",
             message: "You just created your first Project on Riples 💥!",
-            subMessage: "Now, feel free to have a look at your newly created project tabs and move on to the next onboarding task"
+            subMessage: "Now, feel free to have a look at your newly created project pages"
           });
           setShowModal(true);
           // Execute the mutation to update step one status
@@ -153,7 +153,7 @@ export const OnboardingWrapper: React.FC = () => {
       setCurrentMessage({
         title: "As simple as that ! ",
         message: " Tasks are how you breakdown and update you progress on Riples 💪",
-        subMessage: "Now, feel free to continue adding data to your project or move on to the next onboarding task"
+        subMessage: "Now, feel free to continue adding data to your project"
     });
   
       // Execute the mutation to update step one status
@@ -165,12 +165,12 @@ export const OnboardingWrapper: React.FC = () => {
   //step3 check user has a username
   const { setStepThreeCompleted } = useOnboardingMutation();
   useEffect(() => {
-    if (!userDataQuery.isLoading && userData?.user.username && userOnboardingStatus && !userOnboardingStatus?.stepThreeCompleted) {
+    if (!userDataQuery.isLoading && userData?.user.username && userData?.user.interestTags && (userData?.user.interestTags.length > 0) && userOnboardingStatus && !userOnboardingStatus?.stepThreeCompleted) {
       setShowModal(true);
       setCurrentMessage({
         title: "Now we're talking",
         message: "Your profile allows other user to know about you and what you have done",
-        subMessage: "You can also check out the protofolio part of your profile."
+        subMessage: "You can also check out the projects (protofolio) part of your profile."
       });
   
       // Execute the mutation to update step one status
@@ -190,7 +190,7 @@ export const OnboardingWrapper: React.FC = () => {
       setCurrentMessage({
         title: "Well Done",
         message: "Sharing your progress will attract other relevant users to your project",
-        subMessage: "You can also share project creation, or update riples. If you want to delete posts, you can do soby navigating to Riples of the relevant project"    
+        subMessage: "You can also share project creation, or updates. If you want to delete posts (riples), you can do so by navigating to the 'Riples' page of the relevant project"    
       });
   
       // Execute the mutation to update step one status
@@ -208,7 +208,7 @@ export const OnboardingWrapper: React.FC = () => {
             title: "Achievement Unlocked!",
             message: "Congratulations! You've completed the onboarding!",
             achievement: <ClipboardSVG width='8' height='8' colorStrokeHex='#2563eb' />,
-            subMessage: "You can find your achievements in You Profile / About."
+            subMessage: "You can find your achievements in your Profile / About page."
         });
     }
     // Update the previous status to the current status for the next effect run
@@ -248,12 +248,12 @@ export const OnboardingWrapper: React.FC = () => {
             <div className="text-lg flex justify-center items-center space-x-4 mb-2 w-auto">
                 {currentMessage.title}
             </div>
-            <div className="text-center font-semibold mb-10 ">
+            <div className="text-center font-semibold mb-2 ">
               {currentMessage.message}
             </div>
-            <div className="text-center font-semibold mb-10 ">
+            { currentMessage && (<div className="flex justify-center font-semibold mb-2 ">
               {currentMessage.achievement}
-            </div>
+            </div>) }
             <div className="italic text-center mb-2">
               {currentMessage.subMessage}
             </div>

@@ -41,7 +41,7 @@ export const ProjectCardPortofolio = (props: PortofolioProjectCardProps) => {
   return (
     <div 
       key={project.id}
-      className={`border border-slate-300 bg-white w-full rounded-lg mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md`}
+      className={`border border-slate-300 flex flex-col bg-white w-full rounded-lg mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md`}
     >
         <div onClick={props.onClick} className="flex items-center space-x-2">
             <div className="flex-none">

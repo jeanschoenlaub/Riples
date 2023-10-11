@@ -140,22 +140,14 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
                 <label htmlFor="project-story" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="Task Content">
                     Project Story:
                 </label>
-                {!isEditMode ? (
-                    <div 
-                        className="flex-grow w-full p-2 rounded border bg-gray-100"
-                    >
-                        {project.project.summary}
-                    </div>
-                ) : (
-                    <textarea
+                        <textarea
                         id="project-story"
                         value={projectSummary}
                         onChange={(e) => setProjectSummary(e.target.value)}
                         className={`flex-grow w-full p-2 rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
-                        maxLength={50}
-                        rows={1}
+                        maxLength={5000}
+                        disabled={!isEditMode }
                     />
-                )}
             </div>
 
 

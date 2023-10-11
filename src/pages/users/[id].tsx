@@ -9,7 +9,7 @@ import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
 
 import { getSession, useSession } from 'next-auth/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GlobalNavBar } from '~/components/navbar/navbar';
 import { SideNavProject } from '~/components/navbar/sidenavproject';
 import { Tabs } from '~/components/reusables/tabs';
@@ -59,14 +59,15 @@ export default function UserPage(
   
   
     const router = useRouter();
-    //We either have initial state on first land or can be changed from childs or via router pushes
-    const [activeTab, setActiveTab] = useState<string>(() => {
+    const [activeTab, setActiveTab] = useState<string>("about");  // default to "about" initially
+
+    useEffect(() => {
       const tabFromQuery = Array.isArray(router.query.activeTab)
         ? router.query.activeTab[0]
         : router.query.activeTab;
 
-      return tabFromQuery ?? "about";
-    });
+      setActiveTab(tabFromQuery ?? "about");
+    }, [router.query]);
 
     const { data: projectData } = api.projects.getProjectByAuthorId.useQuery({ authorId });
     const { data: user} = api.users.getUserByUserId.useQuery({ userId: authorId });

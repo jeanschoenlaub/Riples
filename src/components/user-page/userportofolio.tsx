@@ -17,7 +17,7 @@ export const UserPortofolio: React.FC<UserPortofolioProps> = ({ projectData, isU
                 <div className='text-lg mt-2 font-semibold'>Public Projects</div>
                 {/* Add more buttons or UI elements here, similar to UserAbout if needed */}
             </div>
-            <div className="flex items-center space-x-4 ml-2">
+            <div className="items-center space-x-4 ml-2 mr-10">
                 {projectData.filter(project => project.project.projectPrivacy === "public").map((fullProject) => (
                     <ProjectCardPortofolio key={fullProject.project.id} {...fullProject} />
                 ))}
