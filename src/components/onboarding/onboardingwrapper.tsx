@@ -10,6 +10,7 @@ import { useOnboardingMutation } from "./joyrides/onboardingapi";
 import { TaskThreeJoyRide } from "./joyrides/taskthreejoyride";
 import { useWizard } from "../wizard/wizardswrapper";
 import { TaskFourJoyRide } from "./joyrides/taskfourjoyride";
+import { ClipboardSVG } from "../reusables/svgstroke";
 
 
 type OnboardingContextType = {
@@ -23,6 +24,7 @@ type TaskMessage = {
   title: string;
   message: string;
   subMessage: string;
+  achievement?: JSX.Element;
 };
 
 
@@ -62,7 +64,7 @@ export const OnboardingWrapper: React.FC = () => {
   const [currentMessage, setCurrentMessage] = useState<TaskMessage>({
     title: "",
     message: "",
-    subMessage: ""
+    subMessage: "",
   });
   const wizardContext = useWizard();
   const [prevOnboardingFinished, setPrevOnboardingFinished] = useState<boolean | null>(null);
@@ -197,6 +199,7 @@ export const OnboardingWrapper: React.FC = () => {
     }
   }, [riplesData]);
 
+  //Finaished all steps check
   useEffect(() => {
     // If the previous status was not finished and the current status is finished
     if (prevOnboardingFinished === false && userOnboardingStatus?.onBoardingFinished === true) {
@@ -204,7 +207,8 @@ export const OnboardingWrapper: React.FC = () => {
         setCurrentMessage({
             title: "Achievement Unlocked!",
             message: "Congratulations! You've completed the onboarding!",
-            subMessage: "You're now ready to use the full features of our platform."
+            achievement: <ClipboardSVG width='8' height='8' colorStrokeHex='#2563eb' />,
+            subMessage: "You can find your achievements in You Profile / About."
         });
     }
     // Update the previous status to the current status for the next effect run
@@ -212,7 +216,6 @@ export const OnboardingWrapper: React.FC = () => {
         setPrevOnboardingFinished(userOnboardingStatus.onBoardingFinished);
     }
 }, [userOnboardingStatus]);
-
   
   
   const onClose = () => {
@@ -247,6 +250,9 @@ export const OnboardingWrapper: React.FC = () => {
             </div>
             <div className="text-center font-semibold mb-10 ">
               {currentMessage.message}
+            </div>
+            <div className="text-center font-semibold mb-10 ">
+              {currentMessage.achievement}
             </div>
             <div className="italic text-center mb-2">
               {currentMessage.subMessage}
