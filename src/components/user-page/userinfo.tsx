@@ -7,6 +7,7 @@ import { handleZodError } from '~/utils/error-handling';
 import { NavBarUserNameModal } from '../navbar/usernamemodal';
 import MultiSelect from '../reusables/multiselect';
 import { sortedProjectClassifications } from '~/utils/constants/projectclassifications';
+import { useOnboarding } from '../onboarding/onboardingwrapper';
 
 
 interface OptionType {
@@ -190,6 +191,7 @@ export type EditUserPayload = {
 
 export const useUserInfoMutation = () => {
     const apiContext = api.useContext();
+    const { triggerOnboardingWatch } = useOnboarding();
     const handleSuccess = async () => {
         await apiContext.users.getUserByUserId.invalidate();
     };
@@ -201,7 +203,10 @@ export const useUserInfoMutation = () => {
     const editUserInfo = (payload: EditUserPayload) => {
         return new Promise<void>((resolve, reject) => {
             editUserInfoMutation(payload, {
-                onSuccess: () => { resolve(); },
+                onSuccess: () => { 
+                    triggerOnboardingWatch();
+                    resolve(); 
+                },
                 onError: (e) => {
                     const fieldErrors = e.data?.zodError?.fieldErrors;
                     const message = handleZodError(fieldErrors);
