@@ -139,7 +139,7 @@ export const OnboardingWrapper: React.FC = () => {
 
     void fetchData();
   }, [watchOnboarding, shouldExecuteQuery, userId]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
 
   // Onboarding step1 check 
   const { setStepOneCompleted } = useOnboardingMutation();
@@ -155,7 +155,6 @@ export const OnboardingWrapper: React.FC = () => {
           //open up the wizard for people to try and do next task
       }
   }, [projectLead, userOnboardingStatus ]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   //step2 check - this only works if completing tasks on you own project
   const { setStepTwoCompleted } = useOnboardingMutation();
@@ -176,7 +175,6 @@ export const OnboardingWrapper: React.FC = () => {
       //open up the wizard for people to try and do next task
     }
   }, [projectLead, userOnboardingStatus]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   //step3 check user has a username
   const { setStepThreeCompleted } = useOnboardingMutation();
@@ -191,7 +189,6 @@ export const OnboardingWrapper: React.FC = () => {
       //open up the wizard for people to try and do next task
     }
   }, [userData, userOnboardingStatus]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   //step3 check - this only works if completing tasks on you own project
   const { setStepFourCompleted } = useOnboardingMutation();

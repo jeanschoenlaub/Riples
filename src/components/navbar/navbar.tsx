@@ -11,7 +11,6 @@ import { handleZodError } from "~/utils/error-handling";
 import ToggleSwitch from "../reusables/toogleswitch";
 import router from "next/router";
 import { SideNavProject } from "./sidenavproject";
-import { rejects } from "assert";
 
 interface GlobalNavBarProps {
   activeTab?: string;

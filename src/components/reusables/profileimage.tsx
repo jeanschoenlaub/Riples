@@ -1,6 +1,5 @@
 import React from 'react';
 import type { FC } from 'react';
-import type { RouterOutputs } from '~/utils/api';
 import Image from 'next/image';
 import Tooltip from './tooltip';
 
@@ -34,7 +33,7 @@ const getColorFromName = (name: string) => {
 };
 
 export const ProfileImage: FC<ProfileImageProps> = ({ username, name, email, image, size = 80, showUsernameOnHover = false}) => {
-  const initial = (email && email[0] ? email[0] : '?').toUpperCase();
+  const initial = (email?.[0] ?? '?').toUpperCase();
   const colorClass = getColorFromName(email ?? "?");
   const imageUrl = image;
 

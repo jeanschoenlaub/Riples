@@ -62,7 +62,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     else {
       setTaskTitle(inputValue);
     }
-  }, [taskToEdit, inputValue, allowedToEdit]); 
+  }, [taskToEdit, inputValue, allowedToEdit, session?.user.id]); 
 
   const handleToogleOwnership = () => {
     if (!isMember && isProjectLead) {

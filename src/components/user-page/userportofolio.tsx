@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import { RouterOutputs } from '~/utils/api';
-import { ProjectCardPortofolio } from '../cards/projectcard';
-import { userAgent } from 'next/server';
-import { useSession } from 'next-auth/react';
+import React from 'react';
+import type { RouterOutputs } from '~/utils/api';
+import { ProjectCardPortofolio } from '../cards/projectportfoliocard';
 
 type UserPortofolioProps = {
     projectData?: RouterOutputs["projects"]["getProjectByAuthorId"];

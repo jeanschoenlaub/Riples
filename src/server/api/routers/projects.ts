@@ -145,6 +145,11 @@ export const projRouter = createTRPCRouter({
             subTasks: true
           }
         },
+        tags: {
+          include: {
+            tag: true
+          }
+        },
       },
       take: 100,
       orderBy: [{ createdAt: "desc" }],

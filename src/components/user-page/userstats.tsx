@@ -7,11 +7,11 @@ type UserStatsProps = {
     user: {
         id: string;
         createdAt: Date;
+        onBoardingFinished: boolean;
     };
 };
 
-export const UserStats: React.FC<UserStatsProps> = ({ user}) => {
-    const [onboardingComplete, setOnboardingComplete] = useState(false); 
+export const UserStats: React.FC<UserStatsProps> = ({ user }) => {
     return (
         <div>
             <div className="flex items-center space-x-4 ml-2">
@@ -36,12 +36,12 @@ export const UserStats: React.FC<UserStatsProps> = ({ user}) => {
                 </label>
                 <div className=" p-2">
                     {/* Onboarding Complete Achievement */}
-                    <Tooltip content={onboardingComplete ? "Onboarding Complete!" : "Complete onboarding to unlock this achievement!"}>
+                    <Tooltip content={user.onBoardingFinished ? "Onboarding Complete!" : "Complete onboarding to unlock this achievement!"}>
                         <div 
                             className={`flex-shrink-0 w-5 rounded`}
                             style={{ cursor: 'pointer' }}
                         >
-                            <ClipboardSVG width='5' height='5' colorStrokeHex={onboardingComplete ? '#2563eb' : '#9CA3AF'} />
+                            <ClipboardSVG width='5' height='5' colorStrokeHex={user.onBoardingFinished ? '#2563eb' : '#9CA3AF'} />
                         </div>
                     </Tooltip>
                 </div>

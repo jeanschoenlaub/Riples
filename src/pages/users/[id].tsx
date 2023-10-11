@@ -9,11 +9,10 @@ import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
 
 import { getSession, useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { GlobalNavBar } from '~/components/navbar/navbar';
 import { SideNavProject } from '~/components/navbar/sidenavproject';
 import { Tabs } from '~/components/reusables/tabs';
-import { ProjectCard } from '~/components/cards/projectcard';
 import { ProfileImage } from '~/components/reusables/profileimage';
 import { UserAbout } from '~/components/user-page/userinfo';
 import Tooltip from '~/components/reusables/tooltip';
@@ -135,6 +134,7 @@ export default function UserPage(
                            <UserStats  user={{
                                   id: user.user.id,
                                   createdAt: user.user.createdAt,
+                                  onBoardingFinished: user.user.onBoardingFinished
                                 }}></UserStats>
                       </>
                   )}
