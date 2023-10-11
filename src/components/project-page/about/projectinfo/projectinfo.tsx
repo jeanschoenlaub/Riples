@@ -271,7 +271,7 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
                         {index > 0 && <span className="text-sm font-medium">, </span>}
                         <div id={`riple-card-metadata-auth-profile-image-${index}`} className="flex items-center">
                           <Link href={`/users/${user.id}`}>
-                            <ProfileImage username={project.author.username} email={project.author.email} image={project.author.image} name={project.author.name} size={32} />
+                            <ProfileImage username={user.user.username} email={user.user.email} image={user.user.image} name={user.user.name} size={32} />
                           </Link>
                         </div>
                         <span className="font-medium ml-1 flex items-center">
