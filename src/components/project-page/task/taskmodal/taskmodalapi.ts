@@ -2,10 +2,13 @@ import { api } from "~/utils/api";
 import type { ChangeTaskOwnerPayload, CreateTaskPayload, DeleteTaskPayload, EditStatusPayload, EditTaskPayload } from "./taskmodaltypes";
 import { handleZodError } from "~/utils/error-handling";
 import toast from "react-hot-toast";
+import { useOnboarding } from "~/components/onboarding/onboardingwrapper";
 
 // Custom hook to handle mutations and their state
 export const useTaskMutation = () => {
     const apiContext = api.useContext();
+    const { triggerOnboardingWatch } = useOnboarding();
+
     const handleSuccess = async () => {
       await apiContext.tasks.getTasksByProjectId.invalidate();
     };
@@ -35,7 +38,9 @@ export const useTaskMutation = () => {
     const editTask = (payload: EditTaskPayload) => {
       return new Promise<void>((resolve) => {
         editTaskMutation(payload, {
-          onSuccess: () => { resolve(); },
+          onSuccess: () => {
+            resolve(); 
+          },
           onError: (e) => {
             const fieldErrors = e.data?.zodError?.fieldErrors;
             const message = handleZodError(fieldErrors);
@@ -87,7 +92,10 @@ export const useTaskMutation = () => {
     const editStatus = (payload: EditStatusPayload) => {
       return new Promise<void>((resolve) => {
         editStatusMutation(payload, {
-          onSuccess: () => { resolve(); },
+          onSuccess: () => { 
+            triggerOnboardingWatch(); //for step 2 onboarding
+            resolve(); 
+          },
           onError: (e) => {
             const fieldErrors = e.data?.zodError?.fieldErrors;
             const message = handleZodError(fieldErrors);

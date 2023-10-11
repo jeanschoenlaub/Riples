@@ -1,4 +1,3 @@
-
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
@@ -49,7 +48,7 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
     <div 
       id="riple-card" 
       key={riple.id}
-      className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md`}
+      className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg flex flex-col mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md`}
       >
       <div id="riple-card-header" className="flex items-center space-x-3">
       
@@ -107,25 +106,29 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
   </div>
 
     
-     {/* Post Content */}
-     {cleanHTML != "" && (
-        <div 
-            id="riple-content" 
-            className={`text-gray-700 mt-2 overflow-hidden transition-all duration-500 ${maxHeightClass}`}
-        >
-            {/* Horizontal Divider */}
-            <hr className="border-t mb-4 border-slate-200"/>
+     {/* Post Content and Read More button */}
+     <div className="flex flex-col justify-between h-full">
+        {cleanHTML != "" && (
+            <div 
+                id="riple-content" 
+                className={`text-gray-700 mt-2 overflow-hidden transition-all duration-500 ${maxHeightClass}`}
+            >
+                {/* Horizontal Divider */}
+                <hr className="border-t mb-4 border-slate-200"/>
 
-            <div dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
+                <div dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
+            </div>
+        )}
+    
+        {/* Conditionally render Read More button */}
+        { showReadMore && (
+            <div className="text-right">
+            <button onClick={() => setIsExpanded(!isExpanded)} className="mt-2 bg-gray-300 text-sm flex-shrink-0 w-22 hover:bg-blue-600 hover:text-white font-bold px-2 rounded-full transition duration-300 ease-in-out ">
+            {isExpanded ? 'See More' : 'See Less'}
+            </button>
+            </div>
+        )}
         </div>
-      )}
-  
-      {/* Conditionally render Read More button */}
-      { showReadMore && (
-        <button onClick={() => setIsExpanded(!isExpanded)} className="mt-4">
-          {isExpanded ? 'Read More' : 'Read Less'}
-        </button>
-      )}
     </div>
   );
 }

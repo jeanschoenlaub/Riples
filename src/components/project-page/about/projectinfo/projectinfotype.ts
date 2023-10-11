@@ -13,6 +13,7 @@ export interface ProjectAboutInfoProps {
     isMember: boolean;
     isPending: boolean;
     isProjectLead: boolean;
+    projectTags: string[];
     userId: string | undefined;
   }
   
@@ -20,5 +21,6 @@ export type EditProjectPayload = {
     projectId: string;
     title: string;
     summary: string;
+    tags: string[];
     status: string;
 };

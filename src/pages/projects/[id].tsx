@@ -137,7 +137,7 @@ export default function Project(
                   <Follow projectId={projectId} />
                 </div>
 
-                <div id="project-main-tabs" className="border-b mt-2 border-gray-200 ">
+                <div id="project-main-tabs-container" className="border-b mt-2 border-gray-200 ">
                   <Tabs 
                     activeTab={activeTab} 
                     setActiveTab={setActiveTab} 
@@ -149,7 +149,7 @@ export default function Project(
               
                 {/* SHOWN IF ABOUT TAB */}
                 {activeTab === 'about' && (
-                  <AboutTab project={projectData}  isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} userId={userId} ></AboutTab>
+                  <AboutTab project={projectData} projectTags={projectData.project.projectTags?.map(tag => tag.name) || []}  isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} userId={userId} ></AboutTab>
                 )}
 
                 {/* SHOWN IF RIPLES TAB */}

@@ -1,3 +1,4 @@
+//disabled for now , enable in Use effect if wanted
 import { api } from "~/utils/api";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -20,7 +21,7 @@ export const OnboardingUserProfile = () => {
 
   useEffect(() => {
     if (userQuery.data?.user.username === "") {
-      setShowUserNameModal(true);
+      setShowUserNameModal(false);//disabled for now 
     }
   }, [userQuery.data]);
 

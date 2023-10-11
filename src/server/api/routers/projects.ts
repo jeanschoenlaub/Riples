@@ -80,7 +80,7 @@ export const projRouter = createTRPCRouter({
   getProjectByProjectId: publicProcedure
   .input(z.object({ projectId: z.string() }))
   .query(async ({ ctx, input }) => {
-    const project = await ctx.prisma.project.findUnique({
+    const projectFromDb = await ctx.prisma.project.findUnique({
       where: { id: input.projectId },
       include: { 
         goals: true,
@@ -94,12 +94,25 @@ export const projRouter = createTRPCRouter({
             subTasks: true
           }
         },
+        tags: {
+          include: {
+            tag: true
+          }
+        },
       },
     });
 
-    if (!project) {
+    if (!projectFromDb) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Project not found" });
     }
+
+    // Flatten the tags structure to match frontend's expectation
+    const projectTags = projectFromDb.tags.map(rel => rel.tag);
+    const project = {
+      ...projectFromDb,
+      projectTags: projectTags,
+      tags: undefined
+    };
 
     const author = await ctx.prisma.user.findUnique({
       where: { id: project.authorID },
@@ -116,6 +129,47 @@ export const projRouter = createTRPCRouter({
   }),
 
   getProjectByAuthorId: publicProcedure
+  .input(z.object({ authorId: z.string() }))
+  .query(async ({ ctx, input }) => {
+    const projects = await ctx.prisma.project.findMany({
+      where: { authorID: input.authorId },
+      include: { 
+        goals: true,
+        members: {
+          include: {
+            user: true
+          }
+        },
+        tasks: {
+          include: {
+            subTasks: true
+          }
+        },
+        tags: {
+          include: {
+            tag: true
+          }
+        },
+      },
+      take: 100,
+      orderBy: [{ createdAt: "desc" }],
+    });
+
+    const author = await ctx.prisma.user.findUnique({
+      where: { id: input.authorId },
+    });
+
+    if (!author) {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Riple author not found" });
+    }
+
+    return projects.map((project) => ({
+      project,
+      author,
+    }));
+  }),
+
+  getProjectByAuthorIdForSideBar: publicProcedure
   .input(z.object({ authorId: z.string() }))
   .query(async ({ ctx, input }) => {
     const projects = await ctx.prisma.project.findMany({
@@ -275,6 +329,7 @@ editInfo: protectedProcedure
   summary: z.string()
     .max(5000, { message: "Project Description must be 5000 or less characters long" }),
   status: z.string(),
+  tags: z.array(z.string()),  // Add tags to the input
 }))
 .mutation(async ({ ctx, input }) => {
   const authorID = ctx.session.user.id;
@@ -283,7 +338,50 @@ editInfo: protectedProcedure
   const { success } = await ratelimit.limit(authorID);
   if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
-  // ... (tag logic remains the same)
+  // Check existing tags
+  const existingTags = await ctx.prisma.tag.findMany({
+    where: {
+      name: {
+        in: input.tags
+      }
+    }
+  });
+
+  const existingTagNames = existingTags.map(t => t.name);
+  const newTagNames = input.tags.filter(tag => !existingTagNames.includes(tag));
+
+  if (newTagNames.length > 0) {
+    await ctx.prisma.tag.createMany({
+      data: newTagNames.map(tagName => ({ name: tagName })),
+      skipDuplicates: true
+    });
+  }
+
+  // Get all tag IDs, including the ones we just created
+  const allTags = await ctx.prisma.tag.findMany({
+    where: {
+      name: {
+        in: input.tags
+      }
+    }
+  });
+
+  const allTagIds = allTags.map(t => t.id);
+
+  await Promise.all(
+    allTagIds.map(tagId => {
+      return ctx.prisma.projectTags.upsert({
+        where: {
+          tagId_projectId: { tagId, projectId: input.projectId }
+        },
+        update: {}, // No updates required, just ensure it exists
+        create: {
+          tagId,
+          projectId: input.projectId
+        }
+      });
+    })
+  );
 
   // Now update the project with tasks and tags
   const updatedProject = await ctx.prisma.project.update({
@@ -295,7 +393,7 @@ editInfo: protectedProcedure
     },
   });
   return updatedProject;
-  }),
+}),
 
 editAdmin: protectedProcedure
 .input(z.object({

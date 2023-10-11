@@ -62,7 +62,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     else {
       setTaskTitle(inputValue);
     }
-  }, [taskToEdit, inputValue, allowedToEdit]); 
+  }, [taskToEdit, inputValue, allowedToEdit, session?.user.id]); 
 
   const handleToogleOwnership = () => {
     if (!isMember && isProjectLead) {
@@ -102,6 +102,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   const generateEditPayload = (): EditTaskPayload => ({
     projectId: project.id,
     title: taskTitle,
+    status: taskStatus,
     content: taskContent,
     id: taskToEdit!.id
   });
@@ -110,6 +111,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   const generateCreatePayload = (): CreateTaskPayload => ({
     projectId: project.id,
     title: taskTitle,
+    status: taskStatus,
     content: taskContent
   });
 
@@ -208,7 +210,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
               <Link href={`/users/${taskOwnerId}`} className="flex items-center space-x-4">
                 {userQuery.data ? (
                   <span className="flex items-center rounded border px-2"> 
-                    <ProfileImage user={userQuery.data.user} size={32} />
+                    <ProfileImage username={userQuery.data.user.username} email={userQuery.data.user.email} image={userQuery.data.user.image} name={userQuery.data.user.name} size={32} />
                     {`  `}{userQuery.data?.user.username} 
                   </span>
                 ) : ""}

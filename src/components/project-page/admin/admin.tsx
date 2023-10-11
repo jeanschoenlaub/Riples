@@ -178,7 +178,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectL
                         <td className="px-6 py-4">
                             <div className="flex items-center">
                             <Link href={`/users/${member.user.id}`}>
-                                <ProfileImage user={member.user} size={32} />
+                                <ProfileImage username={member.user.username} email={member.user.email} image={member.user.image} name={member.user.name} size={32} />
                             </Link>
                             <Link href={`/users/${member.user.id}`} className="text-sm font-medium ml-2">
                                 {member.user.username}
@@ -217,7 +217,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectL
                             <td className="px-6 py-4">
                                 <div className="flex items-center">
                                 <Link href={`/users/${member.user.id}`}>
-                                    <ProfileImage user={member.user} size={32} />
+                                    <ProfileImage username={member.user.username} email={member.user.email} image={member.user.image} name={member.user.name} size={32} />
                                 </Link>
                                 <Link href={`/users/${member.user.id}`} className="text-sm font-medium ml-2">
                                     {member.user.username}

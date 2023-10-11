@@ -13,11 +13,12 @@ import React, { useState } from 'react';
 import { GlobalNavBar } from '~/components/navbar/navbar';
 import { SideNavProject } from '~/components/navbar/sidenavproject';
 import { Tabs } from '~/components/reusables/tabs';
-import { ProjectCard } from '~/components/cards/projectcard';
 import { ProfileImage } from '~/components/reusables/profileimage';
 import { UserAbout } from '~/components/user-page/userinfo';
 import Tooltip from '~/components/reusables/tooltip';
 import { UserStats } from '~/components/user-page/userstats';
+import { useRouter } from 'next/router';
+import { UserPortofolio } from '~/components/user-page/userportofolio';
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -57,7 +58,15 @@ export default function UserPage(
     const { authorId } = props; //author id is the user id from url slug
   
   
-    const [activeTab, setActiveTab] = useState('projects');
+    const router = useRouter();
+    //We either have initial state on first land or can be changed from childs or via router pushes
+    const [activeTab, setActiveTab] = useState<string>(() => {
+      const tabFromQuery = Array.isArray(router.query.activeTab)
+        ? router.query.activeTab[0]
+        : router.query.activeTab;
+
+      return tabFromQuery ?? "about";
+    });
 
     const { data: projectData } = api.projects.getProjectByAuthorId.useQuery({ authorId });
     const { data: user} = api.users.getUserByUserId.useQuery({ userId: authorId });
@@ -87,7 +96,7 @@ export default function UserPage(
                   <span className="flex space-x-10 gap-5 items-center font-medium text-gray-500">  
                       {/* User Profile Image Hover buttons */}
                       <div className="group relative">
-                          <ProfileImage user={user.user} size={80} />
+                          <ProfileImage username={user.user.username} email={user.user.email} image={user.user.image} name={user.user.name} size={80} />
 
                           {/* Hover buttons for user's profile image */}
                           <div className="absolute bottom-0 right-0 flex flex-col items-end mb-2 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -103,7 +112,7 @@ export default function UserPage(
                   </span>
               </div>
 
-              <div id="project-main-tabs" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-5 border-b border-gray-200">
+              <div id="user-main-tabs" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-5 border-b border-gray-200">
                   <Tabs activeTab={activeTab} setActiveTab={setActiveTab} projects="y" />
               </div>
 
@@ -116,8 +125,8 @@ export default function UserPage(
                                   id: user.user.id,
                                   name: user.user.name ?? "",
                                   username: user.user.username ?? "",
-                                  description: user.user.description,  // This assumes that 'description' isn't part of the original user object, so we default it to an empty string.
-                                  // interestTags: [], // Uncomment this when you're ready to handle interest tags
+                                  description: user.user.description,  
+                                  interestTags: user.user.interestTags?.map(tag => tag.name) || [], 
                               }}
                               isUserOwner={isUserOwner}  
                           />
@@ -125,21 +134,15 @@ export default function UserPage(
                            <UserStats  user={{
                                   id: user.user.id,
                                   createdAt: user.user.createdAt,
+                                  onBoardingFinished: user.user.onBoardingFinished
                                 }}></UserStats>
                       </>
                   )}
 
                   {/* SHOWN IF PROJECTS TAB */}
                   {activeTab === 'projects' && (
-                      <div className="font text-gray-800"> 
-                          <div>
-                              Only your public project 
-                              {projectData?.filter(project => project.project.projectPrivacy === "public").map((fullProject) => (
-                                  <ProjectCard key={fullProject.project.id} {...fullProject} />
-                              ))}
-                          </div>
-                      </div>
-                  )}
+                    <UserPortofolio projectData={projectData} isUserOwner={isUserOwner}  ></UserPortofolio>
+                )}
               </div>
           </div>
 

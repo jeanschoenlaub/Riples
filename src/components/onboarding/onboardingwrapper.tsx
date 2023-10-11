@@ -1,5 +1,4 @@
 import { OnboardingJoyRideOne } from "./joyrides/onboardingjoyride";
-import { OnboardingUserProfile } from "./onboardinguserprofiles";
 import { createContext, useContext, useState, type ReactNode, useEffect } from 'react';
 import { TaskOneJoyRide } from "./joyrides/taskonejoyride";
 import { TaskTwoJoyRide } from "./joyrides/tasktwojoyride";
@@ -9,33 +8,25 @@ import { Modal } from "../reusables/modaltemplate";
 import { ProjectManagerAIJoyRide } from "./joyrides/pmjoyride";
 import { useOnboardingMutation } from "./joyrides/onboardingapi";
 import { TaskThreeJoyRide } from "./joyrides/taskthreejoyride";
+import { useWizard } from "../wizard/wizardswrapper";
+import { TaskFourJoyRide } from "./joyrides/taskfourjoyride";
+import { ClipboardSVG } from "../reusables/svgstroke";
 
 
 type OnboardingContextType = {
   activeJoyrideIndex: number | null;
   setActiveJoyrideIndex: React.Dispatch<React.SetStateAction<number | null>>;
+  watchOnboarding: number;
+  triggerOnboardingWatch: () => void;
 };
 
 type TaskMessage = {
-  title?: string;
-  message?: string;
-  subMessage?: string;
+  title: string;
+  message: string;
+  subMessage: string;
+  achievement?: JSX.Element;
 };
 
-
-const TASK_MESSAGES: Record<number, TaskMessage> = {
-  0: {
-    title: "Congratulations",
-    message: "You just created your first Project on Riples 💥!",
-    subMessage: "Now, feel free to have a look at your newly created project tabs and move on to the next onboarding task"
-  },
-  1: {
-    title: "As simple as that ! ",
-    message: "That's all the main features required to manage a solo project 💪",
-    subMessage: "Now, feel free to continue adding data to your project or move on to the next onboarding task"
-  },
-  // add other tasks here
-};
 
 export const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
@@ -49,11 +40,18 @@ export const useOnboarding = () => {
 
 export const OnboardingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 const [activeJoyrideIndex, setActiveJoyrideIndex] = useState<number | null>(null);
+const [watchOnboarding, setWatchOnboarding] = useState(0);
+
+const triggerOnboardingWatch = () => {
+   setWatchOnboarding(prev => prev + 1);
+};
 
 return (
     <OnboardingContext.Provider value={{
         activeJoyrideIndex,
         setActiveJoyrideIndex,
+        watchOnboarding,
+        triggerOnboardingWatch,
     }}>
         {children}
     </OnboardingContext.Provider>
@@ -63,39 +61,85 @@ return (
 export const OnboardingWrapper: React.FC = () => {
   const { activeJoyrideIndex } = useOnboarding();
   const [showModal, setShowModal] = useState(false);
-  const [completedTasks, setCompletedTasks] = useState<number[]>([]);
-  const [currentTask, setCurrentTask] = useState<number | null>(null);
-  const currentMessage = TASK_MESSAGES[currentTask ?? 0] ?? {};
+  const [currentMessage, setCurrentMessage] = useState<TaskMessage>({
+    title: "",
+    message: "",
+    subMessage: "",
+  });
+  const wizardContext = useWizard();
+  const [prevOnboardingFinished, setPrevOnboardingFinished] = useState<boolean | null>(null);
+
+  const { watchOnboarding } = useOnboarding();
 
   let JoyrideComponent = null;
 
   const { data: session } = useSession(); 
   const shouldExecuteQuery = !!session?.user?.id;
+
   const userId = session?.user?.id ?? '';
-  const { data: projectLead } = api.projects.getFullProjectByAuthorId.useQuery(
+  const projectLeadQuery = api.projects.getFullProjectByAuthorId.useQuery(
     { authorId: userId },
     { enabled: shouldExecuteQuery }
   );
-  // The query above will also create the Onboarding table if it doesn't exist 
-  const { data: userOnboardingStatus } = api.userOnboarding.getOnboardingStatus.useQuery(
+  
+  const userOnboardingStatusQuery = api.userOnboarding.getOnboardingStatus.useQuery(
     { userId: userId },
     { enabled: shouldExecuteQuery }
-  );  
+  );
 
-  ////step1 check 
+  const userDataQuery = api.users.getUserByUserId.useQuery(
+    { userId: userId },
+    { enabled: shouldExecuteQuery }
+  );
+
+  // Conditional query using tRPC
+  const riplesDataQuery = api.riples.getRiplesByUserId.useQuery(
+    { userId: session?.user?.id ?? "" },
+    { enabled: shouldExecuteQuery }
+  );
+  
+  const { data: projectLead } =  projectLeadQuery;
+  const { data: userData } =  userDataQuery;
+  const { data: riplesData } =  riplesDataQuery;
+  const { data: userOnboardingStatus } = userOnboardingStatusQuery;
+
+  //watchOnboarding is triggered from specific actions that might result in step completions for instant modal instead of on reload
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log(userOnboardingStatus)
+      try {
+        if (shouldExecuteQuery) {
+          await userOnboardingStatusQuery.refetch();
+          await projectLeadQuery.refetch();
+          await userDataQuery.refetch();
+          await riplesDataQuery.refetch();
+        }
+      } catch (error) {
+        console.error("Error refetching data:", error);
+      }
+    };
+
+    void fetchData();
+  }, [watchOnboarding, shouldExecuteQuery, userId]);
+
+
+  // Onboarding step1 check 
   const { setStepOneCompleted } = useOnboardingMutation();
   useEffect(() => {
-      if (projectLead && projectLead.length > 0 && !completedTasks.includes(0) && !userOnboardingStatus?.stepOneCompleted) {
-          setCompletedTasks(prev => [...prev, 0]);
-          setCurrentTask(0);
+      //Same logic everytime we want to have the Onboarding status Say it's not already done +check 
+      if (projectLead && projectLead.length > 0 && userOnboardingStatus &&  !userOnboardingStatus?.stepOneCompleted) {
+          setCurrentMessage({
+            title: "Congratulations",
+            message: "You just created your first Project on Riples 💥!",
+            subMessage: "Now, feel free to have a look at your newly created project tabs and move on to the next onboarding task"
+          });
           setShowModal(true);
-
           // Execute the mutation to update step one status
-          setStepOneCompleted({ userId: userId }); // Assuming you have currentUserId
+          setStepOneCompleted({ userId: userId });
       }
-  }, [projectLead, setStepOneCompleted , completedTasks, userOnboardingStatus, userId, userOnboardingStatus?.stepOneCompleted]);
+  }, [projectLead, userOnboardingStatus ]);
 
-  ////step2 check 
+  //step2 check - this only works if completing tasks on you own project
   const { setStepTwoCompleted } = useOnboardingMutation();
   const isAuthorOfRelevantProject = projectLead?.some(project => (
     project.project.tasks.some(task => 
@@ -104,20 +148,79 @@ export const OnboardingWrapper: React.FC = () => {
     ) 
   ));
   useEffect(() => {
-    if (isAuthorOfRelevantProject && !completedTasks.includes(1) && !userOnboardingStatus?.stepTwoCompleted) {
-      setCompletedTasks(prev => [...prev, 1]);
-      setCurrentTask(1);
+    if (isAuthorOfRelevantProject && userOnboardingStatus &&  !userOnboardingStatus?.stepTwoCompleted) {
       setShowModal(true);
+      setCurrentMessage({
+        title: "As simple as that ! ",
+        message: " Tasks are how you breakdown and update you progress on Riples 💪",
+        subMessage: "Now, feel free to continue adding data to your project or move on to the next onboarding task"
+    });
   
       // Execute the mutation to update step one status
       setStepTwoCompleted({ userId: userId });
+      //open up the wizard for people to try and do next task
     }
-  }, [isAuthorOfRelevantProject, completedTasks, userOnboardingStatus, userId, setStepTwoCompleted]);
+  }, [projectLead, userOnboardingStatus]);
+
+  //step3 check user has a username
+  const { setStepThreeCompleted } = useOnboardingMutation();
+  useEffect(() => {
+    if (!userDataQuery.isLoading && userData?.user.username && userOnboardingStatus && !userOnboardingStatus?.stepThreeCompleted) {
+      setShowModal(true);
+      setCurrentMessage({
+        title: "Now we're talking",
+        message: "Your profile allows other user to know about you and what you have done",
+        subMessage: "You can also check out the protofolio part of your profile."
+      });
+  
+      // Execute the mutation to update step one status
+      setStepThreeCompleted({ userId: userId });
+      //open up the wizard for people to try and do next task
+    }
+  }, [userData, userOnboardingStatus]);
+
+  //step 4 check
+  const { setStepFourCompleted } = useOnboardingMutation();
+  const isAuthorOfRelevantRiples = riplesData?.some(ripleData => 
+    ripleData.riple.ripleType === 'goalFinished'
+  );
+  useEffect(() => {
+    if (isAuthorOfRelevantRiples && userOnboardingStatus && !userOnboardingStatus?.stepFourCompleted) {
+      setShowModal(true);
+      setCurrentMessage({
+        title: "Well Done",
+        message: "Sharing your progress will attract other relevant users to your project",
+        subMessage: "You can also share project creation, or update riples. If you want to delete posts, you can do soby navigating to Riples of the relevant project"    
+      });
+  
+      // Execute the mutation to update step one status
+      setStepFourCompleted({ userId: userId });
+      //open up the wizard for people to try and do next task
+    }
+  }, [riplesData]);
+
+  //Finaished all steps check
+  useEffect(() => {
+    // If the previous status was not finished and the current status is finished
+    if (prevOnboardingFinished === false && userOnboardingStatus?.onBoardingFinished === true) {
+        setShowModal(true);
+        setCurrentMessage({
+            title: "Achievement Unlocked!",
+            message: "Congratulations! You've completed the onboarding!",
+            achievement: <ClipboardSVG width='8' height='8' colorStrokeHex='#2563eb' />,
+            subMessage: "You can find your achievements in You Profile / About."
+        });
+    }
+    // Update the previous status to the current status for the next effect run
+    if (userOnboardingStatus?.onBoardingFinished !== undefined) {
+        setPrevOnboardingFinished(userOnboardingStatus.onBoardingFinished);
+    }
+}, [userOnboardingStatus]);
   
   
   const onClose = () => {
-      setCurrentTask(null);
       setShowModal(false);
+      wizardContext.setShowWizard(true);//Aftr completing a task open the onboarding wizard for next task or real wizard
   };
 
   // Map activeJoyrideIndex to the correct component
@@ -128,7 +231,11 @@ export const OnboardingWrapper: React.FC = () => {
   }
   else if (activeJoyrideIndex === 2) {
     JoyrideComponent = TaskThreeJoyRide;
-  } else if (activeJoyrideIndex === 3) {
+  }
+  else if (activeJoyrideIndex === 3) {
+    JoyrideComponent = TaskFourJoyRide;
+  } 
+  else if (activeJoyrideIndex === 4) {
     JoyrideComponent = ProjectManagerAIJoyRide;
   }
 
@@ -136,7 +243,6 @@ export const OnboardingWrapper: React.FC = () => {
     <OnboardingProvider>
       {JoyrideComponent && <JoyrideComponent />}
       <OnboardingJoyRideOne />
-      <OnboardingUserProfile />
       <Modal showModal={showModal} Success={true} size="medium" onClose={onClose}>
           <div className="flex flex-col">
             <div className="text-lg flex justify-center items-center space-x-4 mb-2 w-auto">
@@ -144,6 +250,9 @@ export const OnboardingWrapper: React.FC = () => {
             </div>
             <div className="text-center font-semibold mb-10 ">
               {currentMessage.message}
+            </div>
+            <div className="text-center font-semibold mb-10 ">
+              {currentMessage.achievement}
             </div>
             <div className="italic text-center mb-2">
               {currentMessage.subMessage}

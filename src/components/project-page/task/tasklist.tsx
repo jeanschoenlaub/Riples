@@ -175,7 +175,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
               <td className="px-6 py-4 hidden md:table-cell" style={{ textAlign: 'center', verticalAlign: 'middle',   width: columnWidths[3]  }}>
                 {taskDetail.owner ? (
                   <Link href={`/users/${taskDetail.owner.id}`} className="flex items-center justify-center space-x-2">
-                    <ProfileImage user={taskDetail.owner} size={32} showUsernameOnHover={true}/>
+                    <ProfileImage username={taskDetail.owner.username} email={taskDetail.owner.email} image={taskDetail.owner.image} name={taskDetail.owner.name} size={32} showUsernameOnHover={true}/>
                     {taskDetail.owner.name ?? ''}
                   </Link>
                 ) : (

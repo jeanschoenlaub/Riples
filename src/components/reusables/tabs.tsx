@@ -61,6 +61,7 @@ export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, pro
         {collab && (
             <li className="mr-1">
                 <button
+                      id="project-main-tabs-tasks"
                       onClick={() => setActiveTab('collab')}
                       className={`inline-flex items-center justify-center p-3 border-b-2 rounded-t-xl ${activeTab === 'collab' ? 'text-blue-600 bg-sky-200 border-blue-300' : 'text-gray-500 bg-gray-200 border-transparent'}`}>
                   {activeTab === 'collab' ? 

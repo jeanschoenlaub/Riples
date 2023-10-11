@@ -58,25 +58,41 @@ export const userOnboardingRouter = createTRPCRouter({
         });
         return updatedOnboarding;
     }),
-  
     setStepOneCompleted: protectedProcedure
       .input(z.object({
         userId: z.string(),
       }))
       .mutation(async ({ ctx, input }) => {
         const { userId } = input;
-  
+
         const updatedOnboarding = await ctx.prisma.userOnboarding.update({
           where: { userId: userId },
           data: {
             stepOneCompleted: true
+          },
+          select: {
+            stepOneCompleted: true,
+            stepTwoCompleted: true,
+            stepThreeCompleted: true,
+            stepFourCompleted: true,
+            onBoardingFinished: true
           }
         });
-  
+
         if (!updatedOnboarding) {
           throw new Error("Failed to update step one status");
         }
-  
+
+        // Check if all steps are completed
+        if (updatedOnboarding.stepOneCompleted && updatedOnboarding.stepTwoCompleted && updatedOnboarding.stepThreeCompleted && updatedOnboarding.stepFourCompleted) {
+          await ctx.prisma.userOnboarding.update({
+            where: { userId: userId },
+            data: {
+              onBoardingFinished: true
+            }
+          });
+        }
+
         return updatedOnboarding;
     }),
     setStepTwoCompleted: protectedProcedure
@@ -85,20 +101,111 @@ export const userOnboardingRouter = createTRPCRouter({
       }))
       .mutation(async ({ ctx, input }) => {
         const { userId } = input;
-  
+
         const updatedOnboarding = await ctx.prisma.userOnboarding.update({
           where: { userId: userId },
           data: {
             stepTwoCompleted: true
+          },
+          select: {
+            stepOneCompleted: true,
+            stepTwoCompleted: true,
+            stepThreeCompleted: true,
+            stepFourCompleted: true,
+            onBoardingFinished: true
           }
         });
-  
+
         if (!updatedOnboarding) {
           throw new Error("Failed to update step one status");
         }
-  
+
+        // Check if all steps are completed
+        if (updatedOnboarding.stepOneCompleted && updatedOnboarding.stepTwoCompleted && updatedOnboarding.stepThreeCompleted && updatedOnboarding.stepFourCompleted) {
+          await ctx.prisma.userOnboarding.update({
+            where: { userId: userId },
+            data: {
+              onBoardingFinished: true
+            }
+          });
+        }
+
         return updatedOnboarding;
-      })
-  
+    }),
+
+    setStepThreeCompleted: protectedProcedure
+      .input(z.object({
+        userId: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { userId } = input;
+
+        const updatedOnboarding = await ctx.prisma.userOnboarding.update({
+          where: { userId: userId },
+          data: {
+            stepThreeCompleted: true
+          },
+          select: {
+            stepOneCompleted: true,
+            stepTwoCompleted: true,
+            stepThreeCompleted: true,
+            stepFourCompleted: true,
+            onBoardingFinished: true
+          }
+        });
+
+        if (!updatedOnboarding) {
+          throw new Error("Failed to update step one status");
+        }
+
+        // Check if all steps are completed
+        if (updatedOnboarding.stepOneCompleted && updatedOnboarding.stepTwoCompleted && updatedOnboarding.stepThreeCompleted && updatedOnboarding.stepFourCompleted) {
+          await ctx.prisma.userOnboarding.update({
+            where: { userId: userId },
+            data: {
+              onBoardingFinished: true
+            }
+          });
+        }
+
+        return updatedOnboarding;
+    }),
+    setStepFourCompleted: protectedProcedure
+      .input(z.object({
+        userId: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { userId } = input;
+
+        const updatedOnboarding = await ctx.prisma.userOnboarding.update({
+          where: { userId: userId },
+          data: {
+            stepFourCompleted: true
+          },
+          select: {
+            stepOneCompleted: true,
+            stepTwoCompleted: true,
+            stepThreeCompleted: true,
+            stepFourCompleted: true,
+            onBoardingFinished: true
+          }
+        });
+
+        if (!updatedOnboarding) {
+          throw new Error("Failed to update step one status");
+        }
+
+        // Check if all steps are completed
+        if (updatedOnboarding.stepOneCompleted && updatedOnboarding.stepTwoCompleted && updatedOnboarding.stepThreeCompleted && updatedOnboarding.stepFourCompleted) {
+          await ctx.prisma.userOnboarding.update({
+            where: { userId: userId },
+            data: {
+              onBoardingFinished: true
+            }
+          });
+        }
+
+        return updatedOnboarding;
+    }),
   });
   

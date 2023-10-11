@@ -133,4 +133,28 @@ export const ripleRouter = createTRPCRouter({
         };
         });
     }),
+    getRiplesByUserId: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+        const riples = await ctx.prisma.riple.findMany({
+            where: { authorID: input.userId },
+            include: { project: true },
+            orderBy: [{ createdAt: "desc" }],
+        });
+
+        const author = await ctx.prisma.user.findUnique({
+            where: { id: input.userId },
+        });
+
+        if (!author) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Riple author not found" });
+
+        return riples.map((riple) => {
+            return {
+                riple,
+                author,
+                project: riple.project,
+            };
+        });
+    }),
+
 });

@@ -4,7 +4,15 @@ import { EditSVG } from '~/components/reusables/svg';
 import { LoadingSpinner } from '~/components/reusables/loading';
 import { api } from '~/utils/api';
 import { handleZodError } from '~/utils/error-handling';
+import { NavBarUserNameModal } from '../navbar/usernamemodal';
+import MultiSelect from '../reusables/multiselect';
+import { sortedProjectClassifications } from '~/utils/constants/projectclassifications';
 
+
+interface OptionType {
+    value: string;
+    label: string;
+}
 
 type UserAboutInfoProps = {
     user: {
@@ -12,19 +20,26 @@ type UserAboutInfoProps = {
         name: string;
         username: string;
         description: string;
-        // interestTags: string[];
+        interestTags: string[];
     };
     isUserOwner: boolean;
 };
 
 export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) => {
     const [name, setName] = useState(user.name);
-    const [username, setUsername] = useState(user.username);
     const [description, setDescription] = useState(user.description);
-    // const [interestTags, setInterestTags] = useState(user.interestTags); // Commented out as per your request
+    const [showUserNameModal, setShowUserNameModal] = useState(false);
+
+    //For interest tags
+    const [interestTags, setInterestTags] = useState<string[]>(user.interestTags || []);
+    const handleTagsChange = (updatedTags: string[]) => {
+        setInterestTags(updatedTags);
+      };
+    const selectedTags: OptionType[] = interestTags.map(tag => ({ value: tag, label: tag }));
 
     const [isEditMode, setIsEditMode] = useState(false);
     const toggleEditMode = () => {
+        console.log(user)
         setIsEditMode(!isEditMode);
     }
 
@@ -34,9 +49,8 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
         editUserInfo({
             userId: user.id,
             name,
-            username,
             description,
-            // interestTags, // Uncomment this when you're ready to handle interest tags
+            tags: interestTags, 
         })
         .then(() => {
             toast.success('User modifications saved successfully!');
@@ -52,8 +66,8 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
 
     return (
         <div>
-            <div className="flex items-center space-x-4 ml-2">
-                <div className='text-lg mt-2 font-semibold'>User Info</div>
+            <div id="user-page-public-profile-section" className="flex items-center space-x-4 ml-2">
+                <div className='text-lg mt-2 font-semibold'>Public Profile</div>
                 
                 {(isUserOwner && !isEditMode) && (
                     <button 
@@ -88,77 +102,81 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
                 )}
             </div>
 
-            {/* User Description */}
-            <div className="flex items-center ml-2 mt-3 mb-3 space-x-2">
-                <label htmlFor="user-description" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-24" aria-label="User Description">
-                    Description:
+            {/* User Name */}
+            <div className="flex items-center ml-2 mr-2 mt-3 mb-3 space-x-2">
+                <label htmlFor="user-name" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="Username">
+                    Username:
                 </label>
-                {!isEditMode ? (
-                    <div 
-                        className="flex-grow w-full p-2 rounded border bg-gray-100 cursor-pointer"
-                        onClick={toggleEditMode}
-                    >
-                        {user.description}
-                    </div>
-                ) : (
+                <div className="flex-grow w-full p-2 rounded border bg-gray-100 cursor-pointer">
+                    {user.username}
+                </div>
+                <div>
+                {((isUserOwner && isEditMode) &&
+                    <button 
+                        className="bg-blue-500 text-white text-sm rounded px-4 py-2 flex items-center justify-center w-auto"
+                        onClick={() => setShowUserNameModal(true)}>
+                        Change
+                    </button>
+                )}
+                </div>
+            </div>
+
+            {/* User Description */}
+            <div className="flex ml-2 mr-2 mt-4 mb-3 space-x-2">
+                <label htmlFor="user-description" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="User Description">
+                    Bio:
+                </label>
                     <textarea
                         id="user-description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         className="flex-grow w-full p-2 rounded border"
                         maxLength={250}
+                        disabled={!isEditMode}
                         rows={4}
                     />
-                )}
             </div>
 
-             {/* User Name */}
-             <div className="flex items-center ml-2 mt-3 mb-3 space-x-2">
-                <label htmlFor="user-name" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-24" aria-label="User Name">
+            {/* User Name */}
+            <div className="flex items-center ml-2 mr-2 mt-3 mb-3 space-x-2">
+                <label htmlFor="user-name" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="User Name">
                     Name:
                 </label>
-                {!isEditMode ? (
-                    <div 
-                        className="flex-grow w-full p-2 rounded border bg-gray-100 cursor-pointer"
-                        onClick={toggleEditMode}
-                    >
-                        {user.name}
-                    </div>
-                ) : (
-                    <input
-                        id="user-name"
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="flex-grow w-full p-2 rounded border"
-                        maxLength={50}
-                    />
-                )}
+                <input
+                    id="user-name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="flex-grow w-full p-2 rounded border"
+                    maxLength={50}
+                    disabled={!isEditMode}
+                />
             </div>
 
-            {/* User Username */}
-            <div className="flex items-center ml-2 mt-3 mb-3 space-x-2">
-                <label htmlFor="user-username" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-24" aria-label="User Username">
-                    Username:
+            {/* User Interests */}
+            <div className="flex items-center ml-2 mr-2 mt-3 mb-3 space-x-2">
+                <label htmlFor="user-name" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="User Name">
+                    Interests:
                 </label>
-                {!isEditMode ? (
-                    <div 
-                        className="flex-grow w-full p-2 rounded border bg-gray-100 cursor-pointer"
-                        onClick={toggleEditMode}
-                    >
-                        {user.username}
+                <div className="flex-grow w-full">
+                <MultiSelect
+                          options={sortedProjectClassifications}
+                          value={selectedTags}
+                          disabled={!isEditMode}
+                          onChange={(selected) => {
+                          // Convert OptionType[] back to string[] for onTagsChange
+                          if (selected) {
+                              handleTagsChange(selected.map(option => option.value));
+                          } else {
+                              handleTagsChange([]);
+                          }
+                          }}
+                          maxSelection={5}
+                          placeholder="Add tags..."
+                      />
                     </div>
-                ) : (
-                    <input
-                        id="user-username"
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="flex-grow w-full p-2 rounded border"
-                        maxLength={50}
-                    />
-                )}
             </div>
+            <NavBarUserNameModal showModal={showUserNameModal} onClose={() => setShowUserNameModal(false)} />
         </div>
     );
 };
@@ -166,9 +184,8 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
 export type EditUserPayload = {
     userId: string;
     name: string;
-    username: string;
     description: string;
-    // interestTags: string[]; // Uncomment this when you're ready to handle interest tags
+    tags: string[]; 
 };
 
 export const useUserInfoMutation = () => {

@@ -3,7 +3,7 @@ import ReactJoyride from 'react-joyride';
 import type { CallBackProps, Step } from 'react-joyride';
 import { useOnboarding } from '../onboardingwrapper';
 
-export const TaskTwoJoyRide = () => {
+export const TaskFourJoyRide = () => {
     const [isTourOpen, setIsTourOpen] = useState(false);
     const [isClient, setIsClient] = useState(false);
     const [screenWidth, setScreenWidth] = useState<number | null>(null);
@@ -25,64 +25,41 @@ export const TaskTwoJoyRide = () => {
         if (data.status === 'finished' || data.status === 'skipped') {OnboardingContext.setActiveJoyrideIndex(null);}
     }
 
+    const tooltipWidthForSidebar = screenWidth && screenWidth >= 600 ? (screenWidth / 4) - 20 : 'auto';
+
     const tourSteps: Step[] = [
         {
             target: "#main-body-container",
             title: "Navigate to one of your projects",
-            content: "Use the side bar to access one of your projects (top left button on mobile)",
+            content: "You can use the quick access bar on the left or your portofolio",
             placement: "center",
             spotlightClicks: true,
             disableBeacon: true,
+            disableOverlay: true,
         },
         {
             target: "#project-main-tabs",
-            title: "Go to your project tasks",
-            content: "You can use the tabs to navigate the relevant project sections",
+            title: "About Tab",
+            content: "You can find and edit project information on the project about page",
             placement: "bottom",
             spotlightClicks: true,
             disableBeacon: true,
+            disableOverlay: true,
         },
         {
-            target: "#project-collab-task-create-button",
-            title: "Create a Task",
-            content: "Once a project is created, you can add tasks to it",
+            target: "#project-main-tabs",
+            title: "About Tab",
+            content: "You can find and edit project information on the project about page",
             placement: "bottom",
             spotlightClicks: true,
             disableBeacon: true,
-        },
-        {
-            target: "#project-tasklist-task-0",
-            title: "Click on the task",
-            content: "You can view more infomation about the task by clicking it's title. You will be able to modify the task status there",
-            placement: "right",
-            spotlightClicks: true,
-            disableBeacon: true,
-        },
-        {
-            target: "#task-modal-status",
-            title: "Task Status",
-            content: "You can modify the task status here",
-            placement: "bottom",
-            spotlightClicks: true,
-            disableBeacon: true,
-        },
-        {
-            target: "#task-0-table-action-column",
-            title: "Click on themark-down button",
-            content: "You can break down tasks into subtasks. Try it!",
-            placement: "top",
-            spotlightClicks: true,
-            disableBeacon: true,
-        },
-        {
-            target: "#task-table-action-column",
-            title: "Click on themark-down button",
-            content: "You can break down tasks into subtasks. Try it!",
-            placement: "top",
-            spotlightClicks: true,
-            disableBeacon: true,
-        },
-       
+            disableOverlay: true,
+            styles: {
+                options: {
+                    width: tooltipWidthForSidebar,  
+                },
+            }
+        }
     ];
 
     if (!isClient) {

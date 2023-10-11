@@ -8,7 +8,6 @@ import { NavBarUserDeleteModal } from "./userdeletemodal";
 import { api } from "~/utils/api";
 import toast from "react-hot-toast";
 import { handleZodError } from "~/utils/error-handling";
-import { NavBarUserNameModal } from "./usernamemodal";
 import ToggleSwitch from "../reusables/toogleswitch";
 import router from "next/router";
 import { SideNavProject } from "./sidenavproject";
@@ -22,45 +21,32 @@ interface GlobalNavBarProps {
 export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActiveTab, ToogleinBetween }) => {
   const { data: session } = useSession();
   const [showSignInModal, setShowSignInModal] = useState(false);
-  const [showUserNameModal, setShowUserNameModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSideNav, setShowSideNav] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
+  const { deleteUser, isDeleting } = UseUserMutations();
 
-  const redirectUserPage = () => {
-    router.push(`/users/${session?.user.id}`).catch(err => {
+  const redirectUserPage = (option: string) => {
+    router.push(`/users/${session?.user.id}/?activeTab=${option}`).catch(err => {
         // Handle any errors that might occur during the navigation
         console.error('Failed to redirect:', err);
     });
   };
 
-  // Mutation for deleting a user
-  const { mutateAsync: deleteUserAsyncMutation, isLoading: isDeleting } = api.users.deleteUser.useMutation({
-      onSuccess: () => {
-        toast.success("User Deleted successfully");
-      },
-      onError: (e) => {
-        const fieldErrors = e.data?.zodError?.fieldErrors;
-        const message = handleZodError(fieldErrors);
-        toast.error(message);
-      }
-  });
-
-  const handleDeleteUserMutation = async () => {
+  const handleDeleteUserMutation = () => {
       if (!session?.user?.id) {
-          toast.error("User ID not found in session");
-          return;
+        toast.error("User ID not found in session");
+        return;
       }
-
-      try {
-          await deleteUserAsyncMutation({ userId: session.user.id });
-          await signOut();
+      deleteUser({ userId: session.user.id}).then(() => {
+          toast.success('User Deleted Successfully');
           setShowDeleteModal(false);
-          await router.push('/');
-      } catch (error) {
-          toast.error("Failed to delete user");
-      }
+      })
+      .catch(() => {
+          toast.error('Error deleting User');
+          setShowDeleteModal(false);
+      });
   };
   
 
@@ -136,14 +122,14 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
                   onClick={toggleUserDropdown} 
                   style={{ cursor: 'pointer' }} // Make the mouse change to a pointer when hovering
                 >
-                  <ProfileImage user={ session.user } size={32} />
+                  <ProfileImage  username={session.user.username ?? ""} email={session.user.email ?? ""} image={session.user.image ?? "" } name={session.user.name ?? ""}  size={32} />
                 </div>
                 {showDropdown && (
-                  <div ref={dropdownRef}  className="absolute right-0 md:right-auto md:left-0 mt-2 w-48 rounded-md shadow-lg z-30 bg-slate-50">
+                  <div ref={dropdownRef}  className="absolute right-0 md:right-auto md:left-0 mt-2 w-40 rounded-md shadow-lg z-30 bg-slate-50">
                     {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
                     <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => signOut()}>Sign Out</button>
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowUserNameModal(true)}>User Settings</button>
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectUserPage()}>Your Portofolio</button>
+                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectUserPage("about")}>Your Profile</button>
+                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectUserPage("project")}>Your Portofolio</button>
                     <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowDeleteModal(true)}>Delete Account</button>
                   </div>
                 )}
@@ -155,8 +141,8 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
               </div>
             )}
             <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
-            <NavBarUserDeleteModal showDeleteModal={showDeleteModal} isLoading={isDeleting} onClose={() => setShowDeleteModal(false)} onDelete={() => {void handleDeleteUserMutation();}}  />
-            <NavBarUserNameModal showModal={showUserNameModal} onClose={() => setShowUserNameModal(false)} />
+            <NavBarUserDeleteModal showDeleteModal={showDeleteModal} isLoading={isDeleting} onClose={() => setShowDeleteModal(false)} onDelete={handleDeleteUserMutation}  />
+
             <div className={`fixed top-0 left-0 h-full text-red-600 hover:text-red-800 text-xl transition-transform transform ${showSideNav ? 'translate-x-0' : '-translate-x-full'} w-3/4 bg-white shadow-md z-50 md:hidden flex flex-col`}>
               <div className="flex justify-end p-4">
                   <button onClick={() => setShowSideNav(false)}>&times;</button>
@@ -171,3 +157,42 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
   </div>
   )
 } 
+
+type DeleteUserPayload = {
+  userId: string;
+}
+
+export const UseUserMutations  = () => {
+  const apiContext = api.useContext();
+  const handleSuccess = async () => {
+      await apiContext.users.getUserByUserId.invalidate();
+  };
+
+  // Delete User Mutation
+  const { mutate: deleteUserMutation, isLoading: isDeleting } = api.users.deleteUser.useMutation({
+      onSuccess: handleSuccess,
+  });
+
+  const deleteUser = (payload: DeleteUserPayload): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        deleteUserMutation(payload, {
+            onSuccess: () => { 
+                void signOut();
+                void router.push("/")
+                resolve(); 
+            },
+            onError: (e) => {
+                const fieldErrors = e.data?.zodError?.fieldErrors;
+                const message = handleZodError(fieldErrors);
+                toast.error(message);
+                reject(e);
+            },
+        });
+    });
+};
+
+return {
+  isDeleting,
+  deleteUser,
+};
+}

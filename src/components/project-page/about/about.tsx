@@ -10,11 +10,12 @@ export interface AboutTabProps {
   isMember: boolean;
   isPending: boolean;
   isProjectLead: boolean;
+  projectTags: string[];
   userId: string | undefined;
 }
 
 
-export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPending, isProjectLead, userId }) => {
+export const AboutTab : React.FC<AboutTabProps> = ({ project, projectTags, isMember, isPending, isProjectLead, userId }) => {
     const tasks = project.project.tasks;
     const completedTasksCount = tasks.filter(task => task.status === "Done").length;
     const allSubtasks = project.project.tasks.flatMap(task => task.subTasks);
@@ -23,6 +24,7 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, isMember, isPendin
       <div id="proj-about-html" className="border-r-2 border-l-2 border-gray-20 mb-2 space-y-4">
         <ProjectAboutInfo
             project={project}
+            projectTags={projectTags}
             isProjectLead={isProjectLead}
             isMember={isMember}
             isPending={isPending}

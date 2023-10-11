@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { GoalSVG } from '~/components/reusables/svg';
-import { StarSVG } from '~/components/reusables/svgstroke';
+import { StarSVG, GoalSVG } from '~/components/reusables/svgstroke';
 import type { RouterOutputs } from '~/utils/api';
 import { useProjectGoalMutation } from './goalsapi';
 import { LoadingSpinner } from '~/components/reusables/loading';
@@ -84,7 +83,7 @@ export const ProjectAboutGoal: React.FC<ProjectAboutGoalProps> = ({
                     {goals.map((goal, index) => (
                         <div key={index} className="flex items-center mb-2">
                             <div className="flex flex-col items-bottom justify-center ml-2 mr-4">
-                                {goal.status != "finished" ? <GoalSVG />:<GoalSVG colorFillHex='#22c55e'/>}
+                                {goal.status != "finished" ? <GoalSVG />:<GoalSVG colorStrokeHex='#22c55e'/>}
                             </div>
 
                             <div className="flex flex-col w-1/8 md:w-3/5 mr-2">
