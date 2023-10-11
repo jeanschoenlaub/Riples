@@ -20,35 +20,11 @@ type OnboardingContextType = {
 };
 
 type TaskMessage = {
-  title?: string;
-  message?: string;
-  subMessage?: string;
+  title: string;
+  message: string;
+  subMessage: string;
 };
 
-
-const TASK_MESSAGES: Record<number, TaskMessage> = {
-  0: {
-    title: "Congratulations",
-    message: "You just created your first Project on Riples 💥!",
-    subMessage: "Now, feel free to have a look at your newly created project tabs and move on to the next onboarding task"
-  },
-  1: {
-    title: "As simple as that ! ",
-    message: " Tasks are how you breakdown and update you progress on Riples 💪",
-    subMessage: "Now, feel free to continue adding data to your project or move on to the next onboarding task"
-  },
-  2: {
-    title: "Now we're talking",
-    message: "Your profile allows other user to know about you and what you have done",
-    subMessage: "You can also check out the protofolio part of your profile."
-  },
-  3: {
-    title: "Well Done",
-    message: "Sharing your progress will attract other relevant users to your project",
-    subMessage: "You can also share project creation, or update riples. If you want to delete posts, you can do soby navigating to Riples of the relevant project"
-  },
-  // add other tasks here
-};
 
 export const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
@@ -83,10 +59,13 @@ return (
 export const OnboardingWrapper: React.FC = () => {
   const { activeJoyrideIndex } = useOnboarding();
   const [showModal, setShowModal] = useState(false);
-  const [completedTasks, setCompletedTasks] = useState<number[]>([]);
-  const [currentTask, setCurrentTask] = useState<number | null>(null);
-  const currentMessage = TASK_MESSAGES[currentTask ?? 0] ?? {};
+  const [currentMessage, setCurrentMessage] = useState<TaskMessage>({
+    title: "",
+    message: "",
+    subMessage: ""
+  });
   const wizardContext = useWizard();
+  const [prevOnboardingFinished, setPrevOnboardingFinished] = useState<boolean | null>(null);
 
   const { watchOnboarding } = useOnboarding();
 
@@ -122,6 +101,7 @@ export const OnboardingWrapper: React.FC = () => {
   const { data: riplesData } =  riplesDataQuery;
   const { data: userOnboardingStatus } = userOnboardingStatusQuery;
 
+  //watchOnboarding is triggered from specific actions that might result in step completions for instant modal instead of on reload
   useEffect(() => {
     const fetchData = async () => {
       console.log(userOnboardingStatus)
@@ -145,14 +125,15 @@ export const OnboardingWrapper: React.FC = () => {
   const { setStepOneCompleted } = useOnboardingMutation();
   useEffect(() => {
       //Same logic everytime we want to have the Onboarding status Say it's not already done +check 
-      if (projectLead && projectLead.length > 0 && !completedTasks.includes(0) && userOnboardingStatus &&  !userOnboardingStatus?.stepOneCompleted) {
-          setCompletedTasks(prev => [...prev, 0]);
-          setCurrentTask(0);
+      if (projectLead && projectLead.length > 0 && userOnboardingStatus &&  !userOnboardingStatus?.stepOneCompleted) {
+          setCurrentMessage({
+            title: "Congratulations",
+            message: "You just created your first Project on Riples 💥!",
+            subMessage: "Now, feel free to have a look at your newly created project tabs and move on to the next onboarding task"
+          });
           setShowModal(true);
-
           // Execute the mutation to update step one status
           setStepOneCompleted({ userId: userId });
-          //open up the wizard for people to try and do next task
       }
   }, [projectLead, userOnboardingStatus ]);
 
@@ -165,10 +146,13 @@ export const OnboardingWrapper: React.FC = () => {
     ) 
   ));
   useEffect(() => {
-    if (isAuthorOfRelevantProject && !completedTasks.includes(1) && userOnboardingStatus &&  !userOnboardingStatus?.stepTwoCompleted) {
-      setCompletedTasks(prev => [...prev, 1]);
-      setCurrentTask(1);
+    if (isAuthorOfRelevantProject && userOnboardingStatus &&  !userOnboardingStatus?.stepTwoCompleted) {
       setShowModal(true);
+      setCurrentMessage({
+        title: "As simple as that ! ",
+        message: " Tasks are how you breakdown and update you progress on Riples 💪",
+        subMessage: "Now, feel free to continue adding data to your project or move on to the next onboarding task"
+    });
   
       // Execute the mutation to update step one status
       setStepTwoCompleted({ userId: userId });
@@ -179,10 +163,13 @@ export const OnboardingWrapper: React.FC = () => {
   //step3 check user has a username
   const { setStepThreeCompleted } = useOnboardingMutation();
   useEffect(() => {
-    if (!userDataQuery.isLoading && userData?.user.username && !completedTasks.includes(2) && userOnboardingStatus && !userOnboardingStatus?.stepThreeCompleted) {
-      setCompletedTasks(prev => [...prev, 2]);
-      setCurrentTask(2);
+    if (!userDataQuery.isLoading && userData?.user.username && userOnboardingStatus && !userOnboardingStatus?.stepThreeCompleted) {
       setShowModal(true);
+      setCurrentMessage({
+        title: "Now we're talking",
+        message: "Your profile allows other user to know about you and what you have done",
+        subMessage: "You can also check out the protofolio part of your profile."
+      });
   
       // Execute the mutation to update step one status
       setStepThreeCompleted({ userId: userId });
@@ -190,27 +177,45 @@ export const OnboardingWrapper: React.FC = () => {
     }
   }, [userData, userOnboardingStatus]);
 
-  //step3 check - this only works if completing tasks on you own project
+  //step 4 check
   const { setStepFourCompleted } = useOnboardingMutation();
   const isAuthorOfRelevantRiples = riplesData?.some(ripleData => 
     ripleData.riple.ripleType === 'goalFinished'
   );
   useEffect(() => {
-    if (isAuthorOfRelevantRiples && !completedTasks.includes(3) && userOnboardingStatus && !userOnboardingStatus?.stepFourCompleted) {
-      setCompletedTasks(prev => [...prev, 3]);
-      setCurrentTask(3);
+    if (isAuthorOfRelevantRiples && userOnboardingStatus && !userOnboardingStatus?.stepFourCompleted) {
       setShowModal(true);
+      setCurrentMessage({
+        title: "Well Done",
+        message: "Sharing your progress will attract other relevant users to your project",
+        subMessage: "You can also share project creation, or update riples. If you want to delete posts, you can do soby navigating to Riples of the relevant project"    
+      });
   
       // Execute the mutation to update step one status
       setStepFourCompleted({ userId: userId });
       //open up the wizard for people to try and do next task
     }
   }, [riplesData]);
-  
+
+  useEffect(() => {
+    // If the previous status was not finished and the current status is finished
+    if (prevOnboardingFinished === false && userOnboardingStatus?.onBoardingFinished === true) {
+        setShowModal(true);
+        setCurrentMessage({
+            title: "Achievement Unlocked!",
+            message: "Congratulations! You've completed the onboarding!",
+            subMessage: "You're now ready to use the full features of our platform."
+        });
+    }
+    // Update the previous status to the current status for the next effect run
+    if (userOnboardingStatus?.onBoardingFinished !== undefined) {
+        setPrevOnboardingFinished(userOnboardingStatus.onBoardingFinished);
+    }
+}, [userOnboardingStatus]);
+
   
   
   const onClose = () => {
-      setCurrentTask(null);
       setShowModal(false);
       wizardContext.setShowWizard(true);//Aftr completing a task open the onboarding wizard for next task or real wizard
   };

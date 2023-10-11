@@ -22,7 +22,6 @@ export const useProjectGoalMutation = () => {
     return new Promise<void>((resolve) => {
         createProjectGoalMutation(payload, {
         onSuccess: () => { 
-            triggerOnboardingWatch();
             resolve(); 
         },
         onError: (e) => {
@@ -78,7 +77,10 @@ export const useProjectGoalMutation = () => {
     const finishProjectGoal = (payload: FinishProjectGoalPayload) => {
         return new Promise<void>((resolve) => {
             finishProjectGoalMutation(payload, {
-                onSuccess: () => { resolve(); },
+                onSuccess: () => { 
+                    triggerOnboardingWatch();
+                    resolve(); 
+                },
                 onError: (e) => {
                     const fieldErrors = e.data?.zodError?.fieldErrors;
                     const message = handleZodError(fieldErrors);

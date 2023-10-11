@@ -106,7 +106,7 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
             </span>
             {/*Sub task delete */}
             <button 
-              className="text-blue-600  hover:underline ml-2"
+              className="text-blue-600  hover:underline ml-2 mr-6"
               onClick={() => handleDeleteSubTask(subTask.id)}
               disabled={isLoading}
               >
@@ -137,9 +137,9 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
           />
           <button onClick={() => handleCreateSubTask(subTaskTitle)} disabled={isLoading} >
           { isCreating? (
-              <div className="ml-2"> <LoadingSpinner size={16} /> </div>
+              <div className="ml-2 mr-6"> <LoadingSpinner size={16} /> </div>
               ) : (
-                  <svg className="w-4 h-4 ml-2 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                  <svg className="w-4 h-4 ml-2 mr-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                   <path stroke="#008000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
                   </svg>
           )}
