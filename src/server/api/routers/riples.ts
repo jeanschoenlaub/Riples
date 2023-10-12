@@ -21,10 +21,13 @@ export const ripleRouter = createTRPCRouter({
           include: { project: true },
         });
       
+        const authorIDs = riples
+            .map((riple) => riple.authorID)
+            .filter((id): id is string => Boolean(id));
         const authors = await ctx.prisma.user.findMany({
-          where: {
-            id: { in: riples.map((riple) => riple.authorID) },
-          },
+            where: {
+                id: { in: authorIDs },
+            },
         });
       
         return riples.map((riple) => {
@@ -117,10 +120,13 @@ export const ripleRouter = createTRPCRouter({
           orderBy: [{ createdAt: "desc" }],
         });
 
+        const authorIDs = riples
+            .map((riple) => riple.authorID)
+            .filter((id): id is string => Boolean(id));
         const authors = await ctx.prisma.user.findMany({
-        where: {
-            id: { in: riples.map((riple) => riple.authorID) },
-        },
+            where: {
+                id: { in: authorIDs },
+            },
         });
 
         return riples.map((riple) => {
