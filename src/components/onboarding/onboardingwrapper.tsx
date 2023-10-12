@@ -11,6 +11,7 @@ import { TaskThreeJoyRide } from "./joyrides/taskthreejoyride";
 import { useWizard } from "../wizard/wizardswrapper";
 import { TaskFourJoyRide } from "./joyrides/taskfourjoyride";
 import { ClipboardSVG } from "../reusables/svgstroke";
+import Tooltip from "../reusables/tooltip";
 
 
 type OnboardingContextType = {
@@ -22,6 +23,7 @@ type OnboardingContextType = {
 
 type TaskMessage = {
   title: string;
+  type: string;
   message: string;
   subMessage: string;
   achievement?: JSX.Element;
@@ -63,6 +65,7 @@ export const OnboardingWrapper: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentMessage, setCurrentMessage] = useState<TaskMessage>({
     title: "",
+    type:"",
     message: "",
     subMessage: "",
   });
@@ -130,6 +133,7 @@ export const OnboardingWrapper: React.FC = () => {
       if (projectLead && projectLead.length > 0 && userOnboardingStatus &&  !userOnboardingStatus?.stepOneCompleted) {
           setCurrentMessage({
             title: "Congratulations",
+            type:"success",
             message: "You just created your first Project on Riples 💥!",
             subMessage: "Now, feel free to have a look at your newly created project pages"
           });
@@ -152,6 +156,7 @@ export const OnboardingWrapper: React.FC = () => {
       setShowModal(true);
       setCurrentMessage({
         title: "As simple as that ! ",
+        type:"success",
         message: " Tasks are how you breakdown and update you progress on Riples 💪",
         subMessage: "Now, feel free to continue adding data to your project"
     });
@@ -169,8 +174,9 @@ export const OnboardingWrapper: React.FC = () => {
       setShowModal(true);
       setCurrentMessage({
         title: "Now we're talking",
+        type:"success",
         message: "Your profile allows other user to know about you and what you have done",
-        subMessage: "You can also check out the projects (protofolio) part of your profile."
+        subMessage: "You can also check out the projects (portofolio) part of your profile."
       });
   
       // Execute the mutation to update step one status
@@ -189,6 +195,7 @@ export const OnboardingWrapper: React.FC = () => {
       setShowModal(true);
       setCurrentMessage({
         title: "Well Done",
+        type:"success",
         message: "Sharing your progress will attract other relevant users to your project",
         subMessage: "You can also share project creation, or updates. If you want to delete posts (riples), you can do so by navigating to the 'Riples' page of the relevant project"    
       });
@@ -206,8 +213,13 @@ export const OnboardingWrapper: React.FC = () => {
         setShowModal(true);
         setCurrentMessage({
             title: "Achievement Unlocked!",
+            type: "achievement",
             message: "Congratulations! You've completed the onboarding!",
-            achievement: <ClipboardSVG width='8' height='8' colorStrokeHex='#2563eb' />,
+            achievement: (
+              <Tooltip content="You've unlocked this achievement by completing onboarding!">
+                  <ClipboardSVG width='8' height='8' colorStrokeHex='#2563eb' />
+              </Tooltip>
+            ),
             subMessage: "You can find your achievements in your Profile / About page."
         });
     }
@@ -243,7 +255,12 @@ export const OnboardingWrapper: React.FC = () => {
     <OnboardingProvider>
       {JoyrideComponent && <JoyrideComponent />}
       <OnboardingJoyRideOne />
-      <Modal showModal={showModal} Success={true} size="medium" onClose={onClose}>
+      <Modal  showModal={showModal} 
+              Success={currentMessage.type === "success"} 
+              Achievement={currentMessage.type === "achievement"}  
+              size="medium" 
+              onClose={onClose}
+      >
           <div className="flex flex-col">
             <div className="text-lg flex justify-center items-center space-x-4 mb-2 w-auto">
                 {currentMessage.title}

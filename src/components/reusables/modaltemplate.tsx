@@ -9,10 +9,11 @@ interface ModalProps {
   isLoading?: boolean;
   Logo?: boolean;
   Success?: boolean;
+  Achievement?: boolean;
   onClose: () => void;  // <-- Add this prop
 }
 
-export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medium', children, Logo, Success, onClose }) => {
+export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medium', children, Logo, Success, Achievement, onClose }) => {
   const sizeClass = {
     small: 'w-2/3 sm:w-2/3 md:w-1/4 max-h-full sm:max-h-[80vh]',
     medium: 'w-full sm:w-2/3 md:w-1/2 max-h-full sm:max-h-[80vh]',
@@ -54,6 +55,7 @@ export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medi
             </div>) : <div className="flex justify-center my-4"></div> }
             {/* Increase the font-size for the emoji */}
             {Success ?  <div className="flex justify-center my-4 text-6xl"> 🎉 </div> : null}
+            {Achievement ?  <div className="flex justify-center my-4 text-6xl"> 🏅 </div> : null}
 
             {children}
           </div>
