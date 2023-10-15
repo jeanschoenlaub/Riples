@@ -37,7 +37,7 @@ export const useProjectInfoMutation = () => {
         applyToProjectMutation(payload, {
           onSuccess: () => { 
             // Construct the notification content using the projectTitle and username from the payload.
-            const notificationContent = `User ${payload.username} has applied to your project: ${payload.projectTitle}`;
+            const notificationContent = `User ${payload.username} has applied to joing your project: ${payload.projectTitle}`;
 
             // Create a notification for the user
             createNotificationMutation({
