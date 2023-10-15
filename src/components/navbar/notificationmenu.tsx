@@ -68,7 +68,7 @@ export const NotificationMenu = () => {
                     className="rounded-full border-2 p-1 border-slate-300 flex justify-center items-center relative"
                     style={{ cursor: 'pointer' }}
                 >
-                    <BellSVG width="5" height="5" colorStrokeHex="#0369a1"></BellSVG>
+                    <BellSVG width="5" height="5" colorStrokeHex="#3b82f6"></BellSVG>
                     
                     {/* Counter for unread notifications */}
                     {unreadNotificationCount != 0 && (
