@@ -5,7 +5,6 @@ import router from "next/router";
 import { BellSVG } from "../reusables/svgstroke";
 import { handleMutationError } from "~/utils/error-handling";
 
-
 export const NotificationMenu = () => {
   const { data: session } = useSession();
   const { data: notificationData, isLoading: notificationLoading } = api.notification.getUserNotifications.useQuery({userId: session!.user.id});
@@ -101,7 +100,7 @@ export const NotificationMenu = () => {
 export const UseNotificationsMutations = () => {
     const apiContext = api.useContext();
     const handleSuccess = async () => {
-        
+        await apiContext.notification.getUserNotifications.invalidate();
     };
 
     const { mutate: readAllNotificationsMutation } = api.notification.readAllNotification.useMutation({

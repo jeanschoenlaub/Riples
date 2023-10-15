@@ -22,7 +22,8 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
     isMember,
     isPending,
     isProjectLead,
-    userId
+    userId,
+    username,
 }) => {
     const [projectSummary, setProjectSummary] = useState(project.project.summary);
     const [projectStatus, setProjectStatus] = useState(project.project.status);
@@ -43,6 +44,9 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
      const Application = {
        userId: userId ?? "",
        projectId: project.project.id,
+       projectTitle: project.project.title,
+       username: username ?? "",
+       projectLeadId: project.project.authorID,
      };
      const handleApplicationJoin = () => {
        if (userId){

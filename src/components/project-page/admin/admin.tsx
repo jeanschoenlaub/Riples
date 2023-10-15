@@ -54,6 +54,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectL
 
   const generateApproveUserPayload = (userId: string): ApproveUserPayload => ({
     projectId: project.id,
+    projectTitle: project.title,
     userId
   });
 

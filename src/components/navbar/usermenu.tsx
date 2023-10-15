@@ -1,6 +1,5 @@
 import { useSession, signOut } from "next-auth/react"
 import { useEffect, useRef, useState } from "react";
-import { NavBarSignInModal } from "./signinmodal";
 import { ProfileImage } from '~/components/reusables/profileimage'; // Import ProfileImage component
 import { NavBarUserDeleteModal } from "./userdeletemodal";
 import { api } from "~/utils/api";
@@ -11,7 +10,6 @@ import router from "next/router";
 
 export const UserMenu = () => {
   const { data: session } = useSession();
-  const [showSignInModal, setShowSignInModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
@@ -87,12 +85,6 @@ export const UserMenu = () => {
                 )}
             </div>
         )}
-        {!session && (
-            <div>
-                <button className="bg-blue-500 text-white rounded py-1 px-2 md:px-4 text-center text-sm md:text-lg" onClick={() => setShowSignInModal(true)}>Sign In</button>
-            </div>
-        )}
-        <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
         <NavBarUserDeleteModal showDeleteModal={showDeleteModal} isLoading={isDeleting} onClose={() => setShowDeleteModal(false)} onDelete={handleDeleteUserMutation}  />
     </div>
   )

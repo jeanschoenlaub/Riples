@@ -7,6 +7,7 @@ import { SideNavProject } from "./sidenavproject";
 import { MenuSVG } from "../reusables/svgstroke";
 import { UserMenu } from "./usermenu";
 import { NotificationMenu } from "./notificationmenu";
+import { NavBarSignInModal } from "./signinmodal";
 
 interface GlobalNavBarProps {
   activeTab?: string;
@@ -17,6 +18,7 @@ interface GlobalNavBarProps {
 export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActiveTab, ToogleinBetween }) => {
   const { data: session } = useSession();
   const [showSideNav, setShowSideNav] = useState(false);
+  const [showSignInModal, setShowSignInModal] = useState(false);
 
   return ( 
     <div id="global-nav-container" className="flex justify-center w-full h-15">
@@ -62,6 +64,11 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
                   <UserMenu></UserMenu>
               </div>
             )}
+            {!session && (
+              <div>
+                <button className="bg-blue-500 text-white rounded py-1 px-2 md:px-4 text-center text-sm md:text-lg" onClick={() => setShowSignInModal(true)}>Sign In</button>
+              </div>
+            )}
             <div className={`fixed top-0 left-0 h-full text-red-600 hover:text-red-800 text-xl transition-transform transform ${showSideNav ? 'translate-x-0' : '-translate-x-full'} w-3/4 bg-white shadow-md z-50 md:hidden flex flex-col`}>
               <div className="flex justify-end p-4">
                   <button onClick={() => setShowSideNav(false)}>&times;</button>
@@ -72,6 +79,7 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
               </div>
           </div>
         </div>
+        <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
       </div>
   </div>
   )

@@ -18,6 +18,7 @@ export type EditProjectAdminPayload = {
 export type ApproveUserPayload = {
     projectId: string;
     userId: string;
+    projectTitle: string;
   };
   export type RefuseUserPayload = {
     projectId: string;

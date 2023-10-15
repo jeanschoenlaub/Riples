@@ -149,7 +149,7 @@ export default function Project(
               
                 {/* SHOWN IF ABOUT TAB */}
                 {activeTab === 'about' && (
-                  <AboutTab project={projectData} projectTags={projectData.project.projectTags?.map(tag => tag.name) || []}  isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} userId={userId} ></AboutTab>
+                  <AboutTab project={projectData} projectTags={projectData.project.projectTags?.map(tag => tag.name) || []}  isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} userId={userId} username={session?.user.username}></AboutTab>
                 )}
 
                 {/* SHOWN IF RIPLES TAB */}

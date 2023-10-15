@@ -27,11 +27,27 @@ export const useProjectInfoMutation = () => {
     const { mutate: applyToProjectMutation, isLoading: isApplying } = api.projectMembers.applyToProject.useMutation({
       onSuccess: handleSuccess
     });
+
+    const { mutate: createNotificationMutation } = api.notification.createNotification.useMutation({
+      onSuccess: handleSuccess,
+    });
   
     const applyToProject = (payload: ProjectMemberMutationPayload ) => {
       return new Promise<void>((resolve, reject) => {
         applyToProjectMutation(payload, {
-          onSuccess: () => { resolve(); },
+          onSuccess: () => { 
+            // Construct the notification content using the projectTitle and username from the payload.
+            const notificationContent = `User ${payload.username} has applied to your project: ${payload.projectTitle}`;
+
+            // Create a notification for the user
+            createNotificationMutation({
+                userId: payload.projectLeadId, 
+                content: notificationContent,
+                link: `/projects/${payload.projectId}` // This is just an example. You can set it according to your routing structure.
+            });
+
+            resolve();
+           },
           onError: (e) => {
             handleMutationError(e, reject);
           }    

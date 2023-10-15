@@ -43,19 +43,33 @@ export const useUserStatusMutation = () => {
       const { mutate: approveUserMutation, isLoading: isApproving } = api.projectMembers.approveMember.useMutation({
         onSuccess: handleSuccess,
     });
+    const { mutate: createNotificationMutation } = api.notification.createNotification.useMutation({
+      onSuccess: handleSuccess,
+    });
 
       const approveUser = (payload: ApproveUserPayload) => {
           return new Promise<void>((resolve, reject) => {
             approveUserMutation(payload, {
-              onSuccess: () => { resolve(); },
+              onSuccess: () => { 
+                  // Construct the notification content using the projectTitle and username from the payload.
+                  const notificationContent = `You are now a member of project: ${payload.projectTitle}`;
+      
+                  // Create a notification for the user
+                  createNotificationMutation({
+                      userId: payload.userId, 
+                      content: notificationContent,
+                      link: `/projects/${payload.projectId}` // This is just an example. You can set it according to your routing structure.
+                  });
+      
+                  resolve();
+              },
               onError: (e) => {
                 handleMutationError(e, reject);
               }      
             });
         });
       };
-  
-  
+
     // Refuse User Mutation
     const { mutate: rawRefuseUserMutation, isLoading: isRefusing } = api.projectMembers.deleteProjectMember.useMutation({
       onSuccess: handleSuccess,
