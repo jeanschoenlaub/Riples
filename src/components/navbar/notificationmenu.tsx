@@ -83,7 +83,7 @@ export const NotificationMenu = () => {
                 
                 {showDropdown && (
                     <div ref={dropdownRef} className="absolute mt-0 w-96 -right-40 border border-slate-300 z-30 rounded-md shadow-lg">
-                        {notificationData && notificationData.map(notification => (
+                        {notificationData?.map(notification => (
                             <div 
                                 key={notification.id} 
                                 className={`w-full text-left p-3 border-b hover:bg-slate-200 ${notification.read ? 'bg-white' : 'bg-sky-100'}`}

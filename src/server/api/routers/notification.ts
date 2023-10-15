@@ -38,7 +38,7 @@ export const notificationRouter = createTRPCRouter({
                 data: {
                     userId: input.userId,
                     content: input.content,
-                    link: input.link || null
+                    link: input.link ?? null
                 }
             });
 

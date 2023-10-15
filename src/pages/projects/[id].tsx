@@ -74,13 +74,13 @@ export default function Project(
   const router = useRouter();
   const initialTab: string = (Array.isArray(router.query.activeTab) 
   ? router.query.activeTab[0] 
-  : router.query.activeTab) || 'about';
+  : router.query.activeTab) ?? 'about';
   const [activeTab, setActiveTab] = useState<string>(initialTab);
   // This useEffect will react to changes in the router.query object
   useEffect(() => {
     const newTab = (Array.isArray(router.query.activeTab) 
       ? router.query.activeTab[0] 
-      : router.query.activeTab) || 'about';
+      : router.query.activeTab) ?? 'about';
     
     if (newTab !== activeTab) {
       setActiveTab(newTab);
