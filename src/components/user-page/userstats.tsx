@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import dayjs from 'dayjs';
 import Tooltip from '../reusables/tooltip';
 import { ClipboardSVG } from '../reusables/svgstroke';

@@ -190,6 +190,7 @@ model User {
   riples              Riple[] 
   ownedProjects       Project[] @relation("ProjectOwner")
   userOnboarding      UserOnboarding? 
+  logs                UserLog[]
 }
 
 
@@ -240,4 +241,16 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model UserLog {
+  id               String   @id @default(cuid())
+  user             User?     @relation(fields: [userId], references: [id])
+  userId           String   
+  date             DateTime @default(now())
+  lastLogin        DateTime?
+  lastProjectCreated DateTime?
+  lastTaskEdited   DateTime?
+
+  @@unique([userId, date])
 }

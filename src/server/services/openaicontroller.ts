@@ -9,7 +9,7 @@ Tasks:
 1.
 2.
 
-Based on the given information, suggest "${taskNumber}" tasks (task title only), suitable for this project.
+Based on the given information, suggest "${taskNumber}" tasks (task title only), suitable for this project. Make the task title as simple and short as possible.
 `;
 
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });

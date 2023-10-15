@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
 import { Modal } from '../../reusables/modaltemplate';
-import { handleZodError } from '~/utils/error-handling';
+import { handleMutationError } from '~/utils/error-handling';
 
 interface SubTaskModalProps {
   subTaskToEdit: SubTaskData; 
@@ -122,11 +122,8 @@ const { mutate: editSubTaskMutation, isLoading: isEditing } = api.tasks.editSubT
       editSubTaskMutation(payload, {
         onSuccess: () => { resolve(); },
         onError: (e) => {
-          const fieldErrors = e.data?.zodError?.fieldErrors;
-          const message = handleZodError(fieldErrors);
-          toast.error(message);
-          reject(e);
-        }
+          handleMutationError(e, reject);
+        }  
       });
     });
   };

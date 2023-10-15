@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { EditSVG } from '~/components/reusables/svg';
 import { LoadingSpinner } from '~/components/reusables/loading';
 import { api } from '~/utils/api';
-import { handleZodError } from '~/utils/error-handling';
+import { handleMutationError} from '~/utils/error-handling';
 import { NavBarUserNameModal } from '../navbar/usernamemodal';
 import MultiSelect from '../reusables/multiselect';
 import { sortedProjectClassifications } from '~/utils/constants/projectclassifications';
@@ -208,11 +208,8 @@ export const useUserInfoMutation = () => {
                     resolve(); 
                 },
                 onError: (e) => {
-                    const fieldErrors = e.data?.zodError?.fieldErrors;
-                    const message = handleZodError(fieldErrors);
-                    toast.error(message);
-                    reject(e);
-                }
+                    handleMutationError(e, reject);
+                  }            
             });
         });
     };

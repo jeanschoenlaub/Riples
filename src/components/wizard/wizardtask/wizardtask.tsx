@@ -33,7 +33,7 @@ export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSum
                     userId: userId,
                 }
                 try {
-                    const rawDataTasks = await generateProjectTask(payloadTask);  // Assuming you've defined `payload` appropriately earlier in the code
+                    const rawDataTasks = await generateProjectTask(payloadTask);  
                     const tasks = processRawDataForTasksOrGoals(rawDataTasks);
                     dispatch(setTasks(tasks));
                 } catch (error) {

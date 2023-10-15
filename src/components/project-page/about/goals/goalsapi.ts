@@ -1,6 +1,5 @@
 import { api } from "~/utils/api";
-import { handleZodError } from "~/utils/error-handling";
-import toast from "react-hot-toast";
+import { handleMutationError } from "~/utils/error-handling";
 import type { CreateProjectGoalPayload, DeleteProjectGoalPayload, EditProjectGoalPayload, FinishProjectGoalPayload } from "./goaltypes";
 import { useOnboarding } from "~/components/onboarding/onboardingwrapper";
 
@@ -19,16 +18,14 @@ export const useProjectGoalMutation = () => {
     });
 
     const createProjectGoal = (payload: CreateProjectGoalPayload) => {
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve, reject) => {
         createProjectGoalMutation(payload, {
         onSuccess: () => { 
             resolve(); 
         },
         onError: (e) => {
-            const fieldErrors = e.data?.zodError?.fieldErrors;
-            const message = handleZodError(fieldErrors);
-            toast.error(message);
-        },
+            handleMutationError(e, reject);
+          }
         });
     });
     };
@@ -39,14 +36,12 @@ export const useProjectGoalMutation = () => {
     });
 
     const editProjectGoal = (payload: EditProjectGoalPayload) => {
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve, reject) => {
         editProjectGoalMutation(payload, {
         onSuccess: () => { resolve(); },
         onError: (e) => {
-            const fieldErrors = e.data?.zodError?.fieldErrors;
-            const message = handleZodError(fieldErrors);
-            toast.error(message);
-        },
+            handleMutationError(e, reject);
+          }
         });
     });
     };
@@ -57,14 +52,12 @@ export const useProjectGoalMutation = () => {
     });
 
     const deleteProjectGoal = (payload: DeleteProjectGoalPayload) => {
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve, reject) => {
         deleteProjectGoalMutation(payload, {
         onSuccess: () => { resolve(); },
         onError: (e) => {
-            const fieldErrors = e.data?.zodError?.fieldErrors;
-            const message = handleZodError(fieldErrors);
-            toast.error(message);
-        },
+            handleMutationError(e, reject);
+          }
         });
     });
     };
@@ -75,17 +68,14 @@ export const useProjectGoalMutation = () => {
     });
 
     const finishProjectGoal = (payload: FinishProjectGoalPayload) => {
-        return new Promise<void>((resolve) => {
+        return new Promise<void>((resolve, reject) => {
             finishProjectGoalMutation(payload, {
                 onSuccess: () => { 
-                    triggerOnboardingWatch();
                     resolve(); 
                 },
                 onError: (e) => {
-                    const fieldErrors = e.data?.zodError?.fieldErrors;
-                    const message = handleZodError(fieldErrors);
-                    toast.error(message);
-                },
+                    handleMutationError(e, reject);
+                }
             });
         });
     };

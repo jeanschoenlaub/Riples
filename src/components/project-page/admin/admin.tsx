@@ -1,62 +1,76 @@
 import React, { useState } from 'react';
-import { api } from '~/utils/api';
 import Link from 'next/link';
 import { ProfileImage } from '../../reusables/profileimage';
 import { StyledTable } from '../../reusables/styledtables';
 import toast from 'react-hot-toast';
-import { handleZodError } from '~/utils/error-handling';
 import { Modal } from '../../reusables/modaltemplate';
 import { LoadingSpinner } from '../../reusables/loading';
 import router from 'next/router';
 import { EditSVG, MultiUserSVG, PrivateSVG, PublicSVG, SingleUserSVG } from '../../reusables/svg';
-import { useProjectAdminMutation } from './adminapi';
-import type { AdminTabProps, EditProjectAdminPayload } from './admintype';
-
-
+import { useProjectAdminMutation, useUserStatusMutation } from './adminapi';
+import type { AdminTabProps, ApproveUserPayload, DeleteProjectPayload, EditProjectAdminPayload, RefuseUserPayload } from './admintype';
 
 export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectLead }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  //Custom Hooks
-  /* eslint-disable @typescript-eslint/no-empty-function */
-  const { isApproving, isRefusing, isDeleting, deleteProject, approveUser, refuseUser } = useUserStatusMutation({
-    onSuccess: () => {},
-  });
-  /* eslint-enable @typescript-eslint/no-empty-function */
-
-  const isLoading = isApproving || isRefusing;
   const [isEditMode, setIsEditMode] = useState(false);
-    const toggleEditMode = () => {
-        setIsEditMode(!isEditMode);
-    }
-
-  const handleApprove = (userId: string, projectId:string) => {
-    approveUser({ userId, projectId });
-  };
-
   const[projectType, setProjectType] =useState(project.projectType)
   const[projectPrivacy, setProjectPrivacy] =useState(project.projectType)
 
-  const handleRefuse = (userId: string, projectId:string) => {
-    refuseUser({ userId, projectId });
+  const toggleEditMode = () => {
+      setIsEditMode(!isEditMode);
+  }
+  const handleDeleteProject = async () => {
+      await router.push('/');
+      deleteProject(generateDeleteProjectPayload()).then(() => {
+          setShowDeleteModal(false);
+          toast.success("Project Deleted successfully");
+        })
+        .catch(() => {
+            toast.error("Failed to delete the project");
+        });
+  }
+
+  const handleApprove = (userId: string) => {
+    approveUser(generateApproveUserPayload(userId)).then(() => {
+        toast.success('User approved successfully!');
+        toggleEditMode();
+    })
+    .catch(() => {
+        toast.error('Error approving user');
+        toggleEditMode();
+    });
   };
 
-  const handleDeleteProject = async () => {
-      try {
-        await deleteProject({ projectId: project.id });
-        setShowDeleteModal(false);
-        await router.push('/');
-        toast.success("Project Deleted successfully");
-      } catch (error) {
-        // You can handle any error related to the deletion here if necessary.
-        toast.error("Failed to delete the project");
-      }
-  }
+  const handleRefuse = (userId: string) => {
+    refuseUser(generateRefuseUserPayload(userId)).then(() => {
+      toast.success('User refused successfully!');
+      toggleEditMode();
+    })
+    .catch(() => {
+        toast.error('Error refusing user');
+        toggleEditMode();
+    });
+  };
+
+  const generateApproveUserPayload = (userId: string): ApproveUserPayload => ({
+    projectId: project.id,
+    userId
+  });
+
+  const generateDeleteProjectPayload = (): DeleteProjectPayload => ({
+    projectId: project.id,
+  });
+
+  const generateRefuseUserPayload = (userId: string): RefuseUserPayload => ({
+    projectId: project.id,
+    userId
+  });
 
   const generateEditAdminPayload = (): EditProjectAdminPayload => ({
     projectId: project.id,
     projectPrivacy: projectPrivacy,
     projectType: projectType,
-});
+  });
 
   const handleSave = () => {
     editProjectAdmin(generateEditAdminPayload()).then(() => {
@@ -67,10 +81,11 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectL
         toast.error('Error saving project modification');
         toggleEditMode();
     });
-}
-
+  }
 
   const {  isEditing, editProjectAdmin } = useProjectAdminMutation()
+  const { isApproving, isRefusing, isDeleting, deleteProject, approveUser, refuseUser } = useUserStatusMutation();
+  const isLoading = isApproving || isRefusing;
 
   return (
     <div className='flex border-r-2 border-l-2 border-gray-200'>
@@ -189,12 +204,12 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectL
                             {member.member.status}
                         </td>
                         <td className="px-6 py-4 space-x-6">
-                            <button onClick={() => handleApprove(member.user.id,project.id)} disabled={isLoading}>
+                            <button onClick={() => handleApprove(member.user.id)} disabled={isLoading}>
                                 <svg className="w-4 h-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
                                     <path stroke="#008000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5.917 5.724 10.5 15 1.5"/>
                                 </svg>
                             </button>
-                            <button onClick={() => handleRefuse(member.user.id,project.id)} disabled={isLoading}>
+                            <button onClick={() => handleRefuse(member.user.id)} disabled={isLoading}>
                                 <svg className="w-4 h-4 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                     <path stroke="#FF0000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                                 </svg>
@@ -226,7 +241,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectL
                             </td>
                             <td className="px-6 py-4 space-x-6">
                                 <button 
-                                  onClick={() => handleRefuse(member.user.id,project.id)} 
+                                  onClick={() => handleRefuse(member.user.id)} 
                                   disabled={isDeleting}
                                 >
                                     <svg className="w-4 h-4 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -266,51 +281,3 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectL
     </div>
 )};
 
-const useUserStatusMutation = ({ onSuccess }: { onSuccess: () => void }) => {
-    const apiContext = api.useContext();
-  
-    // Function to run on successful mutations
-    const handleSuccess = () => {
-      void apiContext.projectMembers.getMembersByProjectId.invalidate(); // Invalidate the cache for the users
-      onSuccess(); // Execute any additional onSuccess logic
-    };
-  
-    // Mutation for approving a user
-    const { mutate: approveUserMutation, isLoading: isApproving } = api.projectMembers.approveMember.useMutation({
-      onSuccess: handleSuccess,
-      onError: (e) => {
-        const fieldErrors = e.data?.zodError?.fieldErrors;
-        const message = handleZodError(fieldErrors);
-        toast.error(message);
-      },
-    });
-  
-    // Mutation for refusing a user
-    const { mutate: refuseUserMutation, isLoading: isRefusing } = api.projectMembers.deleteProjectMember.useMutation({
-      onSuccess: handleSuccess,
-      onError: (e) => {
-        const fieldErrors = e.data?.zodError?.fieldErrors;
-        const message = handleZodError(fieldErrors);
-        toast.error(message);
-      },
-    });
-
-    // Mutation for deleting a project
-    const { mutateAsync: deleteProjectAsyncMutation, isLoading: isDeleting } = api.projects.delete.useMutation({
-      onSuccess: handleSuccess,
-      onError: (e) => {
-        const fieldErrors = e.data?.zodError?.fieldErrors;
-        const message = handleZodError(fieldErrors);
-        toast.error(message);
-      },
-    });
-  
-    return {
-      isApproving,
-      isRefusing,
-      isDeleting,
-      approveUser: approveUserMutation,
-      refuseUser: refuseUserMutation,
-      deleteProject: deleteProjectAsyncMutation,
-    };
-  };
