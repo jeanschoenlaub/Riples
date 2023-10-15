@@ -32,7 +32,7 @@ please structure your response as follows:
 2.
 ...
 
-Based on the given information, suggest "${goalNumber}" goals (titles only) suitable for this project`
+Based on the given information, suggest "${goalNumber}" goals (titles only) suitable for this project. Make the goal title as simple and short as possible`
 
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const chatCompletion = await openai.chat.completions.create({

@@ -13,7 +13,6 @@ export default async function checkUserActivity(req: NextApiRequest, res: NextAp
     prisma
   });
 
-
   if (req.method !== 'POST') {
     return res.status(405).end();
   }
