@@ -136,7 +136,7 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
 
 
             {/* Project Story */}
-            <div className="flex items-center ml-2 mt-6 mb-3 space-x-2">
+            <div className="block md:flex items-center ml-2 mr-4 mt-6 mb-3 space-x-2">
                 <label htmlFor="project-story" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="Task Content">
                     Project Story:
                 </label>
@@ -144,7 +144,7 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
                         id="project-story"
                         value={projectSummary}
                         onChange={(e) => setProjectSummary(e.target.value)}
-                        className={`flex-grow w-full p-2 rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
+                        className={`flex-grow w-full rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
                         maxLength={5000}
                         disabled={!isEditMode }
                     />
@@ -180,7 +180,7 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
             </div>
 
             {/* Project Tags */}
-            <div className="flex items-center ml-2 mr-2 mt-3 mb-3 space-x-2 ">
+            <div className="block md:flex items-center ml-2 mr-4 mt-3 mb-3 space-x-2 ">
                 <label htmlFor="project-category" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="User Name">
                     Project Category:
                 </label>

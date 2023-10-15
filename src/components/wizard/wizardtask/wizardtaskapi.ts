@@ -1,8 +1,7 @@
 import { api } from "~/utils/api";
 import type { GenerateProjectGoalMutationPayload, GenerateProjectPostMutationPayload, GenerateProjectTaskMutationPayload } from "./wizardtasktype";
 import type OpenAI from "openai";
-import { handleZodError } from "~/utils/error-handling";
-import toast from "react-hot-toast";
+import { handleMutationError } from "~/utils/error-handling";
 
 export const useOpenAIMutation = () => {
     const apiContext = api.useContext();
@@ -13,17 +12,16 @@ export const useOpenAIMutation = () => {
     const { mutate: generateProjectTaskMutation, isLoading: isGeneratingTasks} = api.openai.generateProjectTasks.useMutation({
         onSuccess: handleSuccess,
     });
+
+    // Usage in the mutations
     const generateProjectTask = (payload: GenerateProjectTaskMutationPayload): Promise<OpenAI.Chat.Completions.ChatCompletion.Choice[]> => {
         return new Promise((resolve, reject) => {
             generateProjectTaskMutation(payload, {
                 onSuccess: (data) => {
-                    resolve(data);  // Assuming `data` is of type `Choice[]`
+                    resolve(data);
                 },
                 onError: (e) => {
-                    const fieldErrors = e.data?.zodError?.fieldErrors;
-                    const message = handleZodError(fieldErrors);
-                    toast.error(message);
-                    reject(e);
+                    handleMutationError(e, reject);
                 }
             });
         });
@@ -39,10 +37,7 @@ export const useOpenAIMutation = () => {
                     resolve(data); 
                 },
                 onError: (e) => {
-                    const fieldErrors = e.data?.zodError?.fieldErrors;
-                    const message = handleZodError(fieldErrors);
-                    toast.error(message);
-                    reject(e);
+                    handleMutationError(e, reject);
                 }
             });
         });
@@ -58,10 +53,7 @@ export const useOpenAIMutation = () => {
                     resolve(data); 
                 },
                 onError: (e) => {
-                    const fieldErrors = e.data?.zodError?.fieldErrors;
-                    const message = handleZodError(fieldErrors);
-                    toast.error(message);
-                    reject(e);
+                    handleMutationError(e, reject);
                 }
             });
         });
@@ -76,3 +68,6 @@ export const useOpenAIMutation = () => {
       generateProjectPost,
     };
   };
+
+
+

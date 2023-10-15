@@ -58,6 +58,13 @@ export const CreateFeed = () => {
       </div>
 
       {/* Project Cards */}
+      <div className="flex mt-6 justify-center">
+        <a href="https://forms.gle/WPq2stK3YBDcggHw5" target="_blank" rel="noopener noreferrer">
+              <button className="bg-green-500 text-white rounded py-1 px-2 text-center text-sm">
+                Feedback
+              </button>
+            </a>
+        </div>
       <div className="mt-4 flex justify-center">
         Create Feed is Coming 
       </div>

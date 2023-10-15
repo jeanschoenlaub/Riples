@@ -67,6 +67,7 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
 
         <div className="flex-grow  ">
             {/* Project Title and Follow Button */}
+            <Link href={`/projects/${riple.projectId}`}>
             <div className="flex justify-between items-center flex-wrap">
                 <div id="riple-card-header-title" className="font-semibold text-gray-800 mr-2">
                     {riple.title}
@@ -78,6 +79,7 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
                     <Follow projectId={riple.projectId} />
                 </div>
             </div>
+            </Link>
           
             {/* Metadata */}
             <div className="space-y-1">

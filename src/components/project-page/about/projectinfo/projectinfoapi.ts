@@ -1,6 +1,5 @@
 import { api } from "~/utils/api";
-import { handleZodError } from "~/utils/error-handling";
-import toast from "react-hot-toast";
+import { handleMutationError } from "~/utils/error-handling";
 import type { EditProjectPayload, ProjectMemberMutationPayload } from "./projectinfotype";
 
 export const useProjectInfoMutation = () => {
@@ -19,11 +18,8 @@ export const useProjectInfoMutation = () => {
           editProjectInfoMutation(payload, {
             onSuccess: () => { resolve(); },
             onError: (e) => {
-              const fieldErrors = e.data?.zodError?.fieldErrors;
-              const message = handleZodError(fieldErrors);
-              toast.error(message);
-              reject(e);
-            }
+              handleMutationError(e, reject);
+            }      
           });
       });
     };
@@ -36,12 +32,9 @@ export const useProjectInfoMutation = () => {
       return new Promise<void>((resolve, reject) => {
         applyToProjectMutation(payload, {
           onSuccess: () => { resolve(); },
-          onError: (e) => { 
-            const fieldErrors = e.data?.zodError?.fieldErrors;
-              const message = handleZodError(fieldErrors);
-              toast.error(message);
-              reject(e);
-           }
+          onError: (e) => {
+            handleMutationError(e, reject);
+          }    
         });
       });
     };
@@ -56,11 +49,8 @@ export const useProjectInfoMutation = () => {
         deleteProjectMemberMutation(payload, {
           onSuccess: () => { resolve(); },
           onError: (e) => {
-            const fieldErrors = e.data?.zodError?.fieldErrors;
-              const message = handleZodError(fieldErrors);
-              toast.error(message);
-              reject(e);
-          }
+            handleMutationError(e, reject);
+          }    
         });
       });
     };
@@ -74,3 +64,4 @@ export const useProjectInfoMutation = () => {
       applyToProject,
     };
 };
+

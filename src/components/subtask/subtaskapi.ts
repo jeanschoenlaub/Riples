@@ -1,7 +1,6 @@
 import { api } from "~/utils/api";
 import type { CreateSubTaskPayload, DeleteSubTaskPayload, EditSubTaskStatusPayload } from "./subtasktypes";
-import toast from "react-hot-toast";
-import { handleZodError } from "~/utils/error-handling";
+import { handleMutationError } from "~/utils/error-handling";
 
 // Custom hook to handle mutations and their state for Subtasks
 export const useSubTaskMutation = (taskId: string, { onSuccess }: { onSuccess: () => void }) => {
@@ -20,10 +19,7 @@ export const useSubTaskMutation = (taskId: string, { onSuccess }: { onSuccess: (
             createSubTaskMutation(payload, {
                 onSuccess: () => { resolve(); },
                 onError: (e) => {
-                    const fieldErrors = e.data?.zodError?.fieldErrors;
-                    const message = handleZodError(fieldErrors);
-                    toast.error(message);
-                    reject(e);
+                  handleMutationError(e, reject);
                 }
             });
         });
@@ -37,11 +33,8 @@ export const useSubTaskMutation = (taskId: string, { onSuccess }: { onSuccess: (
           deleteSubTaskMutation(payload, {
               onSuccess: () => { resolve(); },
               onError: (e) => {
-                const fieldErrors = e.data?.zodError?.fieldErrors;
-                const message = handleZodError(fieldErrors);
-                toast.error(message);
-                reject(e);
-              }
+                handleMutationError(e, reject);
+              }        
           });
       });
     };
@@ -54,11 +47,8 @@ export const useSubTaskMutation = (taskId: string, { onSuccess }: { onSuccess: (
           editStatusMutation(payload, {
               onSuccess: () => { resolve(); },
               onError: (e) => {
-                const fieldErrors = e.data?.zodError?.fieldErrors;
-                const message = handleZodError(fieldErrors);
-                toast.error(message);
-                reject(e);
-              }
+                handleMutationError(e, reject);
+              }        
           });
       });
     };

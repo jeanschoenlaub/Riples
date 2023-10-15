@@ -43,6 +43,14 @@ export const SocialFeed = () => {
           </div>
         </div>
 
+        <div className="flex justify-center">
+        <a href="https://forms.gle/WPq2stK3YBDcggHw5" target="_blank" rel="noopener noreferrer">
+              <button className="bg-green-500 text-white rounded py-1 px-2 text-center text-sm">
+                Feedback
+              </button>
+            </a>
+        </div>
+
         <div id="socialfeed">
           {data?.map((fullRiple) => (
             <RipleCard key={fullRiple.riple.id} {...fullRiple}></RipleCard>

@@ -7,7 +7,7 @@ import { ProfileImage } from '~/components/reusables/profileimage'; // Import Pr
 import { NavBarUserDeleteModal } from "./userdeletemodal";
 import { api } from "~/utils/api";
 import toast from "react-hot-toast";
-import { handleZodError } from "~/utils/error-handling";
+import { handleMutationError} from "~/utils/error-handling";
 import ToggleSwitch from "../reusables/toogleswitch";
 import router from "next/router";
 import { SideNavProject } from "./sidenavproject";
@@ -182,11 +182,8 @@ export const UseUserMutations  = () => {
                 resolve(); 
             },
             onError: (e) => {
-                const fieldErrors = e.data?.zodError?.fieldErrors;
-                const message = handleZodError(fieldErrors);
-                toast.error(message);
-                reject(e);
-            },
+              handleMutationError(e, reject);
+            }
         });
     });
 };

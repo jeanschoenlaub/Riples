@@ -37,7 +37,7 @@ export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medi
               className="fixed text-red-600 hover:text-red-800 text-xl z-10">
               &times; {/* This is an HTML entity representing a multiplication symbol (looks like 'x') */}
             </button>
-            {(Logo && !Success)  ? (
+            {(Logo && !Success && !Achievement)  ? (
             <div className="flex justify-center my-4">
               {isLoading ? (
                 <LoadingRiplesLogo isLoading={isLoading}/>

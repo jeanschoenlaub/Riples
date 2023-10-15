@@ -149,7 +149,6 @@ export const userRouter = createTRPCRouter({
 
     const allTagIds = allTags.map(t => t.id);
 
-    // First, let's ensure all required UserInterestTags records exist
     await Promise.all(
       allTagIds.map(tagId => {
         return ctx.prisma.userInterestTags.upsert({
@@ -171,16 +170,35 @@ export const userRouter = createTRPCRouter({
       data: {
         name: input.name,
         description: input.description,
-        // Connecting tags might be redundant here, since the relation is already established by creating/updating UserInterestTags records
       }
     });
   
     return updatedUser;
 }),
 
+createUserLog: publicProcedure
+    .input(
+        z.object({
+        userId: z.string(),
+        date: z.date(),
+        lastLogin: z.date(),
+        lastProjectCreated: z.union([z.date(), z.null()]),
+        lastTaskEdited: z.union([z.date(), z.null()]),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+        const userLog = await ctx.prisma.userLog.create({
+        data: {
+            userId: input.userId,
+            date: input.date,
+            lastLogin: input.lastLogin,
+            lastProjectCreated: input.lastProjectCreated,
+            lastTaskEdited: input.lastTaskEdited,
+        },
+        });
 
-  
-
+        return userLog;
+    }),
     
   deleteUser: publicProcedure
     .input(z.object({ userId: z.string() }))

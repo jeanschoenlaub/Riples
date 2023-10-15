@@ -14,3 +14,15 @@ export type EditProjectAdminPayload = {
     projectPrivacy: string;
     projectType: string;
 };
+
+export type ApproveUserPayload = {
+    projectId: string;
+    userId: string;
+  };
+  export type RefuseUserPayload = {
+    projectId: string;
+    userId: string;
+};
+export type DeleteProjectPayload = {
+    projectId: string;
+};

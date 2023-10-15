@@ -1,6 +1,6 @@
 import { api, type RouterOutputs } from '~/utils/api';
 import { RipleCard } from '../cards/riplecard';
-import { handleZodError } from '~/utils/error-handling';
+import { handleMutationError } from '~/utils/error-handling';
 import toast from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
@@ -112,14 +112,12 @@ export const UseRiplesMutations  = () => {
     });
     
     const deleteRiple = (payload: DeleteRiplePayload) => {
-        return new Promise<void>((resolve) => {
+        return new Promise<void>((resolve, reject) => {
         deleteRipleMutation(payload, {
             onSuccess: () => { resolve(); },
             onError: (e) => {
-                const fieldErrors = e.data?.zodError?.fieldErrors;
-                const message = handleZodError(fieldErrors);
-                toast.error(message);
-            },
+                handleMutationError(e, reject);
+              }        
         });
         });
     };
