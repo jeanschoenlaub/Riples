@@ -259,7 +259,7 @@ model UserLog {
 
 model Notification {
   id          Int      @id @default(autoincrement())
-  userId      String      @map("user_id")
+  userId      String   @map("user_id")
   content     String
   link        String?  // Where the user should be directed when they click the notification
   read        Boolean  @default(false)
