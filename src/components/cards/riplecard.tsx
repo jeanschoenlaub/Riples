@@ -9,7 +9,7 @@ import { api, type RouterOutputs } from "~/utils/api";
 import Follow from "../reusables/follow";
 import { TrashSVG } from "../reusables/svgstroke";
 import { RipleCardFooter } from "./riplecardfooter";
-import { AddlikePayload, useRipleInteractionsMutation } from "./riplecardapi";
+import { type AddlikePayload, useRipleInteractionsMutation } from "./riplecardapi";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { NavBarSignInModal } from "../navbar/signinmodal";
@@ -52,18 +52,30 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
         }
     }, []);
     // Handlers for liking and unliking
-    const handleLike = async () => {
-        if (!session) {
-            toast.error("You must be signed in to create a project")
-            setShowSignInModal(true); // Show sign-in modal if the user is not logged in
-            return;
+
+const handleLike = () => {
+    if (!session) {
+        toast.error("You must be signed in to create a project");
+        setShowSignInModal(true); // Show sign-in modal if the user is not logged in
+        return;
+    }
+
+    const performLikeOperation = async () => {
+        try {
+            if (hasLiked) {
+                await removeLikeFromRiple(riple.id);
+            } else {
+                await addLikeToRiple(generateLikePayload());
             }
-        if (hasLiked) {
-            await removeLikeFromRiple(riple.id);
-        } else {
-            await addLikeToRiple(generateLikePayload());
+        } catch (error) {
+            console.error("Error while handling like operation:", error);
+            // Handle the error appropriately, maybe show a toast to the user?
         }
     };
+
+    // Call the async function
+    void performLikeOperation();
+};
 
     const generateLikePayload = (): AddlikePayload => ({
         ripleAuthorID: riple.authorID ?? "",
