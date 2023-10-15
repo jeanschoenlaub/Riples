@@ -8,6 +8,7 @@ import { taskRouter } from "~/server/api/routers/tasks";
 import { userRouter } from "./routers/user";
 import { openAiRouter } from "./routers/openai"
 import { goalRouter } from "./routers/goals";import { userOnboardingRouter } from "./routers/useronboarding";
+import { notificationRouter } from "./routers/notification";
 ;
 
 /**
@@ -32,6 +33,7 @@ export const appRouter = createTRPCRouter({
   users : userRouter,
   userOnboarding: userOnboardingRouter,
   goals: goalRouter,
+  notification: notificationRouter,
 });
 
 // export type definition of API

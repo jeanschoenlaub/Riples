@@ -6,7 +6,10 @@ export type ProjectCreateData = RouterOutputs["projects"]["create"]
 export  interface ProjectMemberMutationPayload {
     userId: string;
     projectId: string;
-};
+    projectTitle: string;
+    username: string;
+    projectLeadId: string;
+}
   
 export interface ProjectAboutInfoProps {
     project: ProjectData;
@@ -15,6 +18,7 @@ export interface ProjectAboutInfoProps {
     isProjectLead: boolean;
     projectTags: string[];
     userId: string | undefined;
+    username: string | undefined;
   }
   
 export type EditProjectPayload = {

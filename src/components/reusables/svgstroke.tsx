@@ -134,3 +134,41 @@ export const GoalSVG = ({ width = "6", height = "6", marginRight = "0", marginLe
         </svg>
     );
 };
+
+export const MenuSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill={colorStrokeHex}
+            viewBox="0 0 22 20"
+        >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="2"
+                strokeLinejoin="round"
+                d="M1 1h15M1 7h15M1 13h15"/>
+        </svg>
+    );
+};
+
+export const BellSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill={colorStrokeHex}
+            viewBox="0 0 16 20"
+        >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="2"
+                strokeLinejoin="round"
+                d="M8 3.464V1.1m0 2.365a5.338 5.338 0 0 1 5.133 5.368v1.8c0 2.386 1.867 2.982 1.867 4.175C15 15.4 15 16 14.462 16H1.538C1 16 1 15.4 1 14.807c0-1.193 1.867-1.789 1.867-4.175v-1.8A5.338 5.338 0 0 1 8 3.464ZM4.54 16a3.48 3.48 0 0 0 6.92 0H4.54Z"/>
+            </svg>
+    );
+};

@@ -191,6 +191,8 @@ model User {
   ownedProjects       Project[] @relation("ProjectOwner")
   userOnboarding      UserOnboarding? 
   logs                UserLog[]
+  notifications       Notification[]
+
 }
 
 
@@ -254,3 +256,16 @@ model UserLog {
 
   @@unique([userId, date])
 }
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  userId      String   @map("user_id")
+  content     String
+  link        String?  // Where the user should be directed when they click the notification
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id])
+}
+

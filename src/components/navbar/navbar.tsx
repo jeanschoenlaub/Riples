@@ -1,16 +1,13 @@
-import { useSession, signOut } from "next-auth/react"
+import { useSession} from "next-auth/react"
 import Image from 'next/image';
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { NavBarSignInModal } from "./signinmodal";
-import { ProfileImage } from '~/components/reusables/profileimage'; // Import ProfileImage component
-import { NavBarUserDeleteModal } from "./userdeletemodal";
-import { api } from "~/utils/api";
-import toast from "react-hot-toast";
-import { handleMutationError} from "~/utils/error-handling";
+import { useState } from "react";
 import ToggleSwitch from "../reusables/toogleswitch";
-import router from "next/router";
 import { SideNavProject } from "./sidenavproject";
+import { MenuSVG } from "../reusables/svgstroke";
+import { UserMenu } from "./usermenu";
+import { NotificationMenu } from "./notificationmenu";
+import { NavBarSignInModal } from "./signinmodal";
 
 interface GlobalNavBarProps {
   activeTab?: string;
@@ -20,61 +17,8 @@ interface GlobalNavBarProps {
 
 export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActiveTab, ToogleinBetween }) => {
   const { data: session } = useSession();
-  const [showSignInModal, setShowSignInModal] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSideNav, setShowSideNav] = useState(false);
-  const dropdownRef = useRef<null | HTMLDivElement>(null);
-  const { deleteUser, isDeleting } = UseUserMutations();
-
-  const redirectUserPage = (option: string) => {
-    router.push(`/users/${session?.user.id}/?activeTab=${option}`).catch(err => {
-        // Handle any errors that might occur during the navigation
-        console.error('Failed to redirect:', err);
-    });
-  };
-
-  const handleDeleteUserMutation = () => {
-      if (!session?.user?.id) {
-        toast.error("User ID not found in session");
-        return;
-      }
-      deleteUser({ userId: session.user.id}).then(() => {
-          toast.success('User Deleted Successfully');
-          setShowDeleteModal(false);
-      })
-      .catch(() => {
-          toast.error('Error deleting User');
-          setShowDeleteModal(false);
-      });
-  };
-  
-
-  // User Drop Down Event 
-  const onClickOutside = (event: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-      setShowDropdown(false);
-    }
-  };
-
-  const toggleUserDropdown = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (showDropdown) {
-      window.removeEventListener('click', onClickOutside);
-    } else {
-      // Delay adding the event listener to allow for the current event to complete
-      setTimeout(() => {
-        window.addEventListener('click', onClickOutside);
-      }, 0);
-    }
-    setShowDropdown(!showDropdown);
-  };
-
-  useEffect(() => {
-    return () => {
-      window.removeEventListener('click', onClickOutside);
-    };
-  }, []);
+  const [showSignInModal, setShowSignInModal] = useState(false);
 
   return ( 
     <div id="global-nav-container" className="flex justify-center w-full h-15">
@@ -100,9 +44,7 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
       <div id="global-nav-left-small screen" className="flex md:hidden w-1/5 gap-3 justify-center items-center p-2 border border-slate-700">
        {/* Show on small screens */}
       <button onClick={() => setShowSideNav(!showSideNav)} className="px-2 py-2 rounded-lg bg-blue-500">
-        <svg className="w-4 h-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15"/>
-      </svg>
+        <MenuSVG width="4" height="4"></MenuSVG>
       </button>
       </div>
 
@@ -115,24 +57,11 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
         }
       </div>
           <div id="global-nav-right" className="flex w-1/5 md:w-1/4 gap-3 items-center justify-center p-2 border border-slate-700">
-          <div className="flex items-center">
+          <div className="flex">
             {session && (
-              <div className="relative">
-                <div id="userdropdown"
-                  onClick={toggleUserDropdown} 
-                  style={{ cursor: 'pointer' }} // Make the mouse change to a pointer when hovering
-                >
-                  <ProfileImage  username={session.user.username ?? ""} email={session.user.email ?? ""} image={session.user.image ?? "" } name={session.user.name ?? ""}  size={32} />
-                </div>
-                {showDropdown && (
-                  <div ref={dropdownRef}  className="absolute right-0 md:right-auto md:left-0 mt-2 w-40 rounded-md shadow-lg z-30 bg-slate-50">
-                    {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => signOut()}>Sign Out</button>
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectUserPage("about")}>Your Profile</button>
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectUserPage("project")}>Your Portofolio</button>
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowDeleteModal(true)}>Delete Account</button>
-                  </div>
-                )}
+              <div className="flex space-x-2 flex-row items-center">
+                  <NotificationMenu></NotificationMenu>
+                  <UserMenu></UserMenu>
               </div>
             )}
             {!session && (
@@ -140,9 +69,6 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
                 <button className="bg-blue-500 text-white rounded py-1 px-2 md:px-4 text-center text-sm md:text-lg" onClick={() => setShowSignInModal(true)}>Sign In</button>
               </div>
             )}
-            <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
-            <NavBarUserDeleteModal showDeleteModal={showDeleteModal} isLoading={isDeleting} onClose={() => setShowDeleteModal(false)} onDelete={handleDeleteUserMutation}  />
-
             <div className={`fixed top-0 left-0 h-full text-red-600 hover:text-red-800 text-xl transition-transform transform ${showSideNav ? 'translate-x-0' : '-translate-x-full'} w-3/4 bg-white shadow-md z-50 md:hidden flex flex-col`}>
               <div className="flex justify-end p-4">
                   <button onClick={() => setShowSideNav(false)}>&times;</button>
@@ -153,43 +79,8 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
               </div>
           </div>
         </div>
+        <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
       </div>
   </div>
   )
 } 
-
-type DeleteUserPayload = {
-  userId: string;
-}
-
-export const UseUserMutations  = () => {
-  const apiContext = api.useContext();
-  const handleSuccess = async () => {
-      await apiContext.users.getUserByUserId.invalidate();
-  };
-
-  // Delete User Mutation
-  const { mutate: deleteUserMutation, isLoading: isDeleting } = api.users.deleteUser.useMutation({
-      onSuccess: handleSuccess,
-  });
-
-  const deleteUser = (payload: DeleteUserPayload): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        deleteUserMutation(payload, {
-            onSuccess: () => { 
-                void signOut();
-                void router.push("/")
-                resolve(); 
-            },
-            onError: (e) => {
-              handleMutationError(e, reject);
-            }
-        });
-    });
-};
-
-return {
-  isDeleting,
-  deleteUser,
-};
-}
