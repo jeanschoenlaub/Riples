@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { api } from "~/utils/api";
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
 
 //From https://trpc.io/docs/client/nextjs/server-side-helpers
@@ -23,6 +23,7 @@ import Follow from "~/components/reusables/follow";
 import { AdminTab } from "~/components/project-page/admin/admin";
 import Tooltip from "~/components/reusables/tooltip";
 import { RiplesTab } from "~/components/project-page/riples";
+import { useRouter } from "next/router";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -69,7 +70,22 @@ export default function Project(
   const { data: ripleData, isLoading: ripleLoading } = api.riples.getRiplebyProjectId.useQuery({ projectId });
   const { data: projectMemberData, isLoading:projectMemberLoading} = api.projectMembers.getMembersByProjectId.useQuery({ projectId });
 
-  const [activeTab, setActiveTab] = useState('about'); // default active tab is 'riples for project pages'
+  //Allows the setting of which tab is active via the query parameter
+  const router = useRouter();
+  const initialTab: string = (Array.isArray(router.query.activeTab) 
+  ? router.query.activeTab[0] 
+  : router.query.activeTab) || 'about';
+  const [activeTab, setActiveTab] = useState<string>(initialTab);
+  // This useEffect will react to changes in the router.query object
+  useEffect(() => {
+    const newTab = (Array.isArray(router.query.activeTab) 
+      ? router.query.activeTab[0] 
+      : router.query.activeTab) || 'about';
+    
+    if (newTab !== activeTab) {
+      setActiveTab(newTab);
+    }
+  }, [router.query]);
 
   const isLoading = (ripleLoading || projectLoading || projectMemberLoading || sessionStatus=="loading")
   if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)

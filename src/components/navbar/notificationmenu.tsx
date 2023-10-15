@@ -15,12 +15,14 @@ export const NotificationMenu = () => {
   const dropdownRef = useRef<null | HTMLDivElement>(null);
 
   const redirectNotification = (url: string | null) => {
+    toggleNotifDropdown();
     if (url != null)
         router.push(url).catch(err => {
             // Handle any errors that might occur during the navigation
             console.error('Failed to redirect:', err);
         });
     };
+
 
   // User Drop Down Event 
   const onClickOutside = (event: MouseEvent) => {
@@ -30,8 +32,10 @@ export const NotificationMenu = () => {
   };
   const { readAllNotifications } = UseNotificationsMutations();
 
-  const toggleNotifDropdown = (e: React.MouseEvent) => {
-      e.stopPropagation();
+  const toggleNotifDropdown = (e?: React.MouseEvent) => {
+      if (e){
+        e.stopPropagation();
+      }
       if (!showDropdown && session) { // If dropdown is currently closed and there's a session
           readAllNotifications(session.user.id).catch(err => {
               console.error('Failed to set notifications to read:', err);
