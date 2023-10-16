@@ -72,7 +72,7 @@ const handleLike = () => {
             // Handle the error appropriately, maybe show a toast to the user?
         }
     };
-
+    console.log(generateLikePayload())
     // Call the async function
     void performLikeOperation();
 };
@@ -155,7 +155,6 @@ const handleLike = () => {
                     <span className="ml-2">{`${dayjs(riple.createdAt).fromNow()}`}</span>
                 </div>
             </div>
-
         </div>
     </div>
 
