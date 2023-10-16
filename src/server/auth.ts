@@ -9,6 +9,7 @@ import { prisma } from "~/server/db";
 import { env } from "~/env.mjs";
 
 import EmailProvider from "next-auth/providers/email";
+import { AdapterUser } from "next-auth/adapters";
 
 /* For the follow functionality
 import nodemailer from 'nodemailer';
@@ -40,6 +41,10 @@ declare module "next-auth" {
   }
 }
 
+interface ExtendedUser extends AdapterUser {
+  username: string;
+}
+
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  *
@@ -52,6 +57,7 @@ export const authOptions: NextAuthOptions = {
       user: {
         ...session.user,
         id: user.id,
+        username: (user as ExtendedUser).username,
       },
     }),
   },
