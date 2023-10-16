@@ -51,10 +51,10 @@ export default async function checkUserActivity(req: NextApiRequest, res: NextAp
             userId,
             date: new Date(),
             lastLogin: lastLogin!,
-            lastProjectCreated: recentProject?.createdAt || null,
-            lastTaskEdited: recentTaskUpdate?.editedAt || null,
-            lastLikedEntry: recentLikedEntry?.createdAt || null,
-            lastRiple: recentRipleShared?.createdAt || null
+            lastProjectCreated: recentProject?.createdAt ?? null,
+            lastTaskEdited: recentTaskUpdate?.editedAt ?? null,
+            lastLikedEntry: recentLikedEntry?.createdAt ?? null,
+            lastRiple: recentRipleShared?.createdAt ?? null
         };
         await caller.users.createUserLog(createUserLogInput);
     }
