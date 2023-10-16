@@ -65,6 +65,7 @@ export default function UserPage(
       const tabFromQuery = Array.isArray(router.query.activeTab)
         ? router.query.activeTab[0]
         : router.query.activeTab;
+      console.log(user)
 
       setActiveTab(tabFromQuery ?? "about");
     }, [router.query]);
@@ -135,7 +136,7 @@ export default function UserPage(
                            <UserStats  user={{
                                   id: user.user.id,
                                   createdAt: user.user.createdAt,
-                                  onBoardingFinished: user.user.onBoardingFinished
+                                  onBoardingFinished: user.user.userOnboarding?.onBoardingFinished,
                                 }}></UserStats>
                       </>
                   )}

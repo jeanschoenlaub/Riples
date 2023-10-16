@@ -62,7 +62,7 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
                 </div>
             </div>
             }
-            {showWizard && (wizardName == "")  && (!shouldExecuteQuery || userQuery.data?.user?.onBoardingFinished === false) &&
+            {showWizard && (wizardName == "")  && (!shouldExecuteQuery || userQuery.data?.user?.userOnboarding?.onBoardingFinished === false) &&
                 <div id="wizardonboarding" className={`${styles.floatingWindow}`}>
                     {/* If no logged in users or the logged in user hasn't finished the tutorial, show onboarding Mister Watt */}
                     <WizardOnboarding />
@@ -76,7 +76,7 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
                     <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
             }
-            {showWizard && (userQuery.data?.user?.onBoardingFinished === true) && 
+            {showWizard && (userQuery.data?.user?.userOnboarding?.onBoardingFinished === true) && 
                 <div id="wizardreal" className={styles.floatingWindow}>
                     {/* If  finished the tutorial, show real Mister Watt */}
                 </div>
