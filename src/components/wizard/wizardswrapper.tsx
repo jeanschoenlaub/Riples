@@ -6,6 +6,7 @@ import styles from '~/styles/WizardWrapper.module.css'; // you can adjust the pa
 import { api } from '~/utils/api';
 import { WizardTask } from './wizardtask/wizardtask';
 import Image from 'next/image';
+import { WizardProject } from './wizardproject/wizardproject';
 
 type WizardContextType = {
     showWizard: boolean;
@@ -65,6 +66,13 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
                 <div id="wizardonboarding" className={`${styles.floatingWindow}`}>
                     {/* If no logged in users or the logged in user hasn't finished the tutorial, show onboarding Mister Watt */}
                     <WizardOnboarding />
+                    <button onClick={() => setShowWizard(false)}>Close</button>
+                </div>
+            }
+            {showWizard && (wizardName == "project") &&
+                <div id="wizardonboarding" className={`${styles.floatingWindow}`}>
+                    {/* If no logged in users or the logged in user hasn't finished the tutorial, show onboarding Mister Watt */}
+                    <WizardProject />
                     <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
             }

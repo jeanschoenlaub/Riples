@@ -24,6 +24,7 @@ import { AdminTab } from "~/components/project-page/admin/admin";
 import Tooltip from "~/components/reusables/tooltip";
 import { RiplesTab } from "~/components/project-page/riples";
 import { useRouter } from "next/router";
+import { WizardContext, useWizard } from "~/components/wizard/wizardswrapper";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -86,6 +87,17 @@ export default function Project(
       setActiveTab(newTab);
     }
   }, [router.query]);
+
+  //Then we set the wizard to 
+  const wizardContext = useWizard();
+  useEffect(() => {
+    wizardContext.setWizardName("project")
+    wizardContext.setShowWizard(true)
+    return () => {
+      wizardContext.setWizardName("")
+    };
+  }, [wizardContext.setWizardName]);
+ 
 
   const isLoading = (ripleLoading || projectLoading || projectMemberLoading || sessionStatus=="loading")
   if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)

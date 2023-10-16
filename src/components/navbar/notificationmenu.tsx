@@ -75,14 +75,13 @@ export const NotificationMenu = () => {
                     <div 
                         className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
                     >
-                        {/* You'll need to compute this value based on your data */}
                         {unreadNotificationCount}
                     </div>
                     )}
                 </div>
                 
                 {showDropdown && (
-                    <div ref={dropdownRef} className="absolute mt-0 w-96 -right-40 border border-slate-300 z-30 rounded-md shadow-lg">
+                    <div ref={dropdownRef} className="absolute mt-0 w-96 -right-40 border border-slate-300 z-30 rounded-md shadow-lg overflow-y-auto" style={{maxHeight: 'calc(100vh - 100px)'}}>
                         {notificationData?.map(notification => (
                             <div 
                                 key={notification.id} 

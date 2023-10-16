@@ -75,7 +75,6 @@ export const CreateFeed = () => {
         <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
       </div>
 
-      
     </div>
   )
 }
