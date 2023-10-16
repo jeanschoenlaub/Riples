@@ -13,7 +13,9 @@ export default async function checkUserActivity(req: NextApiRequest, res: NextAp
     prisma
   });
 
-  if (req.method !== 'POST') {
+  console.log("triggered cron job")
+
+  if (req.method !== 'GET') {
     return res.status(405).end();
   }
 
@@ -57,6 +59,7 @@ export default async function checkUserActivity(req: NextApiRequest, res: NextAp
       const logResult = await caller.users.createUserLog(createUserLogInput);
     }
     res.status(200).json({ message: 'User activity check completed.' });
+    console.log("User activity check completed.")
   } catch (cause) {
     if (cause instanceof TRPCError) {
         const httpStatusCode = getHTTPStatusCodeFromError(cause);
