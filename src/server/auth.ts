@@ -1,15 +1,11 @@
 import { type GetServerSidePropsContext } from "next";
-import {
-  getServerSession,
-  type NextAuthOptions,
-  type DefaultSession,
-} from "next-auth";
+import { getServerSession, type NextAuthOptions, type DefaultSession } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "~/server/db";
 import { env } from "~/env.mjs";
 
 import EmailProvider from "next-auth/providers/email";
-import { AdapterUser } from "next-auth/adapters";
+import type { AdapterUser } from "next-auth/adapters";
 
 /* For the follow functionality
 import nodemailer from 'nodemailer';

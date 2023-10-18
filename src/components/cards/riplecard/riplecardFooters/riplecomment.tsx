@@ -6,7 +6,6 @@ import { TrashSVG } from '~/components/reusables/svgstroke';
 import toast from 'react-hot-toast';
 import { NavBarSignInModal } from '~/components/navbar/signinmodal';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ProfileImage } from '~/components/reusables/profileimage';
 
 interface RipleCommentProps {
@@ -27,7 +26,7 @@ interface RipleCommentProps {
 
 export const RipleCommentListAndForm: React.FC<RipleCommentProps> = ({ comments, onCommentSubmit, isAddingComment }) => {
     const [commentContent, setCommentContent] = useState('');
-    const { data: session, status: sessionStatus } = useSession()
+    const { data: session } = useSession()
     const [showSignInModal, setShowSignInModal] = useState(false); // If click on folllow when not signed in we redirect
 
     const {removeCommentFromRiple, isRemovingComment} = useRipleInteractionsMutation();

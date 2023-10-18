@@ -1,7 +1,7 @@
 // CreateRipleModal.tsx
 import React, { useState } from 'react';
 import { Modal } from '~/components/reusables/modaltemplate';
-import { CreateRipleModalProps, CreateRiplePayload } from './createripletypes';
+import type { CreateRipleModalProps, CreateRiplePayload } from './createripletypes';
 import toast from 'react-hot-toast';
 import { useRipleMutation } from './createripleapi';
 import { LoadingSpinner } from '~/components/reusables/loading';
@@ -37,7 +37,7 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
         content: ripleContent,
     });
 
-    const { data: followers, isLoading: isLoadingFollowers, isError } = api.projectFollowers.getFollowersByProjectId.useQuery({ projectId: projectId });
+    const { data: followers } = api.projectFollowers.getFollowersByProjectId.useQuery({ projectId: projectId });
     const { isCreating, createRiple } = useRipleMutation(followers);
   
 

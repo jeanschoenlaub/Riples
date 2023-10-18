@@ -23,8 +23,6 @@ export const RiplesTab: React.FC<RipleTabProps> = ({ ripleData, projectId, proje
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [ripleToDelete, setRipleToDelete] = useState<string | null>(null);
     const [showCreateRipleModal, setShowCreateRipleModal] = useState(false);
-    const [ripleContent, setRipleContent] = useState('');  // State to capture the riple content
-
 
     const handleDeleteClick = (ripleId: string) => {
         setRipleToDelete(ripleId);

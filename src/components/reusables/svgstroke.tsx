@@ -173,4 +173,23 @@ export const BellSVG = ({ width = "6", height = "6", marginRight = "0", marginLe
     );
 };
 
+export const ShareSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill={colorStrokeHex}
+            viewBox="0 0 16 20"
+        >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="2"
+                strokeLinejoin="round"
+                d="M1.248 15C.22 11.77 2.275 4.232 9.466 4.232V2.079a1.025 1.025 0 0 1 1.644-.862l5.479 4.307a1.108 1.108 0 0 1 0 1.723l-5.48 4.307a1.026 1.026 0 0 1-1.643-.861V8.539C2.275 9.616 1.248 15 1.248 15Z"/>
+            </svg>
+    );
+};
+
 

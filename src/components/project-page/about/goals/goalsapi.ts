@@ -71,6 +71,7 @@ export const useProjectGoalMutation = () => {
         return new Promise<void>((resolve, reject) => {
             finishProjectGoalMutation(payload, {
                 onSuccess: () => { 
+                    triggerOnboardingWatch();
                     resolve(); 
                 },
                 onError: (e) => {

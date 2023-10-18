@@ -14,7 +14,7 @@ import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { NavBarSignInModal } from "../../navbar/signinmodal";
 import { RipleCommentListAndForm } from "./riplecardFooters/riplecomment";
-import { AddCommentPayload, AddlikePayload } from "./riplecardtypes";
+import type { AddCommentPayload, AddlikePayload } from "./riplecardtypes";
 
 type RipleWithUser = RouterOutputs["riples"]["getAll"][number]&{
     onDelete?: (rippleId: string) => void;
@@ -32,7 +32,7 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
     const rawHTML = riple.content;
 
     let cleanHTML = rawHTML; // Default to rawHTML
-    const { data: session, status: sessionStatus } = useSession()
+    const { data: session } = useSession()
 
     // Run DOMPurify only on the client side
     if (typeof window !== 'undefined') {
@@ -128,9 +128,7 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
     const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user ID exist
     const userId = session?.user?.id ?? ''; //will never be empty 
 
-    const { addLikeToRiple,removeLikeFromRiple, isAddingLike, isRemovingLike,
-          addCommentToRiple, removeCommentFromRiple, isAddingComment, isRemovingComment
-    } = useRipleInteractionsMutation();
+    const { addLikeToRiple,removeLikeFromRiple, isAddingLike, isRemovingLike, addCommentToRiple, isAddingComment} = useRipleInteractionsMutation();
 
     const { data: likeData, isLoading: isLoadingLikeCount  } = api.like.getLikeCount.useQuery({ ripleId: riple.id });
     const { data: hasLiked } = api.like.hasLiked.useQuery(
@@ -145,14 +143,14 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
     const transformComments = (rawComments: CommentWithUser[]) => {
         return rawComments.map(comment => ({
             id: comment.id,
-            authorUsername: comment.author?.username || 'Unknown',  // if username is not available, fallback to 'Unknown'
+            authorUsername: comment.author?.username ?? 'Unknown',  // if username is not available, fallback to 'Unknown'
             content: comment.content,
             createdAt: comment.createdAt,
             ripleId: comment.ripleId,
             authorID: comment.authorID,
-            authorImage: comment.author?.image || "",
-            authorName: comment.author?.name || "",
-            authorEmail: comment.author?.email || "",
+            authorImage: comment.author?.image ?? "",
+            authorName: comment.author?.name ?? "",
+            authorEmail: comment.author?.email ?? "",
         }));
     };
    
@@ -251,9 +249,9 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
                 </div>
             )}
         </div>
-        <hr></hr>
+
         {/* Post Footer */}
-        <div className="flex flex-col justify-between h-full">
+        <div className="flex flex-col  justify-between h-full  rounded-lg border px-4 py-1 border-slate-300 ">
             <RipleCardFooter 
                 likesCount={likeData ?? 0}
                 hasLiked={hasLiked ?? false}
