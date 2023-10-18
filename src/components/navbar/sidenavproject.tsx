@@ -8,7 +8,6 @@ interface SideNavProjectProps {
   onClose?: () => void; // `onClose` is an optional prop, which if provided, should be a function returning void.
 }
 
-
 export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
     const [SideBarToggle, setSideBarToggle] = useState('Doing');
     const { data: session } = useSession(); 
@@ -25,12 +24,15 @@ export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
       { userId: userId },
       { enabled: shouldExecuteQuery }
     )
-    const { data: projectMember, isLoading: projectMemberLoading } = api.projectMembers.getProjectsByMemberId.useQuery(
+    const { data: projectMember, isLoading: projectMemberLoading } = api.projectMembers.getProjectsByMemberAcceptedId.useQuery(
       { userId: userId },
       { enabled: shouldExecuteQuery }
     )
 
-    const combinedProjectsForWorking = [...(projectLead ?? []), ...(projectMember ?? [])];
+    const filteredProjectLead = projectLead?.filter(project => project.project.status !== "Done") ?? [];
+    const filteredProjectMember = projectMember?.filter(member => member.project.status !== "Done") ?? [];
+
+    const combinedProjectsForWorking = [...filteredProjectLead, ...filteredProjectMember];
     
     if (!session) {
         return (<div> Log in to see your projects </div>);
@@ -45,10 +47,12 @@ export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
     
 
     return(
-      <div id="project-side-bar-container" className="flex flex-col justify-center items-center gap-y-4 border bg-white border-slate-300 rounded-lg mx-2 md:mx-2 p-4 mt-4 mb-4 shadow-md" style={{ backdropFilter: 'blur(10px)' }}> 
+      <div id="project-side-bar-container" className="flex flex-col justify-center items-center gap-y-4 border  overflow-hidden  bg-white border-slate-300 rounded-lg mx-2 md:mx-2 p-4 mb-40 shadow-md" style={{ backdropFilter: 'blur(10px)' }}> 
         {/* Toggle Following / Working */}
         <div id="project-side-bar-container-internal" className="flex flex-col items-center justify-center">
-          <div className="mb-2 text-gray-500 font-semibold"> Quick Project Access </div>
+          <div className="mb-2 text-gray-500 font-semibold"> 
+              Quick Project Access
+           </div>
           <div className="mx-2 w-40 h-auto bg-white rounded-full cursor-pointer relative py-3">
             <div
               className={`absolute top-0 h-full bg-blue-400 bg-opacity-50 flex items-center justify-center rounded-full transition-all duration-300 ease-in-out ${SideBarToggle === "Following" ? "left-0 w-1/2" : "left-1/2 w-1/2"}`}
@@ -70,7 +74,7 @@ export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
         </div>
 
         {/*  List of projects */}
-        <div id="side-bar-project-list" className="flow-root space-y-2 w-full border-t">
+        <div id="side-bar-project-list" className="flow-root space-y w-full border-t">
           <ul role="list" className="divide-y divide-gray-200">
             {SideBarToggle === "Following" 
             ? projectFollowed?.map((fullProject) => (

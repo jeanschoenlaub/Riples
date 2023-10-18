@@ -7,7 +7,7 @@ type UserStatsProps = {
     user: {
         id: string;
         createdAt: Date;
-        onBoardingFinished: boolean;
+        onBoardingFinished: boolean | undefined;
     };
 };
 
@@ -34,6 +34,7 @@ export const UserStats: React.FC<UserStatsProps> = ({ user }) => {
                 <label className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32">
                     Achievements:
                 </label>
+                {user.onBoardingFinished}
                 <div className=" p-2">
                     {/* Onboarding Complete Achievement */}
                     <Tooltip content={user.onBoardingFinished ? "Onboarding Complete!" : "Complete onboarding to unlock this achievement!"}>

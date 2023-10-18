@@ -17,8 +17,12 @@ export const userRouter = createTRPCRouter({
           username: true,
           createdAt: true,
           description: true,
-          onBoardingFinished: true,
-          productTourFinished: true,
+          userOnboarding: {
+            select: {
+              onBoardingFinished: true,
+              productTourFinished: true
+            }
+          },
           tags: {
             select: {
               tag: true  // Select the tag field inside the UserInterestTags model
@@ -38,6 +42,8 @@ export const userRouter = createTRPCRouter({
         interestTags: interestTags,
         tags: undefined
       };
+
+      console.log(user)
 
       return {
         user,

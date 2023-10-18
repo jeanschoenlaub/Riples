@@ -44,6 +44,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   // For the project Build page 
   const [tasks, setTasks] = useState<string[]>(new Array(3).fill(''));// We want to upate this from wizard context but not change exisitng logic
   const [postToFeed, setPostToFeed] = useState(false);
+  const [creatingProject, setCreatingProject] = useState(false);
   const [postContent, setPostContent] = useState('');
 
   const handleTasksChange = (updatedTasks: string[]) => {
@@ -123,22 +124,23 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
   });
 
   const handleCreateProject = async  () => {
+    setCreatingProject(true);
     const payload = generateCreatePayload();
     const newProject: NewProjecResponse | undefined = await createProjectAsyncMutation(payload);
     if (newProject) {
       await router.push(`/projects/${newProject.id}`);
     }
-    closeModal()
   };
-
-  const { isCreating, createProjectAsyncMutation} = useProjectMutation({ onSuccess: resetForm });
-  const isLoading = isCreating;
 
   const closeModal = () => {
     wizardContext.setWizardName("");
     wizardContext.setShowWizard(false)
     resetForm();
+    setCreatingProject(false)
   };
+
+  const { isCreating, createProjectAsyncMutation} = useProjectMutation({ onSuccess: closeModal });
+  const isLoading = isCreating || creatingProject;
 
   return (
     <>
@@ -171,6 +173,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
         setPostToFeed= {setPostToFeed}
         postContent={postContent}
         setPostContent={setPostContent}
+        isLoading={isLoading}
         isPrivate={isPrivate}
       />}
       

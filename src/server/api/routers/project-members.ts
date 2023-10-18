@@ -38,13 +38,14 @@ export const projMemberRouter = createTRPCRouter({
       });
     }),
 
-    getProjectsByMemberId: publicProcedure
+    getProjectsByMemberAcceptedId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       // Find the projects by the user ID
       const memberships = await ctx.prisma.projectMembers.findMany({
         where: {
           userID: input.userId,
+          status: "APPROVED"
         },
       });
   

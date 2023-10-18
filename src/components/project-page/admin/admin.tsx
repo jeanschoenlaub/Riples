@@ -19,16 +19,24 @@ export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectL
   const toggleEditMode = () => {
       setIsEditMode(!isEditMode);
   }
+  
   const handleDeleteProject = async () => {
-      await router.push('/');
-      deleteProject(generateDeleteProjectPayload()).then(() => {
-          setShowDeleteModal(false);
-          toast.success("Project Deleted successfully");
-        })
-        .catch(() => {
-            toast.error("Failed to delete the project");
-        });
-  }
+    try {
+        // Attempt to delete the project first
+        await deleteProject(generateDeleteProjectPayload());
+        
+        // Only if successful, navigate away
+        await router.push('/');
+        
+        // Show success notification and hide the delete modal
+        setShowDeleteModal(false);
+        toast.success("Project Deleted successfully");
+    } catch (error) {
+        // Show failure notification if the delete operation fails
+        toast.error("Failed to delete the project");
+    }
+};
+
 
   const handleApprove = (userId: string) => {
     approveUser(generateApproveUserPayload(userId)).then(() => {

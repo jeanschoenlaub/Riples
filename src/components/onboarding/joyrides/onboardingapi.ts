@@ -6,6 +6,7 @@ export const useOnboardingMutation = () => {
     const { mutate: setStepTwoCompletedMutation } = api.userOnboarding.setStepTwoCompleted.useMutation();
     const { mutate: setStepThreeCompletedMutation } = api.userOnboarding.setStepThreeCompleted.useMutation();
     const { mutate: setStepFourCompletedMutation } = api.userOnboarding.setStepFourCompleted.useMutation();
+    const { mutate: setOnaboardingCompletedAchievement } = api.notification.createNotification.useMutation();
 
     const completeProductTour = (payload: { userId: string }) => {
         completeProductTourMutation(payload, {
@@ -47,11 +48,24 @@ export const useOnboardingMutation = () => {
         });
     };
 
+    const sendOnboardingCompletedNotification = (userId: string) => {
+        const notificationContent = "Congratulations! You've completed the onboarding process.";
+
+        // Create a notification for the user
+        setOnaboardingCompletedAchievement({
+            userId: userId,
+            content: notificationContent,
+            link: `/profile/${userId}?activeTab=about` // Pointing user to their achievements page
+        });
+    };
+
     return {
         completeProductTour,
         setStepOneCompleted,
         setStepTwoCompleted,
         setStepThreeCompleted,
         setStepFourCompleted,
+        sendOnboardingCompletedNotification
     }
 }
+

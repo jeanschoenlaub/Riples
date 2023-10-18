@@ -5,6 +5,7 @@ import { useState } from "react";
 import { NavBarSignInModal } from "../navbar/signinmodal";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import ReactPlayer from "react-player";
 
 export const CreateFeed = () => {
   const { data: projectData, isLoading: projectLoading } = api.projects.getAll.useQuery();
@@ -65,8 +66,17 @@ export const CreateFeed = () => {
               </button>
             </a>
         </div>
-      <div className="mt-4 flex justify-center">
-        Create Feed is Coming 
+      <div className="mt-4 ml-2 md:ml-8">
+        Create Feed is Coming (You can toggle between create and social feed at the Top !)
+      </div>
+      <div className="mt-4 ml-2 md:ml-8 font-bold">
+        What is Riples ? Watch this:
+      </div>
+      <div className="flex justify-center p-2 md:p-8">
+            <ReactPlayer
+              url="https://youtu.be/lbyVFgKV3Oc"
+              controls = {true}
+            />
       </div>
 
       {/*  Modals Opening on logic */}
@@ -75,7 +85,6 @@ export const CreateFeed = () => {
         <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
       </div>
 
-      
     </div>
   )
 }

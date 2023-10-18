@@ -24,6 +24,7 @@ import { AdminTab } from "~/components/project-page/admin/admin";
 import Tooltip from "~/components/reusables/tooltip";
 import { RiplesTab } from "~/components/project-page/riples";
 import { useRouter } from "next/router";
+import { WizardContext, useWizard } from "~/components/wizard/wizardswrapper";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -87,6 +88,20 @@ export default function Project(
     }
   }, [router.query]);
 
+
+  //Then, if the user is project lead, we set the wizard to project mode
+  const wizardContext = useWizard();
+  const isProjectLead = session?.user.id === projectData?.project.authorID;
+  useEffect(() => {
+    if (isProjectLead){
+      wizardContext.setWizardName("project")
+      wizardContext.setShowWizard(true)
+    return () => {
+      wizardContext.setWizardName("")
+    };
+  }
+  }, [wizardContext.setWizardName,isProjectLead]);
+
   const isLoading = (ripleLoading || projectLoading || projectMemberLoading || sessionStatus=="loading")
   if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)
   if (!projectData || !ripleData || !projectMemberData ) return (<div> Something went wrong</div>)
@@ -98,11 +113,12 @@ export default function Project(
   const isPending = projectMemberData.some(({ member }) =>
     member.userID ===session?.user.id && (member.status === 'PENDING')
   );
-  const isProjectLead = session?.user.id === projectData.project.authorID;
 
   const displayCollabTab = 
     isProjectLead || isMember ||
     (projectData?.project.projectType === "collab" && projectData?.project.projectPrivacy === "public")
+
+ 
 
   return (
     <>

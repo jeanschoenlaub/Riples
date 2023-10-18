@@ -1,11 +1,12 @@
 import { useSession } from 'next-auth/react';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { WizardOnboarding } from "~/components/wizard/onboardingwizard";
 import styles from '~/styles/WizardWrapper.module.css'; // you can adjust the path based on your folder structure
 import { api } from '~/utils/api';
 import { WizardTask } from './wizardtask/wizardtask';
 import Image from 'next/image';
+import { WizardProject } from './wizardproject/wizardproject';
 
 type WizardContextType = {
     showWizard: boolean;
@@ -61,16 +62,25 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
                 </div>
             </div>
             }
-            {showWizard && (wizardName == "")  && (!shouldExecuteQuery || userQuery.data?.user?.onBoardingFinished === false) &&
+            {showWizard && (wizardName == "")  && (!shouldExecuteQuery || userQuery.data?.user?.userOnboarding?.onBoardingFinished === false) &&
                 <div id="wizardonboarding" className={`${styles.floatingWindow}`}>
                     {/* If no logged in users or the logged in user hasn't finished the tutorial, show onboarding Mister Watt */}
                     <WizardOnboarding />
                     <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
             }
-            {showWizard && (userQuery.data?.user?.onBoardingFinished === true) && 
+            {showWizard && (wizardName == "project") &&
+                <div id="wizardonboarding" className={`${styles.floatingWindow}`}>
+                    {/* If no logged in users or the logged in user hasn't finished the tutorial, show onboarding Mister Watt */}
+                    <WizardProject />
+                    <button onClick={() => setShowWizard(false)}>Close</button>
+                </div>
+            }
+            {showWizard && (wizardName == "") && (userQuery.data?.user?.userOnboarding?.onBoardingFinished === true) && 
                 <div id="wizardreal" className={styles.floatingWindow}>
-                    {/* If  finished the tutorial, show real Mister Watt */}
+                    Congrats on finishing on-boarding. I am still working on implementing more Mister Watt functionalities
+                    <br/>
+                    <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
             }
         </WizardContext.Provider>

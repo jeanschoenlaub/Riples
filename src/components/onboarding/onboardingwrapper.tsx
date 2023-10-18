@@ -207,6 +207,7 @@ export const OnboardingWrapper: React.FC = () => {
   }, [riplesData]);
 
   //Finaished all steps check
+  const { sendOnboardingCompletedNotification } = useOnboardingMutation();
   useEffect(() => {
     // If the previous status was not finished and the current status is finished
     if (prevOnboardingFinished === false && userOnboardingStatus?.onBoardingFinished === true) {
@@ -222,6 +223,7 @@ export const OnboardingWrapper: React.FC = () => {
             ),
             subMessage: "You can find your achievements in your Profile / About page."
         });
+        sendOnboardingCompletedNotification(userId)
     }
     // Update the previous status to the current status for the next effect run
     if (userOnboardingStatus?.onBoardingFinished !== undefined) {
