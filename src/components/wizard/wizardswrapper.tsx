@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { WizardOnboarding } from "~/components/wizard/onboardingwizard";
 import styles from '~/styles/WizardWrapper.module.css'; // you can adjust the path based on your folder structure
@@ -76,9 +76,11 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
                     <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
             }
-            {showWizard && (userQuery.data?.user?.userOnboarding?.onBoardingFinished === true) && 
+            {showWizard && (wizardName == "") && (userQuery.data?.user?.userOnboarding?.onBoardingFinished === true) && 
                 <div id="wizardreal" className={styles.floatingWindow}>
-                    {/* If  finished the tutorial, show real Mister Watt */}
+                    Congrats on finishing on-boarding. I am still working on implementing more Mister Watt functionalities
+                    <br/>
+                    <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
             }
         </WizardContext.Provider>

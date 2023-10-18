@@ -55,7 +55,7 @@ export const useOnboardingMutation = () => {
         setOnaboardingCompletedAchievement({
             userId: userId,
             content: notificationContent,
-            link: `/profile/${userId}?activeTab=achievements` // Pointing user to their achievements page
+            link: `/profile/${userId}?activeTab=about` // Pointing user to their achievements page
         });
     };
 

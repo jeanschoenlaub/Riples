@@ -14,11 +14,11 @@ export const SocialFeed = () => {
     return ( 
       <div>
         <div className="p-4 bg-gray-200 rounded-lg shadow-md mb-5">
-          <div className="flex justify-between">
+          <div className="block md:flex justify-between">
             {/* Filter dropdown */}
             <div className="flex items-center">
               <label htmlFor="filter" className="mr-2 text-gray-600 font-medium">
-                Filter Riples (project updates) by:
+                Filter Riples (project updates):
               </label>
               <Tooltip content="Available soon" shiftLeft={true} width="200px">
                 <select id="filter" disabled className="p-2 bg-white rounded cursor-not-allowed border border-gray-300 shadow-sm">

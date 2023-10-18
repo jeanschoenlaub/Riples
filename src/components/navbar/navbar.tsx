@@ -12,6 +12,8 @@ import { NavBarUserNameModal } from "./usernamemodal";
 import ToggleSwitch from "../reusables/toogleswitch";
 import router from "next/router";
 import { SideNavProject } from "./sidenavproject";
+import { NotificationMenu } from "./notificationmenu";
+import { UserMenu } from "./usermenu";
 
 interface GlobalNavBarProps {
   activeTab?: string;
@@ -128,31 +130,12 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
             (<ToggleSwitch id="navbartoggle" option1="Social" option2="Create" inBetween={ToogleinBetween}></ToggleSwitch>)
         }
       </div>
-  
           <div id="global-nav-right" className="flex w-1/4 gap-3 items-center justify-center p-2 border border-slate-700">
-          <div className="flex items-center">
+          <div className="flex">
             {session && (
-              <div className="relative">
-                <div id="userdropdown"
-                  onClick={toggleUserDropdown} 
-                  style={{ cursor: 'pointer' }} // Make the mouse change to a pointer when hovering
-                >
-                  <ProfileImage
-                  username={session.user.username}
-                  email={session.user.email ?? null}
-                  image={session.user.image}
-                  name={session.user.name ?? null}
-                  size={80} />
-                </div>
-                {showDropdown && (
-                  <div ref={dropdownRef}  className="absolute right-0 md:right-auto md:left-0 mt-2 w-48 rounded-md shadow-lg z-30 bg-slate-50">
-                    {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => signOut()}>Sign Out</button>
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowUserNameModal(true)}>User Settings</button>
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectUserPage()}>Your Portofolio</button>
-                    <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowDeleteModal(true)}>Delete Account</button>
-                  </div>
-                )}
+              <div className="flex space-x-2 flex-row items-center">
+                  <NotificationMenu></NotificationMenu>
+                  <UserMenu></UserMenu>
               </div>
             )}
             {!session && (
@@ -160,19 +143,16 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
                 <button className="bg-blue-500 text-white rounded py-1 px-2 md:px-4 text-center text-sm md:text-lg" onClick={() => setShowSignInModal(true)}>Sign In</button>
               </div>
             )}
-            <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
-            <NavBarUserDeleteModal showDeleteModal={showDeleteModal} isLoading={isDeleting} onClose={() => setShowDeleteModal(false)} onDelete={() => {void handleDeleteUserMutation();}}  />
-            <NavBarUserNameModal showModal={showUserNameModal} onClose={() => setShowUserNameModal(false)} />
             <div className={`fixed top-0 left-0 h-full text-red-600 hover:text-red-800 text-xl transition-transform transform ${showSideNav ? 'translate-x-0' : '-translate-x-full'} w-3/4 bg-white shadow-md z-50 md:hidden flex flex-col`}>
               <div className="flex justify-end p-4">
                   <button onClick={() => setShowSideNav(false)}>&times;</button>
               </div>
-              <div className="text-base text-black">
-                  Your projects:
+              <div className="text-base text-black ">
                   <SideNavProject onClose={() => setShowSideNav(false)}  />
               </div>
           </div>
         </div>
+        <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
       </div>
   </div>
   )

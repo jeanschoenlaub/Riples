@@ -25,6 +25,7 @@ export const WizardOnboarding = () => {
     );
 
     useEffect(() => {
+        console.log(taskStatuses)
         if (userOnboardingStatus) {
             setTaskStatuses(prevStatus => {
                 const updatedStatus = [...prevStatus];

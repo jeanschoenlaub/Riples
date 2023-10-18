@@ -88,16 +88,19 @@ export default function Project(
     }
   }, [router.query]);
 
-  //Then we set the wizard to 
+
+  //Then, if the user is project lead, we set the wizard to project mode
   const wizardContext = useWizard();
+  const isProjectLead = session?.user.id === projectData?.project.authorID;
   useEffect(() => {
-    wizardContext.setWizardName("project")
-    wizardContext.setShowWizard(true)
+    if (isProjectLead){
+      wizardContext.setWizardName("project")
+      wizardContext.setShowWizard(true)
     return () => {
       wizardContext.setWizardName("")
     };
-  }, [wizardContext.setWizardName]);
- 
+  }
+  }, [wizardContext.setWizardName,isProjectLead]);
 
   const isLoading = (ripleLoading || projectLoading || projectMemberLoading || sessionStatus=="loading")
   if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)
@@ -110,11 +113,12 @@ export default function Project(
   const isPending = projectMemberData.some(({ member }) =>
     member.userID ===session?.user.id && (member.status === 'PENDING')
   );
-  const isProjectLead = session?.user.id === projectData.project.authorID;
 
   const displayCollabTab = 
     isProjectLead || isMember ||
     (projectData?.project.projectType === "collab" && projectData?.project.projectPrivacy === "public")
+
+ 
 
   return (
     <>

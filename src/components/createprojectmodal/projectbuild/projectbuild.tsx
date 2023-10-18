@@ -15,6 +15,7 @@ interface ProjectBuildComponentProps {
     postContent: string;
     setPostContent: React.Dispatch<React.SetStateAction<string>>;
     isPrivate: boolean;
+    isLoading: boolean;
 }
   
 const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
@@ -30,7 +31,8 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
     setPostToFeed,
     postContent,
     setPostContent,
-    isPrivate
+    isPrivate,
+    isLoading
 }) => {
     //Quite complexe logic for dynamically resizing textarea on programmatic input of text (via taskWizard)
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -124,20 +126,23 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                                             style={{ overflow: 'hidden', resize: 'none' }}  // hide scrollbar and disable manual resize
                                             className={`flex-grow p-1 rounded border`}
                                             onChange={(e) => handleTaskChange(e, index)}
+                                            disabled={isLoading}
                                         />
                                     ))}
                                 </div>
 
                                 <div className="space-y-2">  
                                     <button 
-                                        onClick={onTaskAdd} 
+                                        onClick={onTaskAdd}
+                                        disabled={isLoading} 
                                         className="p-2 focus:outline-none  text-white rounded transition duration-150">
                                             <svg className="w-4 h-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                                                 <path stroke="#008000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
                                             </svg>
                                     </button>
                                     <button 
-                                        onClick={onTaskDelete} 
+                                        onClick={onTaskDelete}
+                                        disabled={isLoading} 
                                         className="p-2 focus:outline-none text-white rounded transition duration-150">
                                         <svg className="w-4 h-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                                             <path stroke="#FF0000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h16"/>
@@ -165,6 +170,7 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                                         placeholder={`Goal ${index + 1}`}
                                         style={{ overflow: 'hidden', resize: 'none' }}  // hide scrollbar and disable manual resize
                                         className={`flex-grow p-1 rounded border`}
+                                        disabled={isLoading}
                                         onChange={(e) => handleGoalChange(e, index)}
                                     />
                                     ))}
@@ -173,6 +179,7 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                                 <div className="space-y-2">  
                                     <button 
                                         onClick={onGoalAdd} 
+                                        disabled={isLoading}
                                         className="p-2 focus:outline-none  text-white rounded transition duration-150">
                                             <svg className="w-4 h-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                                                 <path stroke="#008000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
@@ -180,6 +187,7 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                                     </button>
                                     <button 
                                         onClick={onGoalDelete} 
+                                        disabled={isLoading}
                                         className="p-2 focus:outline-none text-white rounded transition duration-150">
                                         <svg className="w-4 h-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                                             <path stroke="#FF0000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h16"/>
@@ -196,7 +204,7 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                             id="postToFeed" 
                             className={`form-checkbox h-4 w-4 ${isPrivate ? 'text-gray-400' : 'text-indigo-600'}`}
                             checked={postToFeed}
-                            disabled={isPrivate} // Disable the checkbox if isPrivate is true
+                            disabled={isPrivate || isLoading} // Disable the checkbox if isPrivate is true
                             onChange={(e) => setPostToFeed(e.target.checked)} 
                         />
                         <label htmlFor="postToFeed" className={`ml-2 text-sm ${isPrivate ? 'text-gray-400' : 'text-gray-900'}`}>
@@ -213,7 +221,7 @@ const ProjectBuildComponent: React.FC<ProjectBuildComponentProps> = ({
                             rows={1}
                             placeholder={`This is the cool new project I am working on, I/we will ...`}
                             className={`flex-grow p-1 rounded border`}
-                            disabled={isPrivate} 
+                            disabled={isPrivate || isLoading} 
                             onChange={handleContentChange} 
                         />
                     </div>

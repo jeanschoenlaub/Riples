@@ -223,11 +223,11 @@ export const OnboardingWrapper: React.FC = () => {
             ),
             subMessage: "You can find your achievements in your Profile / About page."
         });
+        sendOnboardingCompletedNotification(userId)
     }
     // Update the previous status to the current status for the next effect run
     if (userOnboardingStatus?.onBoardingFinished !== undefined) {
         setPrevOnboardingFinished(userOnboardingStatus.onBoardingFinished);
-        sendOnboardingCompletedNotification(userId)
     }
 }, [userOnboardingStatus]);
   
