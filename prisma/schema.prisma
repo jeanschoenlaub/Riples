@@ -2,11 +2,19 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  output = "./ERD.png"
+}
+
+
 datasource db {
   provider = "mysql"
   url = env("DATABASE_URL")
   relationMode = "prisma"
 }
+
+
 
 model Project {
   id              String   @id @default(cuid())
@@ -111,9 +119,24 @@ model Riple {
   project   Project @relation(fields: [projectId], references: [id],  onDelete: Cascade)
   authorID  String?  // Making this field nullable
   author    User?    @relation(fields: [authorID], references: [id], onDelete: SetNull)
-  like            Like[]
+  like      Like[]
+  comment   Comment[]
   @@index([projectId])
 }
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  
+  //Relations
+  ripleId   String
+  riple     Riple @relation(fields: [ripleId], references: [id],  onDelete: Cascade)
+  authorID  String?  // Making this field nullable
+  author    User?    @relation(fields: [authorID], references: [id], onDelete: SetNull)
+  @@index([ripleId])
+}
+
 
 model ProjectMembers {
   id           String  @id @default(cuid())
@@ -190,6 +213,7 @@ model User {
   userOnboarding      UserOnboarding? 
   logs                UserLog[]
   notifications       Notification[]
+  comments            Comment[]
   like                Like[]
 }
 

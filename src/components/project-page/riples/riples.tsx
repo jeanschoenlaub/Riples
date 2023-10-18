@@ -1,5 +1,5 @@
 import { api, type RouterOutputs } from '~/utils/api';
-import { RipleCard } from '../../cards/riplecard';
+import { RipleCard } from '../../cards/riplecard/riplecard';
 import { handleMutationError } from '~/utils/error-handling';
 import toast from 'react-hot-toast';
 import { useSession } from 'next-auth/react';

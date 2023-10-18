@@ -1,6 +1,6 @@
 import { api } from "~/utils/api";
 import { LoadingPage } from "~/components/reusables/loading";
-import { RipleCard } from '../cards/riplecard';
+import { RipleCard } from '../cards/riplecard/riplecard';
 import Tooltip from "../reusables/tooltip";
 
 export const SocialFeed = () => {

@@ -1,19 +1,16 @@
 import { api } from "~/utils/api";
 import { handleMutationError } from "~/utils/error-handling";
-
-export  interface AddlikePayload {
-    ripleId: string;
-    projectId: string;
-    ripleAuthorID: string;
-    ripleTitle: string;
-    username: string;
-}
+import { AddCommentPayload, AddlikePayload } from "./riplecardtypes";
 
 export const useRipleInteractionsMutation = () => {
     const apiContext = api.useContext();
     const handleSuccess = async () => {
         await apiContext.like.getLikeCount.invalidate();
         await apiContext.like.hasLiked.invalidate();
+    };
+    const handleSuccessComment = async () => {
+        await apiContext.comment.getCommentsByRiple.invalidate();
+        await apiContext.comment.getCommentCount.invalidate();
     };
 
     // Add Like to Riple Mutation
@@ -64,10 +61,58 @@ export const useRipleInteractionsMutation = () => {
         });
     };
 
+    // Add Comment to Riple Mutation
+    const { mutate: addCommentMutation, isLoading: isAddingComment } = api.comment.addComment.useMutation({
+        onSuccess: handleSuccessComment,
+    });
+
+    const addCommentToRiple = (payload: AddCommentPayload) => {
+        return new Promise<void>((resolve, reject) => {
+            addCommentMutation(payload, {
+                onSuccess: () => {
+                    // Construct the notification content using the projectTitle and username from the payload.
+                    const notificationContent = `User ${payload.username} commented on your Riple: ${payload.ripleTitle}`;
+
+                    // Create a notification for the user
+                    createNotificationMutation({
+                        userId: payload.ripleAuthorID, 
+                        content: notificationContent,
+                        link: `/projects/${payload.projectId}?activeTab=riples`
+                    });
+
+                    resolve();
+                },
+                onError: (e) => {
+                    handleMutationError(e, reject);
+                }
+            });
+        });
+    };
+
+    // Remove Comment from Riple Mutation
+    const { mutate: removeCommentMutation, isLoading: isRemovingComment } = api.comment.removeComment.useMutation({
+        onSuccess: handleSuccessComment,
+    });
+
+    const removeCommentFromRiple = (commentId: string) => {
+        return new Promise<void>((resolve, reject) => {
+            removeCommentMutation({ commentId }, {
+                onSuccess: () => { resolve(); },
+                onError: (e) => {
+                    handleMutationError(e, reject);
+                }
+            });
+        });
+    };
+
     return {
         isAddingLike,
         isRemovingLike,
+        isAddingComment,
+        isRemovingComment,
+        addCommentToRiple,
+        removeCommentFromRiple,
         addLikeToRiple,
-        removeLikeFromRiple
+        removeLikeFromRiple,
     };
 };

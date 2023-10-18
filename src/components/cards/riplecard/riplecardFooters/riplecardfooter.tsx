@@ -1,13 +1,14 @@
-import { LoadingSpinner } from "../reusables/loading";
-import { LikeSVG } from "../reusables/svg";
+import { LoadingSpinner } from "../../../reusables/loading";
+import { AboutSVG, LikeSVG } from "../../../reusables/svg";
 
 interface RipleCardFooterProps {
     likesCount: number;
     hasLiked: boolean;
     onLike: () => void;
     isChangingLikeState? : boolean;
-    commentsCount?: number;
-    onComment?: () => void;
+    commentsCount: number;
+    showComment: boolean;
+    onComment: () => void;
   }
   
   export const RipleCardFooter: React.FC<RipleCardFooterProps> = ({
@@ -16,6 +17,7 @@ interface RipleCardFooterProps {
     onLike,
     isChangingLikeState,
     commentsCount,
+    showComment,
     onComment
   }) => {
     return (
@@ -36,12 +38,17 @@ interface RipleCardFooterProps {
         </div>
   
         {/* Comment Button and Count (Optional) */}
-        {commentsCount !== undefined && onComment && (
+        {commentsCount !== undefined  && (
           <div className="flex items-center space-x-2">
+            <div className="rounded-full flex items-center border px-4 py-1 border-slate-300 ">
             <button onClick={onComment} className="focus:outline-none text-gray-400">
-              💬
+            {showComment ?
+                <AboutSVG width="6" height="6" marginRight='2' marginTop='1' colorFillHex='#2563eb'></AboutSVG> // Blue color
+                :<AboutSVG width="6" height="6" marginRight='2'  marginTop='1' colorFillHex='#9CA3AF'></AboutSVG>  // Gray color
+            }
             </button>
-            <span>{commentsCount}</span>
+            <span className="">{commentsCount}</span>
+          </div>
           </div>
         )}
       </div>

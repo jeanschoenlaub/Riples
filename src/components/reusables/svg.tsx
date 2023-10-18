@@ -42,10 +42,10 @@ export const RiplesSVG = ({ width = "6", height = "6", marginRight = "0", margin
     );
 };
         
-export const AboutSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorFillHex="currentColor" }) => {
+export const AboutSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", marginTop = "0", className = "", colorFillHex="currentColor" }) => {
     return (
             <svg
-                className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+                className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} mt-${marginTop} ${className}`}
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill={colorFillHex}  // Blue and Gray colors
