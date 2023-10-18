@@ -22,9 +22,9 @@ import { SideNavProject } from "~/components/navbar/sidenavproject";
 import Follow from "~/components/reusables/follow";
 import { AdminTab } from "~/components/project-page/admin/admin";
 import Tooltip from "~/components/reusables/tooltip";
-import { RiplesTab } from "~/components/project-page/riples";
+import { RiplesTab } from "~/components/project-page/riples/riples";
 import { useRouter } from "next/router";
-import { WizardContext, useWizard } from "~/components/wizard/wizardswrapper";
+import { useWizard } from "~/components/wizard/wizardswrapper";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -49,7 +49,7 @@ export async function getServerSideProps(
    * `prefetch` does not return the result and never throws - if you need that behavior, use `fetch` instead.
    */
   await helpers.projects.getProjectByProjectId.prefetch({ projectId });
-  await helpers.riples.getRiplebyProjectId.prefetch({ projectId });
+  await helpers.riples.getRipleByProjectId.prefetch({ projectId });
   await helpers.projectMembers.getMembersByProjectId.prefetch({ projectId });
 
   // Make sure to return { props: { trpcState: helpers.dehydrate() } }
@@ -68,7 +68,7 @@ export default function Project(
   const { data: session, status: sessionStatus } = useSession()
   const userId = session?.user.id;
   const { data: projectData, isLoading: projectLoading } = api.projects.getProjectByProjectId.useQuery({ projectId });
-  const { data: ripleData, isLoading: ripleLoading } = api.riples.getRiplebyProjectId.useQuery({ projectId });
+  const { data: ripleData, isLoading: ripleLoading } = api.riples.getRipleByProjectId.useQuery({ projectId });
   const { data: projectMemberData, isLoading:projectMemberLoading} = api.projectMembers.getMembersByProjectId.useQuery({ projectId });
 
   //Allows the setting of which tab is active via the query parameter
@@ -186,7 +186,7 @@ export default function Project(
 
                 {/* SHOWN IF RIPLES TAB */}
                 {activeTab === 'riples' && (
-                    <RiplesTab ripleData={ripleData} ></RiplesTab>
+                    <RiplesTab ripleData={ripleData} projectId={projectId} projectTitle={projectData.project.title}></RiplesTab>
                 )}
 
 

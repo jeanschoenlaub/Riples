@@ -111,7 +111,7 @@ export const ripleRouter = createTRPCRouter({
         return riple;
     }),
         
-    getRiplebyProjectId: publicProcedure
+    getRipleByProjectId: publicProcedure
     .input(z.object({ projectId: z.string() }))
     .query(async ({ ctx, input }) => {
         const riples = await ctx.prisma.riple.findMany({
