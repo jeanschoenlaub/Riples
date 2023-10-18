@@ -93,7 +93,7 @@ export const useUserStatusMutation = () => {
 
   const deleteProject = (payload: DeleteProjectPayload) => {
       return new Promise<void>((resolve, reject) => {
-          rawDeleteProjectAsyncMutation(payload, {
+          void rawDeleteProjectAsyncMutation(payload, {
               onSuccess: () => { resolve(); },
               onError: (e) => {
                   handleMutationError(e, reject);

@@ -29,8 +29,8 @@ export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
       { enabled: shouldExecuteQuery }
     )
 
-    const filteredProjectLead = projectLead?.filter(project => project.project.status !== "Done") || [];
-    const filteredProjectMember = projectMember?.filter(member => member.project.status !== "Done") || [];
+    const filteredProjectLead = projectLead?.filter(project => project.project.status !== "Done") ?? [];
+    const filteredProjectMember = projectMember?.filter(member => member.project.status !== "Done") ?? [];
 
     const combinedProjectsForWorking = [...filteredProjectLead, ...filteredProjectMember];
     
