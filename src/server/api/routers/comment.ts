@@ -1,4 +1,4 @@
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 export const commentRouter = createTRPCRouter({
@@ -44,7 +44,7 @@ export const commentRouter = createTRPCRouter({
         }),
 
     // Get comments for a riple
-    getCommentsByRiple: protectedProcedure
+    getCommentsByRiple: publicProcedure
         .input(z.object({ ripleId: z.string() }))
         .query(async ({ ctx, input }) => {
             const comments = await ctx.prisma.comment.findMany({
@@ -86,7 +86,7 @@ export const commentRouter = createTRPCRouter({
             return updatedComment;
         }),
          // Get count of likes for a riple
-    getCommentCount: protectedProcedure
+    getCommentCount: publicProcedure
     .input(z.object({ ripleId: z.string() }))
     .query(async ({ ctx, input }) => {
         const commentCount = await ctx.prisma.comment.count({

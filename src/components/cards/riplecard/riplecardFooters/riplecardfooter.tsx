@@ -11,6 +11,7 @@ interface RipleCardFooterProps {
     commentsCount: number;
     showComment: boolean;
     onComment: () => void;
+    onShare: () => void;
   }
   
   export const RipleCardFooter: React.FC<RipleCardFooterProps> = ({
@@ -20,10 +21,9 @@ interface RipleCardFooterProps {
     isChangingLikeState,
     commentsCount,
     showComment,
-    onComment
+    onComment,
+    onShare,
   }) => {
-    const appid = '282137064531724'
-    const deepLinkURL = `instagram-stories://share?backgroundImage=${ base64image}&appid=${appid}`;
 
     return (
       <div className="flex items-center justify-between mt-1 mb-1">
@@ -61,7 +61,7 @@ interface RipleCardFooterProps {
         {commentsCount !== undefined  && (
             <div className="rounded-full flex items-center border px-4 py-1 border-slate-300 ">
                 <button 
-                onClick={() => window.location.href = deepLinkURL}
+                onClick={onShare}
                 className="focus:outline-none text-gray-400 mt-1">
                     <ShareSVG width="6" height="6"></ShareSVG> 
                 </button>

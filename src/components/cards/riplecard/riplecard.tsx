@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
 import DOMPurify from "dompurify";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { api, type RouterOutputs } from "~/utils/api";
@@ -15,6 +15,9 @@ import toast from "react-hot-toast";
 import { NavBarSignInModal } from "../../navbar/signinmodal";
 import { RipleCommentListAndForm } from "./riplecardFooters/riplecomment";
 import type { AddCommentPayload, AddlikePayload } from "./riplecardtypes";
+
+//import { toPng } from 'html-to-image';
+import * as htmlToImage from 'html-to-image';
 
 type RipleWithUser = RouterOutputs["riples"]["getAll"][number]&{
     onDelete?: (rippleId: string) => void;
@@ -153,7 +156,27 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
             authorEmail: comment.author?.email ?? "",
         }));
     };
-   
+
+    const rippleCardRef = useRef<HTMLDivElement>(null);
+
+    const generateImage = () => {
+        if (rippleCardRef.current) {
+            htmlToImage.toPng(rippleCardRef.current)
+                .then(dataUrl => {
+                    const link = document.createElement('a');
+                    link.download = 'ripple_share.png';
+                    link.href = dataUrl;
+                    link.click();
+                })
+                .catch(error => {
+                    console.error("Couldn't generate the image", error);
+                });
+        } else {
+            console.error("Ripple Card Ref is not attached yet");
+        }
+    };
+    
+    
 
     useEffect(() => {
         // Check if we got a response for comments count and update the state
@@ -165,10 +188,11 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
   
     return (
         <div 
+        ref={rippleCardRef}
         id="riple-card" 
         key={riple.id}
-        className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg flex flex-col mx-2 md:mx-5 p-4 mt-4 mb-4 shadow-md`}
         >
+        <div className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg flex flex-col mx-2 md:mx-5 p-4 mt-4 shadow-md`}>
         <div id="riple-card-header" className="flex items-center space-x-3">
         
             {/* Author's Profile Image */}
@@ -260,18 +284,22 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
                 commentsCount={commentsCount} 
                 showComment={showComment}
                 onComment={() => setShowComment(!showComment)}
+                onShare={generateImage} 
             />
         </div>
 
         {showComment && (
+            <div className="mb-20">
             <RipleCommentListAndForm 
                 comments={transformComments(comments ?? [])}  // Add author.username
                 onCommentSubmit={handleCommentAdd} 
                 isAddingComment={isAddingComment}
             />
+            </div>
         )}
 
         <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
+        </div>
         </div>
     );
 }

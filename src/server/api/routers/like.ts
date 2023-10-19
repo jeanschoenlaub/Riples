@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
 
 export const likeRouter = createTRPCRouter({
@@ -68,7 +68,7 @@ export const likeRouter = createTRPCRouter({
         }),
 
     // Get count of likes for a riple
-    getLikeCount: protectedProcedure
+    getLikeCount: publicProcedure
         .input(z.object({ ripleId: z.string() }))
         .query(async ({ ctx, input }) => {
             const likeCount = await ctx.prisma.like.count({
