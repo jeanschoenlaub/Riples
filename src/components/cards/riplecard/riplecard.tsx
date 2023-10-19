@@ -163,10 +163,9 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
         if (rippleCardRef.current) {
             htmlToImage.toPng(rippleCardRef.current)
                 .then(dataUrl => {
-                    const link = document.createElement('a');
-                    link.download = 'ripple_share.png';
-                    link.href = dataUrl;
-                    link.click();
+                    const blob = dataURLtoBlob(dataUrl);
+                    const url = URL.createObjectURL(blob);
+                    window.open(url, '_blank');
                 })
                 .catch(error => {
                     console.error("Couldn't generate the image", error);
@@ -175,6 +174,18 @@ export const RipleCard = ({ riple, author, onDelete }: RipleWithUser ) => {
             console.error("Ripple Card Ref is not attached yet");
         }
     };
+
+    // Helper function to convert dataURL to Blob
+    function dataURLtoBlob(dataurl) {
+        const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], { type: mime });
+    }
     
     
 
