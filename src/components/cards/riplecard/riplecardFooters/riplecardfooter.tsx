@@ -1,6 +1,7 @@
 import { ShareSVG } from "~/components/reusables/svgstroke";
 import { LoadingSpinner } from "../../../reusables/loading";
 import { AboutSVG, LikeSVG } from "../../../reusables/svg";
+import { base64image } from "~/utils/constants/projectclassifications";
 
 interface RipleCardFooterProps {
     likesCount: number;
@@ -21,6 +22,9 @@ interface RipleCardFooterProps {
     showComment,
     onComment
   }) => {
+
+    const deepLinkURL = `instagram-stories://share?backgroundImage=${ base64image}`;
+
     return (
       <div className="flex items-center justify-between mt-1 mb-1">
         
@@ -56,7 +60,9 @@ interface RipleCardFooterProps {
         {/* SHARE SVG */}
         {commentsCount !== undefined  && (
             <div className="rounded-full flex items-center border px-4 py-1 border-slate-300 ">
-                <button className="focus:outline-none text-gray-400 mt-1">
+                <button 
+                onClick={() => window.location.href = deepLinkURL}
+                className="focus:outline-none text-gray-400 mt-1">
                     <ShareSVG width="6" height="6"></ShareSVG> 
                 </button>
             </div>
