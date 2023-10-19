@@ -13,6 +13,7 @@ import type { AddCommentPayload, AddlikePayload } from "./riplecardtypes";
 import * as htmlToImage from 'html-to-image';
 import { Modal } from "~/components/reusables/modaltemplate";
 import { RipleCardHeader } from "./riplecardsections/riplecardheader";
+import { RipleCardBody } from "./riplecardsections/riplecardbody";
 
 type FullRiple = RouterOutputs["riples"]["getAll"][number]&{
     onDelete?: (rippleId: string) => void;
@@ -22,14 +23,14 @@ type CommentWithUser = RouterOutputs["comment"]["getCommentsByRiple"][number]&{
     onDelete?: (rippleId: string) => void;
 }
 export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
-    const [isExpanded, setIsExpanded] = useState(true);
+    
     const [showSignInModal, setShowSignInModal] = useState(false); // If click on folllow when not signed in we redirect
     const [commentsCount, setCommentsCount] = useState<number>(0);
     const [showComment, setShowComment] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
     const [shareImageUrl, setShareImageUrl] = useState("");
 
-
+    const [isExpanded, setIsExpanded] = useState(true);
     const rawHTML = riple.content;
 
     let cleanHTML = rawHTML; // Default to rawHTML
@@ -46,9 +47,6 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
         riple.ripleType === "goalFinished" ? "bg-green-50" :
         "bg-white";
     const cardBorderClass = riple.ripleType == "creation" ? "" : "border border-slate-300";
-
-    // Calculate max height based on whether the content is expanded.
-    const maxHeightClass = isExpanded ? 'max-h-40' : 'max-h-200';
 
 
     // Handlers for liking and unliking
@@ -176,29 +174,7 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
                 <RipleCardHeader riple={riple} author={author} onDelete={onDelete} ></RipleCardHeader>
 
             
-                {/* Post Content and Read More button */}
-                <div className="flex flex-col mb-2 justify-between h-full">
-                    {cleanHTML != "" && (
-                        <div 
-                            id="riple-content" 
-                            className={`text-gray-700 mt-2 overflow-hidden transition-all duration-500 ${maxHeightClass}`}
-                        >
-                            {/* Horizontal Divider */}
-                            <hr className="border-t mb-4 border-slate-200"/>
-
-                            <div dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
-                        </div>
-                    )}
-                
-                    {/* Conditionally render Read More button */}
-                    { showReadMore && (
-                        <div className="text-right">
-                            <button onClick={() => setIsExpanded(!isExpanded)} className="mt-2 bg-gray-300 text-sm flex-shrink-0 w-22 hover:bg-blue-600 hover:text-white font-bold px-2 rounded-full transition duration-300 ease-in-out ">
-                                {isExpanded ? 'See More' : 'See Less'}
-                            </button>
-                        </div>
-                    )}
-                </div>
+                <RipleCardBody ripleContent={riple.content}></RipleCardBody>
 
                 {/* Post Footer */}
                 <div className="flex flex-col  justify-between h-full  rounded-lg border px-4 py-1 border-slate-300 ">
