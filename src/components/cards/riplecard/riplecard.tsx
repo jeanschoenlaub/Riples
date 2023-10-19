@@ -6,7 +6,7 @@ import { useRipleInteractionsMutation } from "./riplecardapi";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { NavBarSignInModal } from "../../navbar/signinmodal";
-import { RipleCommentListAndForm } from "./riplecardsections/riplecomment";
+import { RipleCommentListAndForm } from "./riplecardsections/riplecardcomment";
 import type { AddCommentPayload, AddlikePayload } from "./riplecardtypes";
 
 //import { toPng } from 'html-to-image';
@@ -30,18 +30,11 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
     const [showShareModal, setShowShareModal] = useState(false);
     const [shareImageUrl, setShareImageUrl] = useState("");
 
-    const [isExpanded, setIsExpanded] = useState(true);
-    const rawHTML = riple.content;
-
-    let cleanHTML = rawHTML; // Default to rawHTML
     const { data: session } = useSession()
+    const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user ID exist
+    const userId = session?.user?.id ?? ''; //will never be empty 
 
-    // Run DOMPurify only on the client side
-    if (typeof window !== 'undefined') {
-    cleanHTML = DOMPurify.sanitize(rawHTML,{ALLOWED_ATTR: ['class', 'style', 'img', 'alt', 'src']});
-    }
 
-    const showReadMore = cleanHTML.length > 500; // If the content is longer than 500 characters
     const cardBackgroundColor = 
         riple.ripleType === "creation" ? "bg-orange-50" :
         riple.ripleType === "goalFinished" ? "bg-green-50" :
@@ -113,11 +106,10 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
     };
 
 
-    const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user ID exist
-    const userId = session?.user?.id ?? ''; //will never be empty 
+    
 
+    //All below is used to pass like counts to the riplecardfooter component
     const { addLikeToRiple,removeLikeFromRiple, isAddingLike, isRemovingLike, addCommentToRiple, isAddingComment} = useRipleInteractionsMutation();
-
     const { data: likeData, isLoading: isLoadingLikeCount  } = api.like.getLikeCount.useQuery({ ripleId: riple.id });
     const { data: hasLiked } = api.like.hasLiked.useQuery(
         { ripleId: riple.id, userId: userId },
@@ -125,7 +117,7 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
     );
     const isChangingLikeState = isAddingLike || isRemovingLike || isLoadingLikeCount
 
-
+    //All below is used to pass comments and comment counts to the riplecardcomment component
     const { data: commentsCountData } = api.comment.getCommentCount.useQuery({ ripleId: riple.id });
     const { data: comments } = api.comment.getCommentsByRiple.useQuery({ ripleId: riple.id });
     const transformComments = (rawComments: CommentWithUser[]) => {
@@ -142,8 +134,8 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
         }));
     };
 
+    //All below is used to transform a Riple card to image and put in a modal on the press of share button
     const rippleCardRef = useRef<HTMLDivElement>(null);
-
     const generateImage = () => {
         if (rippleCardRef.current) {
             htmlToImage.toPng(rippleCardRef.current)
