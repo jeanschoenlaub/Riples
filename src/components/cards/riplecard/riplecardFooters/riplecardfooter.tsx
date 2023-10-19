@@ -1,7 +1,6 @@
 import { ShareSVG } from "~/components/reusables/svgstroke";
 import { LoadingSpinner } from "../../../reusables/loading";
 import { AboutSVG, LikeSVG } from "../../../reusables/svg";
-import { base64image } from "~/utils/constants/projectclassifications";
 
 interface RipleCardFooterProps {
     likesCount: number;
