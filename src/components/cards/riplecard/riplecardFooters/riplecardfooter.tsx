@@ -22,8 +22,8 @@ interface RipleCardFooterProps {
     showComment,
     onComment
   }) => {
-
-    const deepLinkURL = `instagram-stories://share?backgroundImage=${ base64image}`;
+    const appid = '282137064531724'
+    const deepLinkURL = `instagram-stories://share?backgroundImage=${ base64image}&appid=${appid}`;
 
     return (
       <div className="flex items-center justify-between mt-1 mb-1">
