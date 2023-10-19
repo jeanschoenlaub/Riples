@@ -3,17 +3,15 @@ import Image from 'next/image';
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { NavBarSignInModal } from "./signinmodal";
-import { ProfileImage } from '~/components/reusables/profileimage'; // Import ProfileImage component
-import { NavBarUserDeleteModal } from "./userdeletemodal";
 import { api } from "~/utils/api";
 import toast from "react-hot-toast";
 import { handleZodError } from "~/utils/error-handling";
-import { NavBarUserNameModal } from "./usernamemodal";
 import ToggleSwitch from "../reusables/toogleswitch";
 import router from "next/router";
 import { SideNavProject } from "./sidenavproject";
 import { NotificationMenu } from "./notificationmenu";
 import { UserMenu } from "./usermenu";
+import { MenuSVG } from "../reusables/svgstroke";
 
 interface GlobalNavBarProps {
   activeTab?: string;
@@ -24,19 +22,10 @@ interface GlobalNavBarProps {
 export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActiveTab, ToogleinBetween }) => {
   const { data: session } = useSession();
   const [showSignInModal, setShowSignInModal] = useState(false);
-  const [showUserNameModal, setShowUserNameModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSideNav, setShowSideNav] = useState(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
-
-  const redirectUserPage = () => {
-    router.push(`/users/${session?.user.id}`).catch(err => {
-        // Handle any errors that might occur during the navigation
-        console.error('Failed to redirect:', err);
-    });
-  };
-
   // Mutation for deleting a user
   const { mutateAsync: deleteUserAsyncMutation, isLoading: isDeleting } = api.users.deleteUser.useMutation({
       onSuccess: () => {
@@ -48,22 +37,6 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
         toast.error(message);
       }
   });
-
-  const handleDeleteUserMutation = async () => {
-      if (!session?.user?.id) {
-          toast.error("User ID not found in session");
-          return;
-      }
-
-      try {
-          await deleteUserAsyncMutation({ userId: session.user.id });
-          await signOut();
-          setShowDeleteModal(false);
-          await router.push('/');
-      } catch (error) {
-          toast.error("Failed to delete user");
-      }
-  };
   
 
   // User Drop Down Event 
@@ -73,18 +46,6 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
     }
   };
 
-  const toggleUserDropdown = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (showDropdown) {
-      window.removeEventListener('click', onClickOutside);
-    } else {
-      // Delay adding the event listener to allow for the current event to complete
-      setTimeout(() => {
-        window.addEventListener('click', onClickOutside);
-      }, 0);
-    }
-    setShowDropdown(!showDropdown);
-  };
 
   useEffect(() => {
     return () => {
@@ -114,12 +75,10 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
         </div>
       </div>
       <div id="global-nav-left-small screen" className="flex md:hidden w-1/4 gap-3 justify-center items-center p-2 border border-slate-700">
-       {/* Show on small screens */}
-      <button onClick={() => setShowSideNav(!showSideNav)} className="px-2 py-2 rounded-lg bg-blue-500">
-        <svg className="w-4 h-4 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15"/>
-      </svg>
-      </button>
+        {/* Show on small screens */}
+        <button onClick={() => setShowSideNav(!showSideNav)} className="px-2 py-2 rounded-lg bg-blue-500">
+         <MenuSVG width="4" height="4"></MenuSVG>
+        </button>
       </div>
 
       {/* MIDDLE NAV */}

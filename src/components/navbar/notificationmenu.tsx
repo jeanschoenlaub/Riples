@@ -7,7 +7,7 @@ import { handleMutationError } from "~/utils/error-handling";
 
 export const NotificationMenu = () => {
   const { data: session } = useSession();
-  const { data: notificationData, isLoading: notificationLoading } = api.notification.getUserNotifications.useQuery({userId: session!.user.id});
+  const { data: notificationData } = api.notification.getUserNotifications.useQuery({userId: session!.user.id});
   
   const unreadNotificationCount = notificationData ? notificationData.filter(notification => !notification.read).length : 0;
 

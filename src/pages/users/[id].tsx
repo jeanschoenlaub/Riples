@@ -65,7 +65,6 @@ export default function UserPage(
       const tabFromQuery = Array.isArray(router.query.activeTab)
         ? router.query.activeTab[0]
         : router.query.activeTab;
-      console.log(user)
 
       setActiveTab(tabFromQuery ?? "about");
     }, [router.query]);
