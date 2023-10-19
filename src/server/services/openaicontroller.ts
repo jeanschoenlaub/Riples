@@ -57,3 +57,27 @@ suggest a 3 sentence straightforward post to share the project that you have jus
 
     return chatCompletion.choices;
 }
+
+export const generateRiple= async (projectTitle: string, projectSummary: string, userprompt: string) => {
+    const prompt = `
+    You are writing for a project titled "${projectTitle}".
+    This project is about "${projectSummary}"
+    Following this user prompt: "${userprompt}", write a short post content.`;
+
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const chatCompletion = await openai.chat.completions.create({
+        messages: [
+                {
+                  "role": "system",
+                  "content": "As an experienced content manager, you will to generate a short 3 paragraphe post content. "
+                },
+                {
+                  "role": "user",
+                  "content": prompt,
+                }
+              ],
+        model: 'gpt-3.5-turbo',
+    });
+
+    return chatCompletion.choices;
+}

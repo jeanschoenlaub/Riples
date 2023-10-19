@@ -65,7 +65,7 @@ export const CreateFeed = () => {
                 Feedback
               </button>
             </a>
-        </div>
+      </div>
       <div className="mt-4 ml-2 md:ml-8">
         Create Feed is Coming (You can toggle between create and social feed at the Top !)
       </div>

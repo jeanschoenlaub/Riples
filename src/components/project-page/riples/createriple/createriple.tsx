@@ -1,18 +1,21 @@
 // CreateRipleModal.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal } from '~/components/reusables/modaltemplate';
 import type { CreateRipleModalProps, CreateRiplePayload } from './createripletypes';
 import toast from 'react-hot-toast';
 import { useRipleMutation } from './createripleapi';
 import { LoadingSpinner } from '~/components/reusables/loading';
 import { api } from "~/utils/api";
+import { useWizard } from '~/components/wizard/wizardswrapper';
+import { useSelector } from 'react-redux';
+import { RootState } from '~/redux/store';
 
-export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, onClose, isLoading, projectId, projectTitle }) => {
+export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, onClose, isLoading, projectId, projectTitle, projectSummary }) => {
     const [ripleContent, setRipleContent] = useState('');
     const [ripleTitle, setRipleTitle] = useState('');
+    const wizardContext = useWizard();
 
     const handleRipleSubmit = () => {
-        
         const payload = generateCreatePayload();
         createRiple(payload).then(() => {
           toast.success('Riple created successfully!');
@@ -26,6 +29,7 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
     const resetForm = () => {
         setRipleTitle(''); // Reset content after submitting
         setRipleContent(''); // Reset content after submitting
+        wizardContext.setWizardName("")
         onClose()
     }
 
@@ -36,6 +40,24 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
         title: ripleTitle,
         content: ripleContent,
     });
+
+    useEffect (() => {
+        if (showModal){
+            wizardContext.setWizardName("projectriples")
+            wizardContext.setProjectTitle(projectTitle)
+            wizardContext.setProjectSummary(projectSummary)
+            wizardContext.setShowWizard(true)
+        }
+        if (!showModal){
+            wizardContext.setWizardName("")
+            wizardContext.setShowWizard(false)
+        }
+    },[showModal])
+    
+    const ripleContentFromRedux = useSelector((state: RootState) => state.riple.ripleContent);
+    useEffect(() => {
+      if (ripleContentFromRedux.length) setRipleContent(ripleContentFromRedux);
+    }, [ripleContentFromRedux]);
 
     const { data: followers } = api.projectFollowers.getFollowersByProjectId.useQuery({ projectId: projectId });
     const { isCreating, createRiple } = useRipleMutation(followers);
@@ -65,6 +87,7 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
                     className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
                     maxLength={255}
                     disabled={isLoading}
+                    rows={10}
                 />
             </label>
             <button 

@@ -7,7 +7,6 @@ export const SocialFeed = () => {
     const { data, isLoading } = api.riples.getAll.useQuery();
 
     if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)
-
   
     if (!data) return(<div> Something went wrong</div>)
   
