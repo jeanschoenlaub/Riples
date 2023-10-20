@@ -61,8 +61,8 @@ const RipleHTMLComponent: React.FC<RipleHTMLComponentProps> = ({ ripleTitle, set
                                 ripleTitle={ripleTitle}
                                 ripleContent={ripleContent} 
                                 projectTitle={projectTitle}
-                                projectCoverImageUrl={projectCoverImageUrl}>
-                            </RipleCardPreview>  
+                                projectCoverImageUrl={projectCoverImageUrl}
+                            />
                         </div>
                     )}
                 </div>
