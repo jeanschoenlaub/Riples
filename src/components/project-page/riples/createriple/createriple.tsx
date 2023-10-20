@@ -8,7 +8,7 @@ import { LoadingSpinner } from '~/components/reusables/loading';
 import { api } from "~/utils/api";
 import { useWizard } from '~/components/wizard/wizardswrapper';
 import { useSelector } from 'react-redux';
-import { RootState } from '~/redux/store';
+import type { RootState } from '~/redux/store';
 import RipleTextComponent from './ripletext';
 import RipleHTMLComponent from './riplehtml';
 import { ArrowLeftSVG, ArrowRightSVG, RocketSVG } from '~/components/reusables/svgstroke';

@@ -19,7 +19,7 @@ export const RipleCardPreview : React.FC<RipleCardPreviewProps> = ({
     projectCoverImageUrl,
 }) => {
     const { data: session } = useSession()
-    let user = session?.user
+    const user = session?.user
     const [isExpanded, setIsExpanded] = useState(true);
     const rawHTML = ripleContent;
 
