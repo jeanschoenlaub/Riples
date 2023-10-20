@@ -109,7 +109,6 @@ export const OnboardingWrapper: React.FC = () => {
   //watchOnboarding is triggered from specific actions that might result in step completions for instant modal instead of on reload
   useEffect(() => {
     const fetchData = async () => {
-      console.log(userOnboardingStatus)
       try {
         if (shouldExecuteQuery) {
           await userOnboardingStatusQuery.refetch();

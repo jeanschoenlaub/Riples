@@ -1,13 +1,9 @@
-import { useSession, signOut } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import Image from 'next/image';
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { NavBarSignInModal } from "./signinmodal";
-import { api } from "~/utils/api";
-import toast from "react-hot-toast";
-import { handleZodError } from "~/utils/error-handling";
 import ToggleSwitch from "../reusables/toogleswitch";
-import router from "next/router";
 import { SideNavProject } from "./sidenavproject";
 import { NotificationMenu } from "./notificationmenu";
 import { UserMenu } from "./usermenu";
@@ -22,36 +18,7 @@ interface GlobalNavBarProps {
 export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActiveTab, ToogleinBetween }) => {
   const { data: session } = useSession();
   const [showSignInModal, setShowSignInModal] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSideNav, setShowSideNav] = useState(false);
-  const dropdownRef = useRef<null | HTMLDivElement>(null);
-  // Mutation for deleting a user
-  const { mutateAsync: deleteUserAsyncMutation, isLoading: isDeleting } = api.users.deleteUser.useMutation({
-      onSuccess: () => {
-        toast.success("User Deleted successfully");
-      },
-      onError: (e) => {
-        const fieldErrors = e.data?.zodError?.fieldErrors;
-        const message = handleZodError(fieldErrors);
-        toast.error(message);
-      }
-  });
-  
-
-  // User Drop Down Event 
-  const onClickOutside = (event: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-      setShowDropdown(false);
-    }
-  };
-
-
-  useEffect(() => {
-    return () => {
-      window.removeEventListener('click', onClickOutside);
-    };
-  }, []);
 
   return ( 
     <div id="global-nav-container" className="flex justify-center w-full h-15">

@@ -11,7 +11,6 @@ import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
 
-
 //My components
 import { Tabs } from "~/components/reusables/tabs";
 import { AboutTab } from "~/components/project-page/about/about";
@@ -94,13 +93,14 @@ export default function Project(
   const isProjectLead = session?.user.id === projectData?.project.authorID;
   useEffect(() => {
     if (isProjectLead){
-      wizardContext.setWizardName("project")
-      wizardContext.setShowWizard(true)
+      if (activeTab == "about"){
+        wizardContext.setWizardName("projectabout")
+      }
     return () => {
       wizardContext.setWizardName("")
     };
   }
-  }, [wizardContext.setWizardName,isProjectLead]);
+  }, [wizardContext.setWizardName,isProjectLead, activeTab]);
 
   const isLoading = (ripleLoading || projectLoading || projectMemberLoading || sessionStatus=="loading")
   if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)
@@ -186,7 +186,7 @@ export default function Project(
 
                 {/* SHOWN IF RIPLES TAB */}
                 {activeTab === 'riples' && (
-                    <RiplesTab ripleData={ripleData} projectId={projectId} projectTitle={projectData.project.title}></RiplesTab>
+                    <RiplesTab ripleData={ripleData} projectId={projectId} projectTitle={projectData.project.title} projectSummary={projectData.project.summary} projectCoverImageUrl={projectData.project.coverImageUrl}></RiplesTab>
                 )}
 
 

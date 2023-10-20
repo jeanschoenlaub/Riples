@@ -157,4 +157,20 @@ export const LikeSVG = ({ width = "6", height = "6", marginRight = "0", marginLe
     );
 };
 
+export const FollowFullSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorFillHex="currentColor" }) => {
+    return (
+            <svg
+                className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill={colorFillHex}  // Blue and Gray colors
+                viewBox="0 0 14 20"
+            >
+            <path d="M13 20a1 1 0 0 1-.64-.231L7 15.3l-5.36 4.469A1 1 0 0 1 0 19V2a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v17a1 1 0 0 1-1 1Z"/>
+        </svg>
+    );
+};
+
+
+                
 

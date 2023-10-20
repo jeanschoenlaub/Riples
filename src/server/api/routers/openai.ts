@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { generateGoals, generatePost, generateTasks } from "~/server/services/openaicontroller";
+import { generateGoals, generatePost, generateTasks, generateRipleContent, generateRipleHTML } from "~/server/services/openaicontroller";
 import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
 
@@ -22,7 +22,7 @@ export const openAiRouter = createTRPCRouter({
                 taskNumber: z.string(),
                 userId: z.string(),
                 }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
         const { projectTitle, projectSummary, taskNumber, userId } = input;
 
         const { success } = await ratelimit.limit(userId);
@@ -30,6 +30,12 @@ export const openAiRouter = createTRPCRouter({
         
         try {
             const tasks = await generateTasks(projectTitle, projectSummary, taskNumber);
+            await ctx.prisma.aIUsageLog.create({
+                data: {
+                  userId: userId,
+                  features: 'generateProjectTasks'
+                }
+            });
             return tasks;
         } catch (error) {
             throw new TRPCError({
@@ -44,12 +50,22 @@ export const openAiRouter = createTRPCRouter({
                 projectTitle: z.string(),
                 projectSummary: z.string(), 
                 goalNumber: z.string(),
-                }))
-    .mutation(async ({ input }) => {
-        const { projectTitle, projectSummary, goalNumber } = input;
+                userId: z.string(),
+            }))
+    .mutation(async ({ ctx, input }) => {
+        const { projectTitle, projectSummary, goalNumber, userId } = input;
+        const { success } = await ratelimit.limit(userId);
+        if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS", message:"AI Content generation limited to 2 per minute."});
+        
         try {
-            const tasks = await generateGoals(projectTitle, projectSummary, goalNumber);
-            return tasks;
+            const goals = await generateGoals(projectTitle, projectSummary, goalNumber);
+            await ctx.prisma.aIUsageLog.create({
+                data: {
+                  userId: userId,
+                  features: 'generateProjectGoals'
+                }
+            });
+            return goals;
         } catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
@@ -62,17 +78,86 @@ export const openAiRouter = createTRPCRouter({
         z.object({ 
                 projectTitle: z.string(),
                 projectSummary: z.string(), 
+                userId: z.string(),
                 }))
-    .mutation(async ({ input }) => {
-        const { projectTitle, projectSummary } = input;
+    .mutation(async ({ ctx, input }) => {
+        const { projectTitle, projectSummary, userId } = input;
+        const { success } = await ratelimit.limit(userId);
+        if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS", message:"AI Content generation limited to 2 per minute."});
+        
         try {
-            const tasks = await generatePost(projectTitle, projectSummary);
-            return tasks;
+            const post = await generatePost(projectTitle, projectSummary);
+            await ctx.prisma.aIUsageLog.create({
+                data: {
+                  userId: userId,
+                  features: 'generateProjectPost'
+                }
+            });
+            return post;
         } catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
                 message: "Failed to get tasks from OpenAI ChatGPT.",
             });
         }
-    })
+    }),
+    generateRipleContent: protectedProcedure
+    .input(
+        z.object({ 
+                projectTitle: z.string(),
+                projectSummary: z.string(), 
+                userPrompt: z.string(),
+                userId: z.string(),
+            }))
+    .mutation(async ({ ctx, input }) => {
+        const { projectTitle, projectSummary, userPrompt , userId } = input;
+
+        const { success } = await ratelimit.limit(userId);
+        if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS", message:"AI Task Content generation limited to 2 per minute."});
+        
+        try {
+            const riple = await generateRipleContent(projectTitle, projectSummary, userPrompt);
+            await ctx.prisma.aIUsageLog.create({
+                data: {
+                  userId: userId,
+                  features: 'generateRipleContent'
+                }
+            });
+            return riple;
+        } catch (error) {
+            throw new TRPCError({
+                code: 'INTERNAL_SERVER_ERROR',
+                message: "Failed to get tasks from OpenAI ChatGPT.",
+            });
+        }
+    }),
+    generateRipleHTML: protectedProcedure
+    .input(
+        z.object({ 
+                ripleContent: z.string(),
+                userPrompt: z.string(),
+                userId: z.string(),
+            }))
+    .mutation(async ({ ctx, input }) => {
+        const { ripleContent, userPrompt , userId } = input;
+
+        const { success } = await ratelimit.limit(userId);
+        if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS", message:"AI Task Content generation limited to 2 per minute."});
+        
+        try {
+            const riple = await generateRipleHTML(ripleContent, userPrompt);
+            await ctx.prisma.aIUsageLog.create({
+                data: {
+                  userId: userId,
+                  features: 'generateRipleHTML'
+                }
+            });
+            return riple;
+        } catch (error) {
+            throw new TRPCError({
+                code: 'INTERNAL_SERVER_ERROR',
+                message: "Failed to get tasks from OpenAI ChatGPT.",
+            });
+        }
+    }),
 });
