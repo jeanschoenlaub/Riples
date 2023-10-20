@@ -33,6 +33,7 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
             console.error('Failed to generate content:', error);
         } finally {
             setIsLoading(false);
+            setInputValue("")
         }
     }
 
@@ -54,6 +55,7 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
             console.error('Failed to generate HTML Style:', error);
         } finally {
             setIsLoading(false);
+            setInputValue("")
         }
     }
 
@@ -80,18 +82,12 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
     }
 
     function getButtonText() {
-        if (isLoading) {
-            return (
-                <div className="flex items-center">
-                    <LoadingSpinner size={16}></LoadingSpinner> Generating Content
-                </div>
-            );
+        if (modalStep === "html") {
+            if (isLoading) {return  <div className="flex items-center"><LoadingSpinner size={16}></LoadingSpinner> Syling Riple</div>}
+            return "Style HTML";
         } else {
-            if (modalStep === "html") {
-                return "Style HTML";
-            } else {
-                return "Generate Content";
-            }
+            if (isLoading) {return  <div className="flex items-center"><LoadingSpinner size={16}></LoadingSpinner> Generating content</div>}
+            return "Generate Content";
         }
     }
 
@@ -109,7 +105,7 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
                 <textarea 
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
-                    placeholder="Write about the progress we made on our project this week"
+                    placeholder={modalStep === "html" ? "Optionally add some instructions" : "Write about the progress we made on our project this week"}
                     className="w-full p-2 border rounded-md resize-none"
                     rows={3}
                     disabled= {isGeneratingRipleContent}
@@ -123,7 +119,7 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
                     {getButtonText()}
                 </button>
 
-                {modalStep === "html" && <div className="italic text-sm">By clicking this will override the selected fields in the &apos;Riple Content&apos; popup section</div>}
+                {modalStep != "html" && <div className="italic text-sm">By clicking this will override the selected fields in the &apos;Riple Content&apos; popup section</div>}
             </div>
         </div>
     );

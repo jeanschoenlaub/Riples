@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { RipleCardPreview } from "~/components/cards/riplecard/riplecardpreview";
+import { CodeSVG } from "~/components/reusables/svgstroke";
 
 type RipleHTMLComponentProps = {
     ripleTitle: string;
@@ -17,13 +18,17 @@ const RipleHTMLComponent: React.FC<RipleHTMLComponentProps> = ({ ripleTitle, set
         return (
             <div className="container mx-auto">
                 <div className="p-4 rounded-lg shadow-lg bg-gray-100">
-                    <button 
+                    <div className="flex justify-center items-center mb-4">
+                        <h1 className="text-xl font-semibold">Style your Riple</h1>
+                        <button 
                         onClick={() => setIsEditMode(!isEditMode)} 
                         disabled={isLoading}
-                        className="mb-2"
+                        className="bg-blue-500 text-white rounded px-2 ml-4 py-1 flex flex-row justify-center focus:outline-none focus:ring focus:ring-blue-200"
                     >
-                        {isEditMode ? 'Preview' : 'Edit Raw HTML'}
+                        {isEditMode ? 'Preview' : (<span className="flex items-center "><CodeSVG width="4" height="4" marginRight="2"></CodeSVG>HTML</span>)}
                     </button>
+                    </div>
+                    
         
                     {isEditMode ? (
                         <div>

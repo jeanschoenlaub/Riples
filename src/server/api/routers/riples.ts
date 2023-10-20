@@ -88,7 +88,7 @@ export const ripleRouter = createTRPCRouter({
     create: protectedProcedure
     .input(
         z.object({
-        title: z.string().min(5).max(255),
+        title: z.string().min(5, { message: "Riple title must be 5 or more characters long" }).max(255, { message: "Riple title must be 255 or less characters long" }),
         content: z.string().min(5).max(50000),
         projectId: z.string(),
         })

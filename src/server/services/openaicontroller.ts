@@ -93,7 +93,15 @@ export const generateRipleHTML= async (ripleContent: string, userprompt: string)
         messages: [
                 {
                   "role": "system",
-                  "content": "You will be provided with a plain text and a user prompt. As an HTML develloper, add the required html simple tag to the plain text to make it look nice. "
+                  "content": `
+                    You will be provided with a plain text and a user prompt. 
+                    Use the following instructions to generate the html:
+                    
+                    Headings: Use <p style="font-size: 1em; font-weight: bold;"> tags.
+                    Content Paragraphs: Enclose in regular <p> tags.
+                    Separation: Insert <br> tags between sections.
+                    Listings: Utilize <li> tags for key points or features.
+                  `
                 },
                 {
                   "role": "user",

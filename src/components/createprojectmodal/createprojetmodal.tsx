@@ -186,7 +186,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
               disabled={isLoading}
             >
               <span className='flex items-center'>
-                <ArrowLeftSVG width="4" height="4" marginLeft="2"></ArrowLeftSVG>
+                <ArrowLeftSVG width="4" height="4" marginRight="2"></ArrowLeftSVG>
                 Previous 
               </span>
             </button>

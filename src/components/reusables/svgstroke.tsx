@@ -249,3 +249,23 @@ export const FollowEmptySVG = ({ width = "6", height = "6", marginRight = "0", m
     );
 };
 
+
+export const CodeSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none"
+            viewBox="0 0 20 16"
+        >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="2"
+                strokeLinejoin="round"
+                d="M5 4 1 8l4 4m10-8 4 4-4 4M11 1 9 15"/>
+            </svg>
+              
+    );
+};

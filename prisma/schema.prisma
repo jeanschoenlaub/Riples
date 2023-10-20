@@ -215,6 +215,7 @@ model User {
   notifications       Notification[]
   comments            Comment[]
   like                Like[]
+  AIUsageLog          AIUsageLog[]
 }
 
 
@@ -303,4 +304,13 @@ model Like {
     user        User   @relation(fields: [userId], references: [id])
 
     @@unique([ripleId, userId])
+}
+
+model AIUsageLog {
+    id          String   @id @default(cuid())
+    features    String
+    userId      String
+    timeStamp   DateTime @default(now())
+
+    user        User   @relation(fields: [userId], references: [id])
 }
