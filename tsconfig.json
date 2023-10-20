@@ -29,6 +29,6 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs"
-, "src/utils/error-handling.ts", "src/utils/googleanalytics/index.ts", "src/components/onboarding/joyrides/taskonejoyrideparttwo"  ],
+, "src/utils/error-handling.ts", "src/utils/googleanalytics/index.ts", "src/components/onboarding/joyrides/taskonejoyrideparttwo", "src/components/project-page/riples/createriple/ripletext"  ],
   "exclude": ["node_modules"]
 }

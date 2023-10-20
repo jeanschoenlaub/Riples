@@ -6,12 +6,12 @@ import { WizardRipleProps } from "./wizardripletype";
 import { setRipleContent } from "~/redux/ripleslice";
 import OpenAI from "openai";
 
-export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, projectSummary, userId }) => {
+export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, projectSummary, ripleContent, modalStep, userId }) => {
 
     const [inputValue, setInputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
-    const { isGeneratingRipleContent, generateRipleContent} = useOpenAIRipleMutation()
+    const { isGeneratingRipleContent, generateRipleContent, generateRipleHTML, isGeneratingRipleHTML} = useOpenAIRipleMutation()
     
 
     async function generateRipleAIData() {
@@ -36,6 +36,27 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
         }
     }
 
+    async function generateHTMLStyle() {
+        setIsLoading(true);
+
+        const generateHTMLStylePayload = {
+            userPrompt: inputValue,
+            ripleContent: ripleContent,
+            userId: userId,
+        };
+
+        try {
+            const rawDataRipleHTML = await generateRipleHTML(generateHTMLStylePayload);
+            const RipleHTML = processRawDataForRipleContent(rawDataRipleHTML);
+            dispatch(setRipleContent(RipleHTML));
+
+        } catch (error) {
+            console.error('Failed to generate HTML Style:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
 
     function processRawDataForRipleContent(rawData: OpenAI.Chat.Completions.ChatCompletion.Choice[]): string {
         let result = '';
@@ -50,11 +71,40 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
         return result;
     }
 
+    function getButtonFunction() {
+        if (modalStep === "html") {
+            return generateHTMLStyle;
+        } else {
+            return generateRipleAIData;
+        }
+    }
+
+    function getButtonText() {
+        if (isLoading) {
+            return (
+                <div className="flex items-center">
+                    <LoadingSpinner size={16}></LoadingSpinner> Generating Content
+                </div>
+            );
+        } else {
+            if (modalStep === "html") {
+                return "Style HTML";
+            } else {
+                return "Generate Content";
+            }
+        }
+    }
+
     return (
         <div>
             <div className="onboarding-status-window">
                 <div className="font-semibold flex items-center"> <span className="text-3xl mr-2"> 👩‍🎨 </span> Content Creator Wizard </div>
-                <div className="mb-4"> I already know a lot about your project, but what do you want to post about ?  </div>
+
+                {modalStep === "html" ? 
+                    (<div className="mb-4">Do you want help styling the HTML ?  </div>) 
+                    :
+                    (<div className="mb-4"> I already know a lot about your project, but what do you want to post about ?  </div>) 
+                }
 
                 <textarea 
                     value={inputValue}
@@ -68,18 +118,12 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
                 <button 
                     className="bg-blue-500 text-white rounded px-4 mt-2 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200"
                     disabled={isGeneratingRipleContent}
-                    onClick={generateRipleAIData}
+                    onClick={getButtonFunction()}
                 >
-                    {isLoading ? 
-                        <div className="flex items-center">
-                            <LoadingSpinner size={16}></LoadingSpinner> Generating Content
-                        </div> 
-                        : "Generate Content"}
+                    {getButtonText()}
                 </button>
 
-                <div className="italic text-sm">
-                    By clicking this will override the selected fields in the &apos;Riple Content&apos; popup section
-                </div>
+                {modalStep === "html" && <div className="italic text-sm">By clicking this will override the selected fields in the &apos;Riple Content&apos; popup section</div>}
             </div>
         </div>
     );

@@ -12,4 +12,5 @@ export interface CreateRipleModalProps {
     projectId: string;
     projectTitle: string,
     projectSummary: string,
+    projectCoverImageUrl: string,
 }

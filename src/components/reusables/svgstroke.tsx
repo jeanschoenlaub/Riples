@@ -192,4 +192,60 @@ export const ShareSVG = ({ width = "6", height = "6", marginRight = "0", marginL
     );
 };
 
+export const ArrowLeftSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill={colorStrokeHex}
+            viewBox="0 0 14 10"
+        >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="2"
+                strokeLinejoin="round"
+                d="M13 5H1m0 0 4 4M1 5l4-4"/>
+            </svg>
+    );
+};
+
+export const ArrowRightSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill={colorStrokeHex}
+            viewBox="0 0 14 10"
+        >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="2"
+                strokeLinejoin="round"
+                d="M1 5h12m0 0L9 1m4 4L9 9"/>
+            </svg>
+    );
+};
+
+export const FollowEmptySVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none"
+            viewBox="0 0 14 20"
+        >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="2"
+                strokeLinejoin="round"
+                d="m13 19-6-5-6 5V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17Z"/>
+            </svg>
+    );
+};
 

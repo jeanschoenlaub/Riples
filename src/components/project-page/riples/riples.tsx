@@ -14,9 +14,10 @@ interface RipleTabProps {
     projectId: string;
     projectTitle: string,
     projectSummary: string,
+    projectCoverImageUrl: string,
 }
 
-export const RiplesTab: React.FC<RipleTabProps> = ({ ripleData, projectId, projectTitle, projectSummary  }) => {
+export const RiplesTab: React.FC<RipleTabProps> = ({ ripleData, projectId, projectTitle, projectSummary, projectCoverImageUrl  }) => {
     const { deleteRiple, isDeleting } = UseRiplesMutations();
     const { data: session } = useSession();
     const userId = session?.user.id;
@@ -110,6 +111,7 @@ export const RiplesTab: React.FC<RipleTabProps> = ({ ripleData, projectId, proje
                 projectId={projectId}
                 projectTitle={projectTitle}
                 projectSummary={projectSummary}
+                projectCoverImageUrl={projectCoverImageUrl}
                 onClose={closeCreateRipleModal}
             />
         </div>

@@ -11,7 +11,7 @@ import { LoadingSpinner } from "../reusables/loading";
 import { useWizard } from "../wizard/wizardswrapper";
 import { useSelector} from 'react-redux';
 import type { RootState } from '~/redux/store';
-import { RocketSVG } from "../reusables/svgstroke";
+import { ArrowLeftSVG, ArrowRightSVG, RocketSVG } from "../reusables/svgstroke";
 
 
 type NewProjecResponse  = RouterOutputs["projects"]["create"] 
@@ -186,9 +186,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
               disabled={isLoading}
             >
               <span className='flex items-center'>
-                <svg className="w-4 h-4 mr-2 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
-                </svg>
+                <ArrowLeftSVG width="4" height="4" marginLeft="2"></ArrowLeftSVG>
                 Previous 
               </span>
             </button>
@@ -205,9 +203,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModa
             >
               <span className='flex items-center'>
                 Next 
-                <svg className="w-4 h-4 ml-2 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                </svg>
+                <ArrowRightSVG width="4" height="4" marginLeft="2"></ArrowRightSVG>
               </span>
             </button>
           ) : (

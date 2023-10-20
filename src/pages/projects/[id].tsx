@@ -186,7 +186,7 @@ export default function Project(
 
                 {/* SHOWN IF RIPLES TAB */}
                 {activeTab === 'riples' && (
-                    <RiplesTab ripleData={ripleData} projectId={projectId} projectTitle={projectData.project.title} projectSummary={projectData.project.summary}></RiplesTab>
+                    <RiplesTab ripleData={ripleData} projectId={projectId} projectTitle={projectData.project.title} projectSummary={projectData.project.summary} projectCoverImageUrl={projectData.project.coverImageUrl}></RiplesTab>
                 )}
 
 

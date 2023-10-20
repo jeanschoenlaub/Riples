@@ -17,6 +17,8 @@ type WizardContextType = {
     setProjectSummary: React.Dispatch<React.SetStateAction<string>>;
     setTaskNumber: React.Dispatch<React.SetStateAction<string>>;
     setGoalNumber: React.Dispatch<React.SetStateAction<string>>;
+    setRipleContent: React.Dispatch<React.SetStateAction<string>>;
+    setRipleWizardModalStep: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const WizardContext = createContext<WizardContextType | undefined>(undefined);
@@ -34,12 +36,17 @@ interface WizardWrapperProps {
 }
 
 export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
+    // For the create project Wizard
     const [showWizard, setShowWizard] = useState(false);
     const [wizardName, setWizardName] = useState("");
     const [projectTitle, setProjectTitle] = useState("");
     const [projectSummary, setProjectSummary] = useState("");
     const [taskNumber, setTaskNumber] = useState("3");
     const [goalNumber, setGoalNumber] = useState("1");
+
+    //For the Riples Wizard
+    const [RipleWizardModalStep, setRipleWizardModalStep] = useState("");
+    const [ripleContent, setRipleContent] = useState("");
 
     const { data: session } = useSession();
     const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user id is not null
@@ -51,7 +58,7 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
     );
 
     return (
-        <WizardContext.Provider value={{ setShowWizard, showWizard, setWizardName, setProjectTitle, setProjectSummary, setTaskNumber, setGoalNumber}}>
+        <WizardContext.Provider value={{ setShowWizard, showWizard, setWizardName, setProjectTitle, setRipleContent, setProjectSummary, setTaskNumber, setGoalNumber, setRipleWizardModalStep}}>
             {children}
             <button id="misterwattbutton" className={styles.floatingButton} onClick={() => setShowWizard(!showWizard)}>
                 <Image src="/images/riple_ai.png" alt="Open Wizard" width={256} height={256} />
@@ -80,7 +87,7 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
             {showWizard && (wizardName == "projectriples") && session &&
                 <div id="wizardprojectriples" className={`${styles.floatingWindow}`}>
                     {/* If no logged in users or the logged in user hasn't finished the tutorial, show onboarding Mister Watt */}
-                    <WizardProjectRiples projectTitle={projectTitle} projectSummary={projectSummary} userId={session?.user.id}/>
+                    <WizardProjectRiples projectTitle={projectTitle} projectSummary={projectSummary} ripleContent={ripleContent} userId={session?.user.id} modalStep={RipleWizardModalStep}/>
                     <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
             }
