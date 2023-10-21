@@ -30,6 +30,7 @@ model Project {
   endDate         DateTime @default(now())
 
   coverImageUrl   String   @default("https://t3-portofolio.s3.us-east-2.amazonaws.com/mvp_riples/Riple_bannner.png") @db.VarChar(255)
+  coverImageId    String   @default("123456") @db.VarChar(255)
   
   //Relations
   authorID        String
