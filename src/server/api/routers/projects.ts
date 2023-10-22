@@ -479,7 +479,7 @@ editAdmin: protectedProcedure
       if (!project) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "the course does not exist",
+          message: "the project does not exist",
         });
       }
 
@@ -493,13 +493,11 @@ editAdmin: protectedProcedure
         },
       });
 
-      console.log(imageId)
-
       return createPresignedPost(s3Client, {
-        Bucket: env.S3_PUBLIC_IMAGES_BUCKET,
-        Key: imageId,
+        Bucket: env.NEXT_PUBLIC_S3_PUBLIC_IMAGES_BUCKET,
+        Key: `project-cover-images/${imageId}`,
         Fields: {
-          key: imageId,
+          key: `project-cover-images/${imageId}`,
         },
         Conditions: [
           ["starts-with", "$Content-Type", "image/"],

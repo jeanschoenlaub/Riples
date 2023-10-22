@@ -1,7 +1,9 @@
 import Image from 'next/image';
 import Tooltip from '../reusables/tooltip';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { api } from '~/utils/api';
+import { buildImageUrl } from '~/utils/s3';
+import { LoadingRiplesLogo } from '../reusables/loading';
 
 interface ProjectCoverImageProps {
     coverImageId: string;
@@ -11,64 +13,42 @@ interface ProjectCoverImageProps {
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB for example, adjust as needed
 
 const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, projectId }) => {
-    const uploadMutation = api.projects.createPresignedUrl.useMutation();
-    const [file, setFile] = useState<File | null>(null);
+    const [imageUrl, setImageUrl] = useState(buildImageUrl(coverImageId));
+    const [imageChanging, setImageChanging] = useState(false);
 
-    const s3BaseUrl = 'https://riples-public-images-08453786.s3.us-west-2.amazonaws.com';
-    const imageUrl = `${s3BaseUrl}/${coverImageId}`;
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { file, setFile, isUploading, uploadImage} = useProjectCoverImageUpload();
+
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
-        if (selectedFile) setFile(selectedFile);
-    };
-    
-    const handleUploadClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        if (file) uploadImage();
-    };
-  
-    const uploadImage = async () => {
-        console.log("triggered")
-        if (!file) return;
-    
-        const { url, fields } = await uploadMutation.mutateAsync({
-            projectId,
-        });
-    
-        console.log("url", url);
-    
-        const data: Record<string, any> = {
-            ...fields,
-            "Content-Type": file.type,
-            file,
-        };
-    
-        const formData = new FormData();
-        for (const name in data) {
-            formData.append(name, data[name]);
+        if (selectedFile) {
+            setFile(selectedFile);
+            try {
+                setImageChanging(true);
+                const newCoverImageId = await uploadImage(projectId);
+                const newUrl = buildImageUrl(newCoverImageId) + `?timestamp=${Date.now()}`;
+                setImageUrl(newUrl);
+                setImageChanging(false);
+            } catch (err) {
+                setImageChanging(false);
+                console.error("Error uploading project cover Image");
+            }
         }
-    
-        await fetch(url, {
-            method: "POST",
-            body: formData,
-        });
-    
-        // refetchImages();
-        setFile(null);
-        // if (fileRef.current) {
-        //   fileRef.current.value = "";
-        // }
     };
-      
+
     return (
         <div>
-            <div id="project-main-cover-image" className="hidden md:flex group relative w-full h-[30vh] overflow-hidden">
+            <div id="project-main-cover-image" className="hidden md:flex group relative w-full h-[30vh] overflow-hidden justify-center items-center">
+                {(isUploading || imageChanging)?  ( <LoadingRiplesLogo isLoading={isUploading}></LoadingRiplesLogo>) : (
                 <Image 
-                    src={imageUrl} 
-                    alt="Project cover image" 
-                    layout="fill" 
-                    objectFit="cover"
-                />
+                key={imageUrl}
+                src={imageUrl} 
+                alt="Project cover image" 
+                layout="fill" 
+                objectFit="cover"
+                onLoad={() => console.log("Loading image from:", imageUrl)} // Log here
+            />)}
     
                 {/* Hover buttons */}
                 <div className="absolute bottom-0 right-0 flex flex-col items-end mb-2 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -80,12 +60,6 @@ const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, pro
                             >
                                 Upload
                             </label>
-                            <button
-                                className="m-2 py-1 px-2 bg-sky-100 text-black"
-                                onClick={handleUploadClick}
-                            >
-                                Upload
-                            </button>
                         </span>
                     </Tooltip>
                     <Tooltip content="The feature of repositioning picture is coming." shiftRight={true} width="200px">
@@ -106,5 +80,72 @@ const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, pro
         </div>
     );  
 }
+
+export const useProjectCoverImageUpload = () => {
+    const apiContext = api.useContext();
+
+    const handleSuccess = async () => {
+        await apiContext.projects.getProjectByProjectId.invalidate();
+      };
+      
+
+    const { mutateAsync: createPresignedUrlAsyncMutation, isLoading: isUploading } = api.projects.createPresignedUrl.useMutation({
+        onSuccess: handleSuccess,
+    });
+
+    const fileRef = useRef<File | null>(null);  // Create a ref for the file
+
+    const uploadImage = async (projectId: string): Promise<string> => {
+        if (!fileRef.current) {
+            console.error("File ref is empty.");
+            throw new Error("No file selected");
+        }
+
+        try {
+            const { url, fields } = await createPresignedUrlAsyncMutation({
+                projectId,
+            });
+
+            if (!fields.key) {
+                console.error("Unexpected response: 'fields.key' is missing.");
+                throw new Error("Unexpected server response");
+            }
+
+            const data: Record<string, any> = {
+                ...fields,
+                "Content-Type": fileRef.current.type,
+                file: fileRef.current,
+            };
+
+            const formData = new FormData();
+            for (const name in data) {
+                formData.append(name, data[name]);
+            }
+
+            await fetch(url, {
+                method: "POST",
+                body: formData,
+            });
+            console.log("fields:"+fields.key.split("/")[1] )
+            const newCoverImageId = fields.key.split("/")[1] ?? "";  // Extract new ID from the result's key field
+            return newCoverImageId;
+
+        } catch (e) {
+            console.error("Error in uploadImage:", e);
+            throw e;
+        }
+    };
+
+    return {
+        file: fileRef.current,
+        setFile: (newFile: File | null) => {
+            fileRef.current = newFile;
+        },
+        isUploading,
+        uploadImage,
+    };
+};
+
+
 
 export default ProjectCoverImage;
