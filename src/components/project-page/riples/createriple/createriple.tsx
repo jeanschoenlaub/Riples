@@ -18,7 +18,7 @@ enum Step {
     RipleHTML
 }
 
-export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, onClose, projectId, projectCoverImageUrl, projectTitle, projectSummary }) => {
+export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, onClose, projectId, projectCoverImageId, projectTitle, projectSummary }) => {
     const [ripleContent, setRipleContent] = useState('');
     const [ripleTitle, setRipleTitle] = useState('');
     const [currentStep, setCurrentStep] = useState(Step.RipleText);
@@ -118,7 +118,7 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
                     ripleContent={ripleContent}
                     setRipleContent={setRipleContent}
                     projectTitle={projectTitle}
-                    projectCoverImageUrl={projectCoverImageUrl}
+                    projectCoverImageId={projectCoverImageId}
                     isLoading={isLoading}
                 />
             }

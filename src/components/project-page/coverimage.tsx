@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Tooltip from '../reusables/tooltip';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { api } from '~/utils/api';
 import { buildImageUrl } from '~/utils/s3';
 import { LoadingRiplesLogo } from '../reusables/loading';
@@ -10,15 +10,11 @@ interface ProjectCoverImageProps {
     projectId: string;
 }
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB for example, adjust as needed
-
 const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, projectId }) => {
     const [imageUrl, setImageUrl] = useState(buildImageUrl(coverImageId));
     const [imageChanging, setImageChanging] = useState(false);
 
-
     const { file, setFile, isUploading, uploadImage} = useProjectCoverImageUpload();
-
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
@@ -37,6 +33,12 @@ const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, pro
         }
     };
 
+    //For reloading when navigating between projects 
+    useEffect(() => {
+        const newUrl = buildImageUrl(coverImageId);
+        setImageUrl(newUrl);
+    }, [coverImageId]);
+
     return (
         <div>
             <div id="project-main-cover-image" className="hidden md:flex group relative w-full h-[30vh] overflow-hidden justify-center items-center">
@@ -47,7 +49,6 @@ const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, pro
                 alt="Project cover image" 
                 layout="fill" 
                 objectFit="cover"
-                onLoad={() => console.log("Loading image from:", imageUrl)} // Log here
             />)}
     
                 {/* Hover buttons */}
@@ -126,7 +127,7 @@ export const useProjectCoverImageUpload = () => {
                 method: "POST",
                 body: formData,
             });
-            console.log("fields:"+fields.key.split("/")[1] )
+
             const newCoverImageId = fields.key.split("/")[1] ?? "";  // Extract new ID from the result's key field
             return newCoverImageId;
 

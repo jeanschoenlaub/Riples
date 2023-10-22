@@ -3,20 +3,21 @@ import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from 'react';
 import { AboutSVG, LikeSVG } from "~/components/reusables/svg";
 import { FollowEmptySVG, ShareSVG } from "~/components/reusables/svgstroke";
+import { buildImageUrl } from "~/utils/s3";
 
 
 interface RipleCardPreviewProps {
     ripleTitle: string;
     ripleContent: string;
     projectTitle: string;
-    projectCoverImageUrl: string;
+    projectCoverImageId: string;
 }
 
 export const RipleCardPreview : React.FC<RipleCardPreviewProps> = ({
     ripleTitle,
     ripleContent,
     projectTitle,
-    projectCoverImageUrl,
+    projectCoverImageId,
 }) => {
     const { data: session } = useSession()
     const user = session?.user
@@ -49,7 +50,7 @@ export const RipleCardPreview : React.FC<RipleCardPreviewProps> = ({
             <div className="flex items-center space-x-3">
                 <div id="riple-card-header-image" className="flex-none">
                     <img
-                        src={projectCoverImageUrl}
+                        src={buildImageUrl(projectCoverImageId)}
                         alt="Profile Image"
                         className="rounded-full border border-slate-300"
                         width={imgDimensions.width}

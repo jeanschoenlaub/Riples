@@ -117,7 +117,7 @@ export default function Project(
     isProjectLead || isMember ||
     (projectData?.project.projectType === "collab" && projectData?.project.projectPrivacy === "public")
 
- 
+  console.log(projectData?.project.coverImageId)
 
   return (
     <>
@@ -135,6 +135,7 @@ export default function Project(
             </div>
 
             <div id="project-main" className="relative flex flex-col w-full md:w-3/4 border border-slate-700">
+               {/* Passing empty project cover image because otherwise SSR (which I don't understand very well RN) passes old cover */}
               <ProjectCoverImage coverImageId={projectData?.project.coverImageId} projectId={projectData.project.id}></ProjectCoverImage>
 
 
@@ -161,7 +162,7 @@ export default function Project(
 
                 {/* SHOWN IF RIPLES TAB */}
                 {activeTab === 'riples' && (
-                    <RiplesTab ripleData={ripleData} projectId={projectId} projectTitle={projectData.project.title} projectSummary={projectData.project.summary} projectCoverImageUrl={projectData.project.coverImageUrl}></RiplesTab>
+                    <RiplesTab ripleData={ripleData} projectId={projectId} projectTitle={projectData.project.title} projectSummary={projectData.project.summary} projectCoverImageId={projectData.project.coverImageId}></RiplesTab>
                 )}
 
 

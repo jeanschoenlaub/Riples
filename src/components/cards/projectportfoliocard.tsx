@@ -5,6 +5,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
 import type { RouterOutputs } from "~/utils/api";
 import { useEffect, useState } from 'react';
+import { buildImageUrl } from '~/utils/s3';
 
 
 type FullProjectWithUser = RouterOutputs["projects"]["getProjectByAuthorId"][number]
@@ -47,7 +48,7 @@ export const ProjectCardPortofolio = (props: PortofolioProjectCardProps) => {
             <div className="flex-none">
                 <Image
                     className={`rounded-full border-2 ${props.borderColor ?? "border-gray-300"}`}
-                    src={project.coverImageUrl}
+                    src={buildImageUrl(project.coverImageId)}
                     alt={`${project.title} image`}
                     width={imgDimensions.width}
                     height={imgDimensions.height}
