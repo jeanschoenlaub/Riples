@@ -270,3 +270,23 @@ export const CodeSVG = ({ width = "6", height = "6", marginRight = "0", marginLe
               
     );
 };
+
+export const BreadCrumbArrowSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none"
+            viewBox="0 0 14 6"
+        >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="2"
+                strokeLinejoin="round"
+                d="m1 9 4-4-4-4"/>
+        </svg>
+              
+    );
+};

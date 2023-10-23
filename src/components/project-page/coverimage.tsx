@@ -51,7 +51,7 @@ const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, pro
 
     return (
         <div>
-            <div id="project-main-cover-image" className="hidden md:flex group relative w-full h-[30vh] overflow-hidden justify-center items-center">
+            <div id="project-main-cover-image" className="hidden md:flex group relative w-full h-[35vh] overflow-hidden justify-center items-center">
                 {(isUploading || imageChanging)?  ( <LoadingRiplesLogo isLoading={isUploading}></LoadingRiplesLogo>) : (
                 <Image 
                 key={imageUrl}
@@ -61,18 +61,18 @@ const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, pro
                 objectFit="cover"
             />)}
     
-                {/* Hover buttons */}
-                <div className="absolute bottom-0 right-0 flex flex-col items-end mb-2 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Tooltip content="Upload your own picture" shiftRight={true} width="200px">
+
+                <div className="absolute bottom-0 right-0 flex flex-col items-end mb-2 mr-2 transition-opacity duration-300">
+
                         <span className="mb-2">
                             <label 
                                 htmlFor="replaceImageInput"
                                 className="m-2 py-1 px-2 bg-sky-100 text-black cursor-pointer"
                             >
-                                Upload
+                                Upload Cover Image
                             </label>
                         </span>
-                    </Tooltip>
+
                     <Tooltip content="The feature of repositioning picture is coming." shiftRight={true} width="200px">
                         <span>
                             <button className="m-2 py-1 px-2 bg-sky-100 opacity-70 text-black cursor-not-allowed" disabled>
