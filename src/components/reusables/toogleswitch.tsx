@@ -24,7 +24,7 @@ const ToggleSwitch: React.FC<ToggleProps> = ({
   option1Node,
   option2Node,
   inBetween,
-  width = "40",
+  width = "w-40",
   height = "h-6",
   background ="bg-gray-100",
   id
@@ -54,7 +54,7 @@ const ToggleSwitch: React.FC<ToggleProps> = ({
 
   return (
     <div className="flex items-center justify-center">
-      <div id={id} className={`mx-2 w-${width} ${height} ${background} rounded-full cursor-pointer relative py-4`}>
+      <div id={id} className={`mx-2 ${width} ${height} ${background} rounded-full cursor-pointer relative py-4`}>
         <div
           className={`absolute top-0 h-full bg-blue-400 ${computedWidth} bg-opacity-50 flex items-center justify-center rounded-full transition-all duration-300 ease-in-out ${getBackgroundPosition()}`}
         ></div>
