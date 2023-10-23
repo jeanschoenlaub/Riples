@@ -71,8 +71,8 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
       <div id="global-nav-mid" className="flex flex-col md:flex-row w-1/2 justify-center items-center gap-3 p-2">
         {/* Toogle Social / Create if optional parameters active tab otherwise home*/}
         {activeTab && setActiveTab ? 
-            (<ToggleSwitch id="navbartoggle" activeTab={activeTab} width={windowWidth < 768 ? "40" : "60"}  setActiveTab={setActiveTab} option1="Social" option2="Create" inBetween={ToogleinBetween}></ToggleSwitch>) :
-            (<ToggleSwitch id="navbartoggle" option1="Social" option2="Create" width={windowWidth < 768 ? "40" : "60"}  inBetween={ToogleinBetween}></ToggleSwitch>)
+            (<ToggleSwitch id="navbartoggle" activeTab={activeTab} width={windowWidth < 768 ? "w-40" : "w-60"}  setActiveTab={setActiveTab} option1="Social" option2="Create" inBetween={ToogleinBetween}></ToggleSwitch>) :
+            (<ToggleSwitch id="navbartoggle" option1="Social" option2="Create" width={windowWidth < 768 ? "w-40" : "w-60"}  inBetween={ToogleinBetween}></ToggleSwitch>)
         }
       </div>
           <div id="global-nav-right" className="flex w-1/4 items-center justify-center p-2 ">
