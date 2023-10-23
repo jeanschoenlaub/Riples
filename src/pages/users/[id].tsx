@@ -69,10 +69,13 @@ export default function UserPage(
       setActiveTab(tabFromQuery ?? "about");
     }, [router.query]);
 
-    const { data: projectData } = api.projects.getProjectByAuthorId.useQuery({ authorId });
+    const { data: projectsByAuthor } = api.projects.getProjectByAuthorId.useQuery({ authorId });
+    const { data: projectsByMember } = api.projects.getProjectByMemberId.useQuery({ memberId: authorId });
     const { data: user} = api.users.getUserByUserId.useQuery({ userId: authorId });
     const { data: session } = useSession();
     
+    const combinedProjects = [...(projectsByAuthor || []), ...(projectsByMember || [])];
+
     const isUserOwner = session?.user.id == authorId
 
     if (!user) return <div>Something went wrong</div>;
@@ -88,11 +91,11 @@ export default function UserPage(
           </div>
   
           <div className="flex justify-center w-full bg-sky-50">
-            <div id="project-nav-container" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
+            <div id="project-nav-container" className="hidden md:flex flex-col w-1/4 p-4">
               <SideNavProject></SideNavProject>
             </div>
 
-            <div id="user-main" className="relative flex flex-col w-full md:w-1/2 border border-slate-700">
+            <div id="user-main" className="relative flex flex-col w-full md:w-3/4 ">
               <div id="user-meta" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-5">
                   <span className="flex space-x-10 gap-5 items-center font-medium text-gray-500">  
                       {/* User Profile Image Hover buttons */}
@@ -142,14 +145,11 @@ export default function UserPage(
 
                   {/* SHOWN IF PROJECTS TAB */}
                   {activeTab === 'projects' && (
-                    <UserPortofolio projectData={projectData} isUserOwner={isUserOwner}  ></UserPortofolio>
+                    <UserPortofolio projectData={combinedProjects} isUserOwner={isUserOwner}  ></UserPortofolio>
                 )}
               </div>
           </div>
 
-            <div id="future-content" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
-              <h1>Future Content</h1>
-            </div>
           </div>
         </main>
       </>

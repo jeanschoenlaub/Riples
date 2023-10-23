@@ -22,7 +22,7 @@ export const UserStats: React.FC<UserStatsProps> = ({ user }) => {
             {/* Member Since */}
             <div className="flex items-center ml-2 mt-3 mb-3 space-x-2">
                 <label className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32">
-                    Member since:
+                    Riples User since:
                 </label>
                 <div className="flex-grow w-full p-2">
                     {dayjs(user.createdAt).format('DD/MM/YYYY')}

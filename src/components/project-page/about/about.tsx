@@ -65,8 +65,6 @@ export const AboutTab : React.FC<AboutTabProps> = ({ project, projectTags, isMem
                 </div>
                 </div>
         }
-
-
                 <p className="ml-2 italic text-sm text-gray-600">
                   Created {dayjs(project.project.createdAt).format('DD/MM/YYYY')}
                 </p>

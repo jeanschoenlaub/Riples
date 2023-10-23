@@ -6,6 +6,7 @@ import { useProjectGoalMutation } from './goalsapi';
 import { LoadingSpinner } from '~/components/reusables/loading';
 import { GoalModal } from './goalmodal';
 import { GoalFinishedModal } from './goalfinishedmodal';
+import dayjs from 'dayjs';
 
 type Goal = RouterOutputs["projects"]["getProjectByProjectId"]["project"]["goals"][0]
 
@@ -78,49 +79,57 @@ export const ProjectAboutGoal: React.FC<ProjectAboutGoalProps> = ({
     return (
         <div>
             <div id="project-about-goals" className="mb-4">
-            <div className='text-lg mt-2 ml-2 font-semibold'>Project Goals </div>
-                <div className="mt-2">
-                    {goals.map((goal, index) => (
-                        <div key={index} className="flex items-center mb-2">
-                            <div className="flex flex-col items-bottom justify-center ml-2 mr-4">
-                                {goal.status != "finished" ? <GoalSVG />:<GoalSVG colorStrokeHex='#22c55e'/>}
-                            </div>
+                <div className='text-lg mt-2 ml-2 font-semibold'>Project Goals </div>
+                    <ol className="relative border-l ml-4 border-gray-200 dark:border-gray-700 mt-4">
+                        {goals.map((goal, index) => (
+                            <li key={index} className="mb-6 ml-4">
+                                <div className={`absolute mt-0.5 -left-3`}>{goal.status != "finished" ? <GoalSVG colorStrokeHex='#d1d5db'/>:<GoalSVG colorStrokeHex='#4ade80'/>}</div>
 
-                            <div className="flex flex-col w-1/8 md:w-3/5 mr-2">
+                                <div className="flex items-center mb-1">
+                                    {/* Goal Title */}
+                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{goal.title}</h3>
 
-                                <div>{goal.title}</div>
-                            </div>
-                    
-                            <div className="flex flex-col ml-2">
-                                <div className="flex items-center">
-                                        <div className="border rounded px-2 py-1 mr-1 w-auto">
-                                            {goal.progress}
-                                        </div>
-                                        <span>/</span>
-                                        <div className="px-2 py-1 ml-1 w-auto">
-                                            {goal.progressFinalValue}
-                                        </div>
-                                         {isProjectLead && (
-                                            <div>
+                                    {/* Goal Completion and Deadline */}
+                                    <span className="ml-2 italic text-sm text-gray-600">
+                                        {goal.status === "finished" ? (
+                                            <>- Goal completed on {dayjs(goal.editedAt).format('DD/MM/YYYY')}</>
+                                        ) : (
+                                            <>- Goal deadline on {dayjs(goal.editedAt).format('DD/MM/YYYY')}</>
+                                        )}
+                                    </span>
+                                </div>
+                                
+                                {/* Goal Notes */}
+                                <p className="mb-2 mt-2 text-base text-gray-600">{goal.notes}</p>
+
+                                <div className="flex items-center mb-2">
+                                    <div className="border rounded px-2 py-1 mr-1 w-auto">{goal.progress}</div>
+                                    <span>/</span>
+                                    <div className="px-2 py-1 ml-1 w-auto">{goal.progressFinalValue}</div>
+                                    {isProjectLead && (
+                                        <div className="flex ml-2 space-x-2">
                                             <button 
                                                 onClick={() => startEditing(index)}
-                                                className="bg-blue-500 text-white text-base rounded ml-2 px-2 py-1 justify-center w-auto"
+                                                className="bg-blue-500 text-white text-base rounded px-2 py-1 justify-center w-auto"
                                             >
                                                 Edit
                                             </button>
-                                            {goal.status != "finished" && <button 
-                                                onClick={() => GoalFinished(index)}
-                                                className="bg-green-500 text-white text-base rounded ml-2 px-2 py-1 justify-center w-auto"
-                                            >
-                                                Done
-                                            </button>}
-                                            </div>
-                                        )}
+                                            {goal.status != "finished" && (
+                                                <button 
+                                                    onClick={() => GoalFinished(index)}
+                                                    className="bg-green-500 text-white text-base rounded px-2 py-1 justify-center w-auto"
+                                                >
+                                                    Done
+                                                </button>
+                                            )}
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
-                    ))}
-                </div>
+                            </li>
+                        ))}
+                    </ol>
+
+
             </div>
             {(isProjectLead) &&
                 <div id="project-collab-goal-create-button" className="mb-2 flex">
