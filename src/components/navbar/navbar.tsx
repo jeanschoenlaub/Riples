@@ -36,7 +36,7 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
         </Link>
         </div>
         <div>
-          <Link href="/about/riples">
+          <Link href="/about/riples" className="text-gray-500">
               {'About Riples'}
           </Link>
         </div>

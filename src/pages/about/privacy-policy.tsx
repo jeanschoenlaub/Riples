@@ -7,7 +7,7 @@ export default function PrivacyPolicy() {
     <>
       <main className="flex flex-col items-center w-full h-screen">
         <div id="nav-container" className="w-full">
-          <GlobalNavBar />
+          <GlobalNavBar ToogleinBetween={true}></GlobalNavBar> 
         </div>
 
         <div className="flex justify-center w-full bg-sky-50 p-6">

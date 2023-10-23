@@ -210,7 +210,6 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
           }}
         />
       </div>
-
   );
 };
 

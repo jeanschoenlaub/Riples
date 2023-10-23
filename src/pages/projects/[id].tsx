@@ -117,8 +117,6 @@ export default function Project(
     isProjectLead || isMember ||
     (projectData?.project.projectType === "collab" && projectData?.project.projectPrivacy === "public")
 
-  console.log(projectData?.project.coverImageId)
-
   return (
     <>
       <Head>

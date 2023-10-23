@@ -10,28 +10,38 @@ interface ProjectCoverImageProps {
     projectId: string;
 }
 
+//TO-DO
+interface Fields {
+    key: string;
+    bucket: string;
+    Policy?: string;  // This is optional since it might not always be present.
+    [key: string]: string | undefined;  // This is for any additional properties that might appear in the object.
+}
+
 const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, projectId }) => {
     const [imageUrl, setImageUrl] = useState(buildImageUrl(coverImageId));
     const [imageChanging, setImageChanging] = useState(false);
 
     const { file, setFile, isUploading, uploadImage} = useProjectCoverImageUpload();
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
         if (selectedFile) {
             setFile(selectedFile);
-            try {
-                setImageChanging(true);
-                const newCoverImageId = await uploadImage(projectId);
+            setImageChanging(true);
+            uploadImage(projectId)
+            .then(newCoverImageId => {
                 const newUrl = buildImageUrl(newCoverImageId) + `?timestamp=${Date.now()}`;
                 setImageUrl(newUrl);
                 setImageChanging(false);
-            } catch (err) {
+            })
+            .catch(err => {
                 setImageChanging(false);
                 console.error("Error uploading project cover Image");
-            }
+            });
         }
     };
+    
 
     //For reloading when navigating between projects 
     useEffect(() => {
@@ -111,7 +121,7 @@ export const useProjectCoverImageUpload = () => {
                 console.error("Unexpected response: 'fields.key' is missing.");
                 throw new Error("Unexpected server response");
             }
-
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const data: Record<string, any> = {
                 ...fields,
                 "Content-Type": fileRef.current.type,
@@ -120,6 +130,7 @@ export const useProjectCoverImageUpload = () => {
 
             const formData = new FormData();
             for (const name in data) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 formData.append(name, data[name]);
             }
 

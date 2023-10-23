@@ -14,8 +14,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-
-
 model Project {
   id              String   @id @default(cuid())
   title           String   @db.VarChar(255)
@@ -30,7 +28,7 @@ model Project {
   endDate         DateTime @default(now())
 
   coverImageUrl   String   @default("https://t3-portofolio.s3.us-east-2.amazonaws.com/mvp_riples/Riple_bannner.png") @db.VarChar(255)
-  coverImageId    String   @default("https://riples-public-images-08453786.s3.us-west-2.amazonaws.com/project-cover-images/default/Riple_bannner.png") @db.VarChar(255)
+  coverImageId    String   @default("default/Riple_bannner.png") @db.VarChar(255)
   
   //Relations
   authorID        String
@@ -184,8 +182,6 @@ model SubTasks {
 
   @@index([taskId])
 }
-
-
 
 // CHECK NEXT AUTH BEFORE MODIFYING
 model User {

@@ -12,7 +12,7 @@ export const SocialFeed = () => {
   
     return ( 
       <div>
-        <div className="p-4 bg-gray-200 rounded-lg shadow-md mb-5">
+        <div className="p-3 bg-gray-200 rounded-lg shadow-md mb-5 mr-5 ml-5">
           <div className="block md:flex justify-between">
             {/* Filter dropdown */}
             <div className="flex items-center">

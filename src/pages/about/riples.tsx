@@ -8,27 +8,23 @@ export default function AboutRiples() {
     <>
       <main className="flex flex-col items-center w-full h-screen">
         <div id="nav-container" className="w-full">
-          <GlobalNavBar />
+        <GlobalNavBar ToogleinBetween={true}></GlobalNavBar>
         </div>
 
         <div className="flex justify-center w-full bg-sky-50 p-6">
           <div className="flex flex-col w-full md:w-3/5 p-4 border rounded-lg border-slate-700 space-y-6">
-            <h1 className="text-3xl font-semibold">About Riples</h1>
-            <p>Welcome to Riples - A platform to turn ideas into realities together.</p>
+            <h2 className="text-2xl font-semibold ">About Riples</h2>
+            <p> Riples is a platform where you can host you projects, collaborate in other public projects and share with a vibrant community</p>
+
 
             <section>
-              <h2 className="text-2xl font-semibold mb-2">The story</h2>
-              <p> I&apos;ve always had the desire to create start-up companies with my friends, as well as the belief that collective intelligence is super powerful. Combined with the conviction that current social media create less value than they could, the idea of a mix of a social media & project management platform was born. Let&apos;s try to do what Github did for open-source coding for all kind of projects !  </p>
+              <h2 className="font-semibold">Our Mission</h2>
+              <p>At Riples, we&apos;re on a mission to empower individuals and teams to turn their visions into reality. Whether you&apos;re an aspiring startup founder, looking to get real-life experience in coding, or want to follow your friends on their creative adventures, Riples is the platform you need to bring your projects to life in a supportive and engaging community.</p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-2">Our Mission</h2>
-              <p>At Riples, we&apos;re on a mission to empower individuals and teams to turn their collaborative dreams into reality. Whether you&apos;re a startup founder, an experienced professional, or just friends with a crazy idea, Riples provides the platform and tools you need to bring your projects to life in a supportive and engaging community.</p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-2">Our Vision</h2>
-              <p>Our vision is to create a global ecosystem where collaboration knows no boundaries. We believe that innovation thrives when diverse minds come together. That&apos;s why Riples is designed to be a hub where creators, developers, and dreamers can connect, collaborate, and make waves together.</p>
+              <h2 className="font-semibold">Our Vision</h2>
+              <p> We believe that innovation thrives when diverse minds come together, and that long lasting relationships can be  . That&apos;s why Riples is designed to be a hub where creators, developers, and dreamers can connect, collaborate, and make waves together.</p>
             </section>
 
             <section>

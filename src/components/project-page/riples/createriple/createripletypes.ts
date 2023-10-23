@@ -10,7 +10,7 @@ export interface CreateRipleModalProps {
     onClose: () => void;
     isLoading?: boolean;
     projectId: string;
-    projectTitle: string,
-    projectSummary: string,
-    projectCoverImageUrl: string,
+    projectTitle: string;
+    projectSummary: string;
+    projectCoverImageId: string;
 }
