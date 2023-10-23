@@ -8,11 +8,11 @@ type RipleHTMLComponentProps = {
     ripleContent: string;
     setRipleContent: React.Dispatch<React.SetStateAction<string>>;
     projectTitle: string;
-    projectCoverImageUrl: string;
+    projectCoverImageId: string;
     isLoading: boolean;
 }
 
-const RipleHTMLComponent: React.FC<RipleHTMLComponentProps> = ({ ripleTitle, setRipleTitle, projectTitle, projectCoverImageUrl, isLoading, ripleContent, setRipleContent }) => {
+const RipleHTMLComponent: React.FC<RipleHTMLComponentProps> = ({ ripleTitle, setRipleTitle, projectTitle, projectCoverImageId, isLoading, ripleContent, setRipleContent }) => {
         const [isEditMode, setIsEditMode] = useState(false);
     
         return (
@@ -61,7 +61,7 @@ const RipleHTMLComponent: React.FC<RipleHTMLComponentProps> = ({ ripleTitle, set
                                 ripleTitle={ripleTitle}
                                 ripleContent={ripleContent} 
                                 projectTitle={projectTitle}
-                                projectCoverImageUrl={projectCoverImageUrl}
+                                projectCoverImageId={projectCoverImageId}
                             />
                         </div>
                     )}

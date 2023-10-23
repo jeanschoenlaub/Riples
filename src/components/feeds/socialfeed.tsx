@@ -12,7 +12,7 @@ export const SocialFeed = () => {
   
     return ( 
       <div>
-        <div className="p-4 bg-gray-200 rounded-lg shadow-md mb-5">
+        <div className="p-3 bg-gray-200 rounded-lg shadow-md mb-5 mr-5 ml-5">
           <div className="block md:flex justify-between">
             {/* Filter dropdown */}
             <div className="flex items-center">
@@ -40,14 +40,6 @@ export const SocialFeed = () => {
               </Tooltip>
             </div>
           </div>
-        </div>
-
-        <div className="flex justify-center">
-        <a href="https://forms.gle/WPq2stK3YBDcggHw5" target="_blank" rel="noopener noreferrer">
-              <button className="bg-green-500 text-white rounded py-1 px-2 text-center text-sm">
-                Feedback
-              </button>
-            </a>
         </div>
 
         <div id="socialfeed">

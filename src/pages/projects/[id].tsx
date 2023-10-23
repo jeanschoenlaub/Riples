@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { api } from "~/utils/api";
-import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
 
@@ -20,10 +19,10 @@ import { GlobalNavBar } from "~/components/navbar/navbar";
 import { SideNavProject } from "~/components/navbar/sidenavproject";
 import Follow from "~/components/reusables/follow";
 import { AdminTab } from "~/components/project-page/admin/admin";
-import Tooltip from "~/components/reusables/tooltip";
 import { RiplesTab } from "~/components/project-page/riples/riples";
 import { useRouter } from "next/router";
 import { useWizard } from "~/components/wizard/wizardswrapper";
+import ProjectCoverImage from "~/components/project-page/coverimage";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -118,8 +117,6 @@ export default function Project(
     isProjectLead || isMember ||
     (projectData?.project.projectType === "collab" && projectData?.project.projectPrivacy === "public")
 
- 
-
   return (
     <>
       <Head>
@@ -136,32 +133,9 @@ export default function Project(
             </div>
 
             <div id="project-main" className="relative flex flex-col w-full md:w-3/4 border border-slate-700">
-              <div id="project-main-cover-image" className=" hidden md:flex group relative w-full h-[30vh] overflow-hidden">
-                  <Image 
-                      src={projectData?.project.coverImageUrl} 
-                      alt="Project cover image" 
-                      layout="fill" 
-                      objectFit="cover"
-                  />
+               {/* Passing empty project cover image because otherwise SSR (which I don't understand very well RN) passes old cover */}
+              <ProjectCoverImage coverImageId={projectData?.project.coverImageId} projectId={projectData.project.id}></ProjectCoverImage>
 
-                  {/* Hover buttons */}
-                  <div className="absolute bottom-0 right-0 flex flex-col items-end mb-2 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Tooltip content="The feature of uploading your own picture is coming." shiftRight={true} width="200px">
-                          <span className="mb-2">
-                              <button className="m-2 py-1 px-2 bg-sky-100 opacity-70 text-black cursor-not-allowed" disabled>
-                                  Replace image
-                              </button>
-                          </span>
-                      </Tooltip>
-                      <Tooltip content="The feature of repositioning picture is coming." shiftRight={true} width="200px">
-                          <span>
-                              <button className="m-2 py-1 px-2 bg-sky-100 opacity-70 text-black cursor-not-allowed" disabled>
-                                  Reposition
-                              </button>
-                          </span>
-                      </Tooltip>
-                  </div>
-            </div>
 
             <div id="project-main-metadata" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-5">
                 <div id="project-metadata" className="flex items-center justify-between"> 
@@ -186,7 +160,7 @@ export default function Project(
 
                 {/* SHOWN IF RIPLES TAB */}
                 {activeTab === 'riples' && (
-                    <RiplesTab ripleData={ripleData} projectId={projectId} projectTitle={projectData.project.title} projectSummary={projectData.project.summary} projectCoverImageUrl={projectData.project.coverImageUrl}></RiplesTab>
+                    <RiplesTab ripleData={ripleData} projectId={projectId} projectTitle={projectData.project.title} projectSummary={projectData.project.summary} projectCoverImageId={projectData.project.coverImageId}></RiplesTab>
                 )}
 
 

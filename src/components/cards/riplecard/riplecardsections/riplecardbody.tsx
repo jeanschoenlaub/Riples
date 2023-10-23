@@ -43,7 +43,7 @@ export const RipleCardBody = ({ ripleContent }: RipleCardBodyProps) => {
                     { showReadMore && (
                         <div className="text-right">
                             <button onClick={() => setIsExpanded(!isExpanded)} className="mt-2 bg-gray-300 text-sm flex-shrink-0 w-22 hover:bg-blue-600 hover:text-white font-bold px-2 rounded-full transition duration-300 ease-in-out ">
-                                {isExpanded ? 'See More' : 'See Less'}
+                                {isExpanded ? '... Read More' : 'Read Less'}
                             </button>
                         </div>
                     )}

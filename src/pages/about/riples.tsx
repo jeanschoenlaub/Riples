@@ -1,72 +1,118 @@
 //import Link from "next/link";
-import Link from "next/link";
 import { GlobalNavBar } from "~/components/navbar/navbar";
 
+import dynamic from 'next/dynamic';
+import { useState } from "react";
+import { NavBarSignInModal } from "~/components/navbar/signinmodal";
+import { useSession } from "next-auth/react";
+
+
+
 export default function AboutRiples() {
+  const DynamicReactPlayer = dynamic(() => import('react-player'), {
+    ssr: false, // This will load the component only on client side
+  });
+  const { data: session } = useSession();
+
+  const [showSignInModal, setShowSignInModal] = useState(false);
 
   return (
     <>
       <main className="flex flex-col items-center w-full h-screen">
         <div id="nav-container" className="w-full">
-          <GlobalNavBar />
+        <GlobalNavBar ToogleinBetween={true}></GlobalNavBar>
         </div>
 
-        <div className="flex justify-center w-full bg-sky-50 p-6">
-          <div className="flex flex-col w-full md:w-3/5 p-4 border rounded-lg border-slate-700 space-y-6">
-            <h1 className="text-3xl font-semibold">About Riples</h1>
-            <p>Welcome to Riples - A platform to turn ideas into realities together.</p>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-2">The story</h2>
-              <p> I&apos;ve always had the desire to create start-up companies with my friends, as well as the belief that collective intelligence is super powerful. Combined with the conviction that current social media create less value than they could, the idea of a mix of a social media & project management platform was born. Let&apos;s try to do what Github did for open-source coding for all kind of projects !  </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-2">Our Mission</h2>
-              <p>At Riples, we&apos;re on a mission to empower individuals and teams to turn their collaborative dreams into reality. Whether you&apos;re a startup founder, an experienced professional, or just friends with a crazy idea, Riples provides the platform and tools you need to bring your projects to life in a supportive and engaging community.</p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-2">Our Vision</h2>
-              <p>Our vision is to create a global ecosystem where collaboration knows no boundaries. We believe that innovation thrives when diverse minds come together. That&apos;s why Riples is designed to be a hub where creators, developers, and dreamers can connect, collaborate, and make waves together.</p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-2">What Sets Us Apart</h2>
-              <h2 className="font-semibold mt-4">A Platform Empowering Collaboration</h2>
-              <p>With Riples, you can share and follow ideas, and work with people from around the world seamlessly, all within a user-friendly interface. From tech startups to creative endeavors, Riples welcomes a diverse range of projects.</p>
+        <div className="flex flw justify-center w-full bg-sky-50">
+          <div className="flex flex-col bg-sky-50 w-full ">
+            <section className="mt-4">
+                <div className="gap-8 items-center py-2 px-4 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 sm:py-4 lg:px-6">
+                    <div className="w-full">
+                    {typeof window !== 'undefined' && (
+                          <DynamicReactPlayer
+                            url="https://youtu.be/lbyVFgKV3Oc"
+                            controls={true}
+                            playing={false}
+                            width={"w-1/2"}
+                          />
+                        )}
+                    </div>
+                    <div className="mt-4 md:mt-0">
+                        <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white"> Turning ideas into realities.</h2>
+                        <p className="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400"> Ever felt your ideas were lost in the noise or isolated in your creative journey ? With Riples, your ideas echo louder. </p>
+                        <p className="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400"> Try a revolutionary platform that streamlines your projects, enables you to collaborate and share with a vibrant community. Whether you&apos;re an aspiring startup founder, looking to get real-life experience in collaborative projects, or want to follow your friends on their creative adventures, Riples empowers you to turn your visions into reality. </p>
+                    </div>
+                </div>
               
-              <h2 className="font-semibold mt-4">Infrastructure for Seamless Creation</h2>
-              <p>Crafting the future should be exhilarating, not encumbered. At Riples, we are building a platform that stands as your unwavering foundation. From inception to execution, we provide the infrastructure and resources to streamline your project journey. </p>
+                <div className=" px-4 mx-auto max-w-screen-xl sm:py-8 lg:px-6">
+                    <div className="max-w-screen-md mb-4 lg:mb-8">
+                        <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white"> What sets us apart</h2>
+                   </div>
+                   <div className="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
+                   <div className="flex flex-col space-y-4">
+                <h3 className="mb-2 text-xl font-bold dark:text-white inline-flex items-center space-x-4">
+                    <div className="flex-shrink-0 flex justify-center items-center w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                        <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 20">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 14h12M1 4h12M6.5 16.5h1M2 1h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z"/>
+                        </svg>
+                    </div>
+                    Leveraging your time
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400">Tired of wasting time on social media? So are we. On Riples, you will not only unleash your creative potential but also develop meaningful relationships. Find purpose beyond the scroll.</p>
+            </div>
+
+            <div className="flex flex-col space-y-4">
+                <h3 className="mb-2 text-xl font-bold dark:text-white inline-flex items-center space-x-4">
+                    <div className="flex-shrink-0 flex justify-center items-center w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                        <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.333 6.764a3 3 0 1 1 3.141-5.023M2.5 16H1v-2a4 4 0 0 1 4-4m7.379-8.121a3 3 0 1 1 2.976 5M15 10a4 4 0 0 1 4 4v2h-1.761M13 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-4 6h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z"/>
+                        </svg>
+                    </div>
+                    Redefining Collaboration
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400">With Riples, you can share and follow ideas, and work with people from around the world seamlessly, all within a user-friendly interface. Bringing collective intelligence to your doorstep.</p>
+            </div>
+
+            <div className="flex flex-col space-y-4">
+                <h3 className="mb-2 text-xl font-bold dark:text-white inline-flex items-center space-x-4">
+                    <div className="flex-shrink-0 flex justify-center items-center w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                    <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                    </svg>
+                    </div>
+                    Unified Project Hub
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400">Forget the hassle of juggling folders, we make all your projects easily accessible across devices. Plus, showcase your portfolio to the world, highlighting your contributions.</p>
+            </div>
+            </div>
+            </div>
+              </section>
+              {!session && (
+              <section className="bg-sky-50 dark:bg-gray-900">
+              <div className="py-0 px-4 mx-auto max-w-screen-xl sm:py-0 lg:px-6">
+                  <div className="mx-auto max-w-screen-sm text-center">
+                      <h2 className="mb-4 text-4xl tracking-tight font-extrabold leading-tight text-gray-900 dark:text-white">Start using Riples today</h2>
+                      <p className="mb-6 font-light text-gray-500 dark:text-gray-400 md:text-lg">It&apos;s Free ! No credit card required.</p>
+                      <div>
+              <button className="bg-blue-500 text-white rounded mb-5 py-2 px-10 md:px-4 text-center text-3xl md:text-2xl" onClick={() => setShowSignInModal(true)}>Sign In</button>
+            </div></div>
+                
+              </div>
+          </section>
+            )}
+
+          <div className="flex justify-center">
+                  <a href="https://forms.gle/WPq2stK3YBDcggHw5" target="_blank" rel="noopener noreferrer">
+                        <button className="bg-green-500 text-white mb-5 mt-4 rounded py-1 px-2 text-center text-sm">
+                          Feedback
+                        </button>
+                      </a>
+                </div>
               
-              <h2 className="font-semibold mt-4">We Will Build Riples Collaboratively</h2>
-              <p>And we&apos;re not just about talking the talk, we&apos;re walking the collaborative walk. We believe so strongly in the power of collaboration that we&apos;re using Riples to build Riples. But we&apos;re not doing it alone, we invite you to be a part of this journey. Your contributions, feedback, and insights are not just welcome, they&apos;re essential. You have the unique opportunity to help shape the platform you use, ensuring it evolves in a way that best serves your needs and aspirations. Let&apos;s build the future of collaboration together, one ripple at a time. </p>
-            </section>
 
-            <section>
-              <h2 className="text-2xl font-semibold mb-2">Join the Movement</h2>
-              <p>Are you ready to join a community that&apos;s redefining collaboration? Whether you have a groundbreaking idea or just want to follow innovative projects through our platform, Riples is the place to connect with like-minded individuals. Start your journey with us today! Let us know what you think about the Riples app <Link href="https://forms.gle/WPq2stK3YBDcggHw5" className="text-blue-500">
-                    here
-                </Link>  </p>
-            </section>
-
-            {/*
-            <section>
-                <h2 className="text-2xl font-semibold mb-2">Legal</h2>
-                <p>
-                Please make sure to read our{" "}
-                <Link href="/about/terms-of-service" className="text-blue-500">
-                    Terms of Service
-                </Link>{" "}
-                and{" "}
-                <Link href="/about/privacy-policy" className="text-blue-500">
-                    Privacy Policy
-                </Link>
-                .
-                </p>
-            </section> */}
           </div>
         </div>
+        <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
       </main>
     </>
   );

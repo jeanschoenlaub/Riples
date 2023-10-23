@@ -11,7 +11,7 @@ export const useTaskMutation = () => {
     const handleSuccess = async () => {
       await apiContext.tasks.getTasksByProjectId.invalidate();
     };
-  
+
     // Create Task Mutation
     const { mutate: createTaskMutation, isLoading: isCreating } = api.tasks.create.useMutation({
         onSuccess: handleSuccess,

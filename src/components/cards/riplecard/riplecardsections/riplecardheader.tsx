@@ -6,6 +6,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 import Follow from '~/components/reusables/follow';
 import { TrashSVG } from '~/components/reusables/svgstroke';
 import { RouterOutputs } from '~/utils/api';
+import { buildImageUrl } from '~/utils/s3';
 dayjs.extend(relativeTime);
 
 type Riple = RouterOutputs["riples"]["getAll"][number]["riple"];
@@ -19,11 +20,11 @@ type RipleWithAuthor = {
 
 export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) => {
     //Smaller images if phone
-    const [imgDimensions, setImgDimensions] = useState({width: 100, height: 100});
+    const [imgDimensions, setImgDimensions] = useState({width: 80, height: 80});
     useEffect(() => {
         if (typeof window !== 'undefined') {
             if (window.innerWidth < 640) {
-                setImgDimensions({width: 80, height: 80});
+                setImgDimensions({width: 60, height: 60});
             }
         }
     }, []);
@@ -33,7 +34,7 @@ export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) =
             <div id="riple-card-header-image" className="flex-none">
                 <Link href={`/projects/${riple.projectId}`}>
                     <Image
-                        src={riple.project.coverImageUrl} 
+                        src={buildImageUrl(riple.project.coverImageId)} 
                         alt="Profile Image" 
                         className="rounded-full border border-slate-300"
                         width={imgDimensions.width} 
@@ -61,15 +62,15 @@ export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) =
                 {/* Metadata */}
                 <div className="space-y-1">
                     <div className="text-sm text-gray-500">
-                        {riple.ripleType == "update" ? `Update on` : `Check out project`}
-                        <span className="font-medium text-sky-500 ml-1">
+                        {riple.ripleType == "update" ? `Update on project:` : `Update on project:`}
+                        <span className="font-medium text-base text-sky-500 ml-1">
                             <Link href={`/projects/${riple.projectId}`}>
                                 {riple.project.title}
                             </Link>
                         </span>
-                        &nbsp;&#40;{riple.project.projectType}&#41;
+                        {/*&nbsp;&#40;{riple.project.projectType}&#41;*/}
                     </div>
-
+                    {/*
                     <div className="text-sm text-gray-500">
                         By user &nbsp;
                         <span className="font-medium text-black">
@@ -79,6 +80,7 @@ export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) =
                         </span>
                         <span className="ml-2">{`${dayjs(riple.createdAt).fromNow()}`}</span>
                     </div>
+                    */}
                 </div>
             </div>
         </div>

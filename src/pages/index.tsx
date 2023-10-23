@@ -39,17 +39,17 @@ export default function Home() {
         </div>
 
         <div id="main-body-container" className="flex justify-center w-full bg-sky-50">
-          <div id="project-nav-container" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
+          <div id="project-nav-container" className="hidden md:flex flex-col w-1/4 p-4 ">
             <SideNavProject></SideNavProject>
           </div>
 
-         <div id="feed-container" className="flex flex-col  w-full md:w-1/2 g-4 p-4 border border-slate-700">
+         <div id="feed-container" className="flex flex-col  w-full md:w-1/2 g-4 p-4 ">
             {/* Different Content Between Social and Create */}
             {activeTab === "Social" ? <SocialFeed /> : <CreateFeed />}
           </div>
               
-          <div id="future-content" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
-              <h1>Future Content</h1>
+          <div id="future-content" className="hidden md:flex flex-col w-1/4 p-4 ">
+              <h1></h1>
           </div>
         </div>
       </main>

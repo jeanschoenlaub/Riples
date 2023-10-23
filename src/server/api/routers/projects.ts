@@ -5,6 +5,21 @@ import { TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
 
+//For images upload
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import { S3Client } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from "uuid";
+import { env } from "~/env.mjs";
+
+const UPLOAD_MAX_FILE_SIZE = 1000000;
+
+const s3Client = new S3Client({
+  region: "us-west-2",
+  credentials: {
+    accessKeyId: env.S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_ID,
+    secretAccessKey: env.S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_SECRET,
+  },
+});
 
 // Create a new ratelimiter, that allows 2 requests per 1 minute
 export const ratelimit = new Ratelimit({
@@ -450,4 +465,44 @@ editAdmin: protectedProcedure
 
     return { message: "Project successfully deleted." };
   }),
+
+  createPresignedUrl: protectedProcedure
+    .input(z.object({ projectId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      // const userId = ctx.session.user.id;
+      const project = await ctx.prisma.project.findUnique({
+        where: {
+          id: input.projectId,
+        },
+      });
+
+      if (!project) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "the project does not exist",
+        });
+      }
+
+      const imageId = uuidv4();
+      await ctx.prisma.project.update({
+        where: {
+          id: project.id,
+        },
+        data: {
+          coverImageId: imageId,
+        },
+      });
+
+      return createPresignedPost(s3Client, {
+        Bucket: env.NEXT_PUBLIC_S3_PUBLIC_IMAGES_BUCKET,
+        Key: `project-cover-images/${imageId}`,
+        Fields: {
+          key: `project-cover-images/${imageId}`,
+        },
+        Conditions: [
+          ["starts-with", "$Content-Type", "image/"],
+          ["content-length-range", 0, UPLOAD_MAX_FILE_SIZE],
+        ],
+      });
+    }),
 });

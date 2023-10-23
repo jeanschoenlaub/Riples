@@ -82,7 +82,7 @@ export const GoalFinishedModal: React.FC<GoalFinishedModalType> = ({ goalFinishe
               onChange={(e) => setPostToFeed(e.target.checked)} 
             />
             <label htmlFor="postToFeed" className={`ml-2 text-sm ${isPrivate == "private" ? 'text-gray-400' : 'text-gray-900'}`}>
-              Post this project creation to the feed &#40;only for public projects&#41;
+              Post this goal completion to the feed &#40;only for public projects&#41;
             </label>
           </div>
             {/* Text input for posting to feed */}
