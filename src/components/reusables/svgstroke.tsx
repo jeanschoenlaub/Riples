@@ -135,14 +135,14 @@ export const GoalSVG = ({ width = "6", height = "6", marginRight = "0", marginLe
     );
 };
 
-export const MenuSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+export const MenuSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorFill= "currentColor", colorStrokeHex="currentColor" }) => {
     return (
         <svg 
             className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
             aria-hidden="true" 
             xmlns="http://www.w3.org/2000/svg" 
-            fill={colorStrokeHex}
-            viewBox="0 0 22 20"
+            fill={colorFill}
+            viewBox="0 0 17 14"
         >
             <path 
                 stroke={colorStrokeHex}  // Blue and Gray colors
@@ -153,6 +153,7 @@ export const MenuSVG = ({ width = "6", height = "6", marginRight = "0", marginLe
         </svg>
     );
 };
+
 
 export const BellSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
     return (
