@@ -74,7 +74,7 @@ export default function UserPage(
     const { data: user} = api.users.getUserByUserId.useQuery({ userId: authorId });
     const { data: session } = useSession();
     
-    const combinedProjects = [...(projectsByAuthor || []), ...(projectsByMember || [])];
+    const combinedProjects = [...(projectsByAuthor ?? []), ...(projectsByMember ?? [])];
 
     const isUserOwner = session?.user.id == authorId
 

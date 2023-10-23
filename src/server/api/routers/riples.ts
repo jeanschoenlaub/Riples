@@ -5,6 +5,21 @@ import { TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
 
+//For images upload
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import { S3Client } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from "uuid";
+import { env } from "~/env.mjs";
+
+const UPLOAD_MAX_FILE_SIZE = 1000000;
+
+const s3Client = new S3Client({
+  region: "us-west-2",
+  credentials: {
+    accessKeyId: env.S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_ID,
+    secretAccessKey: env.S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_SECRET,
+  },
+});
 
 // Create a new ratelimiter, that allows 2 requests per 1 minute
 export const ratelimit = new Ratelimit({
@@ -161,6 +176,31 @@ export const ripleRouter = createTRPCRouter({
                 project: riple.project,
             };
         });
+    }),
+
+    createRipleImagePresignedUrl: protectedProcedure
+    .mutation(async ({ ctx, input }) => {
+
+      const imageId = uuidv4();
+
+      // Save the imageId in the RipleImage table
+      await ctx.prisma.ripleImage.create({
+        data: {
+          ImageId: imageId,
+        },
+      });
+
+      return createPresignedPost(s3Client, {
+        Bucket: env.NEXT_PUBLIC_S3_PUBLIC_IMAGES_BUCKET,
+        Key: `riple-images/${imageId}`,
+        Fields: {
+          key: `riple-images/${imageId}`,
+        },
+        Conditions: [
+          ["starts-with", "$Content-Type", "image/"],
+          ["content-length-range", 0, UPLOAD_MAX_FILE_SIZE],
+        ],
+      });
     }),
 
 });

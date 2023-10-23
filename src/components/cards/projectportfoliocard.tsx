@@ -5,7 +5,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
 import type { RouterOutputs } from "~/utils/api";
 import { useEffect, useState } from 'react';
-import { buildImageUrl } from '~/utils/s3';
+import { buildProjectCoverImageUrl } from '~/utils/s3';
 import { ProfileImage } from '../reusables/profileimage';
 
 
@@ -44,7 +44,7 @@ export const ProjectCardPortofolio = (props: PortofolioProjectCardProps) => {
         <div className="relative border-b border-gray-400 h-40">
             <Image
                 className="rounded-t-lg object-cover"
-                src={buildImageUrl(project.coverImageId)}
+                src={buildProjectCoverImageUrl(project.coverImageId)}
                 alt={`${project.title} image`}
                 layout="fill" // This prop will ensure it fills the parent div's dimensions
             />

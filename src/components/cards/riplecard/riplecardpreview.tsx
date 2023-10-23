@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from 'react';
 import { AboutSVG, LikeSVG } from "~/components/reusables/svg";
 import { FollowEmptySVG, ShareSVG } from "~/components/reusables/svgstroke";
-import { buildImageUrl } from "~/utils/s3";
+import { buildProjectCoverImageUrl } from "~/utils/s3";
 
 
 interface RipleCardPreviewProps {
@@ -50,7 +50,7 @@ export const RipleCardPreview : React.FC<RipleCardPreviewProps> = ({
             <div className="flex items-center space-x-3">
                 <div id="riple-card-header-image" className="flex-none">
                     <img
-                        src={buildImageUrl(projectCoverImageId)}
+                        src={buildProjectCoverImageUrl(projectCoverImageId)}
                         alt="Profile Image"
                         className="rounded-full border border-slate-300"
                         width={imgDimensions.width}

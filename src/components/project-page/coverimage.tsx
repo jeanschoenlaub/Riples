@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Tooltip from '../reusables/tooltip';
 import { useEffect, useRef, useState } from 'react';
 import { api } from '~/utils/api';
-import { buildImageUrl } from '~/utils/s3';
+import { buildProjectCoverImageUrl } from '~/utils/s3';
 import { LoadingRiplesLogo } from '../reusables/loading';
 
 interface ProjectCoverImageProps {
@@ -19,7 +19,7 @@ interface Fields {
 }
 
 const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, projectId }) => {
-    const [imageUrl, setImageUrl] = useState(buildImageUrl(coverImageId));
+    const [imageUrl, setImageUrl] = useState(buildProjectCoverImageUrl(coverImageId));
     const [imageChanging, setImageChanging] = useState(false);
 
     const { file, setFile, isUploading, uploadImage} = useProjectCoverImageUpload();
@@ -31,7 +31,7 @@ const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, pro
             setImageChanging(true);
             uploadImage(projectId)
             .then(newCoverImageId => {
-                const newUrl = buildImageUrl(newCoverImageId) + `?timestamp=${Date.now()}`;
+                const newUrl = buildProjectCoverImageUrl(newCoverImageId) + `?timestamp=${Date.now()}`;
                 setImageUrl(newUrl);
                 setImageChanging(false);
             })
@@ -45,7 +45,7 @@ const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, pro
 
     //For reloading when navigating between projects 
     useEffect(() => {
-        const newUrl = buildImageUrl(coverImageId);
+        const newUrl = buildProjectCoverImageUrl(coverImageId);
         setImageUrl(newUrl);
     }, [coverImageId]);
 
@@ -159,6 +159,7 @@ export const useProjectCoverImageUpload = () => {
         uploadImage,
     };
 };
+
 
 
 

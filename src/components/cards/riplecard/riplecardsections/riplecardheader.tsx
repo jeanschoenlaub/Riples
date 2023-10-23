@@ -6,7 +6,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 import Follow from '~/components/reusables/follow';
 import { TrashSVG } from '~/components/reusables/svgstroke';
 import { RouterOutputs } from '~/utils/api';
-import { buildImageUrl } from '~/utils/s3';
+import { buildProjectCoverImageUrl } from '~/utils/s3';
 dayjs.extend(relativeTime);
 
 type Riple = RouterOutputs["riples"]["getAll"][number]["riple"];
@@ -34,7 +34,7 @@ export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) =
             <div id="riple-card-header-image" className="flex-none">
                 <Link href={`/projects/${riple.projectId}`}>
                     <Image
-                        src={buildImageUrl(riple.project.coverImageId)} 
+                        src={buildProjectCoverImageUrl(riple.project.coverImageId)} 
                         alt="Profile Image" 
                         className="rounded-full border border-slate-300"
                         width={imgDimensions.width} 

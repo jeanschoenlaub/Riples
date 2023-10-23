@@ -1,5 +1,5 @@
 // CreateRipleModal.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Modal } from '~/components/reusables/modaltemplate';
 import type { CreateRipleModalProps, CreateRiplePayload } from './createripletypes';
 import toast from 'react-hot-toast';
@@ -18,11 +18,20 @@ enum Step {
     RipleHTML
 }
 
+type RipleImage = {
+    url: string;
+    id: string;
+    caption: string;
+}
+
 export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, onClose, projectId, projectCoverImageId, projectTitle, projectSummary }) => {
     const [ripleContent, setRipleContent] = useState('');
+    const [ripleHTMLContent, setRipleHTMLContent] = useState('');
     const [ripleTitle, setRipleTitle] = useState('');
     const [currentStep, setCurrentStep] = useState(Step.RipleText);
     const wizardContext = useWizard();
+
+    const [ripleImages, setRipleImages] = useState<RipleImage[]>([]);
 
     const handleRipleSubmit = () => {
         const payload = generateCreatePayload();
@@ -64,9 +73,30 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
         }
     },[showModal])
 
+    const appendImagesToContent = (content: string, images: { url: string; caption: string }[]): string => {
+        let imageHtml = "";
+        console.log("trig")
+    
+        images.forEach(image => {
+            imageHtml += `
+            <br>
+            <div style="display: flex; justify-content: center;">
+                <div style="text-align: center;">
+                    <img src="${image.url}" alt="Uploaded Image" style="width: auto; margin: 0 auto; display: block;" class="responsive-image">
+                    <p style="font-style: italic;">${image.caption}</p>
+                </div>
+            </div><br>
+            `;
+        });
+        
+        return  `<p>${content}</p><br>` + imageHtml;
+    };
+
     useEffect (() => {
         if (currentStep === Step.RipleHTML ){
-            wizardContext.setRipleContent(ripleContent) 
+            const updatedContent = appendImagesToContent(ripleContent, ripleImages);
+            wizardContext.setRipleContent(updatedContent);
+            setRipleHTMLContent(updatedContent);
             wizardContext.setRipleWizardModalStep("html") //This will change RipleWizardMode from text writer to HTML writer
             wizardContext.setShowWizard(true)
         }
@@ -108,6 +138,8 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
                     ripleContent={ripleContent}
                     setRipleContent={setRipleContent}
                     isLoading={isLoading}
+                    ripleImages={ripleImages}
+                    setRipleImages={setRipleImages}
                 />
             }
 
@@ -115,8 +147,8 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
                 <RipleHTMLComponent
                     ripleTitle={ripleTitle}
                     setRipleTitle={setRipleTitle}
-                    ripleContent={ripleContent}
-                    setRipleContent={setRipleContent}
+                    ripleContent={ripleHTMLContent}
+                    setRipleContent={setRipleHTMLContent}
                     projectTitle={projectTitle}
                     projectCoverImageId={projectCoverImageId}
                     isLoading={isLoading}
