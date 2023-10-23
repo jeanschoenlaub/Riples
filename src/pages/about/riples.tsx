@@ -92,7 +92,7 @@ export default function AboutRiples() {
               <div className="py-0 px-4 mx-auto max-w-screen-xl sm:py-0 lg:px-6">
                   <div className="mx-auto max-w-screen-sm text-center">
                       <h2 className="mb-4 text-4xl tracking-tight font-extrabold leading-tight text-gray-900 dark:text-white">Start using Riples today</h2>
-                      <p className="mb-6 font-light text-gray-500 dark:text-gray-400 md:text-lg">It's Free ! No credit card required.</p>
+                      <p className="mb-6 font-light text-gray-500 dark:text-gray-400 md:text-lg">It&apos;s Free ! No credit card required.</p>
                       <div>
               <button className="bg-blue-500 text-white rounded mb-5 py-2 px-10 md:px-4 text-center text-3xl md:text-2xl" onClick={() => setShowSignInModal(true)}>Sign In</button>
             </div></div>
