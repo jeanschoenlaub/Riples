@@ -29,10 +29,10 @@ export const RipleCardBody = ({ ripleContent }: RipleCardBodyProps) => {
                 {cleanHTML != "" && (
                     <div 
                         id="riple-content" 
-                        className={`text-gray-700 mt-2 overflow-hidden transition-all duration-500 ${maxHeightClass}`}
+                        className={`text-gray-700 mt-1 overflow-hidden transition-all duration-500 ${maxHeightClass}`}
                     >
                         {/* Horizontal Divider */}
-                        <hr className="border-t mb-4 border-slate-200"/>
+                        <hr className="border-t mb-2 border-slate-200"/>
 
                         <div dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>
                     </div>

@@ -7,6 +7,7 @@ import Follow from '~/components/reusables/follow';
 import { TrashSVG } from '~/components/reusables/svgstroke';
 import { RouterOutputs } from '~/utils/api';
 import { buildProjectCoverImageUrl } from '~/utils/s3';
+import { ThreeDotSVG } from '~/components/reusables/svg';
 dayjs.extend(relativeTime);
 
 type Riple = RouterOutputs["riples"]["getAll"][number]["riple"];
@@ -21,17 +22,19 @@ type RipleWithAuthor = {
 export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) => {
     //Smaller images if phone
     const [imgDimensions, setImgDimensions] = useState({width: 80, height: 80});
+    const [iconSizes, setIconSizes] = useState("6");
     useEffect(() => {
         if (typeof window !== 'undefined') {
             if (window.innerWidth < 640) {
-                setImgDimensions({width: 60, height: 60});
+                setImgDimensions({width: 50, height: 50});
+                setIconSizes("4")
             }
         }
     }, []);
     return (
         <div id="riple-card-header" className="flex items-center space-x-3">
             {/* Author's Profile Image */}
-            <div id="riple-card-header-image" className="flex-none">
+            <div id="riple-card-header-image" className="flex items-center flex-none" style={{ width: imgDimensions.width, height: imgDimensions.height }}>
                 <Link href={`/projects/${riple.projectId}`}>
                     <Image
                         src={buildProjectCoverImageUrl(riple.project.coverImageId)} 
@@ -39,52 +42,48 @@ export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) =
                         className="rounded-full border border-slate-300"
                         width={imgDimensions.width} 
                         height={imgDimensions.height}
+                        layout="responsive"
                     />
                 </Link>
             </div>
 
-            <div className="flex-grow  ">
-                {/* Project Title and Follow Button */}
-                <Link href={`/projects/${riple.projectId}`}>
-                <div className="flex justify-between items-center flex-wrap">
-                    <div id="riple-card-header-title" className="font-semibold text-gray-800 mr-2">
+            {/* Title and Metadata */}
+            <div className="flex flex-col justify-center ">
+                {/* Project Title */}
+                <div id="riple-card-header-title" className="font-semibold text-xs md:text-base text-gray-800">
+                    <Link href={`/projects/${riple.projectId}`}>
                         {riple.title}
-                    </div>
-                    <div id="riple-card-header-delete-optional">
-                        {onDelete ? <button  className="bg-red-500 px-2 py-1 rounded-lg" onClick={() => onDelete(riple.id)}><TrashSVG width="4" height="4"></TrashSVG></button> : null}
-                    </div>
-                    <div id="riple-card-header-follow">
-                        <Follow projectId={riple.projectId} />
-                    </div>
+                    </Link>
                 </div>
-                </Link>
-            
+
                 {/* Metadata */}
-                <div className="space-y-1">
-                    <div className="text-sm text-gray-500">
-                        {riple.ripleType == "update" ? `Update on project:` : `Update on project:`}
-                        <span className="font-medium text-base text-sky-500 ml-1">
-                            <Link href={`/projects/${riple.projectId}`}>
-                                {riple.project.title}
-                            </Link>
-                        </span>
-                        <span className="ml-2">{`${dayjs(riple.createdAt).fromNow()}`}</span>
-                        {/*&nbsp;&#40;{riple.project.projectType}&#41;*/}
-                    </div>
-                    {/*
-                    <div className="text-sm text-gray-500">
-                        By user &nbsp;
-                        <span className="font-medium text-black">
-                            <Link href={`/users/${riple.authorID}`}>
-                                {author?.username}
-                            </Link>
-                        </span>
-                        <span className="ml-2">{`${dayjs(riple.createdAt).fromNow()}`}</span>
-                    </div>
-                    */}
+                <div id="riple-card-header-metadata" className="text-xs md:text-sm text-gray-500">
+                    {riple.ripleType == "update" ? `Update on project:` : `Update on project:`}
+                    <span className="font-medium md:font-medium text-xs md:text-base text-sky-500 ml-1">
+                        <Link href={`/projects/${riple.projectId}`}>
+                            {riple.project.title}
+                        </Link>
+                    </span>
+                    <span className="ml-2">{`${dayjs(riple.createdAt).fromNow()}`}</span>
+                </div>
+            </div>
+
+            {/* Follow Button and Delete */}
+            <div id="riple-card-header-actions" className="flex flex-col justify-between items-end">
+                <div id="riple-card-header-delete-optional">
+                    {/*{onDelete ? 
+                        <button className="bg-red-500 px-2 py-1 rounded-lg" onClick={() => onDelete(riple.id)}>
+                            <TrashSVG width="4" height="4"></TrashSVG>
+                        </button> 
+                        : null}*/}
+                </div>
+                <div id="riple-card-header-follow">
+                    <ThreeDotSVG width={iconSizes} height={iconSizes}></ThreeDotSVG>
+                    {/*<Follow projectId={riple.projectId} />*/}
                 </div>
             </div>
         </div>
+
     );
 }
 

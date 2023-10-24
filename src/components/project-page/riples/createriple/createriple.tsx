@@ -78,7 +78,6 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
 
     const appendImagesToContent = (content: string, images: { url: string; caption: string }[]): string => {
         let imageHtml = "";
-        console.log("trig")
     
         images.forEach(image => {
             imageHtml += `
@@ -101,7 +100,6 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
         if (currentStep === Step.RipleHTML ){
             console.log("step"+currentStep)
             const updatedContent = appendImagesToContent(ripleContent, ripleImages);
-            console.log(updatedContent)
             wizardContext.setRipleContent(updatedContent);
             setRipleHTMLContent(updatedContent);
             wizardContext.setRipleWizardModalStep("html") //This will change RipleWizardMode from text writer to HTML writer
