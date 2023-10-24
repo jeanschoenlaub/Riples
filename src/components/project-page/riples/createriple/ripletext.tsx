@@ -76,7 +76,7 @@ const RipleTextComponent: React.FC<RipleTextComponentProps> = ({
                             value={ripleContent} 
                             onChange={(e) => setRipleContent(e.target.value)}
                             className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
-                            maxLength={255}
+                            maxLength={10000}
                             disabled={isLoading}
                             rows={10}
                         />

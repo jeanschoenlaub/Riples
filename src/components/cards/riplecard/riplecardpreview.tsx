@@ -139,3 +139,6 @@ export const RipleCardPreview : React.FC<RipleCardPreviewProps> = ({
                 </div>
     );
 }
+
+
+

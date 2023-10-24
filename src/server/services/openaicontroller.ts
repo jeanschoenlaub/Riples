@@ -85,8 +85,10 @@ export const generateRipleContent= async (projectTitle: string, projectSummary: 
 export const generateRipleHTML= async (ripleContent: string, userprompt: string) => {
     const prompt = `
     User prompt: "${userprompt}" 
-    Plain text: "${ripleContent}
+    HTML: "${ripleContent}
     .`;
+
+    console.log(prompt)
 
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const chatCompletion = await openai.chat.completions.create({
@@ -94,13 +96,14 @@ export const generateRipleHTML= async (ripleContent: string, userprompt: string)
                 {
                   "role": "system",
                   "content": `
-                    You will be provided with a plain text and a user prompt. 
-                    Use the following instructions to generate the html:
+                    You will be provided with an HTML and a user prompt. Edit the HTML based on the user prompt, using the following commands:
                     
                     Headings: Use <p style="font-size: 1em; font-weight: bold;"> tags.
                     Content Paragraphs: Enclose in regular <p> tags.
                     Separation: Insert <br> tags between sections.
                     Listings: Utilize <li> tags for key points or features.
+
+                    If you don'tsee the command for what was asked usehtml tags that can work through sanitise
                   `
                 },
                 {

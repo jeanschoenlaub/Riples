@@ -75,13 +75,14 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
 
     function getButtonFunction() {
         if (modalStep === "html") {
-            return generateHTMLStyle;
+            generateHTMLStyle();
         } else {
-            return generateRipleAIData;
+            generateRipleAIData();
         }
     }
 
     function getButtonText() {
+        console.log(modalStep)
         if (modalStep === "html") {
             if (isLoading) {return  <div className="flex items-center"><LoadingSpinner size={16}></LoadingSpinner> Syling Riple</div>}
             return "Style HTML";
@@ -97,9 +98,9 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
                 <div className="font-semibold flex items-center"> <span className="text-3xl mr-2"> 👩‍🎨 </span> Content Creator Wizard </div>
 
                 {modalStep === "html" ? 
-                    (<div className="mb-4">Do you want help styling the HTML ?  </div>) 
+                    (<div className="mb-4">Do you want help styling the Riple ?  </div>) 
                     :
-                    (<div className="mb-4"> I already know a lot about your project, but what do you want to post about ?  </div>) 
+                    (<div className="mb-4"> Do you want help creating content ?  </div>) 
                 }
 
                 <textarea 

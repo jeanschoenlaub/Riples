@@ -68,6 +68,7 @@ export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) =
                                 {riple.project.title}
                             </Link>
                         </span>
+                        <span className="ml-2">{`${dayjs(riple.createdAt).fromNow()}`}</span>
                         {/*&nbsp;&#40;{riple.project.projectType}&#41;*/}
                     </div>
                     {/*

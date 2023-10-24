@@ -46,8 +46,10 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
     
     const resetForm = () => {
         setRipleTitle(''); // Reset content after submitting
-        setRipleContent(''); // Reset content after submitting
+        setRipleContent(''); 
+        setRipleHTMLContent('');// Reset content after submitting
         wizardContext.setWizardName("")
+        setCurrentStep(Step.RipleText);
         onClose()
     }
 
@@ -56,7 +58,7 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
         projectId: projectId,
         projectTitle: projectTitle,
         title: ripleTitle,
-        content: ripleContent,
+        content: ripleHTMLContent,
     });
 
     useEffect (() => {
@@ -67,9 +69,10 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
             wizardContext.setProjectSummary(projectSummary)
             wizardContext.setShowWizard(true)
         }
-        if (!showModal){
+        if (!showModal){ //onClose
             wizardContext.setWizardName("")
             wizardContext.setShowWizard(false)
+            resetForm();
         }
     },[showModal])
 
@@ -105,10 +108,23 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
             wizardContext.setRipleWizardModalStep("text") //This will change RipleWizardMode to text writer
         }
     },[currentStep])
+
+    useEffect (() => {
+        console.log("updated riple content")
+        wizardContext.setRipleContent(ripleContent);
+    },[ripleContent])
+
+    useEffect (() => {
+        console.log("updated riple HTML content")
+        wizardContext.setRipleContent(ripleHTMLContent);
+    },[ripleHTMLContent])
     
     const ripleContentFromRedux = useSelector((state: RootState) => state.riple.ripleContent);
     useEffect(() => {
-      if (ripleContentFromRedux.length) setRipleContent(ripleContentFromRedux);
+      if (ripleContentFromRedux.length){
+        if (currentStep === Step.RipleText){setRipleContent(ripleContentFromRedux)}
+        if (currentStep === Step.RipleHTML){setRipleHTMLContent(ripleContentFromRedux)}
+      } 
     }, [ripleContentFromRedux]);
 
     const { data: followers } = api.projectFollowers.getFollowersByProjectId.useQuery({ projectId: projectId });
@@ -127,6 +143,8 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
             setCurrentStep(Step.RipleText);
         }
     };
+
+
   
 
     return (
@@ -147,8 +165,8 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
                 <RipleHTMLComponent
                     ripleTitle={ripleTitle}
                     setRipleTitle={setRipleTitle}
-                    ripleContent={ripleHTMLContent}
-                    setRipleContent={setRipleHTMLContent}
+                    ripleHTMLContent={ripleHTMLContent}
+                    setRipleHTMLContent={setRipleHTMLContent}
                     projectTitle={projectTitle}
                     projectCoverImageId={projectCoverImageId}
                     isLoading={isLoading}
