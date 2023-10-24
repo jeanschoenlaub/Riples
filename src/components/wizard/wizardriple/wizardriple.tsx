@@ -18,7 +18,7 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
         setIsLoading(true);
 
         const generateRipleAIPayload = {
-            userPrompt: inputValue,
+            userPrompt: inputValue + "for this text" + ripleContent,
             projectTitle: projectTitle,
             projectSummary: projectSummary,
             userId: userId,

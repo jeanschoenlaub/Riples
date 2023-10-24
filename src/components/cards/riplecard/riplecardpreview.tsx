@@ -28,7 +28,7 @@ export const RipleCardPreview : React.FC<RipleCardPreviewProps> = ({
 
     // Run DOMPurify only on the client side
     if (typeof window !== 'undefined') {
-        cleanHTML = DOMPurify.sanitize(rawHTML, { ALLOWED_ATTR: ['class', 'style', 'img', 'alt', 'src'] });
+        cleanHTML = DOMPurify.sanitize(rawHTML);
     }
 
     const showReadMore = cleanHTML.length > 500; // If the content is longer than 500 characters

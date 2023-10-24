@@ -96,14 +96,27 @@ export const generateRipleHTML= async (ripleContent: string, userprompt: string)
                 {
                   "role": "system",
                   "content": `
-                    You will be provided with an HTML and a user prompt. Edit the HTML based on the user prompt, using the following commands:
-                    
-                    Headings: Use <p style="font-size: 1em; font-weight: bold;"> tags.
-                    Content Paragraphs: Enclose in regular <p> tags.
-                    Separation: Insert <br> tags between sections.
-                    Listings: Utilize <li> tags for key points or features.
+                    You will be provided with an HTML and a user prompt. Edit the HTML based on the user prompt, using tailwind and class=""
 
-                    If you don'tsee the command for what was asked usehtml tags that can work through sanitise
+                    For example: <div class="container mx-auto">
+                        <p class="font-bold">Text About Lions:</p>
+                    
+                        <ul class="list-disc pl-5 px-4">
+                            <li>Lions are majestic creatures known for their powerful roar.</li>
+                            <li>They are part of the big cat family and are native to Africa.</li>
+                            <li>Male lions have a distinctive mane of hair around their necks.</li>
+                            <li>Lions are skilled hunters and often work together in groups called prides.</li>
+                        </ul>
+                    
+                        <div class="flex justify-center my-4">
+                            <div class="text-center">
+                                <img src="https://riples-public-images-08453786.s3.us-west-2.amazonaws.com/riple-images/ac23c6a6-be78-4aeb-8ac1-03b43518bd3a" alt="Uploaded Image" class="mx-auto block responsive-image">
+                                <p class="italic">asdxcwec</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    Return only HTML
                   `
                 },
                 {

@@ -96,12 +96,17 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
     };
 
     useEffect (() => {
+
+        console.log("step"+currentStep)
         if (currentStep === Step.RipleHTML ){
+            console.log("step"+currentStep)
             const updatedContent = appendImagesToContent(ripleContent, ripleImages);
+            console.log(updatedContent)
             wizardContext.setRipleContent(updatedContent);
             setRipleHTMLContent(updatedContent);
             wizardContext.setRipleWizardModalStep("html") //This will change RipleWizardMode from text writer to HTML writer
             wizardContext.setShowWizard(true)
+            console.log(ripleHTMLContent)
         }
         if (currentStep === Step.RipleText ) {
             wizardContext.setRipleContent("")
@@ -117,6 +122,7 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
     useEffect (() => {
         console.log("updated riple HTML content")
         wizardContext.setRipleContent(ripleHTMLContent);
+        console.log(ripleHTMLContent)
     },[ripleHTMLContent])
     
     const ripleContentFromRedux = useSelector((state: RootState) => state.riple.ripleContent);
