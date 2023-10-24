@@ -22,8 +22,8 @@ export const UserMenu = () => {
     });
   };
 
-  const redirectHelpPage = (option: string) => {
-    router.push(`/users/${session?.user.id}/?activeTab=${option}`).catch(err => {
+  const redirectHelpPage = () => {
+    router.push(`/help/`).catch(err => {
         // Handle any errors that might occur during the navigation
         console.error('Failed to redirect:', err);
     });
@@ -86,7 +86,7 @@ export const UserMenu = () => {
                         {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
                         <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => signOut()}>Sign Out</button>
                         <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectUserPage("about")}>Your Profile</button>
-                        <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectUserPage("projects")}>Help</button>
+                        <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectHelpPage()}>Help</button>
                         <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowDeleteModal(true)}>Delete Account</button>
                     </div>
                 )}

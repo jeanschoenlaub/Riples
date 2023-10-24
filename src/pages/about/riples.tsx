@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { useState } from "react";
 import { NavBarSignInModal } from "~/components/navbar/signinmodal";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 
 
@@ -100,15 +101,22 @@ export default function AboutRiples() {
               </div>
           </section>
             )}
-
-          <div className="flex justify-center">
-                  <a href="https://forms.gle/WPq2stK3YBDcggHw5" target="_blank" rel="noopener noreferrer">
-                        <button className="bg-green-500 text-white mb-5 mt-4 rounded py-1 px-2 text-center text-sm">
+                 
+            <div className="flex flex-col mt-8 mb-4 space-y-4 items-center">
+                <div className="flex space-x-4">
+                    <a href="https://forms.gle/WPq2stK3YBDcggHw5" target="_blank" rel="noopener noreferrer">
+                        <button className="bg-green-500 text-white rounded py-1 px-2 text-center text-sm">
                           Feedback
                         </button>
                       </a>
+                    <div className="text-xl text-gray-700 dark:text-gray-300">or Contact us: <a href="mailto:admin@riples.app" className="text-blue-500 hover:underline">admin@riples.app</a></div>
                 </div>
-              
+                <div className="flex space-x-4">
+                    <Link href="/about/privacy-policy" className="text-sm text-blue-500 hover:underline">Privacy Policy</Link>
+                    <Link href="/about/terms-of-service" className="text-sm text-blue-500 hover:underline">Terms of Service</Link>
+                    <Link href="/help" className="text-sm text-blue-500 hover:underline">Help</Link>
+                </div>
+            </div>
 
           </div>
         </div>
