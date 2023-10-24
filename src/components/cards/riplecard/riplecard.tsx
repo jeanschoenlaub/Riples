@@ -1,4 +1,3 @@
-import DOMPurify from "dompurify";
 import React, { useEffect, useRef, useState } from 'react';
 import { api, type RouterOutputs } from "~/utils/api";
 import { RipleCardFooter } from "./riplecardsections/riplecardfooter";

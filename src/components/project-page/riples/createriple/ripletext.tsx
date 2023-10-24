@@ -26,21 +26,21 @@ const RipleTextComponent: React.FC<RipleTextComponentProps> = ({
     const { file, setFile, isUploading, uploadImage } = useRipleImageUpload();
 
 
-    const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0];
         if (selectedFile) {
-            setFile(selectedFile);
-            try {
-                const newImageId = await uploadImage(); 
-                const newImageUrl = buildRiplesImageUrl(newImageId);  // Assuming you have a similar function to build the URL
-    
+            setFile(selectedFile); // Assuming setFile is used somewhere else; otherwise, remove this line
+            
+            uploadImage() // assuming uploadImage doesn't need any parameter like projectId in the other function
+            .then(newImageId => {
+                const newImageUrl = buildRiplesImageUrl(newImageId); 
                 // Add the new image details to ripleImages
                 const newImage = { url: newImageUrl, id: newImageId, caption: '' };
                 setRipleImages(prev => [...prev, newImage]);
-    
-            } catch (error) {
+            })
+            .catch(error => {
                 console.error("Error uploading riple image:", error);
-            }
+            });
         }
     };
     
@@ -142,7 +142,7 @@ export const useRipleImageUpload = () => {
                 console.error("Unexpected response: 'fields.key' is missing.");
                 throw new Error("Unexpected server response");
             }
-
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const data: Record<string, any> = {
                 ...fields,
                 "Content-Type": fileRef.current.type,
@@ -151,6 +151,7 @@ export const useRipleImageUpload = () => {
 
             const formData = new FormData();
             for (const name in data) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 formData.append(name, data[name]);
             }
 

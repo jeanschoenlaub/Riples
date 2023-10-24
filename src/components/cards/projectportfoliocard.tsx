@@ -4,7 +4,6 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
 import type { RouterOutputs } from "~/utils/api";
-import { useEffect, useState } from 'react';
 import { buildProjectCoverImageUrl } from '~/utils/s3';
 import { ProfileImage } from '../reusables/profileimage';
 
@@ -22,9 +21,9 @@ export const ProjectCardPortofolio = (props: PortofolioProjectCardProps) => {
   const opacityStyle = props.isPrivate ? "opacity-60" : "";
 
 
-  const completedTasksCount = project.tasks.filter(task => task.status === "Done").length;
-  const allSubtasks = project.tasks.flatMap(task => task.subTasks);
-  const completedSubtasksCount = allSubtasks.filter(subtask => subtask?.status === true).length;
+  //const completedTasksCount = project.tasks.filter(task => task.status === "Done").length;
+  //const allSubtasks = project.tasks.flatMap(task => task.subTasks);
+  //const completedSubtasksCount = allSubtasks.filter(subtask => subtask?.status === true).length;
 
   const renderTags = () => {
     return project.tags.map((tag, index) => (

@@ -40,7 +40,7 @@ export default function AboutRiples() {
                     <div className="mt-4 md:mt-0">
                         <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white"> Turning ideas into realities.</h2>
                         <p className="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400"> Ever felt your ideas were lost in the noise or isolated in your creative journey ? With Riples, your ideas echo louder. </p>
-                        <p className="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400"> Try a revolutionary platform that streamlines your projects, enables you to collaborate and share with a vibrant community. Whether you&apos;re an aspiring startup founder, looking to get real-life experience in collaborative projects, or want to follow your friends on their creative adventures, Riples empowers you to turn your visions into reality. </p>
+                        <p className="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400"> Try a revolutionary platform that streamlines your projects, enables you to collaborate and share with a vibrant community. Whether you want to create the next big thing, get real-life experience in collaborative projects, or follow your friends on their creative adventures, Riples empowers it&apos;s community to turn visions into reality. </p>
                     </div>
                 </div>
               
