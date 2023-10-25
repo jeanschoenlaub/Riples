@@ -42,7 +42,7 @@ export const SocialFeed = () => {
           </div>
         </div>
 
-        <div id="socialfeed">
+        <div id="socialfeed" className="space-y-4">
           {data?.map((fullRiple) => (
             <RipleCard key={fullRiple.riple.id} {...fullRiple}></RipleCard>
           ))}

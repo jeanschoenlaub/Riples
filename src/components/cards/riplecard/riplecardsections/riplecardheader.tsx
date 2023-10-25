@@ -4,10 +4,11 @@ import Image from 'next/image';
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import Follow from '~/components/reusables/follow';
-import { TrashSVG } from '~/components/reusables/svgstroke';
+import { FollowEmptySVG, TrashSVG } from '~/components/reusables/svgstroke';
 import { RouterOutputs } from '~/utils/api';
 import { buildProjectCoverImageUrl } from '~/utils/s3';
 import { ThreeDotSVG } from '~/components/reusables/svg';
+import { IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 dayjs.extend(relativeTime);
 
 type Riple = RouterOutputs["riples"]["getAll"][number]["riple"];
@@ -22,7 +23,7 @@ type RipleWithAuthor = {
 export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) => {
     //Smaller images if phone
     const [imgDimensions, setImgDimensions] = useState({width: 80, height: 80});
-    const [iconSizes, setIconSizes] = useState("6");
+    const [iconSizes, setIconSizes] = useState("4");
     useEffect(() => {
         if (typeof window !== 'undefined') {
             if (window.innerWidth < 640) {
@@ -78,12 +79,27 @@ export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) =
                         : null}*/}
                 </div>
                 <div id="riple-card-header-follow">
-                    <ThreeDotSVG width={iconSizes} height={iconSizes}></ThreeDotSVG>
+                <Menu>
+                    <MenuButton
+                        as={IconButton}
+                        aria-label='Options'
+                        icon={<ThreeDotSVG width={iconSizes} height={iconSizes}></ThreeDotSVG>}
+                        variant='outline'
+                    />
+                    <MenuList>
+                        <MenuItem icon={<Follow projectId={riple.projectId} />} command='⌘T'>
+                            Follow
+                        </MenuItem>
+                        {onDelete && <MenuItem icon={<TrashSVG width={iconSizes} height={iconSizes}></TrashSVG>} command='⌘N'>
+                         Delete Riple
+                        </MenuItem>}
+                    </MenuList>
+                    </Menu>
+                    
                     {/*<Follow projectId={riple.projectId} />*/}
                 </div>
             </div>
         </div>
-
     );
 }
 

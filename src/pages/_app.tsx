@@ -13,6 +13,7 @@ import { pageview } from "~/utils/googleanalytics";
 import { WizardWrapper } from "~/components/wizard/wizardswrapper";
 import { Provider } from 'react-redux';
 import store from '~/redux/store';
+import { ChakraProvider } from '@chakra-ui/react'
 
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -56,7 +57,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <OnboardingProvider>
             <WizardWrapper>
               <OnboardingWrapper />
-              <Component {...pageProps} />
+              <ChakraProvider>
+                <Component {...pageProps} />
+              </ChakraProvider>
             </WizardWrapper>
           </OnboardingProvider>
         </Provider>

@@ -161,7 +161,7 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
   
     return (
         <div ref={rippleCardRef} id="riple-card" key={riple.id}>
-            <div className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg flex flex-col mx-2 md:mx-5 p-2 shadow-md`}>
+            <div className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg space-y-3 flex flex-col mx-2 md:mx-5 p-2 shadow-md`}>
                 <RipleCardHeader riple={riple} author={author} onDelete={onDelete} ></RipleCardHeader>
 
             
