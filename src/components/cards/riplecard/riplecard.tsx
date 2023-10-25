@@ -91,7 +91,7 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
                 <RipleCardBody ripleContent={riple.content}></RipleCardBody>
 
                 {/* Post Footer */}
-                <div className="flex flex-col  justify-between h-full  rounded-lg border px-4 py-1 border-slate-300 ">
+                <div className="flex flex-col  justify-between h-full border-t px-4 border-slate-300 ">
                     <RipleCardFooter 
                         likesCount={likeData ?? 0}
                         hasLiked={hasLiked ?? false}
@@ -105,7 +105,7 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
                 </div>
 
                 {showComment && (
-                    <div className="mb-20">
+                    <div className="">
                         <RipleCommentListAndForm 
                             comments={transformComments(comments ?? [])}  // Add author.username
                             onCommentSubmit={handleCommentAdd} 
@@ -125,7 +125,6 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
                         <p className="mt-4 text-gray-700"> 2. Share it !</p>
                     </div>
                 </Modal> 
-                <div className="mb-4">
                 <Modal showModal={showDeleteModal} onClose={handleCancelDelete} size="small">
                     <p>Are you sure you want to delete this riple?</p>
                     <div className="flex justify-end">
@@ -133,7 +132,6 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
                         <button onClick={handleConfirmDelete} className="bg-green-500 text-white rounded px-4 py-2 ml-2">{isDeleting && <LoadingSpinner size={16} />}  Yes</button>
                     </div>
                 </Modal>
-            </div>
             </div>
         </div>
     );
