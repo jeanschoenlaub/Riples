@@ -116,3 +116,38 @@ export const useRipleInteractionsMutation = () => {
         removeLikeFromRiple,
     };
 };
+
+
+export type DeleteRiplePayload = {
+    ripleId: string;
+}
+
+export const UseRiplesMutations  = () => {
+    const apiContext = api.useContext();
+    const handleSuccess = async () => {
+        await apiContext.riples.getRipleByProjectId.invalidate();
+        await apiContext.riples.getAll.invalidate();
+    };
+
+    // Delete Riple Mutation
+    const { mutate: deleteRipleMutation, isLoading: isDeleting } = api.riples.delete.useMutation({
+        onSuccess: handleSuccess,
+    });
+    
+    const deleteRiple = (payload: DeleteRiplePayload) => {
+        return new Promise<void>((resolve, reject) => {
+        deleteRipleMutation(payload, {
+            onSuccess: () => { resolve(); },
+            onError: (e) => {
+                handleMutationError(e, reject);
+              }        
+        });
+        });
+    };
+  
+  return {
+    // ... other returned values
+    isDeleting,
+    deleteRiple,
+  };
+}

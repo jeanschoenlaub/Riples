@@ -4,11 +4,12 @@ import Image from 'next/image';
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import Follow from '~/components/reusables/follow';
-import { FollowEmptySVG, TrashSVG } from '~/components/reusables/svgstroke';
-import { RouterOutputs } from '~/utils/api';
+import { TrashSVG } from '~/components/reusables/svgstroke';
+import type { RouterOutputs } from '~/utils/api';
 import { buildProjectCoverImageUrl } from '~/utils/s3';
 import { ThreeDotSVG } from '~/components/reusables/svg';
 import { IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { LoadingRiplesLogo } from '~/components/reusables/loading';
 dayjs.extend(relativeTime);
 
 type Riple = RouterOutputs["riples"]["getAll"][number]["riple"];
@@ -17,12 +18,12 @@ type Author = RouterOutputs["riples"]["getAll"][number]["author"];
 type RipleWithAuthor = {
     riple: Riple,
     author: Author,
-    onDelete?: (rippleId: string) => void;
+    onDelete?: () => void;
 }
 
 export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) => {
     //Smaller images if phone
-    const [imgDimensions, setImgDimensions] = useState({width: 80, height: 80});
+    const [imgDimensions, setImgDimensions] = useState({width: 70, height: 70});
     const [iconSizes, setIconSizes] = useState("4");
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -35,23 +36,27 @@ export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) =
     return (
         <div id="riple-card-header" className="flex items-center space-x-3">
             {/* Author's Profile Image */}
-            <div id="riple-card-header-image" className="flex items-center flex-none" style={{ width: imgDimensions.width, height: imgDimensions.height }}>
+            <div id="riple-card-header-image" className="flex rounded-full   items-center flex-none" style={{ width: imgDimensions.width, height: imgDimensions.height }}>
                 <Link href={`/projects/${riple.projectId}`}>
                     <Image
                         src={buildProjectCoverImageUrl(riple.project.coverImageId)} 
                         alt="Profile Image" 
-                        className="rounded-full border border-slate-300"
+                        className="rounded-full "
                         width={imgDimensions.width} 
                         height={imgDimensions.height}
-                        layout="responsive"
+                        style={{  
+                            borderWidth: '1px', 
+                            borderColor: '#374151', // This color code is for slate-300 from the Tailwind color palette.
+                            borderStyle: 'solid'
+                        }}
                     />
                 </Link>
             </div>
 
             {/* Title and Metadata */}
-            <div className="flex flex-col justify-center ">
+            <div className="flex flex-col flex-grow justify-center ">
                 {/* Project Title */}
-                <div id="riple-card-header-title" className="font-semibold text-xs md:text-base text-gray-800">
+                <div id="riple-card-header-title" className="font-semibold text-sm md:text-base text-gray-800">
                     <Link href={`/projects/${riple.projectId}`}>
                         {riple.title}
                     </Link>
@@ -79,7 +84,7 @@ export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) =
                         : null}*/}
                 </div>
                 <div id="riple-card-header-follow">
-                <Menu>
+                <Menu >
                     <MenuButton
                         as={IconButton}
                         aria-label='Options'
@@ -87,12 +92,15 @@ export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) =
                         variant='outline'
                     />
                     <MenuList>
-                        <MenuItem icon={<Follow projectId={riple.projectId} />} command='⌘T'>
-                            Follow
+                        <MenuItem >
+                            <Follow projectId={riple.projectId} showText={true} />
                         </MenuItem>
-                        {onDelete && <MenuItem icon={<TrashSVG width={iconSizes} height={iconSizes}></TrashSVG>} command='⌘N'>
-                         Delete Riple
-                        </MenuItem>}
+                        {onDelete && 
+                            <MenuItem 
+                                icon={<TrashSVG width={iconSizes} height={iconSizes}></TrashSVG>} 
+                                onClick={onDelete}>
+                                Delete Riple
+                            </MenuItem>}
                     </MenuList>
                     </Menu>
                     

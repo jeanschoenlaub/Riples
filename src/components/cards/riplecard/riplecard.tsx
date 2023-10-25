@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { api, type RouterOutputs } from "~/utils/api";
 import { RipleCardFooter } from "./riplecardsections/riplecardfooter";
-import { useRipleInteractionsMutation } from "./riplecardapi";
+import { UseRiplesMutations, useRipleInteractionsMutation } from "./riplecardapi";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { NavBarSignInModal } from "../../navbar/signinmodal";
@@ -13,15 +13,12 @@ import * as htmlToImage from 'html-to-image';
 import { Modal } from "~/components/reusables/modaltemplate";
 import { RipleCardHeader } from "./riplecardsections/riplecardheader";
 import { RipleCardBody } from "./riplecardsections/riplecardbody";
+import { LoadingSpinner } from '~/components/reusables/loading';
 
-type FullRiple = RouterOutputs["riples"]["getAll"][number]&{
-    onDelete?: (rippleId: string) => void;
-}
+type FullRiple = RouterOutputs["riples"]["getAll"][number]
+type CommentWithUser = RouterOutputs["comment"]["getCommentsByRiple"][number]
 
-type CommentWithUser = RouterOutputs["comment"]["getCommentsByRiple"][number]&{
-    onDelete?: (rippleId: string) => void;
-}
-export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
+export const RipleCard = ({ riple, author }: FullRiple ) => {
     
     const [showSignInModal, setShowSignInModal] = useState(false); // If click on folllow when not signed in we redirect
     const [commentsCount, setCommentsCount] = useState<number>(0);
@@ -29,9 +26,41 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
     const [showShareModal, setShowShareModal] = useState(false);
     const [shareImageUrl, setShareImageUrl] = useState("");
 
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [ripleToDelete, setRipleToDelete] = useState<string | null>(null);
+
     const { data: session } = useSession()
     const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user ID exist
     const userId = session?.user?.id ?? ''; //will never be empty 
+    
+    const onDelete = userId === riple.authorID ? () => handleDeleteClick() : undefined;
+
+    const handleDeleteClick = () => {
+        setRipleToDelete(riple.id);
+        setShowDeleteModal(true);
+    };
+
+    const { deleteRiple, isDeleting } = UseRiplesMutations();
+
+    const handleConfirmDelete = () => {
+        if (ripleToDelete) {
+            deleteRiple({ ripleId: ripleToDelete }).then(() => {
+                toast.success('Riples Deleted Successfully');
+                setShowDeleteModal(false);
+            })
+            .catch(() => {
+                toast.error('Error deleting Riples');
+                setShowDeleteModal(false);
+            });
+        }
+    };
+
+    
+    const handleCancelDelete = () => {
+        setRipleToDelete(null);
+        setShowDeleteModal(false);
+    };
 
 
     const cardBackgroundColor = 
@@ -61,7 +90,6 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
                 toast.error("Error while liking. Sorry please try again later");
             }
         };
-        console.log(generateLikePayload())
         // Call the async function
         void performLikeOperation();
     };
@@ -104,8 +132,6 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
         void performCommentOperation(commentContent);
     };
 
-
-    
 
     //All below is used to pass like counts to the riplecardfooter component
     const { addLikeToRiple,removeLikeFromRiple, isAddingLike, isRemovingLike, addCommentToRiple, isAddingComment} = useRipleInteractionsMutation();
@@ -161,7 +187,7 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
   
     return (
         <div ref={rippleCardRef} id="riple-card" key={riple.id}>
-            <div className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg space-y-3 flex flex-col mx-2 md:mx-5 p-2 shadow-md`}>
+            <div className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg flex flex-col mx-2 md:mx-5 p-2 shadow-md`}>
                 <RipleCardHeader riple={riple} author={author} onDelete={onDelete} ></RipleCardHeader>
 
             
@@ -202,6 +228,15 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
                         <p className="mt-4 text-gray-700"> 2. Share it !</p>
                     </div>
                 </Modal> 
+                <div className="mb-4">
+                <Modal showModal={showDeleteModal} onClose={handleCancelDelete} size="small">
+                    <p>Are you sure you want to delete this riple?</p>
+                    <div className="flex justify-end">
+                        <button onClick={handleCancelDelete} className="bg-red-500 text-white rounded px-4 py-2">No</button>
+                        <button onClick={handleConfirmDelete} className="bg-green-500 text-white rounded px-4 py-2 ml-2">{isDeleting && <LoadingSpinner size={16} />}  Yes</button>
+                    </div>
+                </Modal>
+            </div>
             </div>
         </div>
     );

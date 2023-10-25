@@ -1,5 +1,5 @@
 // CreateRipleModal.tsx
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal } from '~/components/reusables/modaltemplate';
 import type { CreateRipleModalProps, CreateRiplePayload } from './createripletypes';
 import toast from 'react-hot-toast';

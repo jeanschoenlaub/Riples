@@ -75,9 +75,9 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
 
     function getButtonFunction() {
         if (modalStep === "html") {
-            generateHTMLStyle();
+            void generateHTMLStyle();
         } else {
-            generateRipleAIData();
+            void generateRipleAIData();
         }
     }
 

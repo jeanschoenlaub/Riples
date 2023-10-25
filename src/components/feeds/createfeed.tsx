@@ -1,5 +1,3 @@
-
-import { LoadingPage } from "~/components/reusables/loading";
 import { CreateProjectModal } from "../createprojectmodal/createprojetmodal";
 import { useState } from "react";
 import { NavBarSignInModal } from "../navbar/signinmodal";

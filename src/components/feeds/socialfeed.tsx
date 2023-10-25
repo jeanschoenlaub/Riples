@@ -2,13 +2,17 @@ import { api } from "~/utils/api";
 import { LoadingPage } from "~/components/reusables/loading";
 import { RipleCard } from '../cards/riplecard/riplecard';
 import Tooltip from "../reusables/tooltip";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 export const SocialFeed = () => {
     const { data, isLoading } = api.riples.getAll.useQuery();
+    const {data: session} = useSession() 
 
     if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)
   
     if (!data) return(<div> Something went wrong</div>)
+
   
     return ( 
       <div>
@@ -44,7 +48,7 @@ export const SocialFeed = () => {
 
         <div id="socialfeed" className="space-y-4">
           {data?.map((fullRiple) => (
-            <RipleCard key={fullRiple.riple.id} {...fullRiple}></RipleCard>
+            <RipleCard key={fullRiple.riple.id} {...fullRiple} ></RipleCard>
           ))}
         </div>
     </div>

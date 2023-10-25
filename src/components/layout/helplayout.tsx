@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { GlobalNavBar } from "~/components/navbar/navbar";
 import { SideNavProject } from "~/components/navbar/sidenavproject";
 

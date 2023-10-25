@@ -1,6 +1,5 @@
 
 import DOMPurify from 'dompurify';
-import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 
 type RipleCardBodyProps = {
@@ -12,7 +11,6 @@ export const RipleCardBody = ({ ripleContent }: RipleCardBodyProps) => {
     const rawHTML = ripleContent;
 
     let cleanHTML = rawHTML; // Default to rawHTML
-    const { data: session } = useSession()
 
     // Run DOMPurify only on the client side
     if (typeof window !== 'undefined') {
