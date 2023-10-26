@@ -25,6 +25,11 @@ const RipleTextComponent: React.FC<RipleTextComponentProps> = ({
 
     const { file, setFile, isUploading, uploadImage } = useRipleImageUpload();
 
+    const removeImage = (indexToRemove: number) => {
+        // Filter out the image at the specified index
+        const updatedImages = ripleImages.filter((_, index) => index !== indexToRemove);
+        setRipleImages(updatedImages);
+    };
 
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0];
@@ -87,10 +92,17 @@ const RipleTextComponent: React.FC<RipleTextComponentProps> = ({
                         <h2 className="text-lg font-semibold mb-4">Images</h2>
                         <input type="file" onChange={handleImageUpload} multiple={false} />
                         
-                        {/* Display the uploaded images */}
                         {ripleImages.map((image, index) => (
-                            <div key={index} className="mt-4">
+                            <div key={index} className="mt-4 relative">
                                 <img src={image.url} alt="Uploaded preview" className="w-32 h-32 object-cover" />
+    
+                                <button 
+                                    onClick={() => removeImage(index)} 
+                                    className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                                >
+                                    &times;
+                                </button>
+
                                 <input 
                                     type="text" 
                                     placeholder="Caption" 

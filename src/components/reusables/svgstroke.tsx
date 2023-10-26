@@ -314,6 +314,43 @@ export const MagicWandSVG = ({ width = "6", height = "6", marginRight = "0", mar
             d="m12.555 5.117 2.828 2.828M14 16v4m-2-2h4M3 6v4M1 8h4m11.01-6.339 2.828 2.829L3.99 19.339 1.161 16.51 16.01 1.661Z"/>
         </svg>     
     );
-    
 };
 
+
+export const NextRightArrowSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none"
+            viewBox="0 0 8 14"
+        >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="1"
+                strokeLinejoin="round"
+                d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
+        </svg>
+    );
+};
+
+export const PrevLeftArrowSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none"
+            viewBox="0 0 8 14"
+        >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="1"
+                strokeLinejoin="round"
+                d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13"/>
+        </svg>
+    );
+};

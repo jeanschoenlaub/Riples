@@ -18,7 +18,6 @@ import { RipleCardImages } from './riplecardsections/ripleImages';
 type FullRiple = RouterOutputs["riples"]["getAll"][number]
 
 export const RipleCard = ({ riple, author }: FullRiple ) => {
-
     const [showSignInModal, setShowSignInModal] = useState(false); // If click on folllow when not signed in we redirect
     const [commentsCount, setCommentsCount] = useState<number>(0);
     const [showComment, setShowComment] = useState(false);
