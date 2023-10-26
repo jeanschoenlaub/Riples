@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { LoadingSpinner } from './loading';
 import { FollowFullSVG } from './svg';
 import { FollowEmptySVG } from './svgstroke';
+import { useOnboarding } from '../onboarding/onboardingwrapper';
 
 type FollowProps = {
   projectId: string;
@@ -15,14 +16,14 @@ type FollowProps = {
 export const Follow: React.FC<FollowProps> = ({ projectId, showText }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // To handle loading state during mutation
-  const [showSignInModal, setShowSignInModal] = useState(false); // If click on folllow when not signed in we redirect
+  
   const [showTooltip, setShowTooltip] = useState(false);
 
   const apiContext = api.useContext();//To invalidate cache
 
   const { data: session } = useSession();
 
-  
+  const { setShowSignInModal } = useOnboarding();//If trying to follow while not logged in
   const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user ID exist
   
   // Conditional query using tRPC to avoid no user error if not signed-in
@@ -42,7 +43,7 @@ export const Follow: React.FC<FollowProps> = ({ projectId, showText }) => {
   const toggleFollow = async () => {
     if (!session?.user?.id) {
         toast.error("You must be signed in to create a project")
-        setShowSignInModal(true); // Show sign-in modal if the user is not logged in
+        setShowSignInModal(true); // Change to useOnbaording ?
         return;
     } // Exit if the user is not logged in
     
@@ -91,24 +92,27 @@ export const Follow: React.FC<FollowProps> = ({ projectId, showText }) => {
 
   return (
     <div className="justify-center relative">
-      <button
-        className={` ${showText ? '' : 'border border-gray-300 px-2 py-2'}`}
-        onMouseEnter={ () => showText ?? setShowTooltip(true)}
-        onMouseLeave={() => showText ?? setShowTooltip(false)}
-        onClick={handleToggleFollow}
-      >
-        {isFollowing ? (
-          <div className= "flex items-center">
+      <div
+    className={`cursor-pointer ${showText ? '' : 'border border-gray-300 px-2 py-2'}`}
+    onMouseEnter={ () => showText ?? setShowTooltip(true)}
+    onMouseLeave={() => showText ?? setShowTooltip(false)}
+    onClick={handleToggleFollow}
+    role="button" // Accessibility: Indicates the div's role as a button
+    tabIndex={0}  // Accessibility: Makes the div focusable
+  
+>
+    {isFollowing ? (
+        <div className= "flex items-center">
             <FollowFullSVG width="4" height="4" marginRight="3" colorFillHex='#2563eb'></FollowFullSVG> 
             {showText ? "Unfollow": ""}  
-          </div>)
-         :
-         (<div className= "flex items-center">
+        </div>
+    ) : (
+        <div className= "flex items-center">
             <FollowEmptySVG width="4" height="4" marginRight="3" colorStrokeHex='#2563eb'></FollowEmptySVG> 
             {showText ? "Follow": ""}    
-            </div>)
-         }
-      </button>
+        </div>
+    )}
+</div>
       {showTooltip && (
         <div style={{
           position: 'absolute',
@@ -124,7 +128,6 @@ export const Follow: React.FC<FollowProps> = ({ projectId, showText }) => {
           {isFollowing ? 'Following' : 'Not Followed'}
         </div>
       )}
-      <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
     </div>
   );
 };

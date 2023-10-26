@@ -18,9 +18,9 @@ export const ProjectCard = (props: SideBarProjectCardProps) => {
   return (
     <li className="py-3 sm:py-4">
     <div onClick={props.onClick} className="flex items-center space-x-2">
-      <div className="flex-shrink-0">
+      <div className={`flex-shrink-0 rounded-full border ${props.borderColor ?? "border-gray-300"}`}>
         <Image
-          className={`rounded-full border-2 ${props.borderColor ?? "border-gray-300"}`}
+          className={`rounded-full`}
           src={buildProjectCoverImageUrl(project.coverImageId)}
           alt={`${project.title} image`}
           width={60}

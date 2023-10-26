@@ -309,7 +309,7 @@ model Like {
     createdAt   DateTime @default(now())
 
     riple       Riple  @relation(fields: [ripleId], references: [id])
-    user        User   @relation(fields: [userId], references: [id])
+    user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([ripleId, userId])
 }

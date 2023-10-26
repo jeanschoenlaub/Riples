@@ -77,7 +77,7 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
                     <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
             }
-            {showWizard && (wizardName == "projectabout") &&
+            {showWizard && (wizardName == "projectabout") && (userQuery.data?.user?.userOnboarding?.onBoardingFinished === true) &&
                 <div id="wizardprojectabout" className={`${styles.floatingWindow}`}>
                     {/* If no logged in users or the logged in user hasn't finished the tutorial, show onboarding Mister Watt */}
                     <WizardProjectAbout />
