@@ -127,9 +127,10 @@ model Riple {
 
 model RipleImage {
   id       String  @id @default(cuid())
-  ImageId  String  @db.VarChar(255)  //The unique id of the image
+  ImageId  String  @db.VarChar(255) @unique //The unique id of the image
   caption  String? @db.VarChar(255)  // An optional caption for the image
   ripleId  String?                   // The ID of the Riple to which this image is attached
+  createdAt DateTime @default(now())
   riple    Riple?   @relation(fields: [ripleId], references: [id], onDelete: Cascade) //optional to allow uploading before the riples is created
 }
 

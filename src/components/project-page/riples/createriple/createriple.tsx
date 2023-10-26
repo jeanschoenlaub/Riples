@@ -53,13 +53,18 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
         onClose()
     }
 
-    // Helper function to generate create payload
-    const generateCreatePayload = (): CreateRiplePayload => ({
-        projectId: projectId,
-        projectTitle: projectTitle,
-        title: ripleTitle,
-        content: ripleHTMLContent,
-    });
+    const generateCreatePayload = (): CreateRiplePayload => {
+        // Extract the image IDs from ripleImages state
+        const ripleImagesWithCaptions = ripleImages.map(img => ({ id: img.id, caption: img.caption }))
+
+        return {
+            projectId: projectId,
+            projectTitle: projectTitle,
+            title: ripleTitle,
+            content: ripleHTMLContent,
+            ripleImages: ripleImagesWithCaptions,
+        };
+    };
 
     useEffect (() => {
         if (showModal){
@@ -95,13 +100,13 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
     };
 
     useEffect (() => {
-
-        console.log("step"+currentStep)
         if (currentStep === Step.RipleHTML ){
-            console.log("step"+currentStep)
+            console.log("1")
             const updatedContent = appendImagesToContent(ripleContent, ripleImages);
+            console.log(updatedContent)
             wizardContext.setRipleContent(updatedContent);
             setRipleHTMLContent(updatedContent);
+            console.log(ripleHTMLContent)
             wizardContext.setRipleWizardModalStep("html") //This will change RipleWizardMode from text writer to HTML writer
             wizardContext.setShowWizard(true)
             console.log(ripleHTMLContent)
@@ -118,14 +123,15 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
     },[ripleContent])
 
     useEffect (() => {
-        console.log("updated riple HTML content")
+        console.log("updated riple HTML content:" + ripleHTMLContent)
         wizardContext.setRipleContent(ripleHTMLContent);
-        console.log(ripleHTMLContent)
+        
     },[ripleHTMLContent])
     
     const ripleContentFromRedux = useSelector((state: RootState) => state.riple.ripleContent);
     useEffect(() => {
       if (ripleContentFromRedux.length){
+        console.log("redux")
         if (currentStep === Step.RipleText){setRipleContent(ripleContentFromRedux)}
         if (currentStep === Step.RipleHTML){setRipleHTMLContent(ripleContentFromRedux)}
       } 
@@ -147,9 +153,6 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
             setCurrentStep(Step.RipleText);
         }
     };
-
-
-  
 
     return (
         <Modal showModal={showModal} size="medium" Logo={false} onClose={onClose}>

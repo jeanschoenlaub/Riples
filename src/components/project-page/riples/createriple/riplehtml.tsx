@@ -17,7 +17,7 @@ const RipleHTMLComponent: React.FC<RipleHTMLComponentProps> = ({ ripleTitle, set
 
         //For when wizard changes the vlaue of html content 
         useEffect(() => {
-            setRipleHTMLContent(ripleHTMLContent)
+            //setRipleHTMLContent(ripleHTMLContent)
     
         }, [ripleHTMLContent]);
     

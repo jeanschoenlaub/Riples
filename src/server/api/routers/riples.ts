@@ -29,11 +29,12 @@ export const ratelimit = new Ratelimit({
 })
 
 export const ripleRouter = createTRPCRouter({
+    // To do fixlimited to 20 most recent riples
     getAll: publicProcedure.query(async ({ ctx }) => {
         const riples = await ctx.prisma.riple.findMany({
-          take: 100,
+          take: 20,
           orderBy: [{ createdAt: "desc" }],
-          include: { project: true },
+          include: { project: true, images: true },
         });
       
         const authorIDs = riples
@@ -52,6 +53,7 @@ export const ripleRouter = createTRPCRouter({
             riple,
             author,
             project: riple.project,
+            images: riple.images,
           };
         });
       }),
@@ -106,6 +108,12 @@ export const ripleRouter = createTRPCRouter({
         title: z.string().min(5, { message: "Riple title must be 5 or more characters long" }).max(255, { message: "Riple title must be 255 or less characters long" }),
         content: z.string().min(5, { message: "Riple content must be 5 or more characters long" }).max(10000, { message: "Riple content must be 10000 or less characters long" }),
         projectId: z.string(),
+        ripleImages: z.array(
+          z.object({
+              id: z.string(),
+              caption: z.string().optional(),
+          })
+      ).optional(),
         })
     )
     .mutation(async ({ ctx, input }) => {
@@ -123,6 +131,20 @@ export const ripleRouter = createTRPCRouter({
         },
         });
 
+        // If ripleImages were provided, associate them with the new riple
+        if (input.ripleImages && input.ripleImages.length > 0) {
+          for (const imageInput of input.ripleImages) {
+              await ctx.prisma.ripleImage.update({
+                  where: {
+                      ImageId: imageInput.id,
+                  },
+                  data: {
+                      ripleId: riple.id,
+                      caption: imageInput.caption,
+                  },
+              });
+          }
+      }
         return riple;
     }),
         
@@ -182,6 +204,17 @@ export const ripleRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
 
       const imageId = uuidv4();
+
+      // Check if an image with the generated ID already exists
+      const existingRipleImage = await ctx.prisma.ripleImage.findUnique({
+          where: {
+              ImageId: imageId,
+          },
+      });
+
+      if (existingRipleImage) {
+          throw new Error("An image with this ID already exists. Please retry");
+      }
 
       // Save the imageId in the RipleImage table
       await ctx.prisma.ripleImage.create({

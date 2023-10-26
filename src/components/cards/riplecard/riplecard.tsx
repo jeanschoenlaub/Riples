@@ -13,6 +13,7 @@ import { RipleCardHeader } from "./riplecardsections/riplecardheader";
 import { RipleCardBody } from "./riplecardsections/riplecardbody";
 import { LoadingSpinner } from '~/components/reusables/loading';
 import { useRipleInteractions } from './ripleLikeCommentInteractions';
+import { RipleCardImages } from './riplecardsections/ripleImages';
 
 type FullRiple = RouterOutputs["riples"]["getAll"][number]
 
@@ -89,6 +90,10 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
 
             
                 <RipleCardBody ripleContent={riple.content}></RipleCardBody>
+
+                {riple.images && (
+                        <RipleCardImages images={riple.images}/>
+                )}
 
                 {/* Post Footer */}
                 <div className="flex flex-col  justify-between h-full border-t px-4 border-slate-300 ">
