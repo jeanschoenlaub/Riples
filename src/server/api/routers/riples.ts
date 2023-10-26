@@ -153,7 +153,7 @@ export const ripleRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
         const riples = await ctx.prisma.riple.findMany({
           where: { projectId: input.projectId },
-          include: { project: true },
+          include: { project: true, images: true },
           orderBy: [{ createdAt: "desc" }],
         });
 
@@ -173,6 +173,7 @@ export const ripleRouter = createTRPCRouter({
             riple,
             author,
             project: riple.project,
+            images: riple.images,
         };
         });
     }),

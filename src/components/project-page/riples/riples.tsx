@@ -1,14 +1,9 @@
-import { api, type RouterOutputs } from '~/utils/api';
+import type { RouterOutputs } from '~/utils/api';
 import { RipleCard } from '../../cards/riplecard/riplecard';
-import { handleMutationError } from '~/utils/error-handling';
-import toast from 'react-hot-toast';
-import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-import { Modal } from '../../reusables/modaltemplate';
-import { LoadingSpinner } from '../../reusables/loading';
 import { CreateRipleModal } from './createriple/createriple';
 
-type RipleData = RouterOutputs["riples"]["getAll"]
+type RipleData = RouterOutputs["riples"]["getRipleByProjectId"]
 interface RipleTabProps {
     ripleData: RipleData;
     projectId: string;

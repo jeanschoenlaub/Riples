@@ -6,19 +6,11 @@ import { useOnboarding } from '../onboardingwrapper';
 export const TaskTwoJoyRide = () => {
     const [isTourOpen, setIsTourOpen] = useState(false);
     const [isClient, setIsClient] = useState(false);
-    const [screenWidth, setScreenWidth] = useState<number | null>(null);
-   
 
     useEffect(() => {
         setIsClient(true); 
         setIsTourOpen(true);
     }, []);
-
-    useEffect(() => {
-        if (isClient) {
-            setScreenWidth(window.innerWidth);
-        }
-    }, [isClient]);
 
     const OnboardingContext = useOnboarding();
     const handleJoyrideCompletion = (data: CallBackProps) => {

@@ -129,8 +129,6 @@ const RipleTextComponent: React.FC<RipleTextComponentProps> = ({
 
 
 export const useRipleImageUpload = () => {
-    const apiContext = api.useContext();
-
     const handleSuccess = async () => {
         //await apiContext.riples.getRipleById.invalidate();
     };

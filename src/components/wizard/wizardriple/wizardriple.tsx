@@ -109,12 +109,12 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
                     placeholder={modalStep === "html" ? "Optionally add some instructions" : "Write about the progress we made on our project this week"}
                     className="w-full p-2 border rounded-md resize-none"
                     rows={3}
-                    disabled= {isGeneratingRipleContent}
+                    disabled= {isGeneratingRipleContent || isGeneratingRipleHTML}
                 ></textarea>
 
                 <button 
                     className="bg-blue-500 text-white rounded px-4 mt-2 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200"
-                    disabled={isGeneratingRipleContent}
+                    disabled={isGeneratingRipleContent || isGeneratingRipleHTML}
                     onClick={() => getButtonFunction()}
                 >
                     {getButtonText()}
