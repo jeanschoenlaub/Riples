@@ -98,7 +98,7 @@ const RipleTextComponent: React.FC<RipleTextComponentProps> = ({
     
                                 <button 
                                     onClick={() => removeImage(index)} 
-                                    className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                                    className="absolute top-0 right-0 bg-red-500 text-white px-1 rounded-full hover:bg-red-600"
                                 >
                                     &times;
                                 </button>

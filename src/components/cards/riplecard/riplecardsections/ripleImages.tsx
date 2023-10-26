@@ -28,7 +28,7 @@ export const RipleCardImages: React.FC<RipleCardImagesProps> = ({ images }) => {
     return (
         <div className="mt-4 relative border border-slate-300">
             {/* Display the current image */}
-            <img src={imageUrl} alt={currentImage.caption || 'Uploaded preview'} className='border border-slate-500' />
+            <img src={imageUrl} alt={currentImage.caption ?? 'Uploaded preview'} className='border border-slate-500' />
 
             {/* Navigation controls */}
             {currentImageIndex > 0 && (  // Check if there's a previous image
