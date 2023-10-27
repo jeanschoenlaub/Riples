@@ -53,12 +53,12 @@ const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, pro
         <div>
             <div id="project-main-cover-image" className="hidden border-b border-l border-gray-500 md:flex group relative w-full h-[35vh] overflow-hidden justify-center items-center">
                 {(isUploading || imageChanging)?  ( <LoadingRiplesLogo isLoading={isUploading}></LoadingRiplesLogo>) : (
-                <Image 
+                <img 
                 key={imageUrl}
                 src={imageUrl} 
                 alt="Project cover image" 
-                layout="fill" 
-                objectFit="cover"
+                //layout="fill" 
+                //objectFit="cover"
             />)}
     
                 <div className="absolute top-0 right-0 flex flex-row items-end mb-4 mr-2 transition-opacity duration-300">

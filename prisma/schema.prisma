@@ -308,7 +308,7 @@ model Like {
     userId      String
     createdAt   DateTime @default(now())
 
-    riple       Riple  @relation(fields: [ripleId], references: [id])
+    riple       Riple  @relation(fields: [ripleId], references: [id], onDelete: Cascade)
     user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([ripleId, userId])

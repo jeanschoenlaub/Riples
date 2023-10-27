@@ -32,15 +32,23 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
     const userId = session?.user?.id ?? ''; //will never be empty 
 
     //All below is used to get the data and set up the interactions for the footer 
-    const { data: commentsCountData } = api.comment.getCommentCount.useQuery({ ripleId: riple.id });
-    const { data: comments } = api.comment.getCommentsByRiple.useQuery({ ripleId: riple.id });
-    const { data: likeData, isLoading: isLoadingLikeCount  } = api.like.getLikeCount.useQuery({ ripleId: riple.id });
+    const { data: ripleDetails, isLoading: isLoadingRiplesDetails } = api.feed.getRipleDetails.useQuery({ ripleId: riple.id });
     const { data: hasLiked } = api.like.hasLiked.useQuery(
         { ripleId: riple.id, userId: userId },
         { enabled: shouldExecuteQuery }
     );
+    const comments = ripleDetails?.comments;
+    const likeCount = ripleDetails?.likeCount;
+    
+    // When the data is fetched from the API, update the state
+    useEffect(() => {
+        if (ripleDetails?.commentCount) {
+            setCommentsCount(ripleDetails.commentCount);
+        }
+    }, [ripleDetails]);
+
     const { handleLike, handleCommentAdd, generateShareImage, transformComments, isAddingComment, isChangingLikeState } = useRipleInteractions({ riple, ripleCardRef, session, setShowSignInModal, hasLiked : hasLiked ?? false, setShareImageUrl, setShowShareModal });
-    const isLoadingLikeState = isChangingLikeState ||isLoadingLikeCount
+    const isLoadingLikeState = isChangingLikeState || isLoadingRiplesDetails
     
 
     // Delete Operations
@@ -73,14 +81,6 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
         riple.ripleType === "goalFinished" ? "bg-green-50" :
         "bg-white";
     const cardBorderClass = riple.ripleType == "creation" ? "" : "border border-slate-300";
-
-    useEffect(() => {
-        // Check if we got a response for comments count and update the state
-        if (commentsCountData) {
-            setCommentsCount(commentsCountData);
-        }
-    }, [commentsCountData]);
-
   
     return (
         <div ref={ripleCardRef} id="riple-card" key={riple.id}>
@@ -96,7 +96,7 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
                 {/* Post Footer */}
                 <div className="flex flex-col  justify-between h-full border-t px-4 border-slate-300 ">
                     <RipleCardFooter 
-                        likesCount={likeData ?? 0}
+                        likesCount={likeCount ?? 0}
                         hasLiked={hasLiked ?? false}
                         onLike={handleLike}
                         isChangingLikeState= {isLoadingLikeState}

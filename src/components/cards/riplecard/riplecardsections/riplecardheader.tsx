@@ -9,7 +9,6 @@ import type { RouterOutputs } from '~/utils/api';
 import { buildProjectCoverImageUrl } from '~/utils/s3';
 import { ThreeDotSVG } from '~/components/reusables/svg';
 import { IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
-import { LoadingRiplesLogo } from '~/components/reusables/loading';
 dayjs.extend(relativeTime);
 
 type Riple = RouterOutputs["riples"]["getAll"][number]["riple"];
@@ -38,7 +37,7 @@ export const RipleCardHeader = ({ riple, author, onDelete }: RipleWithAuthor ) =
             {/* Author's Profile Image */}
             <div id="riple-card-header-image" className="flex rounded-full   items-center flex-none" style={{ width: imgDimensions.width, height: imgDimensions.height }}>
                 <Link href={`/projects/${riple.projectId}`}>
-                    <Image
+                    <img
                         src={buildProjectCoverImageUrl(riple.project.coverImageId)} 
                         alt="Profile Image" 
                         className="rounded-full "

@@ -46,9 +46,13 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
             userId: userId,
         };
 
+        console.log(generateHTMLStylePayload)
+
         try {
             const rawDataRipleHTML = await generateRipleHTML(generateHTMLStylePayload);
+            console.log("raw: "+rawDataRipleHTML)
             const RipleHTML = processRawDataForRipleContent(rawDataRipleHTML);
+            console.log("processed: "+RipleHTML)
             dispatch(setRipleContent(RipleHTML));
 
         } catch (error) {
@@ -82,7 +86,6 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
     }
 
     function getButtonText() {
-        console.log(modalStep)
         if (modalStep === "html") {
             if (isLoading) {return  <div className="flex items-center"><LoadingSpinner size={16}></LoadingSpinner> Syling Riple</div>}
             return "Style HTML";

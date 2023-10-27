@@ -11,6 +11,7 @@ import { goalRouter } from "./routers/goals";import { userOnboardingRouter } fro
 import { notificationRouter } from "./routers/notification";
 import { likeRouter } from "./routers/like";
 import { commentRouter } from "./routers/comment";
+import { feedRouter } from "./routers/feed";
 
 
 /**
@@ -38,6 +39,7 @@ export const appRouter = createTRPCRouter({
   notification: notificationRouter,
   like: likeRouter,
   comment: commentRouter,
+  feed: feedRouter,
 });
 
 // export type definition of API

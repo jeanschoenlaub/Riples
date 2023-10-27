@@ -83,6 +83,9 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
 
     const appendImagesToContent = (content: string, images: { url: string; caption: string }[]): string => {
         let imageHtml = "";
+
+        // Replace all backspaces with the desired string
+        content = content.replace(/\n+/g, '</p></br><p>');
     
         images.forEach(image => {
             imageHtml += `
@@ -101,15 +104,11 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
 
     useEffect (() => {
         if (currentStep === Step.RipleHTML ){
-            console.log("1")
             const updatedContent = appendImagesToContent(ripleContent, ripleImages);
-            console.log(updatedContent)
             wizardContext.setRipleContent(updatedContent);
             setRipleHTMLContent(updatedContent);
-            console.log(ripleHTMLContent)
             wizardContext.setRipleWizardModalStep("html") //This will change RipleWizardMode from text writer to HTML writer
             wizardContext.setShowWizard(true)
-            console.log(ripleHTMLContent)
         }
         if (currentStep === Step.RipleText ) {
             wizardContext.setRipleContent("")
@@ -118,12 +117,10 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
     },[currentStep])
 
     useEffect (() => {
-        console.log("updated riple content")
         wizardContext.setRipleContent(ripleContent);
     },[ripleContent])
 
     useEffect (() => {
-        console.log("updated riple HTML content:" + ripleHTMLContent)
         wizardContext.setRipleContent(ripleHTMLContent);
         
     },[ripleHTMLContent])
@@ -131,7 +128,6 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
     const ripleContentFromRedux = useSelector((state: RootState) => state.riple.ripleContent);
     useEffect(() => {
       if (ripleContentFromRedux.length){
-        console.log("redux")
         if (currentStep === Step.RipleText){setRipleContent(ripleContentFromRedux)}
         if (currentStep === Step.RipleHTML){setRipleHTMLContent(ripleContentFromRedux)}
       } 
@@ -155,7 +151,7 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
     };
 
     return (
-        <Modal showModal={showModal} size="medium" Logo={false} onClose={onClose}>
+        <Modal showModal={showModal} size="large" Logo={false} onClose={onClose}>
              {currentStep === Step.RipleText &&
                 <RipleTextComponent
                     ripleTitle={ripleTitle}
