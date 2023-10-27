@@ -23,8 +23,6 @@ import { RiplesTab } from "~/components/project-page/riples/riples";
 import { useRouter } from "next/router";
 import { useWizard } from "~/components/wizard/wizardswrapper";
 import ProjectCoverImage from "~/components/project-page/coverimage";
-import Link from "next/link";
-import { BreadCrumbArrowSVG } from "~/components/reusables/svgstroke";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,

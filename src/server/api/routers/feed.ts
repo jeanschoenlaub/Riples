@@ -1,6 +1,5 @@
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, publicProcedure } from "../trpc";
 import { z } from "zod";
-import { TRPCError } from "@trpc/server";
 
 export const feedRouter = createTRPCRouter({
     getRipleDetails: publicProcedure

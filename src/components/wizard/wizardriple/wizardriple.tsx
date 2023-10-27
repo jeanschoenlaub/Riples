@@ -50,9 +50,7 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
 
         try {
             const rawDataRipleHTML = await generateRipleHTML(generateHTMLStylePayload);
-            console.log("raw: "+rawDataRipleHTML)
             const RipleHTML = processRawDataForRipleContent(rawDataRipleHTML);
-            console.log("processed: "+RipleHTML)
             dispatch(setRipleContent(RipleHTML));
 
         } catch (error) {
