@@ -25,7 +25,7 @@ interface RipleCardFooterProps {
   }) => {
 
     return (
-      <div className="flex items-center justify-between ">
+      <div className="flex items-center mb-2 justify-between ">
         
           {/* Like Button and Count */}
           <div className="mt-1 px-2 border-slate-300 ">
