@@ -49,12 +49,13 @@ export const AboutSVG = ({ width = "6", height = "6", marginRight = "0", marginL
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill={colorFillHex}  // Blue and Gray colors
-                viewBox="0 0 20 20"
+                viewBox="0 0 20 18"
             >
              <path d="M18 0H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3.546l3.2 3.659a1 1 0 0 0 1.506 0L13.454 14H18a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-8 10H5a1 1 0 0 1 0-2h5a1 1 0 1 1 0 2Zm5-4H5a1 1 0 0 1 0-2h10a1 1 0 1 1 0 2Z" />
             </svg>
     );
 };
+
 
 export const MultiUserSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorFillHex="currentColor" }) => {
     return (
@@ -171,6 +172,16 @@ export const FollowFullSVG = ({ width = "6", height = "6", marginRight = "0", ma
     );
 };
 
-
-                
-
+export const ThreeDotSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorFillHex="currentColor" }) => {
+    return (
+            <svg
+                className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill={colorFillHex}  // Blue and Gray colors
+                viewBox="0 0 4 15"
+            >
+            <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
+        </svg>  
+    );
+};

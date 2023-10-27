@@ -23,34 +23,39 @@ export const useRipleMutation = (followers: Follower[] | undefined) => {
     });
 
     const createRiple = (payload: CreateRiplePayload) => {
-        return new Promise<void>((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
           createRipleMutation(payload, {
-            onSuccess: () => {
-              
-              if(!followers || followers.length === 0) {
-                reject(new Error("No followers provided"));
-                return;
-              }
-              
-              // Notify each follower about the new Riple
-              followers.forEach(follower => {
-                const notificationContent = `A new Riple has been posted in this project you follow: ${payload.projectTitle}`;
+              onSuccess: () => {
                 
-                // Create a notification for each follower
-                createNotificationMutation({
-                    userId: follower.userId, 
-                    content: notificationContent,
-                    link: `/projects/${payload.projectId}?activeTab=riples`
-                });
-              });
-              resolve();
-            },
-            onError: (e) => {
-              handleMutationError(e, reject);
-            }    
+                  if(!followers || followers.length === 0) {
+                      resolve();
+                      return;
+                  }
+                  
+                  // Notify each follower about the new Riple
+                  followers.forEach(follower => {
+                      const notificationContent = `A new Riple has been posted in this project you follow: ${payload.projectTitle}`;
+                      
+                      // Create a notification for each follower
+                      createNotificationMutation({
+                          userId: follower.userId, 
+                          content: notificationContent,
+                          link: `/projects/${payload.projectId}?activeTab=riples`
+                      }, {
+                          onError: (e) => {
+                              console.error("Error sending notification:", e);
+                          }
+                      });
+                  });
+                  resolve();
+              },
+              onError: (e) => {
+                  console.error("Error during riple creation:", e);
+                  handleMutationError(e, reject);
+              }    
           });
-        });
-      };
+      });
+  };
       
     return {
         isCreating,

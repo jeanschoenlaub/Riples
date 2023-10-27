@@ -1,38 +1,79 @@
-import DOMPurify from "dompurify";
 import React, { useEffect, useRef, useState } from 'react';
 import { api, type RouterOutputs } from "~/utils/api";
 import { RipleCardFooter } from "./riplecardsections/riplecardfooter";
-import { useRipleInteractionsMutation } from "./riplecardapi";
+import { UseRiplesMutations } from "./riplecardapi";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { NavBarSignInModal } from "../../navbar/signinmodal";
 import { RipleCommentListAndForm } from "./riplecardsections/riplecardcomment";
-import type { AddCommentPayload, AddlikePayload } from "./riplecardtypes";
 
 //import { toPng } from 'html-to-image';
-import * as htmlToImage from 'html-to-image';
 import { Modal } from "~/components/reusables/modaltemplate";
 import { RipleCardHeader } from "./riplecardsections/riplecardheader";
 import { RipleCardBody } from "./riplecardsections/riplecardbody";
+import { LoadingSpinner } from '~/components/reusables/loading';
+import { useRipleInteractions } from './ripleLikeCommentInteractions';
+import { RipleCardImages } from './riplecardsections/ripleImages';
 
-type FullRiple = RouterOutputs["riples"]["getAll"][number]&{
-    onDelete?: (rippleId: string) => void;
-}
+type FullRiple = RouterOutputs["riples"]["getAll"][number]
 
-type CommentWithUser = RouterOutputs["comment"]["getCommentsByRiple"][number]&{
-    onDelete?: (rippleId: string) => void;
-}
-export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
-    
+export const RipleCard = ({ riple, author }: FullRiple ) => {
     const [showSignInModal, setShowSignInModal] = useState(false); // If click on folllow when not signed in we redirect
     const [commentsCount, setCommentsCount] = useState<number>(0);
     const [showComment, setShowComment] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
     const [shareImageUrl, setShareImageUrl] = useState("");
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [ripleToDelete, setRipleToDelete] = useState<string | null>(null);
+    const ripleCardRef = useRef<HTMLDivElement>(null); // For sharing
 
     const { data: session } = useSession()
     const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user ID exist
     const userId = session?.user?.id ?? ''; //will never be empty 
+
+    //All below is used to get the data and set up the interactions for the footer 
+    const { data: ripleDetails, isLoading: isLoadingRiplesDetails } = api.feed.getRipleDetails.useQuery({ ripleId: riple.id });
+    const { data: hasLiked } = api.like.hasLiked.useQuery(
+        { ripleId: riple.id, userId: userId },
+        { enabled: shouldExecuteQuery }
+    );
+    const comments = ripleDetails?.comments;
+    const likeCount = ripleDetails?.likeCount;
+    
+    // When the data is fetched from the API, update the state
+    useEffect(() => {
+        if (ripleDetails?.commentCount) {
+            setCommentsCount(ripleDetails.commentCount);
+        }
+    }, [ripleDetails]);
+
+    const { handleLike, handleCommentAdd, generateShareImage, transformComments, isAddingComment, isChangingLikeState } = useRipleInteractions({ riple, ripleCardRef, session, setShowSignInModal, hasLiked : hasLiked ?? false, setShareImageUrl, setShowShareModal });
+    const isLoadingLikeState = isChangingLikeState || isLoadingRiplesDetails
+    
+
+    // Delete Operations
+    const onDelete = userId === riple.authorID ? () => handleDeleteClick() : undefined;
+    const handleDeleteClick = () => {
+        setRipleToDelete(riple.id);
+        setShowDeleteModal(true);
+    };
+    const { deleteRiple, isDeleting } = UseRiplesMutations();
+    const handleConfirmDelete = () => {
+        if (ripleToDelete) {
+            deleteRiple({ ripleId: ripleToDelete }).then(() => {
+                toast.success('Riples Deleted Successfully');
+                setShowDeleteModal(false);
+            })
+            .catch(() => {
+                toast.error('Error deleting Riples');
+                setShowDeleteModal(false);
+            });
+        }
+    };
+    const handleCancelDelete = () => {
+        setRipleToDelete(null);
+        setShowDeleteModal(false);
+    };
 
 
     const cardBackgroundColor = 
@@ -40,150 +81,34 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
         riple.ripleType === "goalFinished" ? "bg-green-50" :
         "bg-white";
     const cardBorderClass = riple.ripleType == "creation" ? "" : "border border-slate-300";
-
-
-    // Handlers for liking and unliking
-    const handleLike = () => {
-        if (!session) {
-            toast.error("You must be signed in to Like");
-            setShowSignInModal(true); // Show sign-in modal if the user is not logged in
-            return;
-        }
-
-        const performLikeOperation = async () => {
-            try {
-                if (hasLiked) {
-                    await removeLikeFromRiple(riple.id);
-                } else {
-                    await addLikeToRiple(generateLikePayload());
-                }
-            } catch (error) {
-                console.error("Error while handling like operation:", error);
-                toast.error("Error while liking. Sorry please try again later");
-            }
-        };
-        console.log(generateLikePayload())
-        // Call the async function
-        void performLikeOperation();
-    };
-
-    const generateLikePayload = (): AddlikePayload => ({
-        ripleAuthorID: riple.authorID ?? "",
-        ripleTitle: riple.title,
-        username: session?.user.username ?? "",
-        ripleId: riple.id,
-        projectId: riple.projectId,
-    });
-
-    const generateCommentPayload = (commentContent: string): AddCommentPayload => ({
-        ripleAuthorID: riple.authorID ?? "",
-        ripleTitle: riple.title,
-        content: commentContent,
-        username: session?.user.username ?? "",
-        ripleId: riple.id,
-        projectId: riple.projectId,
-    });
-
-    // Handlers for liking and unliking
-    const handleCommentAdd = (commentContent: string) => {
-        if (!session) {
-            toast.error("You must be signed in to comment");
-            setShowSignInModal(true); // Show sign-in modal if the user is not logged in
-            return;
-        }
-
-        const performCommentOperation = async (commentContent: string) => {
-            try {
-                   await addCommentToRiple(generateCommentPayload(commentContent));
-            } catch (error) {
-                console.error("Error while handling comment operation:", error);
-                toast.error("Error while commenting. Sorry please try again later");
-            }
-        };
-        console.log(generateLikePayload())
-        // Call the async function
-        void performCommentOperation(commentContent);
-    };
-
-
-    
-
-    //All below is used to pass like counts to the riplecardfooter component
-    const { addLikeToRiple,removeLikeFromRiple, isAddingLike, isRemovingLike, addCommentToRiple, isAddingComment} = useRipleInteractionsMutation();
-    const { data: likeData, isLoading: isLoadingLikeCount  } = api.like.getLikeCount.useQuery({ ripleId: riple.id });
-    const { data: hasLiked } = api.like.hasLiked.useQuery(
-        { ripleId: riple.id, userId: userId },
-        { enabled: shouldExecuteQuery }
-    );
-    const isChangingLikeState = isAddingLike || isRemovingLike || isLoadingLikeCount
-
-    //All below is used to pass comments and comment counts to the riplecardcomment component
-    const { data: commentsCountData } = api.comment.getCommentCount.useQuery({ ripleId: riple.id });
-    const { data: comments } = api.comment.getCommentsByRiple.useQuery({ ripleId: riple.id });
-    const transformComments = (rawComments: CommentWithUser[]) => {
-        return rawComments.map(comment => ({
-            id: comment.id,
-            authorUsername: comment.author?.username ?? 'Unknown',  // if username is not available, fallback to 'Unknown'
-            content: comment.content,
-            createdAt: comment.createdAt,
-            ripleId: comment.ripleId,
-            authorID: comment.authorID,
-            authorImage: comment.author?.image ?? "",
-            authorName: comment.author?.name ?? "",
-            authorEmail: comment.author?.email ?? "",
-        }));
-    };
-
-    //All below is used to transform a Riple card to image and put in a modal on the press of share button
-    const rippleCardRef = useRef<HTMLDivElement>(null);
-    const generateImage = () => {
-        if (rippleCardRef.current) {
-            htmlToImage.toPng(rippleCardRef.current)
-                .then(dataUrl => {
-                        setShareImageUrl(dataUrl)
-                        setShowShareModal(true);  // Display the modal with the image.
-                })
-                .catch(error => {
-                    console.error("Couldn't generate the image", error);
-                });
-        } else {
-            console.error("Ripple Card Ref is not attached yet");
-        }
-    };
-
-
-    useEffect(() => {
-        // Check if we got a response for comments count and update the state
-        if (commentsCountData) {
-            setCommentsCount(commentsCountData);
-        }
-    }, [commentsCountData]);
-
   
     return (
-        <div ref={rippleCardRef} id="riple-card" key={riple.id}>
-            <div className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg flex flex-col mx-2 md:mx-5 p-4 mt-4 shadow-md`}>
+        <div ref={ripleCardRef} id="riple-card" key={riple.id}>
+            <div className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg flex flex-col mx-2 md:mx-5 p-2 shadow-md`}>
                 <RipleCardHeader riple={riple} author={author} onDelete={onDelete} ></RipleCardHeader>
 
-            
                 <RipleCardBody ripleContent={riple.content}></RipleCardBody>
 
+                {riple.images && (
+                        <RipleCardImages images={riple.images}/>
+                )}
+
                 {/* Post Footer */}
-                <div className="flex flex-col  justify-between h-full  rounded-lg border px-4 py-1 border-slate-300 ">
+                <div className="flex flex-col  justify-between h-full border-t px-4 border-slate-300 ">
                     <RipleCardFooter 
-                        likesCount={likeData ?? 0}
+                        likesCount={likeCount ?? 0}
                         hasLiked={hasLiked ?? false}
                         onLike={handleLike}
-                        isChangingLikeState= {isChangingLikeState}
+                        isChangingLikeState= {isLoadingLikeState}
                         commentsCount={commentsCount} 
                         showComment={showComment}
                         onComment={() => setShowComment(!showComment)}
-                        onShare={generateImage} 
+                        onShare={generateShareImage} 
                     />
                 </div>
 
                 {showComment && (
-                    <div className="mb-20">
+                    <div className="">
                         <RipleCommentListAndForm 
                             comments={transformComments(comments ?? [])}  // Add author.username
                             onCommentSubmit={handleCommentAdd} 
@@ -203,6 +128,13 @@ export const RipleCard = ({ riple, author, onDelete }: FullRiple ) => {
                         <p className="mt-4 text-gray-700"> 2. Share it !</p>
                     </div>
                 </Modal> 
+                <Modal showModal={showDeleteModal} onClose={handleCancelDelete} size="small">
+                    <p>Are you sure you want to delete this riple?</p>
+                    <div className="flex justify-end">
+                        <button onClick={handleCancelDelete} className="bg-red-500 text-white rounded px-4 py-2">No</button>
+                        <button onClick={handleConfirmDelete} className="bg-green-500 text-white rounded px-4 py-2 ml-2">{isDeleting && <LoadingSpinner size={16} />}  Yes</button>
+                    </div>
+                </Modal>
             </div>
         </div>
     );

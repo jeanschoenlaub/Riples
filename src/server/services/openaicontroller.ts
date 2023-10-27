@@ -85,8 +85,10 @@ export const generateRipleContent= async (projectTitle: string, projectSummary: 
 export const generateRipleHTML= async (ripleContent: string, userprompt: string) => {
     const prompt = `
     User prompt: "${userprompt}" 
-    Plain text: "${ripleContent}
+    HTML: "${ripleContent}
     .`;
+
+    console.log(prompt)
 
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const chatCompletion = await openai.chat.completions.create({
@@ -94,13 +96,24 @@ export const generateRipleHTML= async (ripleContent: string, userprompt: string)
                 {
                   "role": "system",
                   "content": `
-                    You will be provided with a plain text and a user prompt. 
-                    Use the following instructions to generate the html:
+                    You will be provided with an HTML and a user prompt. Edit the HTML based on the user prompt, using tailwind and class=""
+
+                    For example: <div class="container mx-auto">
+                        <p class="font-bold">Title</p>
                     
-                    Headings: Use <p style="font-size: 1em; font-weight: bold;"> tags.
-                    Content Paragraphs: Enclose in regular <p> tags.
-                    Separation: Insert <br> tags between sections.
-                    Listings: Utilize <li> tags for key points or features.
+                        <ul class="list-disc pl-5 px-4">
+                            <li>Bullet point </li>
+                        </ul>
+                    
+                        <div class="flex justify-center my-4">
+                            <div class="text-center">
+                                <img src="image source" alt="image caption" class="mx-auto block responsive-image">
+                                <p class="italic">asdxcwec</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    Return only HTML code 
                   `
                 },
                 {

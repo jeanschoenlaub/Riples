@@ -18,7 +18,7 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
         setIsLoading(true);
 
         const generateRipleAIPayload = {
-            userPrompt: inputValue,
+            userPrompt: inputValue + "for this text" + ripleContent,
             projectTitle: projectTitle,
             projectSummary: projectSummary,
             userId: userId,
@@ -45,6 +45,8 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
             ripleContent: ripleContent,
             userId: userId,
         };
+
+        console.log(generateHTMLStylePayload)
 
         try {
             const rawDataRipleHTML = await generateRipleHTML(generateHTMLStylePayload);
@@ -75,9 +77,9 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
 
     function getButtonFunction() {
         if (modalStep === "html") {
-            return generateHTMLStyle;
+            void generateHTMLStyle();
         } else {
-            return generateRipleAIData;
+            void generateRipleAIData();
         }
     }
 
@@ -97,9 +99,9 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
                 <div className="font-semibold flex items-center"> <span className="text-3xl mr-2"> 👩‍🎨 </span> Content Creator Wizard </div>
 
                 {modalStep === "html" ? 
-                    (<div className="mb-4">Do you want help styling the HTML ?  </div>) 
+                    (<div className="mb-4">Do you want help styling the Riple ?  </div>) 
                     :
-                    (<div className="mb-4"> I already know a lot about your project, but what do you want to post about ?  </div>) 
+                    (<div className="mb-4"> Do you want help creating content ?  </div>) 
                 }
 
                 <textarea 
@@ -108,12 +110,12 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
                     placeholder={modalStep === "html" ? "Optionally add some instructions" : "Write about the progress we made on our project this week"}
                     className="w-full p-2 border rounded-md resize-none"
                     rows={3}
-                    disabled= {isGeneratingRipleContent}
+                    disabled= {isGeneratingRipleContent || isGeneratingRipleHTML}
                 ></textarea>
 
                 <button 
                     className="bg-blue-500 text-white rounded px-4 mt-2 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200"
-                    disabled={isGeneratingRipleContent}
+                    disabled={isGeneratingRipleContent || isGeneratingRipleHTML}
                     onClick={() => getButtonFunction()}
                 >
                     {getButtonText()}

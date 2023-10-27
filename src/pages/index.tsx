@@ -18,7 +18,7 @@ export default function Home() {
       ? router.query.activeTab[0]
       : router.query.activeTab;
 
-    return tabFromQuery ?? "Create";
+    return tabFromQuery ?? "Social";
   });
   
   return (

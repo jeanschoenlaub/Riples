@@ -241,6 +241,59 @@ export const projRouter = createTRPCRouter({
     }));
   }),
 
+  getProjectByMemberId: publicProcedure
+  .input(z.object({ memberId: z.string() }))
+  .query(async ({ ctx, input }) => {
+    // Fetching all projects where the member with the provided memberId is a part of
+    const projects = await ctx.prisma.project.findMany({
+      where: {
+        members: {
+          some: {
+            userID: input.memberId
+          }
+        }
+      },
+      include: { 
+        goals: true,
+        members: {
+          include: {
+            user: true
+          }
+        },
+        tasks: {
+          include: {
+            subTasks: true
+          }
+        },
+        tags: {
+          include: {
+            tag: true
+          }
+        },
+      },
+      take: 100,
+      orderBy: [{ createdAt: "desc" }],
+    });
+
+    // Since projects already have an authorID, and assuming each project has one author,
+    // We'll fetch author data for each project and map them together
+    return Promise.all(projects.map(async (project) => {
+      const author = await ctx.prisma.user.findUnique({
+        where: { id: project.authorID },
+      });
+
+      if (!author) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Project author not found" });
+      }
+
+      return {
+        project,
+        author,
+      };
+    }));
+  }),
+
+
   create: protectedProcedure
   .input(z.object({
     title: z.string()

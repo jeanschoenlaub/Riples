@@ -5,6 +5,21 @@ import { TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
 
+//For images upload
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import { S3Client } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from "uuid";
+import { env } from "~/env.mjs";
+
+const UPLOAD_MAX_FILE_SIZE = 1000000;
+
+const s3Client = new S3Client({
+  region: "us-west-2",
+  credentials: {
+    accessKeyId: env.S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_ID,
+    secretAccessKey: env.S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_SECRET,
+  },
+});
 
 // Create a new ratelimiter, that allows 2 requests per 1 minute
 export const ratelimit = new Ratelimit({
@@ -14,11 +29,12 @@ export const ratelimit = new Ratelimit({
 })
 
 export const ripleRouter = createTRPCRouter({
+    // To do fixlimited to 20 most recent riples
     getAll: publicProcedure.query(async ({ ctx }) => {
         const riples = await ctx.prisma.riple.findMany({
-          take: 100,
+          take: 20,
           orderBy: [{ createdAt: "desc" }],
-          include: { project: true },
+          include: { project: true, images: true },
         });
       
         const authorIDs = riples
@@ -37,6 +53,7 @@ export const ripleRouter = createTRPCRouter({
             riple,
             author,
             project: riple.project,
+            images: riple.images,
           };
         });
       }),
@@ -89,8 +106,14 @@ export const ripleRouter = createTRPCRouter({
     .input(
         z.object({
         title: z.string().min(5, { message: "Riple title must be 5 or more characters long" }).max(255, { message: "Riple title must be 255 or less characters long" }),
-        content: z.string().min(5).max(50000),
+        content: z.string().min(5, { message: "Riple content must be 5 or more characters long" }).max(10000, { message: "Riple content must be 10000 or less characters long" }),
         projectId: z.string(),
+        ripleImages: z.array(
+          z.object({
+              id: z.string(),
+              caption: z.string().optional(),
+          })
+      ).optional(),
         })
     )
     .mutation(async ({ ctx, input }) => {
@@ -108,6 +131,20 @@ export const ripleRouter = createTRPCRouter({
         },
         });
 
+        // If ripleImages were provided, associate them with the new riple
+        if (input.ripleImages && input.ripleImages.length > 0) {
+          for (const imageInput of input.ripleImages) {
+              await ctx.prisma.ripleImage.update({
+                  where: {
+                      ImageId: imageInput.id,
+                  },
+                  data: {
+                      ripleId: riple.id,
+                      caption: imageInput.caption,
+                  },
+              });
+          }
+      }
         return riple;
     }),
         
@@ -116,7 +153,7 @@ export const ripleRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
         const riples = await ctx.prisma.riple.findMany({
           where: { projectId: input.projectId },
-          include: { project: true },
+          include: { project: true, images: true },
           orderBy: [{ createdAt: "desc" }],
         });
 
@@ -136,6 +173,7 @@ export const ripleRouter = createTRPCRouter({
             riple,
             author,
             project: riple.project,
+            images: riple.images,
         };
         });
     }),
@@ -161,6 +199,42 @@ export const ripleRouter = createTRPCRouter({
                 project: riple.project,
             };
         });
+    }),
+
+    createRipleImagePresignedUrl: protectedProcedure
+    .mutation(async ({ ctx, input }) => {
+
+      const imageId = uuidv4();
+
+      // Check if an image with the generated ID already exists
+      const existingRipleImage = await ctx.prisma.ripleImage.findUnique({
+          where: {
+              ImageId: imageId,
+          },
+      });
+
+      if (existingRipleImage) {
+          throw new Error("An image with this ID already exists. Please retry");
+      }
+
+      // Save the imageId in the RipleImage table
+      await ctx.prisma.ripleImage.create({
+        data: {
+          ImageId: imageId,
+        },
+      });
+
+      return createPresignedPost(s3Client, {
+        Bucket: env.NEXT_PUBLIC_S3_PUBLIC_IMAGES_BUCKET,
+        Key: `riple-images/${imageId}`,
+        Fields: {
+          key: `riple-images/${imageId}`,
+        },
+        Conditions: [
+          ["starts-with", "$Content-Type", "image/"],
+          ["content-length-range", 0, UPLOAD_MAX_FILE_SIZE],
+        ],
+      });
     }),
 
 });

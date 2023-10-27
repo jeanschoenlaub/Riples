@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { useState } from "react";
 import { NavBarSignInModal } from "~/components/navbar/signinmodal";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 
 
@@ -40,7 +41,7 @@ export default function AboutRiples() {
                     <div className="mt-4 md:mt-0">
                         <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white"> Turning ideas into realities.</h2>
                         <p className="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400"> Ever felt your ideas were lost in the noise or isolated in your creative journey ? With Riples, your ideas echo louder. </p>
-                        <p className="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400"> Try a revolutionary platform that streamlines your projects, enables you to collaborate and share with a vibrant community. Whether you&apos;re an aspiring startup founder, looking to get real-life experience in collaborative projects, or want to follow your friends on their creative adventures, Riples empowers you to turn your visions into reality. </p>
+                        <p className="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400"> Try a revolutionary platform that streamlines your projects, enables you to collaborate and share with a vibrant community. Whether you want to create the next big thing, get real-life experience in collaborative projects, or follow your friends on their creative adventures, Riples empowers it&apos;s community to turn visions into reality. </p>
                     </div>
                 </div>
               
@@ -100,15 +101,22 @@ export default function AboutRiples() {
               </div>
           </section>
             )}
-
-          <div className="flex justify-center">
-                  <a href="https://forms.gle/WPq2stK3YBDcggHw5" target="_blank" rel="noopener noreferrer">
-                        <button className="bg-green-500 text-white mb-5 mt-4 rounded py-1 px-2 text-center text-sm">
+                 
+            <div className="flex flex-col mt-8 mb-4 space-y-4 items-center">
+                <div className="flex space-x-4">
+                    <a href="https://forms.gle/WPq2stK3YBDcggHw5" target="_blank" rel="noopener noreferrer">
+                        <button className="bg-green-500 text-white rounded py-1 px-2 text-center text-sm">
                           Feedback
                         </button>
                       </a>
+                    <div className="text-xl text-gray-700 dark:text-gray-300">or Contact us: <a href="mailto:admin@riples.app" className="text-blue-500 hover:underline">admin@riples.app</a></div>
                 </div>
-              
+                <div className="flex space-x-4">
+                    <Link href="/about/privacy-policy" className="text-sm text-blue-500 hover:underline">Privacy Policy</Link>
+                    <Link href="/about/terms-of-service" className="text-sm text-blue-500 hover:underline">Terms of Service</Link>
+                    <Link href="/help" className="text-sm text-blue-500 hover:underline">Help</Link>
+                </div>
+            </div>
 
           </div>
         </div>

@@ -12,6 +12,7 @@ import { useWizard } from "../wizard/wizardswrapper";
 import { TaskFourJoyRide } from "./joyrides/taskfourjoyride";
 import { ClipboardSVG } from "../reusables/svgstroke";
 import Tooltip from "../reusables/tooltip";
+import { NavBarSignInModal } from "../navbar/signinmodal";
 
 
 type OnboardingContextType = {
@@ -19,6 +20,8 @@ type OnboardingContextType = {
   setActiveJoyrideIndex: React.Dispatch<React.SetStateAction<number | null>>;
   watchOnboarding: number;
   triggerOnboardingWatch: () => void;
+  setShowSignInModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showSignInModal: boolean;
 };
 
 type TaskMessage = {
@@ -43,6 +46,8 @@ export const useOnboarding = () => {
 export const OnboardingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 const [activeJoyrideIndex, setActiveJoyrideIndex] = useState<number | null>(null);
 const [watchOnboarding, setWatchOnboarding] = useState(0);
+// New State for SignIn Modal
+const [showSignInModal, setShowSignInModal] = useState(false);
 
 const triggerOnboardingWatch = () => {
    setWatchOnboarding(prev => prev + 1);
@@ -54,6 +59,8 @@ return (
         setActiveJoyrideIndex,
         watchOnboarding,
         triggerOnboardingWatch,
+        showSignInModal,
+        setShowSignInModal     
     }}>
         {children}
     </OnboardingContext.Provider>
@@ -73,6 +80,7 @@ export const OnboardingWrapper: React.FC = () => {
   const [prevOnboardingFinished, setPrevOnboardingFinished] = useState<boolean | null>(null);
 
   const { watchOnboarding } = useOnboarding();
+  const {showSignInModal, setShowSignInModal} = useOnboarding();
 
   let JoyrideComponent = null;
 
@@ -285,6 +293,7 @@ export const OnboardingWrapper: React.FC = () => {
               </button>
           </div>
         </Modal> 
+        <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
     </OnboardingProvider>
   );
 };

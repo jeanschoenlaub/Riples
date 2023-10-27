@@ -12,30 +12,16 @@ export const UserPortofolio: React.FC<UserPortofolioProps> = ({ projectData, isU
     if (!projectData) return null; 
 
     return (
-        <div>
-            <div className="flex items-center space-x-4 ml-2">
-                <div className='text-lg mt-2 font-semibold'>Public Projects</div>
-                {/* Add more buttons or UI elements here, similar to UserAbout if needed */}
-            </div>
-            <div className="items-center space-x-4 ml-2 mr-10">
-                {projectData.filter(project => project.project.projectPrivacy === "public").map((fullProject) => (
-                    <ProjectCardPortofolio key={fullProject.project.id} {...fullProject} />
+        <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ml-2 mr-10">
+                {projectData.map((fullProject) => (
+                <ProjectCardPortofolio
+                    key={fullProject.project.id}
+                    isPrivate={fullProject.project.projectPrivacy === 'private'}
+                    {...fullProject}
+                />
                 ))}
             </div>
-            <hr></hr>
-            {isUserOwner && 
-            <div>
-            <div className="flex items-center space-x-4 ml-2">
-                <div className='text-lg mt-2 font-semibold'>Private Projects</div>
-                {/* Add more buttons or UI elements here, similar to UserAbout if needed */}
-            </div>
-            <div className="items-center space-x-4 ml-2 mr-10">
-                {projectData.filter(project => project.project.projectPrivacy === "private").map((fullProject) => (
-                    <ProjectCardPortofolio key={fullProject.project.id} {...fullProject} />
-                ))}
-            </div>
-            </div>
-            }
         </div>
     );
 };

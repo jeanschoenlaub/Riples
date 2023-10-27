@@ -1,24 +1,17 @@
-import { api } from "~/utils/api";
-import { LoadingPage } from "~/components/reusables/loading";
 import { CreateProjectModal } from "../createprojectmodal/createprojetmodal";
 import { useState } from "react";
 import { NavBarSignInModal } from "../navbar/signinmodal";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-import ReactPlayer from "react-player";
 
 export const CreateFeed = () => {
-  const { data: projectData, isLoading: projectLoading } = api.projects.getAll.useQuery();
+  //const { data: projectData, isLoading: projectLoading } = api.projects.getAll.useQuery();
   const [showCreateProjModal, setShowCreateProjModal] = useState(false); 
   const [inputValue, setInputValue] = useState('');  // New state for input value
   const [showSignInModal, setShowSignInModal] = useState(false); // If click on folllow when not signed in we redirect
 
   const { data: session } = useSession();
-
-  if (projectLoading) return <LoadingPage isLoading={projectLoading} />;
   
-  if (!projectData) return <div>Something went wrong</div>;
-
   const handleCreateClick = () => {
     if (!session?.user?.id) {
       toast.error("You must be signed in to create a project")

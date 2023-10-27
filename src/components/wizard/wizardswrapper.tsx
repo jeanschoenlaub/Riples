@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 import { WizardOnboarding } from "~/components/wizard/onboardingwizard";
 import styles from '~/styles/WizardWrapper.module.css'; // you can adjust the path based on your folder structure
@@ -77,7 +77,7 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
                     <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
             }
-            {showWizard && (wizardName == "projectabout") &&
+            {showWizard && (wizardName == "projectabout") && (userQuery.data?.user?.userOnboarding?.onBoardingFinished === true) &&
                 <div id="wizardprojectabout" className={`${styles.floatingWindow}`}>
                     {/* If no logged in users or the logged in user hasn't finished the tutorial, show onboarding Mister Watt */}
                     <WizardProjectAbout />

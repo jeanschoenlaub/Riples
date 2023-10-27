@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { RouterOutputs } from "~/utils/api";
-import { buildImageUrl } from '~/utils/s3';
+import { buildProjectCoverImageUrl } from '~/utils/s3';
 
 
 type ProjectWithUser = RouterOutputs["projects"]["getProjectByAuthorIdForSideBar"][number]
@@ -18,10 +18,10 @@ export const ProjectCard = (props: SideBarProjectCardProps) => {
   return (
     <li className="py-3 sm:py-4">
     <div onClick={props.onClick} className="flex items-center space-x-2">
-      <div className="flex-shrink-0">
-        <Image
-          className={`rounded-full border-2 ${props.borderColor ?? "border-gray-300"}`}
-          src={buildImageUrl(project.coverImageId)}
+      <div className={`flex-shrink-0 rounded-full border ${props.borderColor ?? "border-gray-300"}`}>
+        <img
+          className={`rounded-full`}
+          src={buildProjectCoverImageUrl(project.coverImageId)}
           alt={`${project.title} image`}
           width={60}
           height={60}

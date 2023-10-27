@@ -181,14 +181,14 @@ export const ShareSVG = ({ width = "6", height = "6", marginRight = "0", marginL
             aria-hidden="true" 
             xmlns="http://www.w3.org/2000/svg" 
             fill={colorStrokeHex}
-            viewBox="0 0 16 20"
+            viewBox="0 0 18 18"
         >
             <path 
                 stroke={colorStrokeHex}  // Blue and Gray colors
                 strokeLinecap="round" 
                 strokeWidth="2"
                 strokeLinejoin="round"
-                d="M1.248 15C.22 11.77 2.275 4.232 9.466 4.232V2.079a1.025 1.025 0 0 1 1.644-.862l5.479 4.307a1.108 1.108 0 0 1 0 1.723l-5.48 4.307a1.026 1.026 0 0 1-1.643-.861V8.539C2.275 9.616 1.248 15 1.248 15Z"/>
+                d="m5.953 7.467 6.094-2.612m.096 8.114L5.857 9.676m.305-1.192a2.581 2.581 0 1 1-5.162 0 2.581 2.581 0 0 1 5.162 0ZM17 3.84a2.581 2.581 0 1 1-5.162 0 2.581 2.581 0 0 1 5.162 0Zm0 10.322a2.581 2.581 0 1 1-5.162 0 2.581 2.581 0 0 1 5.162 0Z"/>
             </svg>
     );
 };
@@ -268,5 +268,89 @@ export const CodeSVG = ({ width = "6", height = "6", marginRight = "0", marginLe
                 d="M5 4 1 8l4 4m10-8 4 4-4 4M11 1 9 15"/>
             </svg>
               
+    );
+};
+
+export const BreadCrumbArrowSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none"
+            viewBox="0 0 14 6"
+        >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="2"
+                strokeLinejoin="round"
+                d="m1 9 4-4-4-4"/>
+        </svg>
+              
+    );
+};
+
+
+export const MagicWandSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none"
+            viewBox="0 0 20 21"
+        >
+
+        <path 
+            fill={colorStrokeHex}  
+            d="M16 13h-2v2h2v-2ZM10 2H8v2h2V2ZM7 4H5v2h2V4ZM4 2H2v2h2V2Zm15 8h-2v2h2v-2Zm0 5h-2v2h2v-2Z"
+        />
+        <path 
+            stroke={colorStrokeHex}  
+            strokeLinecap="round" 
+            strokeWidth="2"
+            strokeLinejoin="round"
+            d="m12.555 5.117 2.828 2.828M14 16v4m-2-2h4M3 6v4M1 8h4m11.01-6.339 2.828 2.829L3.99 19.339 1.161 16.51 16.01 1.661Z"/>
+        </svg>     
+    );
+};
+
+
+export const NextRightArrowSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none"
+            viewBox="0 0 8 14"
+        >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="1"
+                strokeLinejoin="round"
+                d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
+        </svg>
+    );
+};
+
+export const PrevLeftArrowSVG = ({ width = "6", height = "6", marginRight = "0", marginLeft = "0", className = "", colorStrokeHex="currentColor" }) => {
+    return (
+        <svg 
+            className={`w-${width} h-${height} mr-${marginRight} ml-${marginLeft} ${className}`}
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none"
+            viewBox="0 0 8 14"
+        >
+            <path 
+                stroke={colorStrokeHex}  // Blue and Gray colors
+                strokeLinecap="round" 
+                strokeWidth="1"
+                strokeLinejoin="round"
+                d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13"/>
+        </svg>
     );
 };

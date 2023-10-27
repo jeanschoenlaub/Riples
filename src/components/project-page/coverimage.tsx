@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Tooltip from '../reusables/tooltip';
 import { useEffect, useRef, useState } from 'react';
 import { api } from '~/utils/api';
-import { buildImageUrl } from '~/utils/s3';
+import { buildProjectCoverImageUrl } from '~/utils/s3';
 import { LoadingRiplesLogo } from '../reusables/loading';
 
 interface ProjectCoverImageProps {
@@ -19,7 +19,7 @@ interface Fields {
 }
 
 const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, projectId }) => {
-    const [imageUrl, setImageUrl] = useState(buildImageUrl(coverImageId));
+    const [imageUrl, setImageUrl] = useState(buildProjectCoverImageUrl(coverImageId));
     const [imageChanging, setImageChanging] = useState(false);
 
     const { file, setFile, isUploading, uploadImage} = useProjectCoverImageUpload();
@@ -31,7 +31,7 @@ const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, pro
             setImageChanging(true);
             uploadImage(projectId)
             .then(newCoverImageId => {
-                const newUrl = buildImageUrl(newCoverImageId) + `?timestamp=${Date.now()}`;
+                const newUrl = buildProjectCoverImageUrl(newCoverImageId) + `?timestamp=${Date.now()}`;
                 setImageUrl(newUrl);
                 setImageChanging(false);
             })
@@ -45,48 +45,50 @@ const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, pro
 
     //For reloading when navigating between projects 
     useEffect(() => {
-        const newUrl = buildImageUrl(coverImageId);
+        const newUrl = buildProjectCoverImageUrl(coverImageId);
         setImageUrl(newUrl);
     }, [coverImageId]);
 
     return (
         <div>
-            <div id="project-main-cover-image" className="hidden md:flex group relative w-full h-[30vh] overflow-hidden justify-center items-center">
+            <div id="project-main-cover-image" className="hidden border-b border-l border-gray-500 md:flex group relative w-full h-[35vh] overflow-hidden justify-center items-center">
                 {(isUploading || imageChanging)?  ( <LoadingRiplesLogo isLoading={isUploading}></LoadingRiplesLogo>) : (
-                <Image 
+                <img 
                 key={imageUrl}
                 src={imageUrl} 
                 alt="Project cover image" 
-                layout="fill" 
-                objectFit="cover"
+                //layout="fill" 
+                //objectFit="cover"
             />)}
     
-                {/* Hover buttons */}
-                <div className="absolute bottom-0 right-0 flex flex-col items-end mb-2 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Tooltip content="Upload your own picture" shiftRight={true} width="200px">
-                        <span className="mb-2">
-                            <label 
-                                htmlFor="replaceImageInput"
-                                className="m-2 py-1 px-2 bg-sky-100 text-black cursor-pointer"
-                            >
-                                Upload
-                            </label>
-                        </span>
-                    </Tooltip>
-                    <Tooltip content="The feature of repositioning picture is coming." shiftRight={true} width="200px">
+                <div className="absolute top-0 right-0 flex flex-row items-end mb-4 mr-2 transition-opacity duration-300">
+                    <Tooltip content="The feature of repositioning project cover image is coming soon." shiftRight={true} width="200px">
                         <span>
-                            <button className="m-2 py-1 px-2 bg-sky-100 opacity-70 text-black cursor-not-allowed" disabled>
+                            <button className="py-1 px-2 mt-4 bg-sky-100 text-black cursor-not-allowed" disabled>
                                 Reposition
                             </button>
                         </span>
                     </Tooltip>
                 </div>
-                <input 
-                    type="file" 
-                    id="replaceImageInput"
-                    style={{ display: 'none' }}
-                    onChange={handleFileChange}
-                />
+                <div className="absolute bottom-0 right-0 flex flex-row items-end mb-4 mr-2 transition-opacity duration-300">
+                  
+                    <span className="mb-1">
+                        <label 
+                            htmlFor="replaceImageInput"
+                            className="py-2 px-2 bg-sky-100  text-black cursor-pointer"
+                        >
+                            Upload Cover Image
+                        </label>
+                    </span>
+
+                    
+                    </div>
+                    <input 
+                        type="file" 
+                        id="replaceImageInput"
+                        style={{ display: 'none' }}
+                        onChange={handleFileChange}
+                    />
             </div>
         </div>
     );  
@@ -157,6 +159,7 @@ export const useProjectCoverImageUpload = () => {
         uploadImage,
     };
 };
+
 
 
 

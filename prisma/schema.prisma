@@ -27,9 +27,10 @@ model Project {
   createdAt       DateTime @default(now())
   endDate         DateTime @default(now())
 
-  coverImageUrl   String   @default("https://t3-portofolio.s3.us-east-2.amazonaws.com/mvp_riples/Riple_bannner.png") @db.VarChar(255)
+  
   coverImageId    String   @default("default/Riple_bannner.png") @db.VarChar(255)
   
+  coverImageUrl   String   @default("https://t3-portofolio.s3.us-east-2.amazonaws.com/mvp_riples/Riple_bannner.png") @db.VarChar(255)
   //Relations
   authorID        String
   riples          Riple[]  
@@ -120,7 +121,17 @@ model Riple {
   author    User?    @relation(fields: [authorID], references: [id], onDelete: SetNull)
   like      Like[]
   comment   Comment[]
+  images    RipleImage[]
   @@index([projectId])
+}
+
+model RipleImage {
+  id       String  @id @default(cuid())
+  ImageId  String  @db.VarChar(255) @unique //The unique id of the image
+  caption  String? @db.VarChar(255)  // An optional caption for the image
+  ripleId  String?                   // The ID of the Riple to which this image is attached
+  createdAt DateTime @default(now())
+  riple    Riple?   @relation(fields: [ripleId], references: [id], onDelete: Cascade) //optional to allow uploading before the riples is created
 }
 
 model Comment {
@@ -297,8 +308,8 @@ model Like {
     userId      String
     createdAt   DateTime @default(now())
 
-    riple       Riple  @relation(fields: [ripleId], references: [id])
-    user        User   @relation(fields: [userId], references: [id])
+    riple       Riple  @relation(fields: [ripleId], references: [id], onDelete: Cascade)
+    user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([ripleId, userId])
 }

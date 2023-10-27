@@ -128,16 +128,15 @@ export default function Project(
         </div>
 
         <div className="flex justify-center w-full bg-sky-50">
-            <div id="project-nav-container" className="hidden md:flex flex-col w-1/4 p-4 border border-slate-700">
+            <div id="project-nav-container" className="hidden md:flex flex-col w-1/4 p-4 ">
               <SideNavProject></SideNavProject>
             </div>
 
-            <div id="project-main" className="relative flex flex-col w-full md:w-3/4 border border-slate-700">
-               {/* Passing empty project cover image because otherwise SSR (which I don't understand very well RN) passes old cover */}
+            <div id="project-main" className="relative flex flex-col w-full md:w-3/4">
               <ProjectCoverImage coverImageId={projectData?.project.coverImageId} projectId={projectData.project.id}></ProjectCoverImage>
 
 
-            <div id="project-main-metadata" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-5">
+            <div id="project-main-metadata" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-0">
                 <div id="project-metadata" className="flex items-center justify-between"> 
                   <h1 className="text-2xl font-bold">{projectData?.project.title}</h1>
                   <Follow projectId={projectId} />

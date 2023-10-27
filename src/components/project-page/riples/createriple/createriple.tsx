@@ -18,11 +18,20 @@ enum Step {
     RipleHTML
 }
 
+type RipleImage = {
+    url: string;
+    id: string;
+    caption: string;
+}
+
 export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, onClose, projectId, projectCoverImageId, projectTitle, projectSummary }) => {
     const [ripleContent, setRipleContent] = useState('');
+    const [ripleHTMLContent, setRipleHTMLContent] = useState('');
     const [ripleTitle, setRipleTitle] = useState('');
     const [currentStep, setCurrentStep] = useState(Step.RipleText);
     const wizardContext = useWizard();
+
+    const [ripleImages, setRipleImages] = useState<RipleImage[]>([]);
 
     const handleRipleSubmit = () => {
         const payload = generateCreatePayload();
@@ -37,18 +46,25 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
     
     const resetForm = () => {
         setRipleTitle(''); // Reset content after submitting
-        setRipleContent(''); // Reset content after submitting
+        setRipleContent(''); 
+        setRipleHTMLContent('');// Reset content after submitting
         wizardContext.setWizardName("")
+        setCurrentStep(Step.RipleText);
         onClose()
     }
 
-    // Helper function to generate create payload
-    const generateCreatePayload = (): CreateRiplePayload => ({
-        projectId: projectId,
-        projectTitle: projectTitle,
-        title: ripleTitle,
-        content: ripleContent,
-    });
+    const generateCreatePayload = (): CreateRiplePayload => {
+        // Extract the image IDs from ripleImages state
+        const ripleImagesWithCaptions = ripleImages.map(img => ({ id: img.id, caption: img.caption }))
+
+        return {
+            projectId: projectId,
+            projectTitle: projectTitle,
+            title: ripleTitle,
+            content: ripleHTMLContent,
+            ripleImages: ripleImagesWithCaptions,
+        };
+    };
 
     useEffect (() => {
         if (showModal){
@@ -58,15 +74,39 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
             wizardContext.setProjectSummary(projectSummary)
             wizardContext.setShowWizard(true)
         }
-        if (!showModal){
+        if (!showModal){ //onClose
             wizardContext.setWizardName("")
             wizardContext.setShowWizard(false)
+            resetForm();
         }
     },[showModal])
 
+    const appendImagesToContent = (content: string, images: { url: string; caption: string }[]): string => {
+        let imageHtml = "";
+
+        // Replace all backspaces with the desired string
+        content = content.replace(/\n+/g, '</p></br><p>');
+    
+        images.forEach(image => {
+            imageHtml += `
+            <br>
+            <div style="display: flex; justify-content: center;">
+                <div style="text-align: center;">
+                    <img src="${image.url}" alt="Uploaded Image" style="width: auto; margin: 0 auto; display: block;" class="responsive-image">
+                    <p style="font-style: italic;">${image.caption}</p>
+                </div>
+            </div><br>
+            `;
+        });
+        
+        return  `<p>${content}</p><br>` + imageHtml;
+    };
+
     useEffect (() => {
         if (currentStep === Step.RipleHTML ){
-            wizardContext.setRipleContent(ripleContent) 
+            const updatedContent = appendImagesToContent(ripleContent, ripleImages);
+            wizardContext.setRipleContent(updatedContent);
+            setRipleHTMLContent(updatedContent);
             wizardContext.setRipleWizardModalStep("html") //This will change RipleWizardMode from text writer to HTML writer
             wizardContext.setShowWizard(true)
         }
@@ -75,10 +115,22 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
             wizardContext.setRipleWizardModalStep("text") //This will change RipleWizardMode to text writer
         }
     },[currentStep])
+
+    useEffect (() => {
+        wizardContext.setRipleContent(ripleContent);
+    },[ripleContent])
+
+    useEffect (() => {
+        wizardContext.setRipleContent(ripleHTMLContent);
+        
+    },[ripleHTMLContent])
     
     const ripleContentFromRedux = useSelector((state: RootState) => state.riple.ripleContent);
     useEffect(() => {
-      if (ripleContentFromRedux.length) setRipleContent(ripleContentFromRedux);
+      if (ripleContentFromRedux.length){
+        if (currentStep === Step.RipleText){setRipleContent(ripleContentFromRedux)}
+        if (currentStep === Step.RipleHTML){setRipleHTMLContent(ripleContentFromRedux)}
+      } 
     }, [ripleContentFromRedux]);
 
     const { data: followers } = api.projectFollowers.getFollowersByProjectId.useQuery({ projectId: projectId });
@@ -97,10 +149,9 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
             setCurrentStep(Step.RipleText);
         }
     };
-  
 
     return (
-        <Modal showModal={showModal} size="medium" Logo={false} onClose={onClose}>
+        <Modal showModal={showModal} size="large" Logo={false} onClose={onClose}>
              {currentStep === Step.RipleText &&
                 <RipleTextComponent
                     ripleTitle={ripleTitle}
@@ -108,6 +159,8 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
                     ripleContent={ripleContent}
                     setRipleContent={setRipleContent}
                     isLoading={isLoading}
+                    ripleImages={ripleImages}
+                    setRipleImages={setRipleImages}
                 />
             }
 
@@ -115,8 +168,8 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
                 <RipleHTMLComponent
                     ripleTitle={ripleTitle}
                     setRipleTitle={setRipleTitle}
-                    ripleContent={ripleContent}
-                    setRipleContent={setRipleContent}
+                    ripleHTMLContent={ripleHTMLContent}
+                    setRipleHTMLContent={setRipleHTMLContent}
                     projectTitle={projectTitle}
                     projectCoverImageId={projectCoverImageId}
                     isLoading={isLoading}
