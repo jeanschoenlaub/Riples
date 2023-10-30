@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 
+export const maxDuration=300;
 export const generateTasks = async (projectTitle: string, projectSummary: string, taskNumber: string) => {
     const prompt = `
 Given the project titled "${projectTitle}" with the summary "${projectSummary}", 

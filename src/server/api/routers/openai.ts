@@ -13,6 +13,8 @@ export const ratelimit = new Ratelimit({
   analytics: true,
 })
 
+export const maxDuration = 300; // This function can run for a maximum of 5 minutes
+
 export const openAiRouter = createTRPCRouter({
     generateProjectTasks: protectedProcedure
     .input(
