@@ -5,14 +5,9 @@ import type { AddCommentPayload, AddlikePayload } from "./riplecardtypes";
 export const useRipleInteractionsMutation = () => {
     const apiContext = api.useContext();
     const handleSuccess = async () => {
-        await apiContext.like.getLikeCount.invalidate();
+        await apiContext.feed.getRipleDetails.invalidate();
         await apiContext.like.hasLiked.invalidate();
-    };
-    const handleSuccessComment = async () => {
-        await apiContext.comment.getCommentsByRiple.invalidate();
-        await apiContext.comment.getCommentCount.invalidate();
-    };
-
+    }
     // Add Like to Riple Mutation
     const { mutate: addLikeMutation, isLoading: isAddingLike } = api.like.addLike.useMutation({
         onSuccess: handleSuccess,
@@ -63,7 +58,7 @@ export const useRipleInteractionsMutation = () => {
 
     // Add Comment to Riple Mutation
     const { mutate: addCommentMutation, isLoading: isAddingComment } = api.comment.addComment.useMutation({
-        onSuccess: handleSuccessComment,
+        onSuccess: handleSuccess,
     });
 
     const addCommentToRiple = (payload: AddCommentPayload) => {
@@ -91,7 +86,7 @@ export const useRipleInteractionsMutation = () => {
 
     // Remove Comment from Riple Mutation
     const { mutate: removeCommentMutation, isLoading: isRemovingComment } = api.comment.removeComment.useMutation({
-        onSuccess: handleSuccessComment,
+        onSuccess: handleSuccess,
     });
 
     const removeCommentFromRiple = (commentId: string) => {

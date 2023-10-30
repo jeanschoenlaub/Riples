@@ -24,8 +24,13 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
     const [showShareModal, setShowShareModal] = useState(false);
     const [shareImageUrl, setShareImageUrl] = useState("");
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false)
+    const [inScreenshotMode, setInScreenshotMode] = useState(false);
+
+
     const [ripleToDelete, setRipleToDelete] = useState<string | null>(null);
     const ripleCardRef = useRef<HTMLDivElement>(null); // For sharing
+
 
     const { data: session } = useSession()
     const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user ID exist
@@ -39,7 +44,7 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
     );
     const comments = ripleDetails?.comments;
     const likeCount = ripleDetails?.likeCount;
-    
+
     // When the data is fetched from the API, update the state
     useEffect(() => {
         if (ripleDetails?.commentCount) {
@@ -47,7 +52,7 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
         }
     }, [ripleDetails]);
 
-    const { handleLike, handleCommentAdd, generateShareImage, transformComments, isAddingComment, isChangingLikeState } = useRipleInteractions({ riple, ripleCardRef, session, setShowSignInModal, hasLiked : hasLiked ?? false, setShareImageUrl, setShowShareModal });
+    const { handleLike, handleCommentAdd, generateShareImage, transformComments, isAddingComment, isChangingLikeState } = useRipleInteractions({ riple, ripleCardRef, session, setInScreenshotMode, setShowSignInModal, hasLiked : hasLiked ?? false, setShareImageUrl, setShowShareModal });
     const isLoadingLikeState = isChangingLikeState || isLoadingRiplesDetails
     
 
@@ -83,14 +88,15 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
     const cardBorderClass = riple.ripleType == "creation" ? "" : "border border-slate-300";
   
     return (
+        <>
         <div ref={ripleCardRef} id="riple-card" key={riple.id}>
             <div className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg flex flex-col mx-2 md:mx-5 p-2 shadow-md`}>
                 <RipleCardHeader riple={riple} author={author} onDelete={onDelete} ></RipleCardHeader>
 
-                <RipleCardBody ripleContent={riple.content}></RipleCardBody>
+                <RipleCardBody ripleContent={riple.content} isExpanded={isExpanded} setIsExpanded={setIsExpanded}></RipleCardBody>
 
-                {riple.images && (
-                        <RipleCardImages images={riple.images}/>
+                {!inScreenshotMode && riple.images && (
+                    <RipleCardImages images={riple.images} isExpanded={isExpanded} />
                 )}
 
                 {/* Post Footer */}
@@ -128,15 +134,17 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
                         <p className="mt-4 text-gray-700"> 2. Share it !</p>
                     </div>
                 </Modal> 
-                <Modal showModal={showDeleteModal} onClose={handleCancelDelete} size="small">
-                    <p>Are you sure you want to delete this riple?</p>
-                    <div className="flex justify-end">
-                        <button onClick={handleCancelDelete} className="bg-red-500 text-white rounded px-4 py-2">No</button>
-                        <button onClick={handleConfirmDelete} className="bg-green-500 text-white rounded px-4 py-2 ml-2">{isDeleting && <LoadingSpinner size={16} />}  Yes</button>
-                    </div>
-                </Modal>
+                
             </div>
         </div>
+        <Modal showModal={showDeleteModal} onClose={handleCancelDelete} size="small">
+            <p>Are you sure you want to delete this riple?</p>
+            <div className="flex justify-end">
+                <button onClick={handleCancelDelete} className="bg-red-500 text-white rounded px-4 py-2">No</button>
+                <button onClick={handleConfirmDelete} className="bg-green-500 text-white rounded px-4 py-2 ml-2">{isDeleting && <LoadingSpinner size={16} />}  Yes</button>
+            </div>
+        </Modal>
+        </>
     );
 }
 

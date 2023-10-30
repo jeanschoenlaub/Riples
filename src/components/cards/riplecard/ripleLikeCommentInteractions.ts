@@ -13,6 +13,7 @@ type RipleInteractionsProps = {
     session: Session | null;  // Assuming the session can also be null
     hasLiked: boolean;
     ripleCardRef: React.RefObject<HTMLDivElement>;
+    setInScreenshotMode: React.Dispatch<React.SetStateAction<boolean>>;
     setShowSignInModal: React.Dispatch<React.SetStateAction<boolean>>;
     setShowShareModal: React.Dispatch<React.SetStateAction<boolean>>;  // Type for its updater function
     setShareImageUrl: React.Dispatch<React.SetStateAction<string>>;  
@@ -20,7 +21,7 @@ type RipleInteractionsProps = {
 
 
 export const useRipleInteractions = (props: RipleInteractionsProps) => {
-    const { riple, ripleCardRef, session, hasLiked, setShowSignInModal, setShowShareModal, setShareImageUrl } = props;
+    const { riple, ripleCardRef, session, hasLiked, setInScreenshotMode, setShowSignInModal, setShowShareModal, setShareImageUrl } = props;
     const { addLikeToRiple,removeLikeFromRiple, isAddingLike, isRemovingLike, addCommentToRiple, isAddingComment} = useRipleInteractionsMutation();
     const isChangingLikeState = isAddingLike || isRemovingLike 
     // Handlers for liking and unliking
@@ -99,20 +100,27 @@ export const useRipleInteractions = (props: RipleInteractionsProps) => {
         }));
     };
 
-     const generateShareImage = () => {
-        if (ripleCardRef.current) {
-            htmlToImage.toPng(ripleCardRef.current)
-                .then(dataUrl => {
-                        setShareImageUrl(dataUrl)
-                        setShowShareModal(true);  // Display the modal with the image.
-                })
-                .catch(error => {
-                    console.error("Couldn't generate the image", error);
-                });
-        } else {
-            console.error("Ripple Card Ref is not attached yet");
-        }
+    const generateShareImage = () => {
+            setInScreenshotMode(true);  // Set screenshot mode
+            setTimeout(() => { // slight delay to ensure rendering takes effect
+                if (ripleCardRef.current) {
+                    htmlToImage.toPng(ripleCardRef.current)
+                        .then(dataUrl => {
+                            setShareImageUrl(dataUrl);
+                            setShowShareModal(true);
+                            setInScreenshotMode(false);  // Reset screenshot mode
+                        })
+                        .catch(error => {
+                            console.error("Couldn't generate the image", error);
+                            setInScreenshotMode(false);  // Reset screenshot mode
+                        });
+                }
+                else {
+                    console.error("Ripple Card Ref is not attached yet");
+                }
+            }, 100);
     };
+    
 
 
     return {

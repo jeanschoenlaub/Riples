@@ -1,13 +1,14 @@
 
 import DOMPurify from 'dompurify';
-import React, { useState } from 'react';
+import React from 'react';
 
 type RipleCardBodyProps = {
     ripleContent: string;
+    isExpanded: boolean;
+    setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const RipleCardBody = ({ ripleContent }: RipleCardBodyProps) => {
-    const [isExpanded, setIsExpanded] = useState(true);
+export const RipleCardBody = ({ ripleContent,isExpanded, setIsExpanded }: RipleCardBodyProps) => {
     const rawHTML = ripleContent;
 
     let cleanHTML = rawHTML; // Default to rawHTML
@@ -20,7 +21,7 @@ export const RipleCardBody = ({ ripleContent }: RipleCardBodyProps) => {
     const showReadMore = cleanHTML.length > 500; // If the content is longer than 500 characters
 
     // Calculate max height based on whether the content is expanded.
-    const maxHeightClass = isExpanded ? 'max-h-40' : 'max-h-200';
+    const maxHeightClass = isExpanded ? 'max-h-200' : 'max-h-40';
 
     return (
             <div className="flex flex-col mb-2 justify-between h-full">
@@ -40,7 +41,7 @@ export const RipleCardBody = ({ ripleContent }: RipleCardBodyProps) => {
                 { showReadMore && (
                     <div className="text-right">
                         <button onClick={() =>  setIsExpanded(!isExpanded)} className="mt-2 bg-gray-300 text-sm flex-shrink-0 w-22 hover:bg-blue-600 hover:text-white font-bold px-2 rounded-full transition duration-300 ease-in-out ">
-                            {isExpanded ? '... Read More' : 'Read Less'}
+                            {isExpanded ? 'Read Less' : '... Read More'}
                         </button>
                     </div>
                 )}

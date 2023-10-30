@@ -113,15 +113,17 @@ max-width: 400px; /* Adjust the maximum width as needed */
     height: 50px;
   }
 
-  #riple-content .responsive-image {
-    height: auto; /* Default behavior for mobile or smaller screens */
-}
-
-@media (min-width: 768px) {
-    #riple-content .responsive-image {
-        height: 50vh; /* Adjusted for larger screens */
-    }
-}
+  #riple-content .responsive-image,
+  #riple-image-section .responsive-image {
+      height: auto; /* Default behavior for mobile or smaller screens */
+  }
+  
+  @media (min-width: 768px) {
+      #riple-content .responsive-image,
+      #riple-image-section .responsive-image {
+          height: 50vh; /* Adjusted for larger screens */
+      }
+  }
   
 .droplet {
     position: absolute;
