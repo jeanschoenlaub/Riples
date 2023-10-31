@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { api, type RouterOutputs } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-import { NavBarSignInModal } from "../../../layout/navbar/signinmodal";
+import { NavBarSignInModal } from "../../navbar/signinmodal";
 import { Modal } from "~/components/modal-template";
 import { RipleCardHeader,RipleCardFooter, UseRiplesMutations, RipleCommentListAndForm, RipleCardBody, useRipleInteractions, RipleCardImages} from "~/features/cards/riple-card";
-import { LoadingSpinner } from '~/components/loading';
+import { LoadingSpinner } from '~/components/loading/loading';
 
 
 type FullRiple = RouterOutputs["riples"]["getAll"][number]

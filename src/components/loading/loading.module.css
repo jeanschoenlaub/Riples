@@ -1,0 +1,51 @@
+/* Loading ripple SVG */
+.loadingContainer {
+    position: relative;
+    width: 50px;
+    height: 50px;
+  }
+
+  @keyframes expand {
+    0% {
+        transform: translate(-50%, -50%) scale(3);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(8);
+        opacity: 0;
+    }
+};
+
+.droplet {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px; /* You can adjust this depending on your image's aspect ratio */
+    height: auto;
+    transform: translate(-50%, -50%);
+}
+
+.ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50;
+    height: 50;
+    border: 5px solid blue;
+    border-radius: 50%;
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.rippleActive .ripple {
+    animation: expand 3s infinite ease-out;
+}
+
+.ripple:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.ripple:nth-child(3) {
+    animation-delay: 0.1s;
+}
+

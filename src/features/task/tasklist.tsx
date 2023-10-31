@@ -4,7 +4,7 @@ import { api } from "~/utils/api";
 import Link from 'next/link'; // import Next.js Link component
 import { TaskModal } from '~/features/task/taskmodal/taskmodal';
 import { ProfileImage } from '../../components/profile-image';
-import { LoadingRiplesLogo } from '../../components/loading';
+import { LoadingRiplesLogo } from '../../components/loading/loading';
 import { StyledTable } from '../../components/styled-tables';
 import { SubTasksRows } from './subtask/subtask';
 

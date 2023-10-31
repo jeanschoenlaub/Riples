@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 // Local Imports
 import { Modal } from '../../../../components/modal-template';
 import { useProjectGoalMutation } from './goalsapi';
-import { LoadingSpinner } from '~/components/loading';
+import { LoadingSpinner } from '~/components/loading/loading';
 import type { EditGoalPayload, GoalModalProps } from './goaltypes';
 
 

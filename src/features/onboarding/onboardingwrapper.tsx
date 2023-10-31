@@ -11,7 +11,7 @@ import { TaskThreeJoyRide } from "./joyrides/taskthreejoyride";
 import { TaskFourJoyRide } from "./joyrides/taskfourjoyride";
 import { ClipboardSVG } from "../../components/svg-stroke";
 import Tooltip from "../../components/tooltip";
-import { NavBarSignInModal } from "../../layout/navbar/signinmodal";
+import { NavBarSignInModal } from "../navbar/signinmodal";
 import { useWizard } from "~/features/wizard";
 
 

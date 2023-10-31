@@ -1,5 +1,5 @@
 import { ShareSVG } from "~/components/svg-stroke";
-import { LoadingSpinner } from "../../../../components/loading";
+import { LoadingSpinner } from "../../../../components/loading/loading";
 import { AboutSVG, LikeSVG } from "../../../../components/svg";
 
 interface RipleCardFooterProps {

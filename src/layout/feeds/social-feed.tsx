@@ -1,5 +1,5 @@
 import { api } from "~/utils/api";
-import { LoadingPage } from "~/components/loading";
+import { LoadingPage } from "~/components/loading/loading";
 import { RipleCard } from "~/features/cards/riple-card";
 import Tooltip from "../../components/tooltip";
 import { useSession } from "next-auth/react";

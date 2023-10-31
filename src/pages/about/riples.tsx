@@ -1,9 +1,9 @@
 //import Link from "next/link";
-import { GlobalNavBar } from "~/layout/navbar/navbar";
+import { GlobalNavBar } from "~/features/navbar/navbar";
 
 import dynamic from 'next/dynamic';
 import { useState } from "react";
-import { NavBarSignInModal } from "~/layout/navbar/signinmodal";
+import { NavBarSignInModal } from "~/features/navbar/signinmodal";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 

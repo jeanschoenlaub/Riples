@@ -1,6 +1,7 @@
 
 import DOMPurify from 'dompurify';
 import React from 'react';
+import '../riple-card.module.css';
 
 type RipleCardBodyProps = {
     ripleContent: string;

@@ -1,4 +1,4 @@
-import { GlobalNavBar } from "~/layout/navbar/navbar";
+import { GlobalNavBar } from "~/features/navbar/navbar";
 import Link from "next/link";
 
 export default function PrivacyPolicy() {

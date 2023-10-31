@@ -4,7 +4,7 @@ import { ProfileImage } from '../../../components/profile-image';
 import { StyledTable } from '../../../components/styled-tables';
 import toast from 'react-hot-toast';
 import { Modal } from '../../../components/modal-template';
-import { LoadingSpinner } from '../../../components/loading';
+import { LoadingSpinner } from '../../../components/loading/loading';
 import router from 'next/router';
 import { EditSVG, MultiUserSVG, PrivateSVG, PublicSVG, SingleUserSVG } from '../../../components/svg';
 import { useProjectAdminMutation, useUserStatusMutation } from './adminapi';

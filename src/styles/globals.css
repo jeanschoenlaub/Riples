@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 body {
     overscroll-behavior: none;
 }
@@ -12,17 +11,6 @@ body {
     10%, 30%, 50%, 70%, 90% { transform: translateX(-1px); }
     20%, 40%, 60%, 80% { transform: translateX(1px); }
 }
-
-@keyframes expand {
-    0% {
-        transform: translate(-50%, -50%) scale(3);
-        opacity: 0.5;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(8);
-        opacity: 0;
-    }
-};
 
 
 .shake-animation {
@@ -103,60 +91,3 @@ max-width: 400px; /* Adjust the maximum width as needed */
 .no-scrollbar {
     -ms-overflow-style: none;
 }
-
-
-  
-/* Loading ripple SVG */
-.loading-container {
-    position: relative;
-    width: 50px;
-    height: 50px;
-  }
-
-  #riple-content .responsive-image,
-  #riple-preview-content .responsive-image,
-  #riple-image-section .responsive-image {
-    height: 40vh;/* Default behavior for mobile or smaller screens */
-  }
-  
-  @media (min-width: 768px) {
-      #riple-content .responsive-image,
-      #riple-preview-content .responsive-image,
-      #riple-image-section .responsive-image {
-        height: 50vh;
-      }
-  }
-  
-.droplet {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 50px; /* You can adjust this depending on your image's aspect ratio */
-    height: auto;
-    transform: translate(-50%, -50%);
-}
-
-.ripple {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 50;
-    height: 50;
-    border: 5px solid blue;
-    border-radius: 50%;
-    opacity: 0.5;
-    transform: translate(-50%, -50%) scale(0);
-}
-
-.ripple-active .ripple {
-    animation: expand 3s infinite ease-out;
-}
-
-.ripple:nth-child(2) {
-    animation-delay: 0.5s;
-}
-
-.ripple:nth-child(3) {
-    animation-delay: 0.1s;
-}
-

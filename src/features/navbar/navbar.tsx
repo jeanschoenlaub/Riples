@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { NavBarSignInModal } from "./signinmodal";
 import ToggleSwitch from "../../components/toogle-switch";
-import { SideNavProject } from "../sidenav-project";
+import { SideNavProject } from "../../layout/sidenav-project";
 import { NotificationMenu } from "./notificationmenu";
 import { UserMenu } from "./usermenu";
 import { MenuSVG } from "../../components/svg-stroke";

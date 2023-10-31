@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 // Local Imports
 import { Modal } from '../../../../components/modal-template';
 import { useProjectGoalMutation } from './goalsapi';
-import { LoadingSpinner } from '~/components/loading';
+import { LoadingSpinner } from '~/components/loading/loading';
 import { GoalSVG } from '~/components/svg-stroke';
 import type { FinishGoalPayload, GoalFinishedModalType } from './goaltypes';
 import { useState } from 'react';

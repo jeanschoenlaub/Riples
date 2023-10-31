@@ -1,5 +1,5 @@
 import { api } from "~/utils/api";
-import type { GenerateProjectGoalMutationPayload, GenerateProjectPostMutationPayload, GenerateProjectTaskMutationPayload } from "./wizardtasktype";
+import type { GenerateProjectGoalMutationPayload, GenerateProjectPostMutationPayload, GenerateProjectTaskMutationPayload } from "./wizard-task-type";
 import type OpenAI from "openai";
 import { handleMutationError } from "~/utils/error-handling";
 

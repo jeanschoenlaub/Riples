@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 // Local Imports
 import { api } from "~/utils/api";
 import { Modal } from '../../../components/modal-template';
-import { LoadingSpinner } from '../../../components/loading';
+import { LoadingSpinner } from '../../../components/loading/loading';
 import { ProfileImage } from '../../../components/profile-image';
 import type { CreateTaskPayload, EditTaskPayload, TaskModalProps } from './taskmodaltypes';
 import { useTaskMutation } from './taskmodalapi';

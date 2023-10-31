@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
-import { NavBarSignInModal } from '../layout/navbar/signinmodal';
+import { NavBarSignInModal } from '../features/navbar/signinmodal';
 import toast from 'react-hot-toast';
-import { LoadingSpinner } from './loading';
+import { LoadingSpinner } from './loading/loading';
 import { FollowFullSVG } from './svg';
 import { FollowEmptySVG } from './svg-stroke';
 import { useOnboarding } from '../features/onboarding/onboardingwrapper';

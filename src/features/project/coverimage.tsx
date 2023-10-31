@@ -3,7 +3,7 @@ import Tooltip from '../../components/tooltip';
 import { useEffect, useRef, useState } from 'react';
 import { api } from '~/utils/api';
 import { buildProjectCoverImageUrl } from '~/utils/s3';
-import { LoadingRiplesLogo } from '../../components/loading';
+import { LoadingRiplesLogo } from '../../components/loading/loading';
 
 interface ProjectCoverImageProps {
     coverImageId: string;

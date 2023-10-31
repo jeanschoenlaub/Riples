@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { GlobalNavBar } from "~/layout/navbar/navbar";
+import { GlobalNavBar } from "~/features/navbar/navbar";
 import { SideNavProject } from "~/layout/sidenav-project";
 
 interface HelpLayoutProps {

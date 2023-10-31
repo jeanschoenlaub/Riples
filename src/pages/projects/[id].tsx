@@ -13,9 +13,9 @@ import superjson from 'superjson';
 //My components
 import { Tabs } from "~/components/tabs";
 import { AboutTab } from "~/features/project/about/about";
-import { LoadingPage } from "~/components/loading";
+import { LoadingPage } from "~/components/loading/loading";
 import { CollabTab } from "~/features/project/collab";
-import { GlobalNavBar } from "~/layout/navbar/navbar";
+import { GlobalNavBar } from "~/features/navbar/navbar";
 import { SideNavProject } from "~/layout/sidenav-project";
 import Follow from "~/components/follow";
 import { AdminTab } from "~/features/project/admin/admin";

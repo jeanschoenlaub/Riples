@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { AboutSVG, LikeSVG } from "~/components/svg";
 import { FollowEmptySVG, ShareSVG } from "~/components/svg-stroke";
 import { buildProjectCoverImageUrl } from "~/utils/s3";
+import './riple-card.module.css';
 
 
 interface RipleCardPreviewProps {

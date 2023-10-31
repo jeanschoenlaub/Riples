@@ -1,6 +1,6 @@
 import { api } from "~/utils/api";
 import { useState } from "react";
-import { LoadingPage } from "../components/loading";
+import { LoadingPage } from "../components/loading/loading";
 import { ProjectCard } from "../features/cards/project-card";
 import { useSession } from "next-auth/react";
 
@@ -9,7 +9,7 @@ interface SideNavProjectProps {
 }
 
 export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
-    const [SideBarToggle, setSideBarToggle] = useState('Doing');
+    const [sideBarToggle, setSideBarToggle] = useState('Doing');
     const { data: session } = useSession(); 
 
     const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user ID exist
@@ -55,18 +55,18 @@ export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
            </div>
           <div className="mx-2 w-40 h-auto bg-white rounded-full cursor-pointer relative py-3">
             <div
-              className={`absolute top-0 h-full bg-blue-400 bg-opacity-50 flex items-center justify-center rounded-full transition-all duration-300 ease-in-out ${SideBarToggle === "Following" ? "left-0 w-1/2" : "left-1/2 w-1/2"}`}
+              className={`absolute top-0 h-full bg-blue-400 bg-opacity-50 flex items-center justify-center rounded-full transition-all duration-300 ease-in-out ${sideBarToggle === "Following" ? "left-0 w-1/2" : "left-1/2 w-1/2"}`}
             >
             </div>
             <div
               onClick={() => setSideBarToggle("Following")}
-              className={`absolute top-0 left-0 w-1/2 h-full flex items-center justify-center rounded-sm cursor-pointer ${SideBarToggle === "Following" ? "text-blue-500" : "text-gray-400"} p-2`}
+              className={`absolute top-0 left-0 w-1/2 h-full flex items-center justify-center rounded-sm cursor-pointer ${sideBarToggle === "Following" ? "text-blue-500" : "text-gray-400"} p-2`}
             >
               Following
             </div>
             <div
               onClick={() => setSideBarToggle("Doing")}
-              className={`absolute top-0 left-1/2 w-1/2 h-full flex items-center justify-center rounded cursor-pointer ${SideBarToggle === "Doing" ? "text-blue-500" : "text-gray-400"} p-2`}
+              className={`absolute top-0 left-1/2 w-1/2 h-full flex items-center justify-center rounded cursor-pointer ${sideBarToggle === "Doing" ? "text-blue-500" : "text-gray-400"} p-2`}
             >
               Doing
             </div>
@@ -76,7 +76,7 @@ export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
         {/*  List of projects */}
         <div id="side-bar-project-list" className="flow-root space-y w-full border-t">
           <ul role="list" className="divide-y divide-gray-200">
-            {SideBarToggle === "Following" 
+            {sideBarToggle === "Following" 
             ? projectFollowed?.map((fullProject) => (
                 <ProjectCard
                   key={fullProject.project.id}

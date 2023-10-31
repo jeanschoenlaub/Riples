@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useProjectInfoMutation } from './projectinfoapi';
 import { EditSVG, MultiUserSVG, PrivateSVG, PublicSVG, SingleUserSVG } from '~/components/svg';
-import { LoadingSpinner } from '~/components/loading';
+import { LoadingSpinner } from '~/components/loading/loading';
 import Link from 'next/link';
 import { ProfileImage } from '~/components/profile-image';
 import type { ProjectAboutInfoProps, EditProjectPayload} from './projectinfotype';

@@ -1,8 +1,8 @@
-import Image from 'next/image';
 import { useState } from 'react';
 import { NextRightArrowSVG, PrevLeftArrowSVG } from '~/components/svg-stroke';
 import { RouterOutputs } from '~/utils/api';
 import { buildRiplesImageUrl } from '~/utils/s3';
+import styles from '../riple-card.module.css';
 
 type RipleCardImagesProps = {
     images: RouterOutputs["riples"]["getAll"][0]["images"];
@@ -27,11 +27,11 @@ export const RipleCardImages: React.FC<RipleCardImagesProps> = ({ images, isExpa
     const imageUrl = buildRiplesImageUrl(currentImage.ImageId);
 
     return (
-        <div id="riple-image-section" className="mt-4 flex justify-center relative border border-slate-300">
+        <div id="riple-image-section"  className="mt-4 flex justify-center relative border border-slate-300">
             {/* Display the current image */}
             {!isExpanded && (
                 <>
-                    <img src={imageUrl} alt={currentImage.caption ?? 'Uploaded preview'} className='responsive-image border border-slate-500' />
+                    <img src={imageUrl} alt={currentImage.caption ?? 'Uploaded preview'} className={`${styles.responsiveImage} border border-slate-500`}/>
         
                     {currentImageIndex > 0 && (  // Check if there's a previous image
                         <div className="absolute top-1/2 transform -translate-y-1/2 left-2">

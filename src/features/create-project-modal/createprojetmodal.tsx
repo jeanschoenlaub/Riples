@@ -7,7 +7,7 @@ import type { RouterOutputs } from "~/utils/api";
 import type { CreateProjectModalProps, CreateProjectPayload } from "./createprojecttypes";
 import  { Step } from "./createprojecttypes";
 import router from "next/router";
-import { LoadingSpinner } from "../../components/loading";
+import { LoadingSpinner } from "../../components/loading/loading";
 import { useSelector} from 'react-redux';
 import type { RootState } from '~/redux/store';
 import { ArrowLeftSVG, ArrowRightSVG, RocketSVG } from "../../components/svg-stroke";

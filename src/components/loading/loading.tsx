@@ -1,4 +1,6 @@
 import Image from 'next/image';
+import styles from './loading.module.css';
+
 
 export const LoadingSpinner = (props: {size?: number}) => {
     return(
@@ -34,20 +36,21 @@ export const LoadingPage: React.FC<LoadingProps> = ({ isLoading }) => {
 
 export const LoadingRiplesLogo: React.FC<LoadingProps> = ({ isLoading }) => {
     return (
-      <div className={`loading-container ${isLoading ? 'ripple-active' : ''}`}>
+      <div className={`${styles.loadingContainer} ${isLoading ? styles.rippleActive : ''}`}>
         <Image
             src="/images/logo_256x256.png" 
-            className="droplet" 
+            className={styles.droplet} 
             alt="Riple logo" 
             width={256}
             height={256}
         />
-        <div className="ripple"></div> 
-        <div className="ripple"></div>
-        <div className="ripple"></div>
+        <div className={styles.ripple}></div> 
+        <div className={styles.ripple}></div>
+        <div className={styles.ripple}></div>
       </div>
     );
-  };
+};
+
   
   
   

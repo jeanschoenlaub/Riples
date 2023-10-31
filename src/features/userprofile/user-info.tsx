@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { EditSVG } from '~/components/svg';
-import { LoadingSpinner } from '~/components/loading';
+import { LoadingSpinner } from '~/components/loading/loading';
 import { api } from '~/utils/api';
 import { handleMutationError} from '~/utils/error-handling';
-import { NavBarUserNameModal } from '../../layout/navbar/usernamemodal';
+import { NavBarUserNameModal } from '../navbar/usernamemodal';
 import MultiSelect from '../../components/multi-select';
 import { sortedProjectClassifications } from '~/utils/constants/projectclassifications';
 import { useOnboarding } from '../onboarding/onboardingwrapper';

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { LoadingSpinner } from "~/components/loading";
+import { LoadingSpinner } from "~/components/loading/loading";
 import { resetRipleContent, setRipleContent } from "~/redux/ripleslice";
 import { useStreamedData } from "~/hooks/stream-data-openai";
 
