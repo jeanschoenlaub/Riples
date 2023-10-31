@@ -115,7 +115,14 @@ max-width: 400px; /* Adjust the maximum width as needed */
 
   #riple-content .responsive-image,
   #riple-image-section .responsive-image {
-    height: 50vh;
+    height: 40vh;/* Default behavior for mobile or smaller screens */
+  }
+  
+  @media (min-width: 768px) {
+      #riple-content .responsive-image,
+      #riple-image-section .responsive-image {
+        height: 50vh;
+      }
   }
   
 .droplet {

@@ -31,18 +31,30 @@ export const RipleCardImages: React.FC<RipleCardImagesProps> = ({ images, isExpa
             {/* Display the current image */}
             {!isExpanded && (
                 <>
-                <img src={imageUrl} alt={currentImage.caption ?? 'Uploaded preview'} className='responsive-image border border-slate-500' />
-
-                {currentImageIndex > 0 && (  // Check if there's a previous image
-                    <div className="absolute top-1/2 transform -translate-y-1/2 left-0">
-                        <button onClick={goToPreviousImage}><PrevLeftArrowSVG width="10" height="10"></PrevLeftArrowSVG></button>
-                    </div>
-                )}
-                {currentImageIndex < images.length - 1 && (  // Check if there's a next image
-                    <div className="absolute top-1/2 transform -translate-y-1/2 right-0">
-                        <button onClick={goToNextImage}><NextRightArrowSVG  width="10" height="10"></NextRightArrowSVG></button>
-                    </div>
-                )}
+                    <img src={imageUrl} alt={currentImage.caption ?? 'Uploaded preview'} className='responsive-image border border-slate-500' />
+        
+                    {currentImageIndex > 0 && (  // Check if there's a previous image
+                        <div className="absolute top-1/2 transform -translate-y-1/2 left-2">
+                            <button 
+                                onClick={goToPreviousImage} 
+                                className="bg-black p-1 rounded-full"
+                                style={{ boxSizing: 'content-box', border: '3px solid black' }}
+                            >
+                                <PrevLeftArrowSVG width="6" height="6" colorStrokeHex="#FFFFFF"></PrevLeftArrowSVG>
+                            </button>
+                        </div>
+                    )}
+                    {currentImageIndex < images.length - 1 && (  // Check if there's a next image
+                        <div className="absolute top-1/2 transform -translate-y-1/2 right-2">
+                            <button 
+                                onClick={goToNextImage} 
+                                className="bg-black p-1 rounded-full"
+                                style={{ boxSizing: 'content-box', border: '3px solid black' }}
+                            >
+                                <NextRightArrowSVG width="6" height="6" colorStrokeHex="#FFFFFF"></NextRightArrowSVG>
+                            </button>
+                        </div>
+                    )}
                 </>
             )}
         </div>
