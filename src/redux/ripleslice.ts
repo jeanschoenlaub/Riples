@@ -14,11 +14,14 @@ const ripleSlice = createSlice({
   initialState,
   reducers: {
     setRipleContent: (state, action: PayloadAction<string>) => {
-      state.ripleContent = action.payload;
+      state.ripleContent += action.payload;  // <-- modified this line to append data
     },
+    resetRipleContent: (state) => {  // <-- new action for resetting the content
+      state.ripleContent = '';
+    }
   },
 });
 
 
-export const { setRipleContent } = ripleSlice.actions;
+export const { setRipleContent, resetRipleContent } = ripleSlice.actions;
 export default ripleSlice.reducer;
