@@ -12,17 +12,17 @@ import superjson from 'superjson';
 
 //My components
 import { Tabs } from "~/components/reusables/tabs";
-import { AboutTab } from "~/components/project-page/about/about";
+import { AboutTab } from "~/features/project/about/about";
 import { LoadingPage } from "~/components/reusables/loading";
-import { CollabTab } from "~/components/project-page/collab";
-import { GlobalNavBar } from "~/components/navbar/navbar";
-import { SideNavProject } from "~/components/navbar/sidenavproject";
+import { CollabTab } from "~/features/project/collab";
+import { GlobalNavBar } from "~/layout/navbar/navbar";
+import { SideNavProject } from "~/layout/sidenavproject";
 import Follow from "~/components/reusables/follow";
-import { AdminTab } from "~/components/project-page/admin/admin";
-import { RiplesTab } from "~/components/project-page/riples/riples";
+import { AdminTab } from "~/features/project/admin/admin";
+import { RiplesTab } from "~/features/project/riples/riples";
 import { useRouter } from "next/router";
-import { useWizard } from "~/components/wizard/wizardswrapper";
-import ProjectCoverImage from "~/components/project-page/coverimage";
+import ProjectCoverImage from "~/features/project/coverimage";
+import { useWizard} from "~/features/wizard";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,

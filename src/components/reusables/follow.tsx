@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
-import { NavBarSignInModal } from '../navbar/signinmodal';
+import { NavBarSignInModal } from '../../layout/navbar/signinmodal';
 import toast from 'react-hot-toast';
 import { LoadingSpinner } from './loading';
 import { FollowFullSVG } from './svg';
 import { FollowEmptySVG } from './svgstroke';
-import { useOnboarding } from '../onboarding/onboardingwrapper';
+import { useOnboarding } from '../../features/onboarding/onboardingwrapper';
 
 type FollowProps = {
   projectId: string;

@@ -1,4 +1,4 @@
-import { HelpLayout } from "~/components/layout/helplayout";
+import { HelpLayout } from "~/layout/helplayout";
 
 export default function TutorialOne() {
     return (

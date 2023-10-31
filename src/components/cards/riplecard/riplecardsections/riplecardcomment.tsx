@@ -4,7 +4,7 @@ import { useRipleInteractionsMutation } from '../riplecardapi';
 import { useSession } from 'next-auth/react';
 import { TrashSVG } from '~/components/reusables/svgstroke';
 import toast from 'react-hot-toast';
-import { NavBarSignInModal } from '~/components/navbar/signinmodal';
+import { NavBarSignInModal } from '~/layout/navbar/signinmodal';
 import Link from 'next/link';
 import { ProfileImage } from '~/components/reusables/profileimage';
 

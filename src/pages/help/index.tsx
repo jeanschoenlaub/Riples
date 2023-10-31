@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
-import { HelpLayout } from "~/components/layout/helplayout";
+import { HelpLayout } from "~/layout/helplayout";
 import { MultiUserSVG } from "~/components/reusables/svg";
 import { MagicWandSVG, ShareSVG, TaskSVG } from "~/components/reusables/svgstroke";
 

@@ -10,15 +10,15 @@ import superjson from 'superjson';
 
 import { getSession, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
-import { GlobalNavBar } from '~/components/navbar/navbar';
-import { SideNavProject } from '~/components/navbar/sidenavproject';
+import { GlobalNavBar } from '~/layout/navbar/navbar';
+import { SideNavProject } from '~/layout/sidenavproject';
 import { Tabs } from '~/components/reusables/tabs';
 import { ProfileImage } from '~/components/reusables/profileimage';
-import { UserAbout } from '~/components/user-page/userinfo';
+import { UserAbout } from '~/features/userprofile/userinfo';
 import Tooltip from '~/components/reusables/tooltip';
-import { UserStats } from '~/components/user-page/userstats';
+import { UserStats } from '~/features/userprofile/userstats';
 import { useRouter } from 'next/router';
-import { UserPortofolio } from '~/components/user-page/userportofolio';
+import { UserPortofolio } from '~/features/userprofile/userportofolio';
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,

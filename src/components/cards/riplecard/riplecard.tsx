@@ -4,7 +4,7 @@ import { RipleCardFooter } from "./riplecardsections/riplecardfooter";
 import { UseRiplesMutations } from "./riplecardapi";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-import { NavBarSignInModal } from "../../navbar/signinmodal";
+import { NavBarSignInModal } from "../../../layout/navbar/signinmodal";
 import { RipleCommentListAndForm } from "./riplecardsections/riplecardcomment";
 
 //import { toPng } from 'html-to-image';
