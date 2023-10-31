@@ -1,3 +1,4 @@
+import OpenAI from "openai";
 import { useState } from "react";
 
 export type WizardChatProps = {
@@ -6,6 +7,18 @@ export type WizardChatProps = {
     ripleContent: string;
     modalStep: string;
 };
+
+interface Delta {
+    content: string;
+}
+
+interface ChoiceWithDelta {
+    delta: Delta;
+}
+
+interface ChatCompletionWithDelta {
+    choices: ChoiceWithDelta[];
+}
 
 export const WizardChat: React.FC<WizardChatProps> = ({ projectTitle, projectSummary, ripleContent, modalStep }) => {
 
@@ -51,10 +64,14 @@ export const WizardChat: React.FC<WizardChatProps> = ({ projectTitle, projectSum
 
                 newValue.forEach((newVal) => {
                     try {
-                        const json = JSON.parse(newVal.replace('data: ', ''));
+                        const json = JSON.parse(newVal.replace('data: ', '')) as ChatCompletionWithDelta;
 
-                        if (json.choices && json.choices[0] && json.choices[0].delta && json.choices[0].delta.content) {
-                            setChatResponse((prev) => prev + json.choices[0].delta.content);
+                        if (!json) {
+                            throw new Error("Parsed JSON is undefined.");
+                        }
+                        if (json.choices?.[0]?.delta?.content){
+
+                            setChatResponse((prev) => prev + json.choices[0]!.delta.content);
                         }
                     } catch (error) {
                         tempState = newVal;
@@ -74,7 +91,7 @@ export const WizardChat: React.FC<WizardChatProps> = ({ projectTitle, projectSum
         <div>
             <div className="onboarding-status-window">
                 <div className="font-semibold flex items-center"> <span className="text-3xl mr-2"> 👩 </span> Chat Wizard </div>
-                <div className="mb-4">Let's talk </div>
+                <div className="mb-4">Lets talk </div>
 
                 <textarea
                     value={inputValue}
@@ -85,7 +102,7 @@ export const WizardChat: React.FC<WizardChatProps> = ({ projectTitle, projectSum
 
                 <button
                     className="bg-blue-500 text-white rounded px-4 mt-2 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200"
-                    onClick={() => generateRipleAIData()}
+                    onClick={() => void generateRipleAIData()}
                 >
                     Chat
                 </button>
