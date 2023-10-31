@@ -31,7 +31,7 @@ export const WizardChat: React.FC<WizardChatProps> = ({ projectTitle, projectSum
 
     const handleChat = async () => {
         setIsLoading(true);
-        await streamDataFromServer(inputValue);
+        await streamDataFromServer({prompt: inputValue})
         setIsLoading(false);
         setInputValue("");
     }

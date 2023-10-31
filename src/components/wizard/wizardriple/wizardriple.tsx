@@ -1,85 +1,104 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { LoadingSpinner } from "~/components/reusables/loading";
-import { useOpenAIRipleMutation } from "./wizardripleapi";
-import type { WizardRipleProps } from "./wizardripletype";
-import { setRipleContent } from "~/redux/ripleslice";
-import type OpenAI from "openai";
+import { resetRipleContent, setRipleContent } from "~/redux/ripleslice";
+import { useStreamedData } from "~/hooks/useStreamData";
+
+
+export type WizardRipleProps = {
+    projectTitle: string;
+    projectSummary: string;
+    ripleContent: string;
+    userId: string;
+    modalStep: string;
+};
 
 export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, projectSummary, ripleContent, modalStep, userId }) => {
 
     const [inputValue, setInputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
-    const { isGeneratingRipleContent, generateRipleContent, generateRipleHTML, isGeneratingRipleHTML} = useOpenAIRipleMutation()
     
-
-    async function generateRipleAIData() {
+    const processAndDispatch = (rawData: string) => {
+        dispatch(setRipleContent(rawData));
+    };
+    
+    // Initialize the hook with the callback
+    const { streamDataFromServer } = useStreamedData(processAndDispatch);
+        
+    async function generateTextContent() {
         setIsLoading(true);
 
-        const generateRipleAIPayload = {
-            userPrompt: inputValue + "for this text" + ripleContent,
-            projectTitle: projectTitle,
-            projectSummary: projectSummary,
-            userId: userId,
-        };
-
         try {
-            const rawDataRipleContent = await generateRipleContent(generateRipleAIPayload);
-            const RipleContent = processRawDataForRipleContent(rawDataRipleContent);
-            dispatch(setRipleContent(RipleContent));
+            // Reset the content before generating a new one
+            dispatch(resetRipleContent());
 
+            // Directly use the streaming function here
+            const promptContent = `
+                You are writing for a project titled "${projectTitle}".
+                This project is about "${projectSummary}".
+                Following this user prompt: "${inputValue + " for this text " + ripleContent}", write a short post content.`;
+
+            await streamDataFromServer({
+                prompt: promptContent,
+                systemMessage: "As an experienced content manager, you are to generate a short 3 paragraph post content."
+                // ... add any other parameters you'd like to include
+            });
         } catch (error) {
             console.error('Failed to generate content:', error);
         } finally {
             setIsLoading(false);
-            setInputValue("")
+            setInputValue("");
         }
     }
 
     async function generateHTMLStyle() {
         setIsLoading(true);
 
-        const generateHTMLStylePayload = {
-            userPrompt: inputValue,
-            ripleContent: ripleContent,
-            userId: userId,
-        };
-
-        console.log(generateHTMLStylePayload)
-
         try {
-            const rawDataRipleHTML = await generateRipleHTML(generateHTMLStylePayload);
-            const RipleHTML = processRawDataForRipleContent(rawDataRipleHTML);
-            dispatch(setRipleContent(RipleHTML));
+            // Reset the content before generating a new one
+            dispatch(resetRipleContent());
 
+            // Directly use the streaming function here
+            const prompt = `
+            User prompt: "${inputValue}" 
+            HTML: "${ripleContent}"`;
+        
+            await streamDataFromServer({
+                prompt: prompt,
+                systemMessage: `You will be provided with an HTML and a user prompt. Edit the HTML based on the user prompt, using tailwind and class=""
+
+                For example: <div class="container mx-auto">
+                    <p class="font-bold">Title</p>
+                
+                    <ul class="list-disc pl-5 px-4">
+                        <li>Bullet point </li>
+                    </ul>
+                
+                    <div class="flex justify-center my-4">
+                        <div class="text-center">
+                            <img src="image source" alt="image caption" class="mx-auto block responsive-image">
+                            <p class="italic">asdxcwec</p>
+                        </div>
+                    </div>
+                </div>
+
+                Return only HTML code`
+                // ... add any other parameters you'd like to include
+            });
         } catch (error) {
-            console.error('Failed to generate HTML Style:', error);
+            console.error('Failed to generate content:', error);
         } finally {
             setIsLoading(false);
-            setInputValue("")
+            setInputValue("");
         }
-    }
-
-
-    function processRawDataForRipleContent(rawData: OpenAI.Chat.Completions.ChatCompletion.Choice[]): string {
-        let result = '';
-        rawData.forEach(choice => {
-            const messageContent = choice.message.content;
-            if (messageContent) {
-                result = messageContent; // Assuming there's only one post
-            } else {
-                console.warn("Unexpected message format: ", messageContent);
-            }
-        });
-        return result;
     }
 
     function getButtonFunction() {
         if (modalStep === "html") {
             void generateHTMLStyle();
         } else {
-            void generateRipleAIData();
+            void generateTextContent();
         }
     }
 
@@ -110,12 +129,12 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
                     placeholder={modalStep === "html" ? "Optionally add some instructions" : "Write about the progress we made on our project this week"}
                     className="w-full p-2 border rounded-md resize-none"
                     rows={3}
-                    disabled= {isGeneratingRipleContent || isGeneratingRipleHTML}
+                    disabled= {isLoading}
                 ></textarea>
 
                 <button 
                     className="bg-blue-500 text-white rounded px-4 mt-2 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200"
-                    disabled={isGeneratingRipleContent || isGeneratingRipleHTML}
+                    disabled={isLoading}
                     onClick={() => getButtonFunction()}
                 >
                     {getButtonText()}

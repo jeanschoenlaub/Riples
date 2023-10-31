@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { generateGoals, generatePost, generateTasks, generateRipleContent, generateRipleHTML } from "~/server/services/openaicontroller";
+import { generateGoals, generatePost, generateTasks} from "~/server/services/openaicontroller";
 import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
 
@@ -103,6 +103,7 @@ export const openAiRouter = createTRPCRouter({
             });
         }
     }),
+    /*
     generateRipleContent: protectedProcedure
     .input(
         z.object({ 
@@ -161,5 +162,5 @@ export const openAiRouter = createTRPCRouter({
                 message: "Failed to get tasks from OpenAI ChatGPT.",
             });
         }
-    }),
+    }),*/
 });
