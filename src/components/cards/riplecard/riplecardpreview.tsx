@@ -88,7 +88,8 @@ export const RipleCardPreview : React.FC<RipleCardPreviewProps> = ({
 
                     <div className="flex flex-col mb-2 justify-between h-full">
                         {cleanHTML !== "" && (
-                            <div 
+                            <div   
+                                id="riple-preview-content" 
                                 className={`text-gray-700 mt-2 overflow-hidden transition-all duration-500 ${maxHeightClass}`}
                             >
                                 {/* Horizontal Divider */}
