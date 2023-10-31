@@ -1,5 +1,5 @@
-import { Modal } from "~/components/reusables/modaltemplate";
-import { UserNameForm } from "../../components/reusables/usernameform";
+import { Modal } from "~/components/modal-template";
+import { UserNameForm } from "../../components/username-form";
 import { useState } from "react";
 
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { AboutSVG, AdminSVG, ProjectsSVG, RiplesSVG } from './svg';
-import { TaskSVG } from './svgstroke';
+import { TaskSVG } from './svg-stroke';
 
 interface TabsProps {
   activeTab: string;

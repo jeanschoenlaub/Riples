@@ -1,6 +1,6 @@
 import React from 'react';
 import type { RouterOutputs } from '~/utils/api';
-import { ProjectCardPortofolio } from '../../components/cards/projectportfoliocard';
+import { ProjectCardPortofolio } from '../cards/project-portfolio-card';
 
 type UserPortofolioProps = {
     projectData?: RouterOutputs["projects"]["getProjectByAuthorId"];

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LoadingSpinner } from '../../../components/reusables/loading';
+import { LoadingSpinner } from '../../../components/loading';
 import toast from 'react-hot-toast';
 import { SubTaskModal } from '~/features/task/subtask/subtaskmodal/subtaskmodal';
 import { useSession } from 'next-auth/react';

@@ -1,8 +1,8 @@
 import DOMPurify from "dompurify";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from 'react';
-import { AboutSVG, LikeSVG } from "~/components/reusables/svg";
-import { FollowEmptySVG, ShareSVG } from "~/components/reusables/svgstroke";
+import { AboutSVG, LikeSVG } from "~/components/svg";
+import { FollowEmptySVG, ShareSVG } from "~/components/svg-stroke";
 import { buildProjectCoverImageUrl } from "~/utils/s3";
 
 

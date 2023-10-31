@@ -1,5 +1,5 @@
 import type { RouterOutputs } from '~/utils/api';
-import { RipleCard } from '../../../components/cards/riplecard/riplecard';
+import { RipleCard } from '~/features/cards/riple-card';
 import { useState } from 'react';
 import { CreateRipleModal } from './createriple/createriple';
 

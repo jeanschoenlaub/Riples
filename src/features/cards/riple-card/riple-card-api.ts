@@ -1,6 +1,6 @@
 import { api } from "~/utils/api";
 import { handleMutationError } from "~/utils/error-handling";
-import type { AddCommentPayload, AddlikePayload } from "./riplecardtypes";
+import type { AddCommentPayload, AddlikePayload } from "./riple-card-types";
 
 export const useRipleInteractionsMutation = () => {
     const apiContext = api.useContext();

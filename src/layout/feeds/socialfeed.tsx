@@ -1,9 +1,8 @@
 import { api } from "~/utils/api";
-import { LoadingPage } from "~/components/reusables/loading";
-import { RipleCard } from '../../components/cards/riplecard/riplecard';
-import Tooltip from "../../components/reusables/tooltip";
+import { LoadingPage } from "~/components/loading";
+import { RipleCard } from "~/features/cards/riple-card";
+import Tooltip from "../../components/tooltip";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
 
 export const SocialFeed = () => {
     const { data, isLoading } = api.riples.getAll.useQuery();

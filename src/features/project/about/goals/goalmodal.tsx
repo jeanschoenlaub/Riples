@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 // Local Imports
-import { Modal } from '../../../../components/reusables/modaltemplate';
+import { Modal } from '../../../../components/modal-template';
 import { useProjectGoalMutation } from './goalsapi';
-import { LoadingSpinner } from '~/components/reusables/loading';
+import { LoadingSpinner } from '~/components/loading';
 import type { EditGoalPayload, GoalModalProps } from './goaltypes';
 
 

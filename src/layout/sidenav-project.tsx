@@ -1,7 +1,7 @@
 import { api } from "~/utils/api";
 import { useState } from "react";
-import { LoadingPage } from "../components/reusables/loading";
-import { ProjectCard } from "../components/cards/projectcard";
+import { LoadingPage } from "../components/loading";
+import { ProjectCard } from "../features/cards/project-card";
 import { useSession } from "next-auth/react";
 
 interface SideNavProjectProps {

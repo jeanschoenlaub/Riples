@@ -1,8 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
-import { HelpLayout } from "~/layout/helplayout";
-import { MultiUserSVG } from "~/components/reusables/svg";
-import { MagicWandSVG, ShareSVG, TaskSVG } from "~/components/reusables/svgstroke";
+import { HelpLayout } from "~/layout/help-layout";
+import { MultiUserSVG } from "~/components/svg";
+import { MagicWandSVG, ShareSVG, TaskSVG } from "~/components/svg-stroke";
 
 type HelpCardProps = {
     title: string;

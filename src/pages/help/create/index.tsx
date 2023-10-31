@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HelpLayout } from "~/layout/helplayout";
+import { HelpLayout } from "~/layout/help-layout";
 
 
 export default function HelpIndex() {

@@ -2,12 +2,12 @@ import { useState } from "react";;
 import type OpenAI from 'openai';
 import { useDispatch } from 'react-redux';
 import { setTasks, setGoals, setPost } from '~/redux/createprojectslice';
-import { LoadingSpinner } from "../../../components/reusables/loading";
+import { LoadingSpinner } from "../../../components/loading";
 import type { WizardTaskProps } from "./wizardtasktype";
 import { useOpenAIMutation } from "./wizardtaskapi";
 import toast from "react-hot-toast";
-import Tooltip from "~/components/reusables/tooltip";
-import { QuestionSVG } from "~/components/reusables/svgstroke";
+import Tooltip from "~/components/tooltip";
+import { QuestionSVG } from "~/components/svg-stroke";
 import { useOnboarding } from "~/features/onboarding/onboardingwrapper";
 
 export const WizardTask: React.FC<WizardTaskProps> = ({ projectTitle, projectSummary, taskNumber, goalNumber, userId }) => {

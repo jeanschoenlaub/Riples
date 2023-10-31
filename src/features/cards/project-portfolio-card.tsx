@@ -5,7 +5,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime);
 import type { RouterOutputs } from "~/utils/api";
 import { buildProjectCoverImageUrl } from '~/utils/s3';
-import { ProfileImage } from '../reusables/profileimage';
+import { ProfileImage } from '../../components/profile-image';
 
 
 type FullProjectWithUser = RouterOutputs["projects"]["getProjectByAuthorId"][number]

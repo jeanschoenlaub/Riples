@@ -1,4 +1,4 @@
-import { Modal } from "~/components/reusables/modaltemplate";
+import { Modal } from "~/components/modal-template";
 
 interface DeleteModalProps {
   showDeleteModal: boolean;

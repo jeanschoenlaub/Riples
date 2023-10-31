@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { api } from "~/utils/api";
 import { GlobalNavBar } from "~/layout/navbar/navbar";
-import { SideNavProject } from "~/layout/sidenavproject";
+import { SideNavProject } from "~/layout/sidenav-project";
 import { SocialFeed } from "~/layout/feeds/socialfeed";  // Rename to avoid naming conflicts
 import { CreateFeed } from "~/layout/feeds/createfeed"; // Assume you have a CreateFeed component
 import { useState } from "react";

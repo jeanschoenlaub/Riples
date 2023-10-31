@@ -1,6 +1,6 @@
 import { useSession, signOut } from "next-auth/react"
 import { useEffect, useRef, useState } from "react";
-import { ProfileImage } from '~/components/reusables/profileimage'; // Import ProfileImage component
+import { ProfileImage } from '~/components/profile-image'; // Import ProfileImage component
 import { NavBarUserDeleteModal } from "./userdeletemodal";
 import { api } from "~/utils/api";
 import toast from "react-hot-toast";

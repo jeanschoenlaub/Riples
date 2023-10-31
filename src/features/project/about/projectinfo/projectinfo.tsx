@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useProjectInfoMutation } from './projectinfoapi';
-import { EditSVG, MultiUserSVG, PrivateSVG, PublicSVG, SingleUserSVG } from '~/components/reusables/svg';
-import { LoadingSpinner } from '~/components/reusables/loading';
+import { EditSVG, MultiUserSVG, PrivateSVG, PublicSVG, SingleUserSVG } from '~/components/svg';
+import { LoadingSpinner } from '~/components/loading';
 import Link from 'next/link';
-import { ProfileImage } from '~/components/reusables/profileimage';
+import { ProfileImage } from '~/components/profile-image';
 import type { ProjectAboutInfoProps, EditProjectPayload} from './projectinfotype';
-import Tooltip from '~/components/reusables/tooltip';
-import MultiSelect from '~/components/reusables/multiselect';
+import Tooltip from '~/components/tooltip';
+import MultiSelect from '~/components/multi-select';
 import { sortedProjectClassifications } from '~/utils/constants/projectclassifications';
 
 

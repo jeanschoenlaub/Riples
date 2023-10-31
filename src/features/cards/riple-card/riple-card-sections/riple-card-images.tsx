@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useState } from 'react';
-import { NextRightArrowSVG, PrevLeftArrowSVG } from '~/components/reusables/svgstroke';
+import { NextRightArrowSVG, PrevLeftArrowSVG } from '~/components/svg-stroke';
 import { RouterOutputs } from '~/utils/api';
 import { buildRiplesImageUrl } from '~/utils/s3';
 

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { LoadingSpinner } from '~/components/reusables/loading';
-import { useRipleInteractionsMutation } from '../riplecardapi';
+import { LoadingSpinner } from '~/components/loading';
+import { useRipleInteractionsMutation } from '../riple-card-api';
 import { useSession } from 'next-auth/react';
-import { TrashSVG } from '~/components/reusables/svgstroke';
+import { TrashSVG } from '~/components/svg-stroke';
 import toast from 'react-hot-toast';
 import { NavBarSignInModal } from '~/layout/navbar/signinmodal';
 import Link from 'next/link';
-import { ProfileImage } from '~/components/reusables/profileimage';
+import { ProfileImage } from '~/components/profile-image';
 
 interface RipleCommentProps {
     comments: Array<{ 

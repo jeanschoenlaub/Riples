@@ -3,11 +3,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
-import Follow from '~/components/reusables/follow';
-import { TrashSVG } from '~/components/reusables/svgstroke';
+import Follow from '~/components/follow';
+import { TrashSVG } from '~/components/svg-stroke';
 import type { RouterOutputs } from '~/utils/api';
 import { buildProjectCoverImageUrl } from '~/utils/s3';
-import { ThreeDotSVG } from '~/components/reusables/svg';
+import { ThreeDotSVG } from '~/components/svg';
 import { IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 dayjs.extend(relativeTime);
 

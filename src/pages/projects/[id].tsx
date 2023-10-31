@@ -11,13 +11,13 @@ import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
 
 //My components
-import { Tabs } from "~/components/reusables/tabs";
+import { Tabs } from "~/components/tabs";
 import { AboutTab } from "~/features/project/about/about";
-import { LoadingPage } from "~/components/reusables/loading";
+import { LoadingPage } from "~/components/loading";
 import { CollabTab } from "~/features/project/collab";
 import { GlobalNavBar } from "~/layout/navbar/navbar";
-import { SideNavProject } from "~/layout/sidenavproject";
-import Follow from "~/components/reusables/follow";
+import { SideNavProject } from "~/layout/sidenav-project";
+import Follow from "~/components/follow";
 import { AdminTab } from "~/features/project/admin/admin";
 import { RiplesTab } from "~/features/project/riples/riples";
 import { useRouter } from "next/router";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useStreamedData } from "~/hooks/useStreamData";
+import { useStreamedData } from "~/hooks/stream-data-openai";
 
 export type WizardChatProps = {
     projectTitle: string;

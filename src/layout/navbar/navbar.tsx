@@ -3,11 +3,11 @@ import Image from 'next/image';
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { NavBarSignInModal } from "./signinmodal";
-import ToggleSwitch from "../../components/reusables/toogleswitch";
-import { SideNavProject } from "../sidenavproject";
+import ToggleSwitch from "../../components/toogle-switch";
+import { SideNavProject } from "../sidenav-project";
 import { NotificationMenu } from "./notificationmenu";
 import { UserMenu } from "./usermenu";
-import { MenuSVG } from "../../components/reusables/svgstroke";
+import { MenuSVG } from "../../components/svg-stroke";
 
 interface GlobalNavBarProps {
   activeTab?: string;

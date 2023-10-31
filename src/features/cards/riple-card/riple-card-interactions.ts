@@ -1,8 +1,8 @@
 import toast from "react-hot-toast";
 import type { RouterOutputs } from "~/utils/api";
-import type { AddCommentPayload, AddlikePayload } from "./riplecardtypes";
+import type { AddCommentPayload, AddlikePayload } from "./riple-card-types";
 import type { Session } from "next-auth";
-import { useRipleInteractionsMutation } from "./riplecardapi";
+import { useRipleInteractionsMutation } from "./riple-card-api";
 import * as htmlToImage from 'html-to-image';
 
 

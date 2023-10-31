@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { signIn } from 'next-auth/react';
-import { Modal} from "~/components/reusables/modaltemplate";
+import { Modal} from "~/components/modal-template";
 
 interface SignInModalProps {
   showModal: boolean;

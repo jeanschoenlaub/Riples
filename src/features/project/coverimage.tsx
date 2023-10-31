@@ -1,9 +1,9 @@
 import Image from 'next/image';
-import Tooltip from '../../components/reusables/tooltip';
+import Tooltip from '../../components/tooltip';
 import { useEffect, useRef, useState } from 'react';
 import { api } from '~/utils/api';
 import { buildProjectCoverImageUrl } from '~/utils/s3';
-import { LoadingRiplesLogo } from '../../components/reusables/loading';
+import { LoadingRiplesLogo } from '../../components/loading';
 
 interface ProjectCoverImageProps {
     coverImageId: string;

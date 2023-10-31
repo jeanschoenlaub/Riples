@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { LoadingSpinner } from "~/components/reusables/loading";
+import { LoadingSpinner } from "~/components/loading";
 import { resetRipleContent, setRipleContent } from "~/redux/ripleslice";
-import { useStreamedData } from "~/hooks/useStreamData";
+import { useStreamedData } from "~/hooks/stream-data-openai";
 
 
 export type WizardRipleProps = {

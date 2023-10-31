@@ -4,13 +4,13 @@ import { TaskOneJoyRide } from "./joyrides/taskonejoyride";
 import { TaskTwoJoyRide } from "./joyrides/tasktwojoyride";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import { Modal } from "../../components/reusables/modaltemplate";
+import { Modal } from "../../components/modal-template";
 import { ProjectManagerAIJoyRide } from "./joyrides/pmjoyride";
 import { useOnboardingMutation } from "./joyrides/onboardingapi";
 import { TaskThreeJoyRide } from "./joyrides/taskthreejoyride";
 import { TaskFourJoyRide } from "./joyrides/taskfourjoyride";
-import { ClipboardSVG } from "../../components/reusables/svgstroke";
-import Tooltip from "../../components/reusables/tooltip";
+import { ClipboardSVG } from "../../components/svg-stroke";
+import Tooltip from "../../components/tooltip";
 import { NavBarSignInModal } from "../../layout/navbar/signinmodal";
 import { useWizard } from "~/features/wizard";
 

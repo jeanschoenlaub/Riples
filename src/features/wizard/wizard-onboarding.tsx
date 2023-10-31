@@ -1,8 +1,8 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
-import { QuestionSVG } from "~/components/reusables/svgstroke";
-import Tooltip from "~/components/reusables/tooltip";
+import { QuestionSVG } from "~/components/svg-stroke";
+import Tooltip from "~/components/tooltip";
 import { useOnboarding } from "../onboarding/onboardingwrapper";
 import { useWizard } from "~/features/wizard";
 

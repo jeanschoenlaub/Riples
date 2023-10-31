@@ -1,19 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { api, type RouterOutputs } from "~/utils/api";
-import { RipleCardFooter } from "./riplecardsections/riplecardfooter";
-import { UseRiplesMutations } from "./riplecardapi";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { NavBarSignInModal } from "../../../layout/navbar/signinmodal";
-import { RipleCommentListAndForm } from "./riplecardsections/riplecardcomment";
+import { Modal } from "~/components/modal-template";
+import { RipleCardHeader,RipleCardFooter, UseRiplesMutations, RipleCommentListAndForm, RipleCardBody, useRipleInteractions, RipleCardImages} from "~/features/cards/riple-card";
+import { LoadingSpinner } from '~/components/loading';
 
-//import { toPng } from 'html-to-image';
-import { Modal } from "~/components/reusables/modaltemplate";
-import { RipleCardHeader } from "./riplecardsections/riplecardheader";
-import { RipleCardBody } from "./riplecardsections/riplecardbody";
-import { LoadingSpinner } from '~/components/reusables/loading';
-import { useRipleInteractions } from './ripleLikeCommentInteractions';
-import { RipleCardImages } from './riplecardsections/ripleImages';
 
 type FullRiple = RouterOutputs["riples"]["getAll"][number]
 

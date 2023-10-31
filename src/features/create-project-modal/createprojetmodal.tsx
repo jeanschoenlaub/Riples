@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Modal } from "~/components/reusables/modaltemplate";  
+import { Modal } from "~/components/modal-template";  
 import ProjectDescriptionComponent from "./projectdescription/projectdescription";
 import ProjectBuildComponent from "./projectbuild/projectbuild";
 import { useProjectMutation } from "./createprojectapi";
@@ -7,10 +7,10 @@ import type { RouterOutputs } from "~/utils/api";
 import type { CreateProjectModalProps, CreateProjectPayload } from "./createprojecttypes";
 import  { Step } from "./createprojecttypes";
 import router from "next/router";
-import { LoadingSpinner } from "../../components/reusables/loading";
+import { LoadingSpinner } from "../../components/loading";
 import { useSelector} from 'react-redux';
 import type { RootState } from '~/redux/store';
-import { ArrowLeftSVG, ArrowRightSVG, RocketSVG } from "../../components/reusables/svgstroke";
+import { ArrowLeftSVG, ArrowRightSVG, RocketSVG } from "../../components/svg-stroke";
 import { useWizard } from "~/features/wizard";
 
 
