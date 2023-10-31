@@ -16,7 +16,7 @@ interface ToggleProps {
   id? : string;
 }
 
-const ToggleSwitch: React.FC<ToggleProps> = ({
+export const ToggleSwitch: React.FC<ToggleProps> = ({
   activeTab, 
   setActiveTab,
   option1,
@@ -74,6 +74,3 @@ const ToggleSwitch: React.FC<ToggleProps> = ({
     </div>
   );
 };
-
-
-export default ToggleSwitch;

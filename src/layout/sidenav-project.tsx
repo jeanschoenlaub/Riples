@@ -1,6 +1,6 @@
 import { api } from "~/utils/api";
 import { useState } from "react";
-import { LoadingPage } from "../components/loading/loading";
+import { LoadingPage } from "~/components";
 import { ProjectCard } from "../features/cards/project-card";
 import { useSession } from "next-auth/react";
 

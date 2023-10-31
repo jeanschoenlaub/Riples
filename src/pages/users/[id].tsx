@@ -12,13 +12,11 @@ import { getSession, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { GlobalNavBar } from '~/features/navbar/navbar';
 import { SideNavProject } from '~/layout/sidenav-project';
-import { Tabs } from '~/components/tabs';
-import { ProfileImage } from '~/components/profile-image';
-import { UserAbout } from '~/features/userprofile/userinfo';
-import Tooltip from '~/components/tooltip';
-import { UserStats } from '~/features/userprofile/userstats';
+import { Tabs, ProfileImage , Tooltip } from '~/components';
+import { UserAbout } from '~/features/userprofile/user-info';
+import { UserStats } from '~/features/userprofile/user-stats';
 import { useRouter } from 'next/router';
-import { UserPortofolio } from '~/features/userprofile/userportofolio';
+import { UserPortofolio } from '~/features/userprofile/user-portofolio';
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,

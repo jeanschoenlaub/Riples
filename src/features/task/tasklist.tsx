@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
-import Link from 'next/link'; // import Next.js Link component
+import Link from 'next/link'; 
 import { TaskModal } from '~/features/task/taskmodal/taskmodal';
-import { ProfileImage } from '../../components/profile-image';
-import { LoadingRiplesLogo } from '../../components/loading/loading';
-import { StyledTable } from '../../components/styled-tables';
+import { ProfileImage, LoadingRiplesLogo, StyledTable } from '~/components';
 import { SubTasksRows } from './subtask/subtask';
 
 

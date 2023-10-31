@@ -1,16 +1,14 @@
 // CreateRipleModal.tsx
 import React, { useEffect, useState } from 'react';
-import { Modal } from '~/components/modal-template';
 import type { CreateRipleModalProps, CreateRiplePayload } from './createripletypes';
 import toast from 'react-hot-toast';
 import { useRipleMutation } from './createripleapi';
-import { LoadingSpinner } from '~/components/loading/loading';
 import { api } from "~/utils/api";
 import { useSelector } from 'react-redux';
 import type { RootState } from '~/redux/store';
 import RipleTextComponent from './ripletext';
 import RipleHTMLComponent from './riplehtml';
-import { ArrowLeftSVG, ArrowRightSVG, RocketSVG } from '~/components/svg-stroke';
+import { LoadingSpinner, Modal, ArrowLeftSVG, ArrowRightSVG, RocketSVG } from '~/components';
 import { useWizard } from "~/features/wizard";
 
 enum Step {

@@ -1,7 +1,6 @@
 import { api } from "~/utils/api";
-import { LoadingPage } from "~/components/loading/loading";
+import { LoadingPage, Tooltip } from "~/components";
 import { RipleCard } from "~/features/cards/riple-card";
-import Tooltip from "../../components/tooltip";
 import { useSession } from "next-auth/react";
 
 export const SocialFeed = () => {

@@ -1,8 +1,7 @@
 import DOMPurify from "dompurify";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from 'react';
-import { AboutSVG, LikeSVG } from "~/components/svg";
-import { FollowEmptySVG, ShareSVG } from "~/components/svg-stroke";
+import {AboutSVG, LikeSVG , FollowEmptySVG, ShareSVG } from '~/components';
 import { buildProjectCoverImageUrl } from "~/utils/s3";
 import './riple-card.module.css';
 

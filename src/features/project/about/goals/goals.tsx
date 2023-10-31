@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { StarSVG, GoalSVG } from '~/components/svg-stroke';
 import type { RouterOutputs } from '~/utils/api';
 import { useProjectGoalMutation } from './goalsapi';
-import { LoadingSpinner } from '~/components/loading/loading';
 import { GoalModal } from './goalmodal';
 import { GoalFinishedModal } from './goalfinishedmodal';
+
+import { StarSVG, GoalSVG, LoadingSpinner } from '~/components';
 import dayjs from 'dayjs';
 
 type Goal = RouterOutputs["projects"]["getProjectByProjectId"]["project"]["goals"][0]

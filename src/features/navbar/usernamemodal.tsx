@@ -1,5 +1,4 @@
-import { Modal } from "~/components/modal-template";
-import { UserNameForm } from "../../components/username-form";
+import { Modal, UserNameForm } from "~/components";
 import { useState } from "react";
 
 

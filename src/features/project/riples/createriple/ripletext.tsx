@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { LoadingRiplesLogo } from '~/components/loading/loading';
+import { LoadingRiplesLogo } from '~/components';
 import { api } from '~/utils/api';
 import { buildRiplesImageUrl } from '~/utils/s3';
 

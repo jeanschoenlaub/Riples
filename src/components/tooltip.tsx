@@ -9,7 +9,7 @@ interface TooltipProps {
     shiftDown?: boolean;  // New prop
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ 
+export const Tooltip: React.FC<TooltipProps> = ({ 
     content, 
     children, 
     width, 
@@ -68,4 +68,3 @@ const Tooltip: React.FC<TooltipProps> = ({
     );
 };
 
-export default Tooltip;

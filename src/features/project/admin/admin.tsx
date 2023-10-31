@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ProfileImage } from '../../../components/profile-image';
-import { StyledTable } from '../../../components/styled-tables';
 import toast from 'react-hot-toast';
-import { Modal } from '../../../components/modal-template';
-import { LoadingSpinner } from '../../../components/loading/loading';
 import router from 'next/router';
-import { EditSVG, MultiUserSVG, PrivateSVG, PublicSVG, SingleUserSVG } from '../../../components/svg';
+import { ProfileImage, StyledTable, Modal, LoadingSpinner, EditSVG, MultiUserSVG, PrivateSVG, PublicSVG, SingleUserSVG } from '~/components';
 import { useProjectAdminMutation, useUserStatusMutation } from './adminapi';
 import type { AdminTabProps, ApproveUserPayload, DeleteProjectPayload, EditProjectAdminPayload, RefuseUserPayload } from './admintype';
 

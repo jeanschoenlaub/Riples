@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { RipleCardPreview } from "~/features/cards/riple-card";
-import { CodeSVG } from "~/components/svg-stroke";
+import { CodeSVG } from "~/components";
 
 type RipleHTMLComponentProps = {
     ripleTitle: string;

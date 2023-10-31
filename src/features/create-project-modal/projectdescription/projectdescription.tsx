@@ -1,8 +1,6 @@
-import MultiSelect from "~/components/multi-select";
-import { AddUserSVG, PrivateSVG, PublicSVG, SingleUserSVG } from "~/components/svg";
-import ToggleSwitch from "~/components/toogle-switch";
-import Tooltip from "~/components/tooltip";
 import {sortedProjectClassifications} from "~/utils/constants/projectclassifications";
+import { MultiSelect, ToggleSwitch, Tooltip, AddUserSVG, PrivateSVG, PublicSVG, SingleUserSVG } from "~/components";
+
 
 interface ProjectDescriptionComponentProps {
       projectName: string;

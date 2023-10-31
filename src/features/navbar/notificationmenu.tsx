@@ -2,7 +2,7 @@ import { useSession} from "next-auth/react"
 import { useEffect, useRef, useState } from "react";
 import { api } from "~/utils/api";
 import router from "next/router";
-import { BellSVG } from "../../components/svg-stroke";
+import { BellSVG } from "~/components";
 import { handleMutationError } from "~/utils/error-handling";
 
 export const NotificationMenu = () => {
