@@ -8,6 +8,7 @@ import { WizardTask } from './wizardtask/wizardtask';
 import Image from 'next/image';
 import { WizardProjectAbout } from './wizardprojectabout/wizardprojectabout';
 import { WizardProjectRiples } from './wizardriple/wizardriple';
+import { WizardChat } from './wizardchat/wizardchatapi';
 
 type WizardContextType = {
     showWizard: boolean;
@@ -101,6 +102,7 @@ export const WizardWrapper: React.FC<WizardWrapperProps> = ({ children }) => {
                             </button>
                             </a>
                     </div>
+                    <WizardChat projectTitle={projectTitle} projectSummary={projectSummary} ripleContent={ripleContent} modalStep={RipleWizardModalStep}/>
                     <br/>
                     <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
