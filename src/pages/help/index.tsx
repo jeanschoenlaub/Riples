@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
-import { HelpLayout } from "~/layout/help-layout";
+import { FocusLayout } from "~/layout/focus-layout";
 import { MultiUserSVG, MagicWandSVG, ShareSVG, TaskSVG } from "~/components/";
 
 type HelpCardProps = {
@@ -30,14 +30,10 @@ function HelpCard({ title, description, IconComponent, color = "#3b82f6", path }
 export default function HelpIndex() {
     return (
         <>
-            <Head>
-                <title>Help & Tutorials - Riples</title>
-                {/* Other Head Contents... */}
-            </Head>
-
-            <HelpLayout>
+            <FocusLayout ToogleinBetween={true}>
+            <div className="p-4">
             <h2 className="mb-6 mt-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white"> Help and Tutorials.</h2>
-                <div className="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
+                <div className="space-y-8 mr-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
                     <HelpCard 
                          title="Create and Manage a project"
                          description="Learn how to start a new project and manage its contents."
@@ -67,7 +63,8 @@ export default function HelpIndex() {
                         path="/help/create/"
                     />
                 </div>
-            </HelpLayout>
+                </div>
+            </FocusLayout>
         </>
     );
 }

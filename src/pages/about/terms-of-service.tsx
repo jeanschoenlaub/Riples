@@ -1,17 +1,11 @@
 import { GlobalNavBar } from "~/features/navbar/navbar";
-
+import { FullPageLayout } from "~/layout/full-page-layout";
 
 export default function PrivacyPolicy() {
 
     return (
         <>
-          <main className="flex flex-col items-center w-full h-screen">
-            <div id="nav-container" className="w-full">
-              <GlobalNavBar />
-            </div>
-    
-            <div className="flex justify-center w-full bg-sky-50 p-6">
-              
+          <FullPageLayout ToogleinBetween={true}>
               <div className="flex flex-col w-full md:w-3/5 p-4 border rounded-lg border-slate-700 space-y-6">
                 <h1 className="text-3xl font-semibold">Terms of Service for Riples</h1>
     
@@ -57,8 +51,7 @@ export default function PrivacyPolicy() {
                   <p>If you have any questions about these Terms of Service, please contact us at admin@riples.app.</p>
                 </section>
               </div>
-            </div>
-          </main>
+            </FullPageLayout>
         </>
       );
     }

@@ -1,15 +1,11 @@
 import Image from 'next/image';
 import { GlobalNavBar } from "~/features/navbar/navbar";
+import { FullPageLayout } from '~/layout/full-page-layout';
 
 export default function HowToCollaborate() {
   return (
     <>
-      <main className="flex flex-col items-center w-full h-screen">
-        <div id="nav-container" className="w-full">
-        <GlobalNavBar ToogleinBetween={true}></GlobalNavBar>
-        </div>
-
-        <div className="flex justify-center w-full bg-sky-50 p-6">
+      <FullPageLayout ToogleinBetween={true}>
             <div className="flex flex-col w-full md:w-3/5 p-4 border rounded-lg border-slate-700 space-y-6">
                 <h1 className="text-3xl font-semibold">How to Collaborate on Riples Projects</h1>
 
@@ -86,8 +82,7 @@ export default function HowToCollaborate() {
                     </ul>
                 </section>
             </div>
-        </div>
-      </main>
+        </FullPageLayout>
     </>
   );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
-import Tooltip from '../../components/tooltip';
 import { ClipboardSVG } from '../../components/svg-stroke';
+import { Tooltip } from '~/components';
 
 type UserStatsProps = {
     user: {

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { NavBarSignInModal } from "~/features/navbar/signinmodal";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { FullPageLayout } from "~/layout/full-page-layout";
 
 
 
@@ -19,12 +20,7 @@ export default function AboutRiples() {
 
   return (
     <>
-      <main className="flex flex-col items-center w-full h-screen">
-        <div id="nav-container" className="w-full">
-        <GlobalNavBar ToogleinBetween={true}></GlobalNavBar>
-        </div>
-
-        <div className="flex flw justify-center w-full bg-sky-50">
+      <FullPageLayout ToogleinBetween={true}>
           <div className="flex flex-col bg-sky-50 w-full ">
             <section className="mt-4">
                 <div className="gap-8 items-center py-2 px-4 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 sm:py-4 lg:px-6">
@@ -117,11 +113,9 @@ export default function AboutRiples() {
                     <Link href="/help" className="text-sm text-blue-500 hover:underline">Help</Link>
                 </div>
             </div>
-
           </div>
-        </div>
-        <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
-      </main>
+      <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
+      </FullPageLayout>
     </>
   );
 }

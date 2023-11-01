@@ -2,7 +2,6 @@
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import type{ GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 
-import Head from "next/head";
 import { api } from "~/utils/api";
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
@@ -10,13 +9,12 @@ import superjson from 'superjson';
 
 import { getSession, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
-import { GlobalNavBar } from '~/features/navbar/navbar';
-import { SideNavProject } from '~/layout/sidenav-project';
 import { Tabs, ProfileImage , Tooltip } from '~/components';
 import { UserAbout } from '~/features/userprofile/user-info';
 import { UserStats } from '~/features/userprofile/user-stats';
 import { useRouter } from 'next/router';
 import { UserPortofolio } from '~/features/userprofile/user-portofolio';
+import { FocusLayout } from '~/layout/focus-layout';
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -80,20 +78,9 @@ export default function UserPage(
   
     return (
       <>
-        <Head>
-          <title>{user.user.name}</title>
-        </Head>
-        <main className="flex flex-col items-center w-full h-screen">
-          <div id="nav-container" className="w-full">
-            <GlobalNavBar />
-          </div>
-  
-          <div className="flex justify-center w-full bg-sky-50">
-            <div id="project-nav-container" className="hidden md:flex flex-col w-1/4 p-4">
-              <SideNavProject></SideNavProject>
-            </div>
+         <FocusLayout ToogleinBetween={true} title={user.user.username ?? ""}>
 
-            <div id="user-main" className="relative flex flex-col w-full md:w-3/4 ">
+            <div id="user-main" className="relative flex flex-col w-full">
               <div id="user-meta" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-5">
                   <span className="flex space-x-10 gap-5 items-center font-medium text-gray-500">  
                       {/* User Profile Image Hover buttons */}
@@ -148,8 +135,7 @@ export default function UserPage(
               </div>
           </div>
 
-          </div>
-        </main>
+          </FocusLayout>
       </>
     );
   }

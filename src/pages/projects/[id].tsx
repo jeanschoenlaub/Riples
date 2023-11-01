@@ -21,6 +21,7 @@ import { RiplesTab } from "~/features/project/riples/riples";
 import { useRouter } from "next/router";
 import ProjectCoverImage from "~/features/project/coverimage";
 import { useWizard} from "~/features/wizard";
+import { FocusLayout } from "~/layout/focus-layout";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -117,22 +118,9 @@ export default function Project(
 
   return (
     <>
-      <Head>
-        <title>{projectData.project.title}</title>
-      </Head>
-      <main className="flex flex-col items-center w-full h-screen">
-        <div id="nav-container" className="w-full">
-          <GlobalNavBar ToogleinBetween={true}></GlobalNavBar>
-        </div>
-
-        <div className="flex justify-center w-full bg-sky-50">
-            <div id="project-nav-container" className="hidden md:flex flex-col w-1/4 p-4 ">
-              <SideNavProject></SideNavProject>
-            </div>
-
-            <div id="project-main" className="relative flex flex-col w-full md:w-3/4">
-              <ProjectCoverImage coverImageId={projectData?.project.coverImageId} projectId={projectData.project.id}></ProjectCoverImage>
-
+      <FocusLayout ToogleinBetween={true} title={projectData.project.title}>
+            
+            <ProjectCoverImage coverImageId={projectData?.project.coverImageId} projectId={projectData.project.id}></ProjectCoverImage>
 
             <div id="project-main-metadata" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-0">
                 <div id="project-metadata" className="flex items-center justify-between"> 
@@ -168,9 +156,7 @@ export default function Project(
                 {activeTab === 'admin' && <AdminTab project={projectData.project} members={projectMemberData} isProjectLead={isProjectLead} ></AdminTab>}
 
               </div>
-            </div>
-            </div>
-      </main>
+            </FocusLayout>
     </>
   );
 }

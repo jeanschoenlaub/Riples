@@ -1,6 +1,6 @@
-import { CreateProjectModal } from "../../features/create-project-modal/createprojetmodal";
+import { CreateProjectModal } from "../create-project-modal/createprojetmodal";
 import { useState } from "react";
-import { NavBarSignInModal } from "../../features/navbar/signinmodal";
+import { NavBarSignInModal } from "../navbar/signinmodal";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
