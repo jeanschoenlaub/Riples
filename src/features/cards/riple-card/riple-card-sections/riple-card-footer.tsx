@@ -9,6 +9,7 @@ interface RipleCardFooterProps {
     showComment: boolean;
     onComment: () => void;
     onShare: () => void;
+    isLoadingRiplesDetails: boolean;
   }
   
   export const RipleCardFooter: React.FC<RipleCardFooterProps> = ({
@@ -20,39 +21,43 @@ interface RipleCardFooterProps {
     showComment,
     onComment,
     onShare,
+    isLoadingRiplesDetails,
   }) => {
 
     return (
       <div className="flex items-center mb-2 justify-between ">
         
-          {/* Like Button and Count */}
-          <div className="mt-1 px-2 border-slate-300 ">
-              {isChangingLikeState ?
-                  (<LoadingSpinner size={20}></LoadingSpinner> ):
-                  (
+            {/* Like Button and Count */}
+            <div className="mt-1 px-2 border-slate-300 ">
+                { (isChangingLikeState || isLoadingRiplesDetails) ?
+                    (<LoadingSpinner size={20}></LoadingSpinner> ):
+                    (
                     <div className="flex items-center space-x-2">
                         <button onClick={onLike} className={`focus:outline-none ${hasLiked ? 'text-blue-500' : 'text-gray-400'}`}>
                             <LikeSVG width="4" height="4"></LikeSVG>
                         </button>
                         <span>{likesCount}</span>
-                  </div>)
-              }
-          </div>
-  
-          {/* Comment Button and Count (Optional) */}
-              {commentsCount !== undefined  && (
-                  <div className="flex items-center space-x-2">
-                      <div className="flex items-center ">
-                          <button onClick={onComment} className="focus:outline-none text-gray-400">
-                          {showComment ?
-                              <AboutSVG width="4" height="4" marginRight='2' marginTop='1' colorFillHex='#2563eb'></AboutSVG> // Blue color
-                              :<AboutSVG width="4" height="4" marginRight='2'  marginTop='1' colorFillHex='#9CA3AF'></AboutSVG>  // Gray color
-                          }
-                          </button>
-                          <span className="">{commentsCount}</span>
-                  </div>
+                    </div>)
+                }
             </div>
-        )}
+  
+             {/* Comments */}
+            { isLoadingRiplesDetails ?
+            (<LoadingSpinner size={20}></LoadingSpinner> ):
+            (
+                <div className="flex items-center space-x-2">
+                    <div className="flex items-center ">
+                        <button onClick={onComment} className="focus:outline-none text-gray-400">
+                        {showComment ?
+                            <AboutSVG width="4" height="4" marginRight='2' marginTop='1' colorFillHex='#2563eb'></AboutSVG> // Blue color
+                            :<AboutSVG width="4" height="4" marginRight='2'  marginTop='1' colorFillHex='#9CA3AF'></AboutSVG>  // Gray color
+                        }
+                        </button>
+                        <span className="">{commentsCount}</span>
+                    </div>
+                </div>
+            )}
+
 
         {/* SHARE SVG */}
         {commentsCount !== undefined  && (

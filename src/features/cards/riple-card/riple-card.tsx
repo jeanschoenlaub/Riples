@@ -29,14 +29,13 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
     const shouldExecuteQuery = !!session?.user?.id; // Run query only if session and user ID exist
     const userId = session?.user?.id ?? ''; //will never be empty 
 
-    //All below is used to get the data and set up the interactions for the footer 
     const { data: ripleDetails, isLoading: isLoadingRiplesDetails } = api.feed.getRipleDetails.useQuery({ ripleId: riple.id });
-    const { data: hasLiked } = api.like.hasLiked.useQuery(
-        { ripleId: riple.id, userId: userId },
-        { enabled: shouldExecuteQuery }
-    );
+
     const comments = ripleDetails?.comments;
     const likeCount = ripleDetails?.likeCount;
+
+    // Determine if the user has liked the riple based on their ID
+    const userHasLiked = ripleDetails?.likedUserIds.includes(userId);
 
     // When the data is fetched from the API, update the state
     useEffect(() => {
@@ -45,7 +44,7 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
         }
     }, [ripleDetails]);
 
-    const { handleLike, handleCommentAdd, generateShareImage, transformComments, isAddingComment, isChangingLikeState } = useRipleInteractions({ riple, ripleCardRef, session, setInScreenshotMode, setShowSignInModal, hasLiked : hasLiked ?? false, setShareImageUrl, setShowShareModal });
+    const { handleLike, handleCommentAdd, generateShareImage, transformComments, isAddingComment, isChangingLikeState } = useRipleInteractions({ riple, ripleCardRef, session, setInScreenshotMode, setShowSignInModal, hasLiked : userHasLiked ?? false, setShareImageUrl, setShowShareModal });
     const isLoadingLikeState = isChangingLikeState || isLoadingRiplesDetails
     
 
@@ -96,12 +95,13 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
                 <div className="flex flex-col  justify-between h-full border-t px-4 border-slate-300 ">
                     <RipleCardFooter 
                         likesCount={likeCount ?? 0}
-                        hasLiked={hasLiked ?? false}
+                        hasLiked={userHasLiked ?? false}
                         onLike={handleLike}
                         isChangingLikeState= {isLoadingLikeState}
                         commentsCount={commentsCount} 
                         showComment={showComment}
                         onComment={() => setShowComment(!showComment)}
+                        isLoadingRiplesDetails={isLoadingRiplesDetails}
                         onShare={generateShareImage} 
                     />
                 </div>
