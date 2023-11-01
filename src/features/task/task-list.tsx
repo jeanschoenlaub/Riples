@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
 import Link from 'next/link'; 
-import { TaskModal } from '~/features/task/taskmodal/taskmodal';
+import { TaskModal } from '~/features/task/task-modal/task-modal';
 import { ProfileImage, LoadingRiplesLogo, StyledTable } from '~/components';
 import { SubTasksRows } from './subtask/subtask';
 

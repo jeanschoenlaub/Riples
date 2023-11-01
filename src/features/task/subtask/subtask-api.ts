@@ -1,5 +1,5 @@
 import { api } from "~/utils/api";
-import type { CreateSubTaskPayload, DeleteSubTaskPayload, EditSubTaskStatusPayload } from "./subtasktypes";
+import type { CreateSubTaskPayload, DeleteSubTaskPayload, EditSubTaskStatusPayload } from "./subtask-types";
 import { handleMutationError } from "~/utils/error-handling";
 
 // Custom hook to handle mutations and their state for Subtasks

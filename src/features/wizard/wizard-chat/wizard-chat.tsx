@@ -8,18 +8,6 @@ export type WizardChatProps = {
     modalStep: string;
 };
 
-interface Delta {
-    content: string;
-}
-
-interface ChoiceWithDelta {
-    delta: Delta;
-}
-
-interface ChatCompletionWithDelta {
-    choices: ChoiceWithDelta[];
-}
-
 export const WizardChat: React.FC<WizardChatProps> = ({ projectTitle, projectSummary, ripleContent, modalStep }) => {
 
     const [inputValue, setInputValue] = useState('');

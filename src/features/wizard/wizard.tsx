@@ -5,10 +5,6 @@ import { api } from '~/utils/api';
 import Image from 'next/image';
 import {  WizardTask, WizardOnboarding, WizardProjectAbout,  WizardProjectRiples, WizardChat, useWizard} from '~/features/wizard/';
 
-interface WizardWrapperProps {
-    children: ReactNode;
-}
-
 export const WizardUI: React.FC = () => {
     const { 
         showWizard, setShowWizard, 

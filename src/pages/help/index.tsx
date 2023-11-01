@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Link from "next/link";
 import { FocusLayout } from "~/layout/focus-layout";
 import { MultiUserSVG, MagicWandSVG, ShareSVG, TaskSVG } from "~/components/";

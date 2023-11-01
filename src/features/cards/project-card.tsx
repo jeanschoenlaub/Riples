@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import type { RouterOutputs } from "~/utils/api";
 import { buildProjectCoverImageUrl } from '~/utils/s3';
 

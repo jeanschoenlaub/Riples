@@ -1,4 +1,4 @@
-import { CreateProjectModal } from "../create-project-modal/createprojetmodal";
+import { CreateProjectModal } from "../create-project/createprojetmodal";
 import { useState } from "react";
 import { NavBarSignInModal } from "../navbar/signinmodal";
 import { useSession } from "next-auth/react";

@@ -1,4 +1,3 @@
-import { GlobalNavBar } from "~/features/navbar/navbar";
 import { FullPageLayout } from "~/layout/full-page-layout";
 
 export default function PrivacyPolicy() {

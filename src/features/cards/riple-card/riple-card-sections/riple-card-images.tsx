@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NextRightArrowSVG, PrevLeftArrowSVG } from '~/components';
-import { RouterOutputs } from '~/utils/api';
+import type { RouterOutputs } from '~/utils/api';
 import { buildRiplesImageUrl } from '~/utils/s3';
 import styles from '../riple-card.module.css';
 

@@ -1,5 +1,5 @@
 import type { RouterOutputs } from '~/utils/api';
-import { TaskList } from "~/features/task/tasklist";
+import { TaskList } from "~/features/task/task-list";
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"]
 interface CollabTabProps {

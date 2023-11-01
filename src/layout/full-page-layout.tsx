@@ -1,7 +1,6 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import Head from 'next/head';
 import { GlobalNavBar } from '~/features/navbar/navbar';
-import { SideNavProject } from './sidenav-project';
 
 interface FullPageLayoutProps {
   children: ReactNode;

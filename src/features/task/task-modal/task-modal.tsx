@@ -7,8 +7,8 @@ import { useSession } from 'next-auth/react';
 // Local Imports
 import { api } from "~/utils/api";
 import { LoadingSpinner, Modal, ProfileImage } from '~/components';
-import type { CreateTaskPayload, EditTaskPayload, TaskModalProps } from './taskmodaltypes';
-import { useTaskMutation } from './taskmodalapi';
+import type { CreateTaskPayload, EditTaskPayload, TaskModalProps } from './task-modal-types';
+import { useTaskMutation } from './task-modal-api';
 
 // Main React Functional Component
 export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {

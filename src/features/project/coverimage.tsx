@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { api } from '~/utils/api';
 import { buildProjectCoverImageUrl } from '~/utils/s3';

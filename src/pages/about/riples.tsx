@@ -1,14 +1,9 @@
-//import Link from "next/link";
-import { GlobalNavBar } from "~/features/navbar/navbar";
-
 import dynamic from 'next/dynamic';
 import { useState } from "react";
 import { NavBarSignInModal } from "~/features/navbar/signinmodal";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { FullPageLayout } from "~/layout/full-page-layout";
-
-
 
 export default function AboutRiples() {
   const DynamicReactPlayer = dynamic(() => import('react-player'), {

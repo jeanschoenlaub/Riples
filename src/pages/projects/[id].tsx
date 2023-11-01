@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { api } from "~/utils/api";
 import React, { useEffect, useState } from 'react';
 import { getSession, useSession } from 'next-auth/react'; // Importing getSession from next-auth
@@ -14,8 +13,6 @@ import superjson from 'superjson';
 import { AboutTab } from "~/features/project/about/about";
 import { Follow, Tabs, LoadingPage } from "~/components";
 import { CollabTab } from "~/features/project/collab";
-import { GlobalNavBar } from "~/features/navbar/navbar";
-import { SideNavProject } from "~/layout/sidenav-project";
 import { AdminTab } from "~/features/project/admin/admin";
 import { RiplesTab } from "~/features/project/riples/riples";
 import { useRouter } from "next/router";

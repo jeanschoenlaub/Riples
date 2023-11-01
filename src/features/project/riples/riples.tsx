@@ -1,7 +1,7 @@
 import type { RouterOutputs } from '~/utils/api';
 import { RipleCard } from '~/features/cards/riple-card';
 import { useState } from 'react';
-import { CreateRipleModal } from './createriple/createriple';
+import { CreateRipleModal } from '../../create-riple/createriple';
 
 type RipleData = RouterOutputs["riples"]["getRipleByProjectId"]
 interface RipleTabProps {

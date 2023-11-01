@@ -1,5 +1,5 @@
 import { api } from "~/utils/api";
-import type { ChangeTaskOwnerPayload, CreateTaskPayload, DeleteTaskPayload, EditStatusPayload, EditTaskPayload } from "./taskmodaltypes";
+import type { ChangeTaskOwnerPayload, CreateTaskPayload, DeleteTaskPayload, EditStatusPayload, EditTaskPayload } from "./task-modal-types";
 import { handleMutationError } from "~/utils/error-handling";
 import { useOnboarding } from "~/features/onboarding/onboardingwrapper";
 

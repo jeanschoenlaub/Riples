@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { LoadingSpinner } from '~/components';
 import toast from 'react-hot-toast';
-import { SubTaskModal } from '~/features/task/subtask/subtaskmodal/subtaskmodal';
+import { SubTaskModal } from '~/features/task/subtask/subtask-modal/subtask-modal';
 import { useSession } from 'next-auth/react';
-import type { SubTaskData, SubTasksRowsProps } from './subtasktypes';
-import { useSubTaskMutation } from './subtaskapi';
+import type { SubTaskData, SubTasksRowsProps } from './subtask-types';
+import { useSubTaskMutation } from './subtask-api';
 import { useOnboarding } from '../../onboarding/onboardingwrapper';
 
 
