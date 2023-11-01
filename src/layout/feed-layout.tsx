@@ -44,11 +44,11 @@ export const FeedLayout: React.FC<FeedLayoutProps> = ({
         </div>
 
         <div id="main-body-container" className="flex justify-center w-full bg-sky-50">
-          <div id="project-nav-container" className={`${styles.projectNavContainer} "hidden md:flex flex-col w-1/4 p-4`}>
+          <div id="project-nav-container" className={`${styles.projectNavContainer} hidden md:flex flex-col w-1/4 p-4`}>
             <SideNavProject></SideNavProject>
           </div>
 
-         <div id="feed-container" className={`${styles.feedContainer} flex flex-col  w-full md:w-1/2 g-4 p-4`}>
+         <div id="feed-container" className={`${styles.feedContainer} flex flex-col w-full md:w-1/2 g-4 p-4`}>
             {/* Different Content Between Social and Create */}
             {children}
           </div>

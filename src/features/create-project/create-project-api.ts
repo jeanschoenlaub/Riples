@@ -2,7 +2,7 @@ import { handleZodError } from "~/utils/error-handling";
 import toast from "react-hot-toast";
 import { api } from "~/utils/api";
 import router from "next/router";
-import type { ProjectCreateData } from "./createprojecttypes";
+import type { ProjectCreateData } from "./create-project-types";
 import { useOnboarding } from "../onboarding/onboardingwrapper";
 
 // Custom hook to handle mutations and their state

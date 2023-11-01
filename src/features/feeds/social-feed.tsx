@@ -1,11 +1,43 @@
-import { api } from "~/utils/api";
-import { LoadingPage, Tooltip } from "~/components";
+import { RouterOutputs, api } from "~/utils/api";
+import { ArrowLeftSVG, ArrowRightSVG, LoadingPage, Tooltip } from "~/components";
 import { RipleCard } from "~/features/cards/riple-card";
-import { useSession } from "next-auth/react";
+import { useState } from "react";
+
+
+type FullRiple = RouterOutputs["riples"]["getAll"][number]
 
 export const SocialFeed = () => {
-    const { data, isLoading } = api.riples.getAll.useQuery();
-    const {data: session} = useSession() 
+    const [riples, setRiples] = useState<FullRiple[]>([]);
+    const [offset, setOffset] = useState(0);
+    const [hasMoreRiples, setHasMoreRiples] = useState(true);
+
+    const { data, isLoading, refetch } = api.riples.getAll.useQuery({
+        limit: 10,
+        offset: offset,
+    });
+
+    const loadNextRiples = async () => {
+        setOffset(prevOffset => prevOffset + 10);
+        const newData = await refetch();
+        if (newData.data) {
+            setRiples(newData.data); // Replace the existing riples with the new set
+            if (newData.data.length < 10) setHasMoreRiples(false);
+        } else {
+            console.error('Failed to fetch new data or data is null.');
+        }
+    };
+
+    const loadPreviousRiples = async () => {
+        setOffset(prevOffset => Math.max(prevOffset - 10, 0));
+        setHasMoreRiples(true)
+        const newData = await refetch();
+        if (newData.data) {
+            setRiples(newData.data);
+        } else {
+            console.error('Failed to fetch previous data or data is null.');
+        }
+    };
+  
 
     if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)
   
@@ -49,6 +81,42 @@ export const SocialFeed = () => {
             <RipleCard key={fullRiple.riple.id} {...fullRiple} ></RipleCard>
           ))}
         </div>
+
+        <div className="flex justify-between mt-4">
+            {/* Previous 10 Button */}
+            <span className="text-lg flex justify-center items-center space-x-4 w-auto">
+                {offset !== 0 && (
+                    <button 
+                        onClick={loadPreviousRiples}
+                        className="bg-blue-500 text-white text-lg rounded px-4 py-1 flex items-center justify-center w-auto"
+                        disabled={offset === 0}
+                    >
+                        <span className='flex items-center'>
+                            {/* Assuming you've imported ArrowLeftSVG at the top */}
+                            <ArrowLeftSVG width="4" height="4" marginRight="2" />
+                            Previous 10
+                        </span>
+                    </button>
+                )}
+            </span>
+
+            {/* Next 10 Button */}
+            <span className="text-lg flex justify-center items-center space-x-4 w-auto">
+                {hasMoreRiples && (
+                    <button 
+                        onClick={loadNextRiples}
+                        className="bg-blue-500 text-white text-lg rounded px-4 py-1 flex items-center justify-center w-auto"
+                    >
+                        <span className='flex items-center'>
+                            Next 10
+                            {/* Assuming you've imported ArrowRightSVG at the top */}
+                            <ArrowRightSVG width="4" height="4" marginLeft="2" />
+                        </span>
+                    </button>
+                )}
+            </span>
+        </div>
+
     </div>
     )
 } 

@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import ProjectDescriptionComponent from "./projectdescription/projectdescription";
-import ProjectBuildComponent from "./projectbuild/projectbuild";
-import { useProjectMutation } from "./createprojectapi";
+import ProjectDescriptionComponent from "./project-description/project-description";
+import ProjectBuildComponent from "./project-build/project-build";
+import { useProjectMutation } from "./create-project-api";
 import type { RouterOutputs } from "~/utils/api";
-import type { CreateProjectModalProps, CreateProjectPayload } from "./createprojecttypes";
-import  { Step } from "./createprojecttypes";
+import type { CreateProjectModalProps, CreateProjectPayload } from "./create-project-types";
+import  { Step } from "./create-project-types";
 import router from "next/router";
 import { useSelector} from 'react-redux';
 import type { RootState } from '~/redux/store';
