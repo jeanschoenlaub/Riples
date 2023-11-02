@@ -187,11 +187,13 @@ createUserLog: publicProcedure
         z.object({
         userId: z.string(),
         date: z.date(),
+        registrationDate: z.union([z.date(), z.null()]),
         lastLogin: z.date(),
         lastProjectCreated: z.union([z.date(), z.null()]),
         lastTaskEdited: z.union([z.date(), z.null()]),
         lastLikedEntry: z.union([z.date(), z.null()]),
         lastRiple: z.union([z.date(), z.null()]),
+        onBoardingCompleted: z.union([z.date(), z.null()]),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -199,11 +201,13 @@ createUserLog: publicProcedure
         data: {
             userId: input.userId,
             date: input.date,
+            registrationDate: input.registrationDate,
             lastLogin: input.lastLogin,
             lastProjectCreated: input.lastProjectCreated,
             lastTaskEdited: input.lastTaskEdited,
             lastLikedEntry: input.lastLikedEntry,
             lastRiple: input.lastRiple,
+            onBoardingCompleted: input.onBoardingCompleted,
         },
         });
 

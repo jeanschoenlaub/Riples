@@ -24,7 +24,7 @@ export const CreateFeed = () => {
 
   return ( 
     <div>
-      {/* Attractive Project Creation */}
+      {/*  Project Creation input and button */}
       <div id="project-collab-create-project-entry" className="mt-4 mr-2 md:ml-6 md:mr-6 mb-2 flex items-center grow space-x-4">
         <input 
           id="project-collab-create-project-input"
@@ -32,7 +32,7 @@ export const CreateFeed = () => {
           value={inputValue}  // Controlled input
           onChange={(e) => setInputValue(e.target.value)}  // Update state on change
           placeholder="Create a project" 
-          className="py-2 px-4 rounded grow focus:outline-none focus:border-gray-500 border-2"
+          className="py-2 px-4 text-base rounded grow focus:outline-none focus:border-gray-500 border-2"
         />
         <button 
           id="project-collab-create-project-button"

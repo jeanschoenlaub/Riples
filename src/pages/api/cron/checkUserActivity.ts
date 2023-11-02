@@ -26,6 +26,21 @@ export default async function checkUserActivity(req: NextApiRequest, res: NextAp
         const userId = user.id;
         const lastLogin = await getLastLogin(userId);
 
+        // Get user's registrationDate from emailVerified field to split into cohorts
+        const registrationDate = user.emailVerified;
+        
+        // Fetch onBoardingCompleted date
+        const userOnboarding = await prisma.userOnboarding.findFirst({
+            where: {
+                userId: userId,
+                onBoardingFinished: true
+            },
+            select: {
+                updatedAt: true
+            }
+        });
+        const onBoardingCompletedDate = userOnboarding?.updatedAt ?? null;
+
         // Check for project creation within the last day
         const [recentProject, recentTaskUpdate, recentLikedEntry, recentRipleShared] = await Promise.all([
             prisma.project.findFirst({
@@ -45,16 +60,19 @@ export default async function checkUserActivity(req: NextApiRequest, res: NextAp
                 orderBy: { createdAt: 'desc' }
             })
         ]);
+
     
         // Create UserLog entry
         const createUserLogInput = {
             userId,
             date: new Date(),
+            registrationDate: registrationDate,
             lastLogin: lastLogin!,
             lastProjectCreated: recentProject?.createdAt ?? null,
             lastTaskEdited: recentTaskUpdate?.editedAt ?? null,
             lastLikedEntry: recentLikedEntry?.createdAt ?? null,
-            lastRiple: recentRipleShared?.createdAt ?? null
+            lastRiple: recentRipleShared?.createdAt ?? null,
+            onBoardingCompleted: onBoardingCompletedDate,
         };
         await caller.users.createUserLog(createUserLogInput);
     }

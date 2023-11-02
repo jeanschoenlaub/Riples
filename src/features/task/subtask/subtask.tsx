@@ -91,7 +91,7 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
               ) : (
               <input
                   type="checkbox"
-                  className="mr-2"
+                  className="mr-2 flex-shrink-0"
                   checked={subTask.status}
                   disabled={isLoading}
                   onChange={() => { handleChangeSubTaskStatus(subTask.id, !subTask.status); }}

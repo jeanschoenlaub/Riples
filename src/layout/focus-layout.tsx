@@ -44,7 +44,7 @@ export const FocusLayout: React.FC<FocusLayoutProps> = ({
         </div>
 
         <div id="main-body-container" className="flex justify-center w-full bg-sky-50">
-          <div id="project-nav-container" className={`${styles.projectNavContainer} "hidden md:flex flex-col w-1/4 p-4`}>
+          <div id="project-nav-container" className={`${styles.projectNavContainer} hidden md:flex flex-col w-1/4 p-4`}>
             <SideNavProject></SideNavProject>
           </div>
 

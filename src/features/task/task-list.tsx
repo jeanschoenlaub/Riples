@@ -45,10 +45,10 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
   
 
   let headers = isMobile ? ["Sub", "Task"] : ["Sub", "Task Title", "Status", "Owner"];
-  let columnWidths = isMobile ? ["8%", "50%"] : ["4%", "30%", "8%", "8%"];
+  let columnWidths = isMobile ? ["15%", "50%"] : ["4%", "30%", "8%", "8%"];
   if (project.projectType === "solo") {
     headers = headers.filter(header => header !== "Owner");
-    isMobile ? columnWidths =["8%","50%"] :columnWidths =["4%","50%","8%"]
+    isMobile ? columnWidths =["15%","50%"] :columnWidths =["4%","50%","8%"]
   }
 
   const handleCreateClick = () => {

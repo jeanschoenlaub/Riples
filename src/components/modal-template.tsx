@@ -47,8 +47,8 @@ export const Modal: React.FC<ModalProps> = ({ showModal, isLoading, size = 'medi
                     src="/images/logo_256x256.png"
                     className="droplet"
                     alt="Riple logo"
-                    width={256}
-                    height={256}
+                    width={40}
+                    height={40}
                   />
                 </div>
               )}
