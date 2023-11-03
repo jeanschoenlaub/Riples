@@ -106,8 +106,8 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
           {taskData.map((taskDetail, index) => (
             <React.Fragment key={index}>
             <tr key={index} id={`project-tasklist-task-${index}`}  className="bg-white border-b items-center ">
-              <th scope="row" id={`task-${index}-table-action-column`} className="px-10 mt-2 flex items-center justify-center" style={{textAlign: 'center', verticalAlign: 'middle',  width: columnWidths[0] }}>
-                <button onClick={() => toggleSubtasks(taskDetail.task.id)} className="flex  items-center text-blue-600 ">
+              <td id={`task-${index}-table-action-column`} className="px-9 justify-center py-2 table-cell" style={{ width: columnWidths[0] }}>
+                <button onClick={() => toggleSubtasks(taskDetail.task.id)} className="flex text-blue-600 ">
                 {displaySubtasks === taskDetail.task.id ? (
                 <div>
                   {(() => {
@@ -116,9 +116,9 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
 
                     // Display these numbers in a badge
                     return (
-                      <span className="text-sm flex justify-center">
+                      <div className="text-sm">
                           {`${doneSubtasks}/${totalSubtasks}`}
-                      </span>
+                      </div>
                     );
                   })()}
 
@@ -136,9 +136,9 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
 
                     // Display these numbers in a badge
                     return (
-                      <span className="text-sm">
+                      <div className="text-sm">
                           {`${doneSubtasks}/${totalSubtasks}`}
-                      </span>
+                      </div>
                     );
                   })()}
 
@@ -148,7 +148,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
                   </div>
                 )}
               </button>
-              </th>
+              </td>
               
               <td className="px-6 py-2 overflow-x-auto whitespace-nowrap font-medium text-gray-900 no-scrollbar" style={{ width: columnWidths[1]}}>
                 <button onClick={() => openEditModal(taskDetail.task)} className="text-blue-600  hover:underline">
