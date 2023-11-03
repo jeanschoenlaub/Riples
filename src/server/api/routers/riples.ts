@@ -30,11 +30,16 @@ export const ratelimit = new Ratelimit({
 
 export const ripleRouter = createTRPCRouter({
     // To do fixlimited to 20 most recent riples
-    getAll: publicProcedure.query(async ({ ctx }) => {
+    getAll: publicProcedure.input(z.object({ 
+        limit: z.number().default(10), 
+        offset: z.number().default(0) 
+    })).query(async ({ ctx, input }) => {
+        const { limit, offset } = input;
         const riples = await ctx.prisma.riple.findMany({
-          take: 20,
-          orderBy: [{ createdAt: "desc" }],
-          include: { project: true, images: true },
+            take: limit,
+            skip: offset,
+            orderBy: [{ createdAt: "desc" }],
+            include: { project: true, images: true },
         });
       
         const authorIDs = riples

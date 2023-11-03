@@ -277,15 +277,17 @@ model VerificationToken {
 }
 
 model UserLog {
-  id                 String   @id @default(cuid())
-  user               User?     @relation(fields: [userId], references: [id])
-  userId             String   
-  date               DateTime @default(now())
-  lastLogin          DateTime?
-  lastProjectCreated DateTime?
-  lastTaskEdited     DateTime?
-  lastLikedEntry     DateTime?
-  lastRiple     DateTime?
+  id                  String   @id @default(cuid())
+  user                User?     @relation(fields: [userId], references: [id])
+  userId              String   
+  date                DateTime @default(now())
+  registrationDate    DateTime? 
+  lastLogin           DateTime?
+  lastProjectCreated  DateTime?
+  lastTaskEdited      DateTime?
+  lastLikedEntry      DateTime?
+  lastRiple           DateTime?
+  onBoardingCompleted DateTime?
 
   @@unique([userId, date])
 }

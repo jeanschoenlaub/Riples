@@ -1,0 +1,37 @@
+/* layout.module.css */
+
+.sideBarProjectList {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.sideBarProjectList {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.projectSideBarContainer::-webkit-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.feedContainer
+{
+    max-height: calc(100vh - 15px); /* Adjust 60px based on your navigation bar's height */
+    overflow-y: auto;
+}
+
+.feedContainer {
+    scrollbar-width: none; /* for Firefox */
+    -ms-overflow-style: none;  /* for Internet Explorer and Edge */
+}
+
+.feedContainer::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+}
+
+/* For having the scrolls on feed on side project independant */
+.projectNavContainer,
+.futureContent
+{
+    max-height: calc(100vh - 15px); /* Adjust 60px based on your navigation bar's height */
+}

@@ -7,66 +7,7 @@ body {
     overscroll-behavior: none;
 }
 
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-1px); }
-    20%, 40%, 60%, 80% { transform: translateX(1px); }
-}
 
-@keyframes expand {
-    0% {
-        transform: translate(-50%, -50%) scale(3);
-        opacity: 0.5;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(8);
-        opacity: 0;
-    }
-};
-
-
-.shake-animation {
-    animation: shake 0.5s linear;
-}
-
-.iframe { width: 90%; height: 500px; border: 2px solid #ccc; border-radius: 10px; padding: none; }
-
-.grey-background {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 8px 12px;
-    font-size: 14px;
-    border-radius: 20px;
-}
-
-/* For having the scrolls on feed on side project independant */
-#project-nav-container,
-#future-content
-{
-    max-height: calc(100vh - 15px); /* Adjust 60px based on your navigation bar's height */
-}
-
-#feed-container
-{
-    max-height: calc(100vh - 15px); /* Adjust 60px based on your navigation bar's height */
-    overflow-y: auto;
-}
-
-#side-bar-project-list{
-    max-height: calc(100vh - 200px); /* AManually adjusted but should be Size of Following / Doing toggle +bottom margin */
-    overflow-y: auto;
-}
-
-#side-bar-project-list,
-#feed-container {
-    scrollbar-width: none; /* for Firefox */
-    -ms-overflow-style: none;  /* for Internet Explorer and Edge */
-}
-
-#project-side-bar-container::-webkit-scrollbar,
-#feed-container::-webkit-scrollbar {
-    display: none; /* for Chrome, Safari, and Opera */
-}
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 #project-main-tabs::-webkit-scrollbar {
@@ -79,10 +20,6 @@ body {
     scrollbar-width: none;  /* Firefox */
 }
 
-/* Custom rule to limit the growth effect */
-.search-max-growth {
-max-width: 400px; /* Adjust the maximum width as needed */
-}
 
 .truncate {
     display: block;
@@ -103,60 +40,3 @@ max-width: 400px; /* Adjust the maximum width as needed */
 .no-scrollbar {
     -ms-overflow-style: none;
 }
-
-
-  
-/* Loading ripple SVG */
-.loading-container {
-    position: relative;
-    width: 50px;
-    height: 50px;
-  }
-
-  #riple-content .responsive-image,
-  #riple-preview-content .responsive-image,
-  #riple-image-section .responsive-image {
-    height: 40vh;/* Default behavior for mobile or smaller screens */
-  }
-  
-  @media (min-width: 768px) {
-      #riple-content .responsive-image,
-      #riple-preview-content .responsive-image,
-      #riple-image-section .responsive-image {
-        height: 50vh;
-      }
-  }
-  
-.droplet {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 50px; /* You can adjust this depending on your image's aspect ratio */
-    height: auto;
-    transform: translate(-50%, -50%);
-}
-
-.ripple {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 50;
-    height: 50;
-    border: 5px solid blue;
-    border-radius: 50%;
-    opacity: 0.5;
-    transform: translate(-50%, -50%) scale(0);
-}
-
-.ripple-active .ripple {
-    animation: expand 3s infinite ease-out;
-}
-
-.ripple:nth-child(2) {
-    animation-delay: 0.5s;
-}
-
-.ripple:nth-child(3) {
-    animation-delay: 0.1s;
-}
-

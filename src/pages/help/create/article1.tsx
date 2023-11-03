@@ -1,10 +1,11 @@
-import { HelpLayout } from "~/components/layout/helplayout";
+import { FocusLayout } from "~/layout/focus-layout";
+
 
 export default function TutorialOne() {
     return (
-        <HelpLayout>
+        <FocusLayout ToogleinBetween={true}>
             <h1>Tutorial 1: Title Here</h1>
             {/* Tutorial Content */}
-        </HelpLayout>
+        </FocusLayout>
     );
 }

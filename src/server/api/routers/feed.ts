@@ -23,16 +23,22 @@ export const feedRouter = createTRPCRouter({
                 }
             });
 
-            const likeCount = await ctx.prisma.like.count({
+            const likes = await ctx.prisma.like.findMany({
                 where: {
                     ripleId: input.ripleId
+                },
+                select: {
+                    userId: true // Return only the userIds of those who've liked the riple
                 }
             });
+    
+            const likeCount = likes.length;    
 
             return {
                 commentCount,
                 comments,
-                likeCount
+                likeCount,
+                likedUserIds: likes.map(like => like.userId) // Send an array of user IDs to the frontend
             };
         }),
 });

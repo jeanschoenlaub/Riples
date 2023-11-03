@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { HelpLayout } from "~/components/layout/helplayout";
-
+import { FocusLayout } from "~/layout/focus-layout";
 
 export default function HelpIndex() {
     return (
         <>
-        <HelpLayout>
+        <FocusLayout ToogleinBetween={true}>
         <div className="flex mt-8 ml-4">
             <ul className="list-decimal pl-5">
                 <li className="mb-2">
@@ -21,7 +20,7 @@ export default function HelpIndex() {
             </ul>
         </div>
 
-        </HelpLayout>
+        </FocusLayout>
         </>
     );
 }

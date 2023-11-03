@@ -6,14 +6,14 @@ import { Toaster } from "react-hot-toast";
 import "~/styles/globals.css";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react"
-import { OnboardingProvider, OnboardingWrapper } from "~/components/onboarding/onboardingwrapper";
+import { OnboardingProvider, OnboardingWrapper } from "~/features/onboarding/onboardingwrapper";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { pageview } from "~/utils/googleanalytics";
-import { WizardWrapper } from "~/components/wizard/wizardswrapper";
 import { Provider } from 'react-redux';
 import store from '~/redux/store';
 import { ChakraProvider } from '@chakra-ui/react'
+import { WizardProvider} from "~/features/wizard";
 
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -55,12 +55,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <Toaster />
         <Provider store={store}>
           <OnboardingProvider>
-            <WizardWrapper>
+            <WizardProvider>
               <OnboardingWrapper />
               <ChakraProvider>
                 <Component {...pageProps} />
               </ChakraProvider>
-            </WizardWrapper>
+            </WizardProvider>
           </OnboardingProvider>
         </Provider>
         <Analytics />

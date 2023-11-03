@@ -1,0 +1,9 @@
+.responsiveImage {
+  height: 40vh; /* Default behavior for mobile or smaller screens */
+}
+
+@media (min-width: 768px) {
+ .responsiveImage {
+    height: 50vh;
+  }
+}
