@@ -117,7 +117,7 @@ export default function Project(
     <>
       <FocusLayout ToogleinBetween={true} title={projectData.project.title}>
             
-            <ProjectCoverImage coverImageId={projectData?.project.coverImageId} projectId={projectData.project.id}></ProjectCoverImage>
+            <ProjectCoverImage isProjectLead={isProjectLead} coverImageId={projectData?.project.coverImageId} projectId={projectData.project.id}></ProjectCoverImage>
 
             <div id="project-main-metadata" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-0">
                 <div id="project-metadata" className="flex items-center justify-between"> 

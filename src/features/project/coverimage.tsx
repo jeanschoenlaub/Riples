@@ -6,6 +6,7 @@ import { Tooltip, LoadingRiplesLogo } from '~/components';
 interface ProjectCoverImageProps {
     coverImageId: string;
     projectId: string;
+    isProjectLead: boolean;
 }
 
 //TO-DO
@@ -16,7 +17,7 @@ interface Fields {
     [key: string]: string | undefined;  // This is for any additional properties that might appear in the object.
 }
 
-const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, projectId }) => {
+const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, projectId, isProjectLead }) => {
     const [imageUrl, setImageUrl] = useState(buildProjectCoverImageUrl(coverImageId));
     const [imageChanging, setImageChanging] = useState(false);
 
@@ -50,36 +51,39 @@ const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, pro
     return (
         <div>
             <div id="project-main-cover-image" className="hidden border-b border-l border-gray-500 md:flex group relative w-full h-[35vh] overflow-hidden justify-center items-center">
-                {(isUploading || imageChanging)?  ( <LoadingRiplesLogo isLoading={isUploading}></LoadingRiplesLogo>) : (
-                <img 
-                key={imageUrl}
-                src={imageUrl} 
-                alt="Project cover image" 
-                //layout="fill" 
-                //objectFit="cover"
-            />)}
+                {(isUploading || imageChanging) ?  
+                    ( <LoadingRiplesLogo isLoading={isUploading}></LoadingRiplesLogo>) : (
+                    <img 
+                    key={imageUrl}
+                    src={imageUrl} 
+                    alt="Project cover image" 
+                    //layout="fill" 
+                    //objectFit="cover"
+                />)}
     
-                <div className="absolute top-0 right-0 flex flex-row items-end mb-4 mr-2 transition-opacity duration-300">
-                    <Tooltip content="The feature of repositioning project cover image is coming soon." shiftRight={true} width="200px">
-                        <span>
-                            <button className="py-1 px-2 mt-4 bg-sky-100 text-black cursor-not-allowed" disabled>
-                                Reposition
-                            </button>
-                        </span>
-                    </Tooltip>
-                </div>
-                <div className="absolute bottom-0 right-0 flex flex-row items-end mb-4 mr-2 transition-opacity duration-300">
-                  
-                    <span className="mb-1">
-                        <label 
-                            htmlFor="replaceImageInput"
-                            className="py-2 px-2 bg-sky-100  text-black cursor-pointer"
-                        >
-                            Upload Cover Image
-                        </label>
-                    </span>
-
+                { isProjectLead &&
+                    <>
+                    <div className="absolute top-0 right-0 flex flex-row items-end mb-4 mr-2 transition-opacity duration-300">
+                        <Tooltip content="The feature of repositioning project cover image is coming soon." shiftRight={true} width="200px">
+                            <span>
+                                <button className="py-1 px-2 mt-4 bg-sky-100 text-black cursor-not-allowed" disabled>
+                                    Reposition
+                                </button>
+                            </span>
+                        </Tooltip>
+                    </div>
+                    <div className="absolute bottom-0 right-0 flex flex-row items-end mb-4 mr-2 transition-opacity duration-300">
                     
+                        <span className="mb-1">
+                            <label 
+                                htmlFor="replaceImageInput"
+                                className="py-2 px-2 bg-sky-100  text-black cursor-pointer"
+                            >
+                                Upload Cover Image
+                            </label>
+                        </span>
+
+                        
                     </div>
                     <input 
                         type="file" 
@@ -87,6 +91,7 @@ const ProjectCoverImage: React.FC<ProjectCoverImageProps> = ({ coverImageId, pro
                         style={{ display: 'none' }}
                         onChange={handleFileChange}
                     />
+                </>}
             </div>
         </div>
     );  

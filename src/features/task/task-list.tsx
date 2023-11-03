@@ -45,10 +45,10 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
   
 
   let headers = isMobile ? ["Sub", "Task"] : ["Sub", "Task Title", "Status", "Owner"];
-  let columnWidths = isMobile ? ["15%", "50%"] : ["4%", "30%", "8%", "8%"];
+  let columnWidths = isMobile ? ["15%", "50%"] : ["6%", "30%", "8%", "8%"];
   if (project.projectType === "solo") {
     headers = headers.filter(header => header !== "Owner");
-    isMobile ? columnWidths =["15%","50%"] :columnWidths =["4%","50%","8%"]
+    isMobile ? columnWidths =["15%","50%"] :columnWidths =["6%","50%","8%"]
   }
 
   const handleCreateClick = () => {
@@ -107,7 +107,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
             <React.Fragment key={index}>
             <tr key={index} id={`project-tasklist-task-${index}`}  className="bg-white border-b items-center ">
               <th scope="row" id={`task-${index}-table-action-column`} className="px-10 mt-2 flex items-center justify-center" style={{textAlign: 'center', verticalAlign: 'middle',  width: columnWidths[0] }}>
-                <button onClick={() => toggleSubtasks(taskDetail.task.id)} className="flex items-center text-blue-600 ">
+                <button onClick={() => toggleSubtasks(taskDetail.task.id)} className="flex  items-center text-blue-600 ">
                 {displaySubtasks === taskDetail.task.id ? (
                 <div>
                   {(() => {
@@ -116,7 +116,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
 
                     // Display these numbers in a badge
                     return (
-                      <span className="text-sm">
+                      <span className="text-sm flex justify-center">
                           {`${doneSubtasks}/${totalSubtasks}`}
                       </span>
                     );
