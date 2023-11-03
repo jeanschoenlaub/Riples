@@ -12,6 +12,7 @@ import { notificationRouter } from "./routers/notification";
 import { likeRouter } from "./routers/like";
 import { commentRouter } from "./routers/comment";
 import { feedRouter } from "./routers/feed";
+import { forumRouter } from "./routers/forum";
 
 
 /**
@@ -40,6 +41,7 @@ export const appRouter = createTRPCRouter({
   like: likeRouter,
   comment: commentRouter,
   feed: feedRouter,
+  forum: forumRouter,
 });
 
 // export type definition of API

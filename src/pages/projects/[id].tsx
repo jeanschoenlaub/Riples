@@ -10,15 +10,16 @@ import { appRouter } from "~/server/api/root";
 import superjson from 'superjson';
 
 //My components
-import { AboutTab } from "~/features/project/about/about";
+import { AboutTab } from "~/features/page-project/about/about";
 import { Follow, Tabs, LoadingPage } from "~/components";
-import { CollabTab } from "~/features/project/collab";
-import { AdminTab } from "~/features/project/admin/admin";
-import { RiplesTab } from "~/features/project/riples/riples";
+import { CollabTab } from "~/features/page-project/collab";
+import { AdminTab } from "~/features/page-project/admin/admin";
+import { RiplesTab } from "~/features/page-project/riples/riples";
 import { useRouter } from "next/router";
-import ProjectCoverImage from "~/features/project/coverimage";
+import ProjectCoverImage from "~/features/page-project/cover-image";
 import { useWizard} from "~/features/wizard";
 import { FocusLayout } from "~/layout/focus-layout";
+import { TaskTab } from "~/features/page-project/tasks";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -113,6 +114,11 @@ export default function Project(
     isProjectLead || isMember ||
     (projectData?.project.projectType === "collab" && projectData?.project.projectPrivacy === "public")
 
+  const displayTasksTab = 
+    isProjectLead || isMember ||
+    (projectData?.project.projectType === "collab" && projectData?.project.projectPrivacy === "public")
+
+
   return (
     <>
       <FocusLayout ToogleinBetween={true} title={projectData.project.title}>
@@ -131,7 +137,8 @@ export default function Project(
                     setActiveTab={setActiveTab} 
                     riples="y"
                     admin={isProjectLead} 
-                    collab={ displayCollabTab}
+                    tasks={displayTasksTab}
+                    collab={displayCollabTab}
                   />
                 </div>
               
@@ -145,6 +152,8 @@ export default function Project(
                     <RiplesTab ripleData={ripleData} projectId={projectId} projectTitle={projectData.project.title} projectSummary={projectData.project.summary} projectCoverImageId={projectData.project.coverImageId}></RiplesTab>
                 )}
 
+                {/* SHOWN IF TASK*/}
+                {activeTab === 'tasks' && <TaskTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} />}
 
                 {/* SHOWN IF COLLAB*/}
                 {activeTab === 'collab' && <CollabTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} />}

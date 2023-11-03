@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { useProjectInfoMutation } from './projectinfoapi';
+import { useProjectInfoMutation } from './project-info-api';
 import Link from 'next/link';
-import type { ProjectAboutInfoProps, EditProjectPayload} from './projectinfotype';
+import type { ProjectAboutInfoProps, EditProjectPayload} from './project-info-type';
 import { sortedProjectClassifications } from '~/utils/constants/projectclassifications';
 
 import {LoadingSpinner, MultiSelect, Tooltip, ProfileImage, EditSVG, MultiUserSVG, PrivateSVG, PublicSVG, SingleUserSVG } from '~/components';

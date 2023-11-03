@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { AboutSVG, AdminSVG, ProjectsSVG, RiplesSVG } from './svg';
-import { TaskSVG } from './svg-stroke';
+import { GiftSVG, GlobeSVG, TaskSVG } from './svg-stroke';
 
 interface TabsProps {
   activeTab: string;
@@ -9,10 +9,11 @@ interface TabsProps {
   riples? : string;  // optional props
   projects? : string;
   collab?: boolean; 
+  tasks?: boolean;
   admin?: boolean; 
 }
 
-export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, projects, collab, admin}) => {
+export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, projects, tasks, collab, admin}) => {
   return (
     <div id="project-main-tabs" className="border-b border-gray-200 ">
        <ul className="flex whitespace-nowrap overflow-x-auto -mb-px text-sm font-medium text-center text-gray-500 ">
@@ -57,18 +58,34 @@ export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, pro
         </li>
         )}
 
-        {/* CONDITIONAL TAB COLLAB */}
-        {collab && (
+        {/* CONDITIONAL TASK TAB */}
+        {tasks && (
             <li className="mr-1">
                 <button
                       id="project-main-tabs-tasks"
-                      onClick={() => setActiveTab('collab')}
-                      className={`inline-flex items-center justify-center p-3 border-b-2 rounded-t-xl ${activeTab === 'collab' ? 'text-blue-600 bg-sky-200 border-blue-300' : 'text-gray-500 bg-gray-200 border-transparent'}`}>
-                  {activeTab === 'collab' ? 
+                      onClick={() => setActiveTab('tasks')}
+                      className={`inline-flex items-center justify-center p-3 border-b-2 rounded-t-xl ${activeTab === 'tasks' ? 'text-blue-600 bg-sky-200 border-blue-300' : 'text-gray-500 bg-gray-200 border-transparent'}`}>
+                  {activeTab === 'tasks' ? 
                       <TaskSVG width="4" height="4" marginRight='2' colorStrokeHex='#2563eb'></TaskSVG> // Blue
                       :<TaskSVG width="4" height="4" marginRight='2' colorStrokeHex='#9CA3AF'></TaskSVG>  // Gray colors
                   }
                   Tasks
+              </button>
+              </li>
+        )}
+
+        {/* CONDITIONAL TAB COLLAB */}
+        {collab && (
+            <li className="mr-1">
+                <button
+                      id="project-main-tabs-collab"
+                      onClick={() => setActiveTab('collab')}
+                      className={`inline-flex items-center justify-center p-3 border-b-2 rounded-t-xl ${activeTab === 'collab' ? 'text-blue-600 bg-sky-200 border-blue-300' : 'text-gray-500 bg-gray-200 border-transparent'}`}>
+                  {activeTab === 'collab' ? 
+                      <GlobeSVG width="4" height="4" marginRight='2' colorStrokeHex='#2563eb'></GlobeSVG> // Blue
+                      :<GlobeSVG width="4" height="4" marginRight='2' colorStrokeHex='#9CA3AF'></GlobeSVG>  // Gray colors
+                  }
+                  Collab
               </button>
               </li>
         )}
