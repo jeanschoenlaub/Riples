@@ -25,7 +25,7 @@ export const SocialFeed = () => {
         } else {
             console.error('Failed to fetch new data or data is null.');
         }
-    };
+    }; 
 
     const loadPreviousRiples = async () => {
         setOffset(prevOffset => Math.max(prevOffset - 10, 0));
@@ -87,7 +87,7 @@ export const SocialFeed = () => {
             <span className="text-lg flex justify-center items-center space-x-4 w-auto">
                 {offset !== 0 && (
                     <button 
-                        onClick={loadPreviousRiples}
+                        onClick={() => loadPreviousRiples}
                         className="bg-blue-500 text-white text-lg rounded px-4 py-1 flex items-center justify-center w-auto"
                         disabled={offset === 0}
                     >
@@ -104,7 +104,7 @@ export const SocialFeed = () => {
             <span className="text-lg flex justify-center items-center space-x-4 w-auto">
                 {hasMoreRiples && (
                     <button 
-                        onClick={loadNextRiples}
+                        onClick={() => loadNextRiples}
                         className="bg-blue-500 text-white text-lg rounded px-4 py-1 flex items-center justify-center w-auto"
                     >
                         <span className='flex items-center'>

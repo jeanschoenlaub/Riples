@@ -29,7 +29,7 @@ interface RipleCardFooterProps {
         
             {/* Like Button and Count */}
             <div className="mt-1 px-2 border-slate-300 ">
-                { (isChangingLikeState || isLoadingRiplesDetails) ?
+                { (isChangingLikeState ?? isLoadingRiplesDetails) ?
                     (<LoadingSpinner size={20}></LoadingSpinner> ):
                     (
                     <div className="flex items-center space-x-2">
