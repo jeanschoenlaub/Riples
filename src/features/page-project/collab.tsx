@@ -1,6 +1,6 @@
 import type { RouterOutputs } from '~/utils/api';
-import { CollabTaskList } from '../collaboration/collab-task-list';
-import { Forum } from '../collaboration/forum-list';
+import { CollabTaskList } from '../collab/collab-task-list';
+import { Forum } from '../collab/forum-list';
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"]
 interface CollabTabProps {

@@ -2,10 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-//generator erd {
-//  provider = "prisma-erd-generator"
-//  output = "./ERD.svg"
-//}
+generator erd {
+  provider = "prisma-erd-generator"
+  output = "./ERD.svg"
+}
 
 
 datasource db {
@@ -331,21 +331,18 @@ model ForumQuestion {
     userId      String
     user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     answers     ForumAnswers[]
-    @@unique([projectId, userId])
 }
 
 model ForumAnswers {
     id          String   @id @default(cuid())
-    projectId   String
     content     String
     createdAt   DateTime @default(now())
 
     //Relations
-    questionId     String
-    question      ForumQuestion @relation(fields: [questionId], references: [id],  onDelete: Cascade)
+    questionId  String
+    question    ForumQuestion @relation(fields: [questionId], references: [id],  onDelete: Cascade)
     userId      String
     user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    @@unique([projectId, userId])
 }
 
 model AIUsageLog {

@@ -1,7 +1,6 @@
 import { api } from "~/utils/api";
 
-
-export const useCollabMutation = (followers: Follower[] | undefined) => {
+export const useCollabMutation = (followers?: Follower[] | undefined) => {
     const apiContext = api.useContext();
   
     // Function to invalidate the cache after a new question is created or a notification is sent
@@ -51,9 +50,44 @@ export const useCollabMutation = (followers: Follower[] | undefined) => {
         });
       });
     };
+
+    // Add a mutation for creating forum answers
+    const { mutate: createForumAnswerMutation, isLoading: isCreatingAnswer } = api.forum.createForumAnswer.useMutation({
+      onSuccess: handleSuccess,
+    });
+
+    // Create a function to call the createForumAnswer mutation
+    const createForumAnswer = (payload: CreateForumAnswerPayload) => {
+      return new Promise<void>((resolve, reject) => {
+        createForumAnswerMutation(payload, {
+          onSuccess: () => {
+            // Notify the question creator of answers
+            const notificationContent = `A user replied to your discussion: ${payload.content.substring(0, 100)}...`; // Truncate content for the notification
   
+              // Create a notification for each follower
+              createNotificationMutation({
+                userId: payload.authorId,
+                content: notificationContent,
+                link: `/projects/${payload.projectId}?activeTab=forum`
+              }, {
+                onError: (error) => {
+                  console.error("Error sending notification:", error);
+                }
+            });
+            resolve();
+          },
+          onError: (error) => {
+            console.error("Error during forum answer creation:", error);
+            reject(error);
+          }
+        });
+      });
+    };
+
     return {
       isCreatingQuestion,
+      isCreatingAnswer,
+      createForumAnswer,
       createForumQuestion,
     };
   };
