@@ -188,7 +188,7 @@ createUserLog: publicProcedure
         userId: z.string(),
         date: z.date(),
         registrationDate: z.union([z.date(), z.null()]),
-        lastLogin: z.date(),
+        lastLogin: z.union([z.date(), z.null()]),
         lastProjectCreated: z.union([z.date(), z.null()]),
         lastTaskEdited: z.union([z.date(), z.null()]),
         lastLikedEntry: z.union([z.date(), z.null()]),
