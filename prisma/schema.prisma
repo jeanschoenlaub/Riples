@@ -2,10 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator erd {
-  provider = "prisma-erd-generator"
-  output = "./ERD.svg"
-}
+//generator erd {
+  //provider = "prisma-erd-generator"
+  //output = "./ERD.svg"
+//}
 
 
 datasource db {
@@ -205,6 +205,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  isBot         Boolean @default(false)
 
   //My User Fields
   username            String? @unique @db.VarChar(255)
@@ -322,7 +323,7 @@ model Like {
 
 model ForumQuestion {
     id          String   @id @default(cuid())
-    content     String
+    content     String   @db.VarChar(255)@default("")
     createdAt   DateTime @default(now())
 
     //Relations
@@ -335,7 +336,7 @@ model ForumQuestion {
 
 model ForumAnswers {
     id          String   @id @default(cuid())
-    content     String
+    content     String   @db.VarChar(10000)@default("")
     createdAt   DateTime @default(now())
 
     //Relations
@@ -348,7 +349,7 @@ model ForumAnswers {
 model AIUsageLog {
     id          String   @id @default(cuid())
     features    String
-    userId      String
+    userId      String 
     timeStamp   DateTime @default(now())
 
     user        User   @relation(fields: [userId], references: [id])

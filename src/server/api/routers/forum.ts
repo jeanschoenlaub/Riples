@@ -30,7 +30,7 @@ export const forumRouter = createTRPCRouter({
     createForumQuestion: protectedProcedure
         .input(z.object({
         projectId: z.string(),
-        content: z.string().min(1), // Ensuring that the content is not empty
+        content: z.string().min(5, { message: "Question must be 5 or more characters long" }).max(255, { message: "Question must be 255 or less characters long" }),
         // Add any other fields that might be required for creating a forum question
         }))
         .mutation(async ({ ctx, input }) => {
@@ -53,8 +53,7 @@ export const forumRouter = createTRPCRouter({
     createForumAnswer: protectedProcedure
     .input(z.object({
         questionId: z.string(),
-        content: z.string().min(1), // Ensuring that the content is not empty
-        // Add any other fields that might be required for creating an answer
+        content: z.string().min(5, { message: "Answer must be 5 or more characters long" }).max(10000, { message: "Answer must be 10000 or less characters long" }),
     }))
     .mutation(async ({ ctx, input }) => {
         // Check if the user is authenticated
