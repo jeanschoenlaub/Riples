@@ -13,7 +13,7 @@ export const adminStatsRouter = createTRPCRouter({
         const inputDate = new Date(input.selectedDate);
         inputDate.setHours(0, 0, 0, 0);
   
-        let statsFor30Days = [];
+        const statsFor30Days = [];
   
         for (let day = 0; day < 30; day++) {
           const targetDate = new Date(inputDate);

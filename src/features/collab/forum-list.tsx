@@ -70,8 +70,8 @@ export const Forum: React.FC<ForumProps> = ({ project, isMember, isProjectLead})
   if (isLoading) return <div className="flex justify-center"><LoadingRiplesLogo isLoading={isLoading}/></div>;
   if (isError || !forumData) return <p>Error loading tasks.</p>;
 
-  let headers = isMobile ? ["Question", "Details"] : ["Replies", "Question", "Posted By"];
-  let columnWidths = isMobile ? ["50%", "50%"] : ["10%", "50%", "20%"];
+  const headers = isMobile ? ["Question", "Details"] : ["Replies", "Question", "Posted By"];
+  const columnWidths = isMobile ? ["50%", "50%"] : ["10%", "50%", "20%"];
 
   const handleArrowClick = (questionId: string) => {
     if (displayAnswers === questionId) {

@@ -46,7 +46,7 @@ export const ForumAnswersComponent: React.FC<ForumAnswersComponentProps> = ({ qu
     // Generate the payload for creating an answer
     const generateCreateAnswerPayload = (): CreateForumAnswerPayload => {
         return {
-        questionId: questionId!,
+        questionId: questionId,
         content: answerInput,
         authorId: session!.user.id, // Replace `user.id` with the actual author's user ID
         projectId: projectId, // Replace `project.id` with the actual project ID

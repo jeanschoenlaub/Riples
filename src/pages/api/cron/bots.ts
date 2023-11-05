@@ -25,8 +25,13 @@ export async function botActivity() {
 
   // Perform bot actions
   if (randomBotUser) {
-    console.log(randomBotUser)
-    forumBotHelper(randomBotUser.id)
+    forumBotHelper(randomBotUser.id).then(() => {
+        // Handle the resolved promise if necessary.
+      })
+      .catch((error) => {
+        // Handle any errors that occur during the execution of the promise.
+        console.error(error);
+      });
   }
 }
 
@@ -87,7 +92,7 @@ async function forumBotHelper(botUserId: string) {
   
 function processRawDataForForumAnswer(rawData: OpenAI.Chat.Completions.ChatCompletion.Choice[]): string {
     let responseText = '';
-    if (rawData && rawData[0] &&rawData.length > 0) {
+    if (rawData?.[0] &&rawData.length > 0) {
       const messageContent = rawData[0].message.content;
       if (messageContent) {
         responseText = messageContent.trim();
