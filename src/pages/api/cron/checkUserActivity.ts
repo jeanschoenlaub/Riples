@@ -26,55 +26,58 @@ export default async function checkUserActivity(req: NextApiRequest, res: NextAp
         const userId = user.id;
         const lastLogin = await getLastLogin(userId);
 
-        // Get user's registrationDate from emailVerified field to split into cohorts
-        const registrationDate = user.emailVerified;
+        if (!user.isBot) { // we don't log i
+
+            // Get user's registrationDate from emailVerified field to split into cohorts
+            const registrationDate = user.emailVerified;
+            
+            // Fetch onBoardingCompleted date
+            const userOnboarding = await prisma.userOnboarding.findFirst({
+                where: {
+                    userId: userId,
+                    onBoardingFinished: true,
+                },
+                select: {
+                    updatedAt: true
+                }
+            });
+            const onBoardingCompletedDate = userOnboarding?.updatedAt ?? null;
+
+            // Check for project creation within the last day
+            const [recentProject, recentTaskUpdate, recentLikedEntry, recentRipleShared] = await Promise.all([
+                prisma.project.findFirst({
+                    where: { authorID: userId},
+                    orderBy: { createdAt: 'desc' }
+                }),
+                prisma.tasks.findFirst({
+                    where: { createdById: userId },
+                    orderBy: { editedAt: 'desc' }
+                }),
+                prisma.like.findFirst({
+                    where: { userId: userId },
+                    orderBy: { createdAt: 'desc' }
+                }),
+                prisma.riple.findFirst({
+                    where: { authorID: userId },
+                    orderBy: { createdAt: 'desc' }
+                })
+            ]);
+
         
-        // Fetch onBoardingCompleted date
-        const userOnboarding = await prisma.userOnboarding.findFirst({
-            where: {
-                userId: userId,
-                onBoardingFinished: true
-            },
-            select: {
-                updatedAt: true
-            }
-        });
-        const onBoardingCompletedDate = userOnboarding?.updatedAt ?? null;
-
-        // Check for project creation within the last day
-        const [recentProject, recentTaskUpdate, recentLikedEntry, recentRipleShared] = await Promise.all([
-            prisma.project.findFirst({
-                where: { authorID: userId},
-                orderBy: { createdAt: 'desc' }
-            }),
-            prisma.tasks.findFirst({
-                where: { createdById: userId },
-                orderBy: { editedAt: 'desc' }
-            }),
-            prisma.like.findFirst({
-                where: { userId: userId },
-                orderBy: { createdAt: 'desc' }
-            }),
-            prisma.riple.findFirst({
-                where: { authorID: userId },
-                orderBy: { createdAt: 'desc' }
-            })
-        ]);
-
-    
-        // Create UserLog entry
-        const createUserLogInput = {
-            userId,
-            date: new Date(),
-            registrationDate: registrationDate,
-            lastLogin: lastLogin!,
-            lastProjectCreated: recentProject?.createdAt ?? null,
-            lastTaskEdited: recentTaskUpdate?.editedAt ?? null,
-            lastLikedEntry: recentLikedEntry?.createdAt ?? null,
-            lastRiple: recentRipleShared?.createdAt ?? null,
-            onBoardingCompleted: onBoardingCompletedDate,
-        };
-        await caller.users.createUserLog(createUserLogInput);
+            // Create UserLog entry
+            const createUserLogInput = {
+                userId,
+                date: new Date(),
+                registrationDate: registrationDate,
+                lastLogin: lastLogin ?? new Date(),
+                lastProjectCreated: recentProject?.createdAt ?? null,
+                lastTaskEdited: recentTaskUpdate?.editedAt ?? null,
+                lastLikedEntry: recentLikedEntry?.createdAt ?? null,
+                lastRiple: recentRipleShared?.createdAt ?? null,
+                onBoardingCompleted: onBoardingCompletedDate,
+            };
+            await caller.users.createUserLog(createUserLogInput);
+        }
     }
     res.status(200).json({ message: 'User activity check completed.' });
   } catch (cause) {
@@ -105,11 +108,12 @@ async function getLastLogin(userId: string): Promise<Date | null> {
   });
 
   if (sessions.length > 0) {
+      // TO-DO understand better the logic of last login and next-auth's sessions 
       // Subtract 31 days from the expires date to get the login date
       const loginDate = new Date(sessions[0]!.expires.getTime() - (31 * 24 * 60 * 60 * 1000));
       return loginDate;
   } else {
-      return null;
+      return new Date('1970-01-01T00:00:00Z'); // don't really understand where sessionn is empty or what to do about it 
   }
 }
 
