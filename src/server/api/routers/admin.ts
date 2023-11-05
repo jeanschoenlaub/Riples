@@ -21,9 +21,6 @@ export const adminStatsRouter = createTRPCRouter({
           const nextDay = new Date(targetDate);
           nextDay.setDate(targetDate.getDate() + 1);
   
-          // Fetch all users as a base for percentage calculations
-          const totalUsers = await prisma.user.count();
-  
           // Fetch the logs for the last day, week, and month
           const oneDayAgo = new Date(targetDate.getTime() - 864e5);
           const oneWeekAgo = new Date(targetDate.getTime() - 7 * 864e5);
@@ -37,16 +34,16 @@ export const adminStatsRouter = createTRPCRouter({
               },
             },
           });
-
-          console.log(logsForPeriod)
   
           // Filter the logs for specific statistics
+          const totalUsers = logsForPeriod.length;
           const activeLastDay = logsForPeriod.filter(log => log.lastLogin && log.lastLogin >= oneDayAgo).length;
           const activeLastWeek = logsForPeriod.filter(log => log.lastLogin && log.lastLogin >= oneWeekAgo).length;
           const activeLastMonth = logsForPeriod.filter(log => log.lastLogin && log.lastLogin >= oneMonthAgo).length;
           const projectCreatedLastWeek = logsForPeriod.filter(log => log.lastProjectCreated && log.lastProjectCreated >= oneWeekAgo).length;
           const taskEditedLastWeek = logsForPeriod.filter(log => log.lastTaskEdited && log.lastTaskEdited >= oneWeekAgo).length;
           const ripleLastWeek = logsForPeriod.filter(log => log.lastRiple && log.lastRiple >= oneWeekAgo).length;
+  ;
   
           // Calculate percentage (utility function)
           const calcPercent = (partialValue: number, totalValue: number) => {

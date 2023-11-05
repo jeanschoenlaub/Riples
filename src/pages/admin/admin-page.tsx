@@ -54,13 +54,13 @@ return (
       <thead className="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
           <th scope="col" className="px-6 py-3">Date</th>
-          <th scope="col" className="px-6 py-3">Total Number Of Registered Users</th>
-          <th scope="col" className="px-6 py-3">Percent Active Last Day</th>
-          <th scope="col" className="px-6 py-3">Percent Active Last Week</th>
-          <th scope="col" className="px-6 py-3">Percent Active Last Month</th>
-          <th scope="col" className="px-6 py-3">Percent Created Project Last Week</th>
-          <th scope="col" className="px-6 py-3">Percent Task Edited Last Week</th>
-          <th scope="col" className="px-6 py-3">Percent Riple Last Week</th>
+          <th scope="col" className="px-6 py-3">Registered Users</th>
+          <th scope="col" className="px-6 py-3">DAU</th>
+          <th scope="col" className="px-6 py-3">WAU</th>
+          <th scope="col" className="px-6 py-3">MAU</th>
+          <th scope="col" className="px-6 py-3">Project Created Last Week</th>
+          <th scope="col" className="px-6 py-3">Task Edited Last Week</th>
+          <th scope="col" className="px-6 py-3">Riple Last Week</th>
         </tr>
       </thead>
       <tbody>
