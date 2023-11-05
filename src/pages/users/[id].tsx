@@ -10,11 +10,11 @@ import superjson from 'superjson';
 import { getSession, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { Tabs, ProfileImage , Tooltip } from '~/components';
-import { UserAbout } from '~/features/userprofile/user-info';
-import { UserStats } from '~/features/userprofile/user-stats';
 import { useRouter } from 'next/router';
-import { UserPortofolio } from '~/features/userprofile/user-portofolio';
 import { FocusLayout } from '~/layout/focus-layout';
+import { UserPortofolio } from '~/features/page-user/user-portofolio';
+import { UserAbout } from '~/features/page-user/user-info';
+import { UserStats } from '~/features/page-user/user-stats';
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,

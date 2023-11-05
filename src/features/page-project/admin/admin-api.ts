@@ -1,6 +1,6 @@
 import { api } from "~/utils/api";
 import { handleMutationError } from "~/utils/error-handling";
-import type { ApproveUserPayload, DeleteProjectPayload, EditProjectAdminPayload, RefuseUserPayload } from "./admintype";
+import type { ApproveUserPayload, DeleteProjectPayload, EditProjectAdminPayload, RefuseUserPayload } from "./admin-type";
 
 export const useProjectAdminMutation = () => {
     const apiContext = api.useContext();

@@ -3,8 +3,8 @@ generator client {
 }
 
 //generator erd {
-//  provider = "prisma-erd-generator"
-//  output = "./ERD.svg"
+  //provider = "prisma-erd-generator"
+  //output = "./ERD.svg"
 //}
 
 
@@ -40,6 +40,7 @@ model Project {
   goals           Goals[] 
   followers       ProjectFollowers[] 
   tags            ProjectTags[]
+  forumQuestion   ForumQuestion[]
 
   @@index([authorID])
 }
@@ -71,6 +72,7 @@ model Tasks {
   createdById  String  //userId
   createdAt    DateTime @default(now())
   editedAt     DateTime @default(now())
+  openSource   Boolean  @default(false)
 
   // Relations
   ownerId      String  @default("")
@@ -203,6 +205,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  isBot         Boolean @default(false)
 
   //My User Fields
   username            String? @unique @db.VarChar(255)
@@ -223,6 +226,8 @@ model User {
   notifications       Notification[]
   comments            Comment[]
   like                Like[]
+  forumQuestion       ForumQuestion[]
+  forumAnswers        ForumAnswers[]
   AIUsageLog          AIUsageLog[]
 }
 
@@ -316,10 +321,35 @@ model Like {
     @@unique([ripleId, userId])
 }
 
+model ForumQuestion {
+    id          String   @id @default(cuid())
+    content     String   @db.VarChar(255)@default("")
+    createdAt   DateTime @default(now())
+
+    //Relations
+    projectId   String
+    project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    userId      String
+    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    answers     ForumAnswers[]
+}
+
+model ForumAnswers {
+    id          String   @id @default(cuid())
+    content     String   @db.VarChar(10000)@default("")
+    createdAt   DateTime @default(now())
+
+    //Relations
+    questionId  String
+    question    ForumQuestion @relation(fields: [questionId], references: [id],  onDelete: Cascade)
+    userId      String
+    user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model AIUsageLog {
     id          String   @id @default(cuid())
     features    String
-    userId      String
+    userId      String 
     timeStamp   DateTime @default(now())
 
     user        User   @relation(fields: [userId], references: [id])

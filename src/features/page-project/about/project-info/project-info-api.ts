@@ -1,6 +1,6 @@
 import { api } from "~/utils/api";
 import { handleMutationError } from "~/utils/error-handling";
-import type { EditProjectPayload, ProjectMemberMutationPayload } from "./projectinfotype";
+import type { EditProjectPayload, ProjectMemberMutationPayload } from "./project-info-type";
 
 export const useProjectInfoMutation = () => {
     const apiContext = api.useContext();

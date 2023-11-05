@@ -3,8 +3,8 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import router from 'next/router';
 import { ProfileImage, StyledTable, Modal, LoadingSpinner, EditSVG, MultiUserSVG, PrivateSVG, PublicSVG, SingleUserSVG } from '~/components';
-import { useProjectAdminMutation, useUserStatusMutation } from './adminapi';
-import type { AdminTabProps, ApproveUserPayload, DeleteProjectPayload, EditProjectAdminPayload, RefuseUserPayload } from './admintype';
+import { useProjectAdminMutation, useUserStatusMutation } from './admin-api';
+import type { AdminTabProps, ApproveUserPayload, DeleteProjectPayload, EditProjectAdminPayload, RefuseUserPayload } from './admin-type';
 
 export const AdminTab: React.FC<AdminTabProps> = ({ project, members, isProjectLead }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);

@@ -1,8 +1,8 @@
 import React from 'react';
 import dayjs from 'dayjs';
-import { ProjectAboutGoal } from './goals/goals';
-import { ProjectAboutInfo } from './projectinfo/projectinfo';
 import type { RouterOutputs } from '~/utils/api';
+import { ProjectAboutInfo } from './project-info/project-info';
+import { ProjectAboutGoal } from '~/features/goals/goals';
 
 export type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"] 
 export interface AboutTabProps {

@@ -4,7 +4,6 @@ import { handleMutationError } from "~/utils/error-handling";
 
 type Follower = {
     userId: string;
-    // Add any other properties of a follower if required
 };
 
 export const useRipleMutation = (followers: Follower[] | undefined) => {

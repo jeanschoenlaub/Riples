@@ -71,7 +71,7 @@ export const openAiRouter = createTRPCRouter({
         } catch (error) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
-                message: "Failed to get tasks from OpenAI ChatGPT.",
+                message: "Failed to get goals from OpenAI ChatGPT.",
             });
         }
     }),
