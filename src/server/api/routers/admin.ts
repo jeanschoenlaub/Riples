@@ -37,6 +37,8 @@ export const adminStatsRouter = createTRPCRouter({
               },
             },
           });
+
+          console.log(logsForPeriod)
   
           // Filter the logs for specific statistics
           const activeLastDay = logsForPeriod.filter(log => log.lastLogin && log.lastLogin >= oneDayAgo).length;

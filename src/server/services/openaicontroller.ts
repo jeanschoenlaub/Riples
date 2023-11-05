@@ -58,17 +58,3 @@ suggest a 3 sentence straightforward post to share the project that you have jus
 
     return chatCompletion.choices;
 }
-
-export const generateForumBotAnswer= async (questionTitle: string) => {
-    const prompt = `
-    Provide a helpful response to the forum question titled: "${questionTitle}"
-    `;
-
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY_BOT });
-    const chatCompletion = await openai.chat.completions.create({
-        messages: [{ role: 'user', content: prompt }],
-        model: 'gpt-3.5-turbo',
-    });
-
-    return chatCompletion.choices;
-}
