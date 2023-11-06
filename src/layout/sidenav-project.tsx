@@ -4,6 +4,7 @@ import { LoadingPage } from "~/components";
 import { ProjectCard } from "../features/cards/project-card";
 import { useSession } from "next-auth/react";
 import styles from './layout.module.css';
+import Link from "next/link";
 
 interface SideNavProjectProps {
   onClose?: () => void; // `onClose` is an optional prop, which if provided, should be a function returning void.
@@ -48,7 +49,7 @@ export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
     
 
     return(
-      
+      <>
       <div id="project-side-bar-container" className={`${styles.loadingContainer} flex flex-col h-3/4 md:h-full items-center gap-y-4 border overflow-hidden  bg-white border-slate-300 rounded-lg mx-2 md:mx-2 p-4 mb-5 shadow-md" style={{ backdropFilter: 'blur(10px)' }}`}> 
         {/* Toggle Following / Working */}
         <div id="project-side-bar-container-internal" className="flex flex-col items-center justify-center">
@@ -101,7 +102,12 @@ export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
         </div>
         
       </div>
-      
+      <div className="space-x-4 px-10 items-center">
+          <Link href="/about/riples" className="text-sm text-blue-500 hover:underline">About</Link> 
+          <Link href="/about/privacy-policy" className="text-sm text-blue-500 hover:underline">Privacy Policy</Link>
+          <Link href="/about/terms-of-service" className="text-sm text-blue-500 hover:underline">Terms of Service</Link>
+          <Link href="/help" className="text-sm text-blue-500 hover:underline">Help</Link>
+      </div>
+    </>  
     )
-    
-  }
+}
