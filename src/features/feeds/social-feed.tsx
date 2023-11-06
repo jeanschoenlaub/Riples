@@ -87,7 +87,7 @@ export const SocialFeed = () => {
             <span className="text-lg flex justify-center items-center space-x-4 w-auto">
                 {offset !== 0 && (
                     <button 
-                        onClick={() => loadPreviousRiples}
+                        onClick={() => loadPreviousRiples()}
                         className="bg-blue-500 text-white text-lg rounded px-4 py-1 flex items-center justify-center w-auto"
                         disabled={offset === 0}
                     >
@@ -104,12 +104,11 @@ export const SocialFeed = () => {
             <span className="text-lg flex justify-center items-center space-x-4 w-auto">
                 {hasMoreRiples && (
                     <button 
-                        onClick={() => loadNextRiples}
+                        onClick={() => loadNextRiples()}
                         className="bg-blue-500 text-white text-lg rounded px-4 py-1 flex items-center justify-center w-auto"
                     >
                         <span className='flex items-center'>
                             Next 10
-                            {/* Assuming you've imported ArrowRightSVG at the top */}
                             <ArrowRightSVG width="4" height="4" marginLeft="2" />
                         </span>
                     </button>

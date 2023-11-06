@@ -43,7 +43,6 @@ export const adminStatsRouter = createTRPCRouter({
           const projectCreatedLastWeek = logsForPeriod.filter(log => log.lastProjectCreated && log.lastProjectCreated >= oneWeekAgo).length;
           const taskEditedLastWeek = logsForPeriod.filter(log => log.lastTaskEdited && log.lastTaskEdited >= oneWeekAgo).length;
           const ripleLastWeek = logsForPeriod.filter(log => log.lastRiple && log.lastRiple >= oneWeekAgo).length;
-  ;
   
           // Calculate percentage (utility function)
           const calcPercent = (partialValue: number, totalValue: number) => {
