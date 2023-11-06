@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { GlobalNavBar } from '~/features/navbar/navbar';
 import { SideNavProject } from './sidenav-project';
 import styles from './layout.module.css';
+import Link from 'next/link';
 
 interface FeedLayoutProps {
   children: ReactNode;
@@ -46,6 +47,12 @@ export const FeedLayout: React.FC<FeedLayoutProps> = ({
         <div id="main-body-container" className="flex justify-center w-full bg-sky-50">
           <div id="project-nav-container" className={`${styles.projectNavContainer} hidden md:flex flex-col w-1/4 p-4`}>
             <SideNavProject></SideNavProject>
+            <div className="space-x-4 px-10 items-center">
+                    <Link href="/about/riples" className="text-sm text-blue-500 hover:underline">About</Link> 
+                    <Link href="/about/privacy-policy" className="text-sm text-blue-500 hover:underline">Privacy Policy</Link>
+                    <Link href="/about/terms-of-service" className="text-sm text-blue-500 hover:underline">Terms of Service</Link>
+                    <Link href="/help" className="text-sm text-blue-500 hover:underline">Help</Link>
+              </div>
           </div>
 
          <div id="feed-container" className={`${styles.feedContainer} flex flex-col w-full md:w-1/2 g-4 p-4`}>

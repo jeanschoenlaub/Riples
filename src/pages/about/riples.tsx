@@ -109,7 +109,7 @@ export default function AboutRiples() {
                 </div>
             </div>
           </div>
-      <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
+       <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
       </FullPageLayout>
     </>
   );
