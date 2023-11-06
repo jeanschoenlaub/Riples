@@ -2,6 +2,8 @@ import { RouterOutputs, api } from "~/utils/api";
 import { ArrowLeftSVG, ArrowRightSVG, LoadingPage, Tooltip } from "~/components";
 import { RipleCard } from "~/features/cards/riple-card";
 import { useState } from "react";
+import React from "react";
+import { ProjectFollowCarousel } from "../cards/project-follow-carroussel";
 
 
 type FullRiple = RouterOutputs["riples"]["getAll"][number]
@@ -15,6 +17,8 @@ export const SocialFeed = () => {
         limit: 10,
         offset: offset,
     });
+
+    const { data: publicProjectData } = api.projects.getAll.useQuery()
 
     const loadNextRiples = async () => {
         setOffset(prevOffset => prevOffset + 10);
@@ -41,7 +45,7 @@ export const SocialFeed = () => {
 
     if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)
   
-    if (!data) return(<div> Something went wrong</div>)
+    if (!data || !publicProjectData) return(<div> Something went wrong</div>)
 
   
     return ( 
@@ -77,9 +81,12 @@ export const SocialFeed = () => {
         </div>
 
         <div id="socialfeed" className="space-y-4">
-          {data?.map((fullRiple) => (
-            <RipleCard key={fullRiple.riple.id} {...fullRiple} ></RipleCard>
-          ))}
+          {data?.map((fullRiple, index) => (
+          <React.Fragment key={fullRiple.riple.id}>
+            <RipleCard {...fullRiple} />
+            {((index + 1) == 5) && <ProjectFollowCarousel projects={publicProjectData} />} {/* This will insert the carousel after every 5 Riples */}
+          </React.Fragment>
+        ))}
         </div>
 
         <div className="flex justify-between mt-4">
