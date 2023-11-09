@@ -80,7 +80,7 @@ export const SocialFeed = () => {
           </div>
         </div>
 
-        <div id="socialfeed" className="space-y-4">
+        <div id="socialfeed" className="space-y-4 mr-2 ml-2 md:mr-5 md:ml-5">
           {data?.map((fullRiple, index) => (
           <React.Fragment key={fullRiple.riple.id}>
             <RipleCard {...fullRiple} />

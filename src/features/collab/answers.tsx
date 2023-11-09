@@ -6,6 +6,11 @@ import { useSession } from 'next-auth/react';
 import { RouterOutputs, api } from '~/utils/api';
 import { NavBarSignInModal } from '../navbar/signinmodal';
 import { ProfileImage } from '~/components';
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime"
+dayjs.extend(relativeTime);
+
+import Link from 'next/link';
 
 type QuestionType = RouterOutputs["forum"]["getForumQuestionsByProjectId"][number];
 type AnswerType = QuestionType['answers'][number]; // This extracts the type of a single answer
@@ -67,16 +72,28 @@ export const ForumAnswersComponent: React.FC<ForumAnswersComponentProps> = ({ qu
 
                 {/* Answer user info */}
                 <td className="px-6 py-4">
-                    <div className="flex items-center space-x-3">
-                        <ProfileImage
-                            username={answer.user.username}
-                            email={answer.user.email}
-                            image={answer.user.image}
-                            name={answer.user.name}
-                            size={32}
-                        />
-                        <div className="text-sm font-medium text-gray-900">{answer.user.username}</div>
-                        {/* Here you can add more user details like the post time etc. */}
+                    <div className="space-y-1">
+                        <div className="flex items-center text-sm text-gray-500">
+                            <span className="ml-1 flex items-center text-black font-normal  ">
+                                <div id="project-lead-profile-image" className="flex items-center ">
+                                    <Link href={`/users/${answer.user.id}`}>
+                                            <ProfileImage
+                                                username={answer.user.username}
+                                                email={answer.user.email}
+                                                image={answer.user.image}
+                                                name={answer.user.name}
+                                                size={32}
+                                            />
+                                        </Link>
+                                </div>
+                                <Link href={`/users/${answer.user.id}`} className="ml-2">
+                                        {answer.user.username}
+                                </Link>
+                            </span>
+                        </div>
+                    </div>
+                    <div className="flex text-sm text-gray-500">
+                          <span className="mr-1">{`${dayjs(answer.createdAt).fromNow()}`}</span>
                     </div>
                 </td>
             </tr>
