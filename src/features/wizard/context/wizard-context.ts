@@ -7,6 +7,8 @@ type WizardContextType = {
     setWizardName: React.Dispatch<React.SetStateAction<string>>;
     projectTitle: string;
     setProjectTitle: React.Dispatch<React.SetStateAction<string>>;
+    projectId: string;
+    setProjectId: React.Dispatch<React.SetStateAction<string>>;
     projectSummary: string;
     setProjectSummary: React.Dispatch<React.SetStateAction<string>>;
     taskNumber: string;

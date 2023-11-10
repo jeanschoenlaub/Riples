@@ -91,6 +91,7 @@ export default function Project(
     if (isProjectLead){
       if (activeTab == "about"){
         wizardContext.setWizardName("projectabout")
+        wizardContext.setProjectId(projectId)
       }
     return () => {
       wizardContext.setWizardName("")
