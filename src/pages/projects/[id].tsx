@@ -89,13 +89,9 @@ export default function Project(
   const isProjectLead = session?.user.id === projectData?.project.authorID;
   useEffect(() => {
     if (isProjectLead){
-      if (activeTab == "about"){
         wizardContext.setWizardName("projectabout")
+        wizardContext.setProjectId(projectId)
       }
-    return () => {
-      wizardContext.setWizardName("")
-    };
-  }
   }, [wizardContext.setWizardName,isProjectLead, activeTab]);
 
   const isLoading = (ripleLoading || projectLoading || projectMemberLoading || sessionStatus=="loading")

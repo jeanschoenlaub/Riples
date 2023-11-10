@@ -38,7 +38,7 @@ const handler = async (req: NextRequest): Promise<Response> => {
     }
 
     const payload = {
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-3.5-turbo-1106',
         messages: [
             { role: 'system', content: systemMessage },
             { role: 'user', content: prompt },

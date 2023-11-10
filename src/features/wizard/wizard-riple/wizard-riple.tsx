@@ -42,7 +42,6 @@ export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, 
             await streamDataFromServer({
                 prompt: promptContent,
                 systemMessage: "As an experienced content manager, you are to generate a short 3 paragraph post content."
-                // ... add any other parameters you'd like to include
             });
         } catch (error) {
             console.error('Failed to generate content:', error);

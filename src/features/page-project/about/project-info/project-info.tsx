@@ -24,6 +24,7 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
 }) => {
     const [projectSummary, setProjectSummary] = useState(project.project.summary);
     const [projectStatus, setProjectStatus] = useState(project.project.status);
+    const [projectTitle, setProjectTitle] = useState(project.project.title);
 
     const [isEditMode, setIsEditMode] = useState(false);
     const toggleEditMode = () => {
@@ -78,7 +79,7 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
 
     const generateEditPayload = (): EditProjectPayload => ({
         projectId: project.project.id,
-        title: project.project.title,
+        title: projectTitle,
         summary: projectSummary,
         status: projectStatus,
         tags: interestTags,
@@ -135,6 +136,22 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
                 )}
             </div>
 
+            {/* Project Title, only if edit mode */}
+            {isEditMode && 
+                <div className="flex items-center ml-2 mt-3 mb-3 space-x-2">
+                    <label htmlFor="project-title" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="Task Content">
+                        Project Title:
+                    </label>
+                    <input
+                        id="project-title"
+                        value={projectTitle}
+                        onChange={(e) => setProjectTitle(e.target.value)}
+                        className={`flex-grow w-full rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
+                        maxLength={255}
+                        disabled={!isEditMode }
+                    />
+                </div>
+            }
 
             {/* Project Story */}
             <div className="block md:flex items-center ml-2 mr-4 mt-6 mb-3 space-x-2">

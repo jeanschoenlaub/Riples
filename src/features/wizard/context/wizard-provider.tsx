@@ -9,6 +9,7 @@ interface WizardProviderProps {
 export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
     const [showWizard, setShowWizard] = useState(false);
     const [wizardName, setWizardName] = useState("");
+    const [projectId, setProjectId] = useState("");
     const [projectTitle, setProjectTitle] = useState("");
     const [projectSummary, setProjectSummary] = useState("");
     const [taskNumber, setTaskNumber] = useState("3");
@@ -20,6 +21,7 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
         <WizardContext.Provider value={{ 
             showWizard, setShowWizard, 
             wizardName, setWizardName, 
+            projectId, setProjectId,
             projectTitle, setProjectTitle, 
             projectSummary, setProjectSummary,
             taskNumber, setTaskNumber, 

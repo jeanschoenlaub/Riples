@@ -102,7 +102,7 @@ export const openAiRouter = createTRPCRouter({
                 message: "Failed to get tasks from OpenAI ChatGPT.",
             });
         }
-    }),
+    })
     /*
     generateRipleContent: protectedProcedure
     .input(

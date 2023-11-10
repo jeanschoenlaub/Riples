@@ -1,15 +1,14 @@
 import { useSession } from 'next-auth/react';
-import type { ReactNode } from 'react';
 import styles from '~/styles/WizardWrapper.module.css'; // you can adjust the path based on your folder structure
 import { api } from '~/utils/api';
 import Image from 'next/image';
-import {  WizardTask, WizardOnboarding, WizardProjectAbout,  WizardProjectRiples, WizardChat, useWizard} from '~/features/wizard/';
+import {  WizardTask, WizardOnboarding, WizardAbout,  WizardProjectRiples, WizardChat, useWizard} from '~/features/wizard/';
 
 export const WizardUI: React.FC = () => {
     const { 
         showWizard, setShowWizard, 
         wizardName, 
-        projectTitle, projectSummary, 
+        projectTitle, projectSummary, projectId,
         taskNumber, goalNumber, 
         ripleWizardModalStep, 
         ripleContent 
@@ -46,11 +45,11 @@ export const WizardUI: React.FC = () => {
             {showWizard && (wizardName == "projectabout") && (userQuery.data?.user?.userOnboarding?.onBoardingFinished === true) &&
                 <div id="wizardprojectabout" className={`${styles.floatingWindow}`}>
                     {/* If no logged in users or the logged in user hasn't finished the tutorial, show onboarding Mister Watt */}
-                    <WizardProjectAbout />
+                    <WizardAbout projectId={projectId}/>
                     <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
             }
-            {showWizard && (wizardName == "projectriples") && session &&
+            {showWizard && (wizardName == "projectriples") && (userQuery.data?.user?.userOnboarding?.onBoardingFinished === true) && session &&
                 <div id="wizardprojectriples" className={`${styles.floatingWindow}`}>
                     {/* If no logged in users or the logged in user hasn't finished the tutorial, show onboarding Mister Watt */}
                     <WizardProjectRiples projectTitle={projectTitle} projectSummary={projectSummary} ripleContent={ripleContent} userId={session?.user.id} modalStep={ripleWizardModalStep}/>
