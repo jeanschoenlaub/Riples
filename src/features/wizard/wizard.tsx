@@ -49,7 +49,7 @@ export const WizardUI: React.FC = () => {
                     <button onClick={() => setShowWizard(false)}>Close</button>
                 </div>
             }
-            {showWizard && (wizardName == "projectriples") && session &&
+            {showWizard && (wizardName == "projectriples") && (userQuery.data?.user?.userOnboarding?.onBoardingFinished === true) && session &&
                 <div id="wizardprojectriples" className={`${styles.floatingWindow}`}>
                     {/* If no logged in users or the logged in user hasn't finished the tutorial, show onboarding Mister Watt */}
                     <WizardProjectRiples projectTitle={projectTitle} projectSummary={projectSummary} ripleContent={ripleContent} userId={session?.user.id} modalStep={ripleWizardModalStep}/>

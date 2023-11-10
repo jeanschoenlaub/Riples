@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { api } from "~/utils/api";
 import { useProjectAssistant } from "~/hooks/project-assistant";
 import ReactMarkdown from "react-markdown";
+import { LoadingSpinner } from "~/components";
 
 export type WizardAboutProps = {
     projectId: string;
@@ -15,17 +15,17 @@ export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
     // Function to handle chat
     function handleChat() {
         if (threadId) {
-            fetchData({ prompt: inputValue, projectId: projectId, threadId: threadId });
+            fetchData({ prompt: inputValue, projectId: projectId, existingThreadId: threadId });
         } else {
             fetchData({ prompt: inputValue, projectId: projectId });
         }
-        const updatedChatHistory = chatHistory + `**You:** ${inputValue} \n\n`;
+        const updatedChatHistory = chatHistory + `**You:** ${inputValue}\n\n`;
         setChatHistory(updatedChatHistory);
     }
 
     useEffect (() => { 
         if (chatResponse) {
-            const updatedChatHistory = chatHistory + `\n---**Mr Watt:**  ${chatResponse} \n`;
+            const updatedChatHistory = chatHistory + `---\n\n**Mr. Watt:** ${chatResponse}\n\n`;
             setChatHistory(updatedChatHistory);
         }
     }, [chatResponse])
@@ -56,10 +56,11 @@ export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
                 <button
                     className="bg-blue-500 text-white rounded px-4 mt-2 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200"
                     onClick={() => void handleChat()}
+                    disabled={loading}
                 >
-                    Chat
+                    {loading && <LoadingSpinner size={16}></LoadingSpinner>}Chat
                 </button>
-                {loading && <p>Loading...</p>}
+                
                 {error && <p>Error: {error}</p>}
             </div>
         </div>

@@ -3,7 +3,7 @@ import { useState } from "react";
 interface useProjectAssistantParameters {
     prompt: string;
     projectId: string;
-    threadId?: string; // Optional threadId
+    existingThreadId?: string; // Optional threadId
 }
 
 interface AssistantResponse {
@@ -17,8 +17,9 @@ export const useProjectAssistant = () => {
     const [threadId, setThreadId] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchData = async ({ prompt, projectId, threadId }: useProjectAssistantParameters) => {
-        const bodyData = threadId ? { prompt, projectId, threadId } : { prompt, projectId };
+    const fetchData = async ({ prompt, projectId, existingThreadId }: useProjectAssistantParameters) => {
+        const bodyData = threadId ? { prompt, projectId, existingThreadId } : { prompt, projectId };
+        console.log(bodyData)
         try {
             setLoading(true)
             const response = await fetch('/api/openai/project-assistant', {
@@ -34,7 +35,6 @@ export const useProjectAssistant = () => {
             }
 
             const responseData: AssistantResponse = await response.json();
-            console.log(responseData)
             setData(responseData.response);
             if (responseData.threadId) {
                 setThreadId(responseData.threadId);

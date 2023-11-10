@@ -14,28 +14,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).end('Method Not Allowed');
     }
 
-    const { prompt, projectId, existingthreadId } = req.body;
+    const { prompt, projectId, existingThreadId } = req.body;
     if (!prompt) {
         return res.status(400).end('Bad Request: Prompt is required');
     }
+    console.log(existingThreadId)
 
     try {
         let threadId
-        if (!existingthreadId) {
+        if (!existingThreadId) {
             // Create a new thread using the OpenAI SDK
+            console.log("new thread")
             const thread = await openai.beta.threads.create();
             threadId = thread.id;
         } else { 
-            threadId = existingthreadId
+            console.log("keeping old thread")
+            threadId = existingThreadId
         }
-
-        const prompt_with_params = prompt + " projectId="+ projectId
-        console.log(prompt_with_params + "thread"+threadId)
 
         // Add a message to the thread using the OpenAI SDK
         await openai.beta.threads.messages.create(threadId, {
         role: "user",
-        content: prompt_with_params
+        content: prompt
         });
 
         // Run the Assistant and wait for completion
@@ -52,27 +52,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
 
             if (runResponse.status === "requires_action") {
-                // Handle action calling
-                const toolCalls = runResponse.required_action?.submit_tool_outputs.tool_calls ?? []; 
-                if (toolCalls[0]) {
-                    const toolCallId = toolCalls[0].id;
-                    const functionDetails = toolCalls[0].function;
-                    const functionName = functionDetails.name;
-                    const functionArguments = JSON.parse(functionDetails.arguments);
-                
-                    // Execute the required function 
-                    const result = await executeFunction(functionName, functionArguments);
-                
-                    // Submit tool output
+                // Handle action calling for all tool calls
+                const toolCalls = runResponse.required_action?.submit_tool_outputs.tool_calls ?? [];
+                const toolOutputs = await Promise.all(
+                    toolCalls.map(async (toolCall) => {
+                        const toolCallId = toolCall.id;
+                        const functionDetails = toolCall.function;
+                        const functionName = functionDetails.name;
+                        const functionArguments = JSON.parse(functionDetails.arguments);
+            
+                        // Execute the required function 
+                        const result = await executeFunction(functionName, functionArguments, projectId);
+            
+                        return {
+                            "tool_call_id": toolCallId,
+                            "output": result,
+                        };
+                    })
+                );
+            
+                // Submit tool outputs for all calls
+                if (toolOutputs.length > 0) {
                     await openai.beta.threads.runs.submitToolOutputs(threadId, run.id, {
-                        tool_outputs: [
-                            {
-                                "tool_call_id": toolCallId,
-                                "output": result,
-                            },
-                        ]
+                        tool_outputs: toolOutputs
                     });
-                }        
+                }
             }
             await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for a short period before polling again
         }
@@ -102,19 +106,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-async function executeFunction(functionName:string, functionArguments) {
-    if (functionName === 'getTasksByProjectId') {
-        console.log('Executing getTasksByProjectId with arguments:', functionArguments);
-
+async function executeFunction(functionName:string, functionArguments, projectId:string) {
+    if (functionName === 'getTasks') {
         try {
             // Construct the query parameter
             const queryParams = new URLSearchParams({
                 batch: '1',
-                input: JSON.stringify({"0": { json: functionArguments }})
+                input: JSON.stringify({"0": { json: { projectId: projectId } }})
             }).toString();
 
             const url = `http://localhost:3000/api/trpc/tasks.getTasksByProjectId?${queryParams}`;
-
+            console.log(url)
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
