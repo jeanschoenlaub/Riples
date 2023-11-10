@@ -107,7 +107,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 async function executeFunction(functionName:string, functionArguments, projectId:string) {
-    if (functionName === 'getTasks') {
+    if (functionName === 'createTasks') {
+        try {
+            // Construct the query parameter
+            const queryParams = new URLSearchParams({
+                batch: '1',
+                input: JSON.stringify({"0": { json: { projectId: projectId, title: functionArguments.title, content: functionArguments.content} }})
+            }).toString();
+
+            const url = `http://localhost:3000/api/trpc/tasks.create?${queryParams}`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const tasks = await response.json();
+            return JSON.stringify(tasks); // Return the tasks from your API
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+            throw error;
+        }
+    } else if (functionName === 'getTasks') {
         try {
             // Construct the query parameter
             const queryParams = new URLSearchParams({
@@ -129,13 +155,13 @@ async function executeFunction(functionName:string, functionArguments, projectId
             }
 
             const tasks = await response.json();
-
             return JSON.stringify(tasks); // Return the tasks from your API
         } catch (error) {
             console.error('Error fetching tasks:', error);
             throw error;
         }
-    } else {
+    }
+    else {
         console.error('Unknown function name:', functionName);
         throw new Error(`Function ${functionName} is not implemented`);
     }

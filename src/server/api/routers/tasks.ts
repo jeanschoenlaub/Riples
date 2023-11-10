@@ -74,8 +74,6 @@ export const taskRouter = createTRPCRouter({
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Could not access session id" });
       }
 
-      
-  
       const task = await ctx.prisma.tasks.create({
         data: {
           createdById: createdById,
