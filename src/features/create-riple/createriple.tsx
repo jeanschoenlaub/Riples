@@ -46,8 +46,13 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
         setRipleTitle(''); // Reset content after submitting
         setRipleContent(''); 
         setRipleHTMLContent('');// Reset content after submitting
-        wizardContext.setWizardName("")
         setCurrentStep(Step.RipleText);
+
+        if (wizardContext.wizardName == "projectriples"){
+            wizardContext.setShowWizard(false); //Only force close wizard if we actually opened the createproject modal
+        }
+        wizardContext.setWizardName("projectabout")
+        
         onClose()
     }
 
@@ -73,8 +78,8 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
             wizardContext.setShowWizard(true)
         }
         if (!showModal){ //onClose
-            wizardContext.setWizardName("")
-            wizardContext.setShowWizard(false)
+            //wizardContext.setWizardName("")
+            //wizardContext.setShowWizard(false)
             resetForm();
         }
     },[showModal])

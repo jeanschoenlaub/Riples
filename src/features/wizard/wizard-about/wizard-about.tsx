@@ -1,28 +1,34 @@
 import { useEffect, useState } from "react";
-import { WizardChallenge } from "./wizard-challenge";
-import { useOpenAIProjectWizardMutation } from "./wizard-about-apis";
 import { api } from "~/utils/api";
+import { useProjectAssistant } from "~/hooks/project-assistant";
+import ReactMarkdown from "react-markdown";
 
 export type WizardAboutProps = {
     projectId: string;
 };
-
 export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
-    const [wizardName, setWizardName] = useState("menu");
-    const { data: taskData, isLoading: isLoadingTasks, isError } = api.tasks.getTasksByProjectId.useQuery({ projectId });
-    const { isGeneratingChallenge, generateProjectChallenge } = useOpenAIProjectWizardMutation();
+    const [inputValue, setInputValue] = useState('');
+    const [chatHistory, setChatHistory] = useState<string>('');
 
-    useEffect(() => {
-        if (wizardName === "idea") {
-            console.log("call the idea GPT API");
-        } else if (wizardName === "challenge") {
-            // When the wizard name is set to "challenge", we prepare the payload
-            // and call the function to generate the project challenge.
-            generateProjectChallenge(generateChallengePayload(projectId));
+    const { data: chatResponse, threadId, loading, error, fetchData } = useProjectAssistant();
+
+    // Function to handle chat
+    function handleChat() {
+        if (threadId) {
+            fetchData({ prompt: inputValue, projectId: projectId, threadId: threadId });
+        } else {
+            fetchData({ prompt: inputValue, projectId: projectId });
         }
-    }, [wizardName, projectId, generateProjectChallenge]);
+        const updatedChatHistory = chatHistory + `**You:** ${inputValue} \n\n`;
+        setChatHistory(updatedChatHistory);
+    }
 
-    if (!taskData) return null;
+    useEffect (() => { 
+        if (chatResponse) {
+            const updatedChatHistory = chatHistory + `\n---**Mr Watt:**  ${chatResponse} \n`;
+            setChatHistory(updatedChatHistory);
+        }
+    }, [chatResponse])
 
     return (
         <div>
@@ -31,35 +37,31 @@ export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
                     <span className="text-3xl mr-2">🦸</span>
                     Project Wizard
                 </div>
-                {wizardName === "menu" && (
-                    <>
-                        <div className="mb-4"> Keep going, you are doing great work </div>
-                        <div id="wizard-about-choice-buttons" className="flex flex-col items-center justify-center mb-4">
-                            <button
-                                className="bg-blue-500 w-52 text-white rounded px-4 mt-2 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200"
-                                onClick={() => setWizardName("idea")}>
-                                Brainstorm
-                            </button>
-                            <button
-                                className="bg-blue-500 w-52 text-white rounded px-4 mt-2 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200"
-                                onClick={() => setWizardName("challenge")}>
-                                Daily Challenge
-                            </button>
-                        </div>
-                    </>
+                <div className="mb-4"> Ask me anything about this project </div>
+
+                {chatResponse && chatResponse && (
+                    <div className="prose">
+                       <ReactMarkdown>{chatHistory}</ReactMarkdown>
+                    </div>
                 )}
-                {wizardName === "challenge" && <WizardChallenge setWizardName={setWizardName} />}
+
+
+                <textarea
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    className="w-full p-2 border rounded-md resize-none"
+                    rows={3}
+                ></textarea>
+
+                <button
+                    className="bg-blue-500 text-white rounded px-4 mt-2 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200"
+                    onClick={() => void handleChat()}
+                >
+                    Chat
+                </button>
+                {loading && <p>Loading...</p>}
+                {error && <p>Error: {error}</p>}
             </div>
         </div>
     );
 };
-
-function generateChallengePayload(projectId :string) {
-    // Construct the payload with the required parameters for the assistant
-    const payloadChallenge = {
-        // Assuming the assistant expects a 'project_id' to retrieve the tasks.
-        project_id: projectId
-    };
-
-    return payloadChallenge;
-}
