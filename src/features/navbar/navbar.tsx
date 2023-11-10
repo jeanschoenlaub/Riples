@@ -93,23 +93,6 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
               </div>
               <div className="text-base text-gray-600 ">
                   <SideNavProject onClose={() => setShowSideNav(false)}  />
-                  <div className="flex flex-row items-center justify-center">
-                    <div className="w-8 h-8 mr-4">
-                    <Link href="/about/riples">
-                      <Image 
-                          src="/images/logo_256x256.png" 
-                          alt="Riple logo" 
-                          width={256}
-                          height={256}
-                      />
-                    </Link>
-                    </div>
-                    <div>
-                      <Link href="/about/riples" className="">
-                          {'About Riples'}
-                      </Link>
-                    </div>
-                  </div>
               </div>
           </div>
         </div>

@@ -8,7 +8,6 @@ import Link from 'next/link';
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import { useSession } from 'next-auth/react';
-import { NavBarSignInModal } from '../navbar/signinmodal';
 import { ForumAnswersComponent } from './answers';
 dayjs.extend(relativeTime);
 
@@ -145,7 +144,7 @@ export const Forum: React.FC<ForumProps> = ({ project, isMember, isProjectLead})
                           <div className="flex items-center text-sm text-gray-500">
                               <span className="ml-1 flex items-center text-black font-normal  ">
                                   <div id="project-lead-profile-image" className="flex items-center ">
-                                      <Link href={`/users/${project.authorID}`}>
+                                      <Link href={`/users/${question.user.id}`}>
                                       <ProfileImage username={question.user.username} email={question.user.email} image={question.user.image} name={question.user.name} size={32} />
                                       </Link>
                                   </div>
@@ -154,8 +153,7 @@ export const Forum: React.FC<ForumProps> = ({ project, isMember, isProjectLead})
                                   </Link>
                               </span>
                           </div>
-
-                    </div>
+                      </div>
                       <div className="flex text-sm text-gray-500">
                           <span className="mr-1">{`${dayjs(question.createdAt).fromNow()}`}</span>
                           <span className="flex items-center text-sm text-sky-500 hover:text-sky-700 hover:underline">

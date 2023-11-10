@@ -83,10 +83,10 @@ export const UserMenu = () => {
                 </div>
                 {showDropdown && (
                     <div ref={dropdownRef}  className="absolute right-0 md:right-auto md:left-0 mt-2 w-40 rounded-md shadow-lg z-30 bg-slate-50">
-                        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-                        <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => signOut()}>Sign Out</button>
                         <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectUserPage("about")}>Your Profile</button>
                         <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => redirectHelpPage()}>Help</button>
+                        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+                        <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => signOut()}>Sign Out</button>
                         <button className="w-full text-left p-3 border hover:bg-slate-200" onClick={() => setShowDeleteModal(true)}>Delete Account</button>
                     </div>
                 )}

@@ -2,6 +2,8 @@ import { RouterOutputs, api } from "~/utils/api";
 import { ArrowLeftSVG, ArrowRightSVG, LoadingPage, Tooltip } from "~/components";
 import { RipleCard } from "~/features/cards/riple-card";
 import { useState } from "react";
+import React from "react";
+import { ProjectFollowCarousel } from "../cards/project-follow-carroussel";
 
 
 type FullRiple = RouterOutputs["riples"]["getAll"][number]
@@ -15,6 +17,8 @@ export const SocialFeed = () => {
         limit: 10,
         offset: offset,
     });
+
+    const { data: publicProjectData } = api.projects.getAll.useQuery()
 
     const loadNextRiples = async () => {
         setOffset(prevOffset => prevOffset + 10);
@@ -41,7 +45,7 @@ export const SocialFeed = () => {
 
     if (isLoading) return(<LoadingPage isLoading={isLoading}></LoadingPage>)
   
-    if (!data) return(<div> Something went wrong</div>)
+    if (!data || !publicProjectData) return(<div> Something went wrong</div>)
 
   
     return ( 
@@ -76,10 +80,13 @@ export const SocialFeed = () => {
           </div>
         </div>
 
-        <div id="socialfeed" className="space-y-4">
-          {data?.map((fullRiple) => (
-            <RipleCard key={fullRiple.riple.id} {...fullRiple} ></RipleCard>
-          ))}
+        <div id="socialfeed" className="space-y-4 mr-2 ml-2 md:mr-5 md:ml-5">
+          {data?.map((fullRiple, index) => (
+          <React.Fragment key={fullRiple.riple.id}>
+            <RipleCard {...fullRiple} />
+            {((index + 1) == 5) && <ProjectFollowCarousel projects={publicProjectData} />} {/* This will insert the carousel after every 5 Riples */}
+          </React.Fragment>
+        ))}
         </div>
 
         <div className="flex justify-between mt-4">
@@ -87,7 +94,7 @@ export const SocialFeed = () => {
             <span className="text-lg flex justify-center items-center space-x-4 w-auto">
                 {offset !== 0 && (
                     <button 
-                        onClick={() => loadPreviousRiples}
+                        onClick={() => {void loadPreviousRiples()}}
                         className="bg-blue-500 text-white text-lg rounded px-4 py-1 flex items-center justify-center w-auto"
                         disabled={offset === 0}
                     >
@@ -104,12 +111,11 @@ export const SocialFeed = () => {
             <span className="text-lg flex justify-center items-center space-x-4 w-auto">
                 {hasMoreRiples && (
                     <button 
-                        onClick={() => loadNextRiples}
+                        onClick={() => { void loadNextRiples(); }}
                         className="bg-blue-500 text-white text-lg rounded px-4 py-1 flex items-center justify-center w-auto"
                     >
                         <span className='flex items-center'>
                             Next 10
-                            {/* Assuming you've imported ArrowRightSVG at the top */}
                             <ArrowRightSVG width="4" height="4" marginLeft="2" />
                         </span>
                     </button>

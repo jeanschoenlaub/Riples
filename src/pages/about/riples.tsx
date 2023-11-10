@@ -102,14 +102,9 @@ export default function AboutRiples() {
                       </a>
                     <div className="text-xl text-gray-700 dark:text-gray-300">or Contact us: <a href="mailto:admin@riples.app" className="text-blue-500 hover:underline">admin@riples.app</a></div>
                 </div>
-                <div className="flex space-x-4">
-                    <Link href="/about/privacy-policy" className="text-sm text-blue-500 hover:underline">Privacy Policy</Link>
-                    <Link href="/about/terms-of-service" className="text-sm text-blue-500 hover:underline">Terms of Service</Link>
-                    <Link href="/help" className="text-sm text-blue-500 hover:underline">Help</Link>
-                </div>
             </div>
           </div>
-      <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
+       <NavBarSignInModal showModal={showSignInModal} onClose={() => setShowSignInModal(false)} />
       </FullPageLayout>
     </>
   );
