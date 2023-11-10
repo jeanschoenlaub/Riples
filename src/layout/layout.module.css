@@ -16,7 +16,7 @@
 
 .feedContainer
 {
-    max-height: calc(100vh - 15px); /* Adjust 60px based on your navigation bar's height */
+    max-height: calc(100vh - 50px); /* Adjust 50px based on your navigation bar's height */
     overflow-y: auto;
 }
 
@@ -33,5 +33,5 @@
 .projectNavContainer,
 .futureContent
 {
-    max-height: calc(100vh - 15px); /* Adjust 60px based on your navigation bar's height */
+    max-height: 90vh ; /* Adjust 60px based on your navigation bar's height */
 }

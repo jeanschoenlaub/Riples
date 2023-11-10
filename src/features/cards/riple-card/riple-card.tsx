@@ -77,12 +77,11 @@ export const RipleCard = ({ riple, author }: FullRiple ) => {
         riple.ripleType === "creation" ? "bg-orange-50" :
         riple.ripleType === "goalFinished" ? "bg-green-50" :
         "bg-white";
-    const cardBorderClass = riple.ripleType == "creation" ? "" : "border border-slate-300";
   
     return (
         <>
         <div ref={ripleCardRef} id="riple-card" key={riple.id}>
-            <div className={`${cardBackgroundColor} ${cardBorderClass} rounded-lg flex flex-col mx-2 md:mx-5 p-2 shadow-md`}>
+            <div className={`${cardBackgroundColor} border border-slate-300 rounded-lg flex flex-col p-2 shadow-md`}>
                 <RipleCardHeader riple={riple} author={author} onDelete={onDelete} ></RipleCardHeader>
 
                 <RipleCardBody ripleContent={riple.content} isExpanded={isExpanded} setIsExpanded={setIsExpanded}></RipleCardBody>

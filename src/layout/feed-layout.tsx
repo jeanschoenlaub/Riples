@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { GlobalNavBar } from '~/features/navbar/navbar';
 import { SideNavProject } from './sidenav-project';
 import styles from './layout.module.css';
+import Link from 'next/link';
 
 interface FeedLayoutProps {
   children: ReactNode;

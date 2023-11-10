@@ -37,7 +37,19 @@ export const projRouter = createTRPCRouter({
      }],
      where: {
       projectPrivacy:"public"
-     }
+     },
+     include: { 
+      members: {
+        include: {
+          user: true
+        }
+      },
+      tags: {
+        include: {
+          tag: true
+        }
+      },
+    },
     });
 
     const users = await ctx.prisma.user.findMany({

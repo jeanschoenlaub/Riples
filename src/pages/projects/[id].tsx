@@ -151,9 +151,9 @@ export default function Project(
                 {/* SHOWN IF TASK*/}
                 {activeTab === 'tasks' && <TaskTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} />}
 
-                {/* SHOWN IF COLLAB
+                {/* SHOWN IF COLLAB 
                 {activeTab === 'collab' && <CollabTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} />}
-              */}
+                */}
                 {/* SHOWN IF ADMIN */}
                 {activeTab === 'admin' && <AdminTab project={projectData.project} members={projectMemberData} isProjectLead={isProjectLead} ></AdminTab>}
 
