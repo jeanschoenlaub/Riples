@@ -6,6 +6,8 @@ import { env } from "~/env.mjs";
 
 import EmailProvider from "next-auth/providers/email";
 import type { AdapterUser } from "next-auth/adapters";
+import FacebookProvider from "next-auth/providers/facebook";
+import GoogleProvider from "next-auth/providers/google";
 
 /* For the follow functionality
 import nodemailer from 'nodemailer';
@@ -63,6 +65,14 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       server: env.EMAIL_SERVER,
       from: env.EMAIL_FROM
+    }),
+    FacebookProvider({
+      clientId: env.FACEBOOK_CLIENT_ID,
+      clientSecret: env.FACEBOOK_CLIENT_SECRET
+    }),
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET
     }),
   ],
   session: {

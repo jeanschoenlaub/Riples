@@ -283,7 +283,7 @@ model VerificationToken {
 
 model UserLog {
   id                  String   @id @default(cuid())
-  user                User?     @relation(fields: [userId], references: [id])
+  user                User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId              String   
   date                DateTime @default(now())
   registrationDate    DateTime? 
@@ -306,7 +306,7 @@ model Notification {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Like {
@@ -352,5 +352,5 @@ model AIUsageLog {
     userId      String 
     timeStamp   DateTime @default(now())
 
-    user        User   @relation(fields: [userId], references: [id])
+    user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

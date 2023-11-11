@@ -58,7 +58,7 @@ export const taskRouter = createTRPCRouter({
     });
   }),
 
-  create: protectedProcedure
+  create: publicProcedure
     .input(
       z.object({
         title: z.string().min(5, { message: "Task title must be 5 or more characters long" }).max(255, { message: "Task title must be 255 or less characters long" }),
@@ -69,6 +69,9 @@ export const taskRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const createdById = ctx.session.user?.id;
+      
+
+      console.log("username"+ctx.session.user?.name)
   
       if (!createdById) {
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Could not access session id" });
