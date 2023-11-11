@@ -12,7 +12,6 @@ import superjson from 'superjson';
 //My components
 import { AboutTab } from "~/features/page-project/about/about";
 import { Follow, Tabs, LoadingPage } from "~/components";
-import { CollabTab } from "~/features/page-project/collab";
 import { AdminTab } from "~/features/page-project/admin/admin";
 import { RiplesTab } from "~/features/page-project/riples/riples";
 import { useRouter } from "next/router";
@@ -145,7 +144,7 @@ export default function Project(
 
                 {/* SHOWN IF RIPLES TAB */}
                 {activeTab === 'riples' && (
-                    <RiplesTab ripleData={ripleData} projectId={projectId} projectTitle={projectData.project.title} projectSummary={projectData.project.summary} projectCoverImageId={projectData.project.coverImageId}></RiplesTab>
+                    <RiplesTab ripleData={ripleData} projectId={projectId} projectTitle={projectData.project.title}  projectSummary={projectData.project.summary} projectCoverImageId={projectData.project.coverImageId}  isMember={isMember} isProjectLead={isProjectLead}></RiplesTab>
                 )}
 
                 {/* SHOWN IF TASK*/}

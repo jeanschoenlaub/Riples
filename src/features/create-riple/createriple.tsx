@@ -46,14 +46,8 @@ export const CreateRipleModal: React.FC<CreateRipleModalProps> = ({ showModal, o
         setRipleTitle(''); // Reset content after submitting
         setRipleContent(''); 
         setRipleHTMLContent('');// Reset content after submitting
-        setCurrentStep(Step.RipleText);
-
-        if (wizardContext.wizardName == "projectriples"){
-            wizardContext.setShowWizard(false); //Only force close wizard if we actually opened the createproject modal
-        }
-        wizardContext.setWizardName("projectabout")
-        
-        onClose()
+        setCurrentStep(Step.RipleText);  
+        onClose() //Managing wizard there
     }
 
     const generateCreatePayload = (): CreateRiplePayload => {
