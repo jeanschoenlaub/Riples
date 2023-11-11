@@ -14,14 +14,19 @@ export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
 
     // Function to handle chat
     function handleChat() {
-        if (threadId) {
-            fetchData({ prompt: inputValue, projectId: projectId, existingThreadId: threadId });
-        } else {
-            fetchData({ prompt: inputValue, projectId: projectId });
-        }
-        const updatedChatHistory = chatHistory + `**You:** ${inputValue}\n\n`;
-        setChatHistory(updatedChatHistory);
+        const fetchDataPromise = threadId 
+            ? fetchData({ prompt: inputValue, projectId: projectId, existingThreadId: threadId })
+            : fetchData({ prompt: inputValue, projectId: projectId });
+
+        fetchDataPromise.then(() => {
+            const updatedChatHistory = chatHistory + `**You:** ${inputValue}\n\n`;
+            setChatHistory(updatedChatHistory);
+        }).catch(error => {
+            console.error('Error fetching data:', error);
+            // Handle error
+        });
     }
+
 
     useEffect (() => { 
         if (chatResponse) {

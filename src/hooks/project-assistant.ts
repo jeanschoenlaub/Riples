@@ -34,13 +34,13 @@ export const useProjectAssistant = () => {
                 throw new Error(`Server error: ${response.status}`);
             }
 
-            const responseData: AssistantResponse = await response.json();
+            const responseData: AssistantResponse = await response.json() as AssistantResponse;
             setData(responseData.response);
             if (responseData.threadId) {
                 setThreadId(responseData.threadId);
             }
         } catch (err) {
-            setError(err.message);
+            setError("error sending or receiving data from project assistant");
         } finally {
             setLoading(false);
         }

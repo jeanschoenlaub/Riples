@@ -2,6 +2,8 @@ import type { RouterOutputs } from '~/utils/api';
 import { RipleCard } from '~/features/cards/riple-card';
 import { useState } from 'react';
 import { CreateRipleModal } from '../../create-riple/createriple';
+import { useWizard } from "~/features/wizard";
+import toast from 'react-hot-toast';
 
 type RipleData = RouterOutputs["riples"]["getRipleByProjectId"]
 interface RipleTabProps {
@@ -10,21 +12,35 @@ interface RipleTabProps {
     projectTitle: string,
     projectSummary: string,
     projectCoverImageId: string,
+    isProjectLead: boolean,
+    isMember: boolean,
 }
 
-export const RiplesTab: React.FC<RipleTabProps> = ({ ripleData, projectId, projectTitle, projectSummary, projectCoverImageId  }) => {
+export const RiplesTab: React.FC<RipleTabProps> = ({ ripleData, isProjectLead, isMember, projectId, projectTitle, projectSummary, projectCoverImageId  }) => {
 
 
     const [showCreateRipleModal, setShowCreateRipleModal] = useState(false);
+    const wizardContext = useWizard()
 
     // Function to open the creation modal
     const openCreateRipleModal = () => {
-        setShowCreateRipleModal(true);
+        if (isProjectLead){
+            setShowCreateRipleModal(true);
+        }
+        else{
+            toast.error("Posting only allowed for project Lead")
+        }
     };
 
     // Function to close the creation modal
     const closeCreateRipleModal = () => {
         setShowCreateRipleModal(false);
+        if (wizardContext.wizardName == "projectriples"){
+            wizardContext.setShowWizard(false); //Only force close wizard if we actually opened the createproject modal
+        }
+        if (isProjectLead){
+            wizardContext.setWizardName("projectabout")
+        }
     };
 
 

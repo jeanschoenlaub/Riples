@@ -1,10 +1,26 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI, { ClientOptions } from "openai";
 import { MessageContentText } from 'openai/resources/beta/threads/messages/messages';
+import { RouterOutputs } from '~/utils/api';
 
 const options: ClientOptions = {
   apiKey: process.env.OPENAI_API_KEY, 
 }
+
+type functionArguments= {
+    projectTitle: string;
+    projectContent: string;
+};
+
+interface RequestBody {
+    prompt: string;
+    projectId: string;
+    existingThreadId?: string;
+}
+
+type TaskFromGetAll = RouterOutputs["tasks"]["getTasksByProjectId"]
+
+
 const openai = new OpenAI(options);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -14,11 +30,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).end('Method Not Allowed');
     }
 
-    const { prompt, projectId, existingThreadId } = req.body;
+    const { prompt, projectId, existingThreadId } = req.body as RequestBody;
     if (!prompt) {
         return res.status(400).end('Bad Request: Prompt is required');
     }
-    console.log(existingThreadId)
 
     try {
         let threadId
@@ -59,7 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         const toolCallId = toolCall.id;
                         const functionDetails = toolCall.function;
                         const functionName = functionDetails.name;
-                        const functionArguments = JSON.parse(functionDetails.arguments);
+                        const functionArguments = JSON.parse(functionDetails.arguments) as functionArguments;
             
                         // Execute the required function 
                         const result = await executeFunction(functionName, functionArguments, projectId);
@@ -102,20 +117,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(200).json({ response: messageContent, threadId: threadId });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message || 'An error occurred with the OpenAI service' });
+        res.status(500).json({ error: 'An error occurred with the OpenAI Assistant service' });
     }
 }
 
-async function executeFunction(functionName:string, functionArguments, projectId:string) {
-    if (functionName === 'createTasks') {
+async function executeFunction(functionName:string, functionArguments: functionArguments, projectId:string) {
+    
+    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'; //If vercel deployment take that otherwise localhos
+    
+    if (functionName === 'createTask') {
         try {
-            // Construct the query parameter
+            // Will need to figure out protected routes with AI and sending status and projectId
             const queryParams = new URLSearchParams({
                 batch: '1',
-                input: JSON.stringify({"0": { json: { projectId: projectId, title: functionArguments.title, content: functionArguments.content} }})
+                input: JSON.stringify({"0": { json: { projectId: projectId, title: functionArguments.projectTitle, content: functionArguments.projectContent} }})
             }).toString();
 
-            const url = `http://localhost:3000/api/trpc/tasks.create?${queryParams}`;
+            const url = `${baseUrl}/api/trpc/tasks.create?${queryParams}`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -127,10 +145,9 @@ async function executeFunction(functionName:string, functionArguments, projectId
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const tasks = await response.json();
-            return JSON.stringify(tasks); // Return the tasks from your API
+            return ("success creating task"); // Return the tasks from your API
         } catch (error) {
-            console.error('Error fetching tasks:', error);
+            console.error('Error creating tasks:', error);
             throw error;
         }
     } else if (functionName === 'getTasks') {
@@ -141,8 +158,7 @@ async function executeFunction(functionName:string, functionArguments, projectId
                 input: JSON.stringify({"0": { json: { projectId: projectId } }})
             }).toString();
 
-            const url = `http://localhost:3000/api/trpc/tasks.getTasksByProjectId?${queryParams}`;
-            console.log(url)
+            const url = `${baseUrl}/api/trpc/tasks.getTasksByProjectId?${queryParams}`;
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -154,7 +170,7 @@ async function executeFunction(functionName:string, functionArguments, projectId
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const tasks = await response.json();
+            const tasks = await response.json() as TaskFromGetAll;
             return JSON.stringify(tasks); // Return the tasks from your API
         } catch (error) {
             console.error('Error fetching tasks:', error);
