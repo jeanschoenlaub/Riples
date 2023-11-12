@@ -1,17 +1,17 @@
 import { TRPCError } from '@trpc/server';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI, { ClientOptions } from "openai";
-import { MessageContentText } from 'openai/resources/beta/threads/messages/messages';
 import { appRouter } from '~/server/api/root';
 import { getServerAuthSession } from '~/server/auth';
 import { prisma } from '~/server/db';
+import { Messages, processAssistantMessages } from './utils';
 import { RouterOutputs } from '~/utils/api';
 
 const options: ClientOptions = {
   apiKey: process.env.OPENAI_API_KEY, 
 }
 
-type functionArguments= {
+type FunctionArguments= {
     projectTitle: string;
     projectContent: string;
 };
@@ -22,10 +22,9 @@ interface RequestBody {
     existingThreadId?: string;
 }
 
-type TaskFromGetAll = RouterOutputs["tasks"]["getTasksByProjectId"]
-
-
 const openai = new OpenAI(options);
+
+type Task = RouterOutputs["tasks"]["getTasksByProjectId"]
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const ASSISTANT_ID = 'asst_AuMgUlkhbiRl0vsW4KjWO4bC'; // Your hardcoded assistant ID
@@ -80,28 +79,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             runResponse = await openai.beta.threads.runs.retrieve(threadId, run.id);
             
             if (runResponse.status === "completed") {
-                break; // Exit loop if run is completed
+                break; // Exit loop if run is completed - which can happen after tool call completed 
             }
 
             if (runResponse.status === "requires_action") {
-                // Handle action calling for all tool calls
                 const toolCalls = runResponse.required_action?.submit_tool_outputs.tool_calls ?? [];
-                const toolOutputs = await Promise.all(
-                    toolCalls.map(async (toolCall) => {
-                        const toolCallId = toolCall.id;
-                        const functionDetails = toolCall.function;
-                        const functionName = functionDetails.name;
-                        const functionArguments = JSON.parse(functionDetails.arguments) as functionArguments;
-            
-                        // Execute the required function 
-                        const result = await executeFunction(functionName, functionArguments, projectId, caller);
-            
-                        return {
-                            "tool_call_id": toolCallId,
-                            "output": result,
-                        };
-                    })
-                );
+                
+                const toolOutputs = await handleRequiresAction(toolCalls, projectId, caller);
             
                 // Submit tool outputs for all calls
                 if (toolOutputs.length > 0) {
@@ -110,27 +94,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     });
                 }
             }
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for a short period before polling again
+            await new Promise(resolve => setTimeout(resolve, 500)); // Wait for a short period before polling again
         }
 
         // Retrieve messages after run completion
         const response = await openai.beta.threads.messages.list(threadId);
-        const messages = response.data;
-        let messageContent = ''; // getting only the answer back
-        if (messages) {
-            const assistantMessages = messages.filter(msg => msg.role === 'assistant');
-            if (assistantMessages[0]) {
-                const latestAssistantMessage = assistantMessages[0];
-                messageContent = latestAssistantMessage.content
-                    .filter(content => content.type === 'text')
-                    .map(content => (content as MessageContentText).text.value)
-                    .join('\n');
-            } else {
-                console.log("No response from the assistant found.");
-            }
-        } else {
-            console.log("No messages found in the response.");
-        }
+        const messages: Messages = response.data;
+        const messageContent = processAssistantMessages(messages);
         res.status(200).json({ response: messageContent, threadId: threadId });
     } catch (error) {
         console.error(error);
@@ -138,12 +108,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-async function executeFunction(functionName:string, functionArguments: functionArguments, projectId:string, caller:any) {
+async function handleRequiresAction(toolCalls: OpenAI.Beta.Threads.Runs.RequiredActionFunctionToolCall[], projectId: string, caller:any) {
+    const toolOutputs = await Promise.all(
+        toolCalls.map(async (toolCall) => {
+            const toolCallId = toolCall.id;
+            const functionDetails = toolCall.function;
+            const functionName = functionDetails.name;
+            const functionArguments = JSON.parse(functionDetails.arguments) as FunctionArguments
+            
+            const result = await executeFunction(functionName, functionArguments, projectId, caller);
+            
+            return {
+                "tool_call_id": toolCallId,
+                "output": result,
+            };
+        })
+    );
+
+    return toolOutputs;
+}
+
+
+async function executeFunction(functionName:string, functionArguments: FunctionArguments, projectId:string, caller:any) {
 
     if (functionName === 'createTask') {
         try {
             // Use the tRPC caller to call the procedure directly
-            const result = await caller.tasks.create({
+            await caller.tasks.create({
               title: functionArguments.projectTitle,
               content: functionArguments.projectContent,
               projectId: projectId,
@@ -156,7 +147,7 @@ async function executeFunction(functionName:string, functionArguments: functionA
         }
     } else if (functionName === 'getTasks') {
         try {
-            const result = await caller.tasks.getTasksByProjectId({
+            const result: Task = await caller.tasks.getTasksByProjectId({
                 projectId: projectId,
             });
             return JSON.stringify(result); 

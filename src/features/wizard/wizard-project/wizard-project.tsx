@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useProjectAssistant } from "~/hooks/project-assistant";
+import { useProjectAssistant } from "~/hooks/use-project-assistant";
 import ReactMarkdown from "react-markdown";
 import { LoadingSpinner } from "~/components";
 
