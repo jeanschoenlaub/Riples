@@ -69,6 +69,9 @@ export const taskRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const createdById = ctx.session.user?.id;
+      
+
+      console.log("username"+ctx.session.user?.name)
   
       if (!createdById) {
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Could not access session id" });

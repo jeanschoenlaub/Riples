@@ -1,5 +1,4 @@
 import type { RouterOutputs } from '~/utils/api';
-import { CollabTaskList } from '../collab/collab-task-list';
 import { Forum } from '../collab/forum-list';
 
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"]

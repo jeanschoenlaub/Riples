@@ -7,28 +7,35 @@ import { z } from "zod";
 const server = z.object({
   DATABASE_URL: z.string().url(),
   NODE_ENV: z.enum(["development", "test", "production"]),
-  NEXTAUTH_SECRET:
-    process.env.NODE_ENV === "production"
-      ? z.string().min(1)
-      : z.string().min(1).optional(),
-  NEXTAUTH_URL: z.preprocess(
-    // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
-    // Since NextAuth.js automatically uses the VERCEL_URL if present.
-    (str) => process.env.VERCEL_URL ?? str,
-    // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-    process.env.VERCEL ? z.string().min(1) : z.string().url(),
-  ),
-  // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
-  //DISCORD_CLIENT_ID: z.string(),
-  //DISCORD_CLIENT_SECRET: z.string(),
+  
+
   NEXT_PUBLIC_GOOGLE_ANALYTICS: z.string(),
-  EMAIL_SERVER: z.string(),
   OPENAI_API_KEY: z.string(),
   OPENAI_API_KEY_BOTS: z.string(),
   EMAIL_FROM: z.string(),
   NEXT_PUBLIC_S3_PUBLIC_IMAGES_BUCKET: z.string(),
   S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_ID: z.string(),
   S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_SECRET: z.string(),
+  
+  //AUTH
+  NEXTAUTH_SECRET:
+    process.env.NODE_ENV === "production"
+      ? z.string().min(1)
+      : z.string().min(1).optional(),
+  NEXTAUTH_URL: z.preprocess(
+    // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL Since NextAuth.js automatically uses the VERCEL_URL if present.
+    (str) => process.env.VERCEL_URL ?? str,
+    process.env.VERCEL ? z.string().min(1) : z.string().url(), // VERCEL_URL doesn't include `https` so it cant be validated as a URL
+  ),
+  EMAIL_SERVER: z.string(),
+  FACEBOOK_CLIENT_ID: z.string(),
+  FACEBOOK_CLIENT_SECRET: z.string(),
+  GOOGLE_CLIENT_ID: z.string(),
+  GOOGLE_CLIENT_SECRET: z.string(),
+  GITHUB_ID: z.string(),
+  GITHUB_SECRET:  z.string(),
+  LINKEDIN_CLIENT_ID: z.string(),
+  LINKEDIN_CLIENT_SECRET: z.string(),
 });
 
 /**
@@ -48,16 +55,26 @@ const client = z.object({
 const processEnv = {
   DATABASE_URL: process.env.DATABASE_URL,
   NODE_ENV: process.env.NODE_ENV,
-  NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-  NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   NEXT_PUBLIC_GOOGLE_ANALYTICS: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS,
-  EMAIL_SERVER: process.env.EMAIL_SERVER,
-  EMAIL_FROM: process.env.EMAIL_FROM,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   OPENAI_API_KEY_BOTS: process.env.OPENAI_API_KEY_BOTS,
   NEXT_PUBLIC_S3_PUBLIC_IMAGES_BUCKET: process.env.NEXT_PUBLIC_S3_PUBLIC_IMAGES_BUCKET,
   S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_ID: process.env.S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_ID,
   S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_SECRET: process.env.S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_SECRET,
+
+  //AUTH
+  NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+  NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+  EMAIL_SERVER: process.env.EMAIL_SERVER,
+  EMAIL_FROM: process.env.EMAIL_FROM,
+  FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
+  FACEBOOK_CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+  GITHUB_ID: process.env.GITHUB_ID,
+  GITHUB_SECRET:  process.env.GITHUB_SECRET,
+  LINKEDIN_CLIENT_ID: process.env.LINKEDIN_CLIENT_ID,
+  LINKEDIN_CLIENT_SECRET:  process.env.LINKEDIN_CLIENT_SECRET,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

@@ -1,6 +1,8 @@
+import { TRPCError } from '@trpc/server';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI, { ClientOptions } from "openai";
 import { MessageContentText } from 'openai/resources/beta/threads/messages/messages';
+import { getServerAuthSession } from '~/server/auth';
 import { RouterOutputs } from '~/utils/api';
 
 const options: ClientOptions = {
@@ -25,6 +27,11 @@ const openai = new OpenAI(options);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const ASSISTANT_ID = 'asst_AuMgUlkhbiRl0vsW4KjWO4bC'; // Your hardcoded assistant ID
+
+    const session = await getServerAuthSession({ req, res });
+    if (!session || !session.user) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
+    }
 
     if (req.method !== 'POST') {
         return res.status(405).end('Method Not Allowed');
@@ -58,6 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             assistant_id: ASSISTANT_ID,
         });
 
+        //Loop while waiting for the run execution including 
         let runResponse;
         while (true) {
             runResponse = await openai.beta.threads.runs.retrieve(threadId, run.id);
@@ -123,26 +131,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function executeFunction(functionName:string, functionArguments: functionArguments, projectId:string) {
     
+    
     const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'; //If vercel deployment take that otherwise localhos
     
     if (functionName === 'createTask') {
         try {
             // Will need to figure out protected routes with AI and sending status and projectId
-            const queryParams = new URLSearchParams({
-                batch: '1',
-                input: JSON.stringify({"0": { json: { projectId: projectId, title: functionArguments.projectTitle, content: functionArguments.projectContent} }})
-            }).toString();
-
-            const url = `${baseUrl}/api/trpc/tasks.create?${queryParams}`;
+            const requestBody = {
+                title: functionArguments.projectTitle,
+                content: functionArguments.projectContent,
+                projectId: projectId,
+                status: 'To-Do' // Include other required fields
+            };
+            
+            const url = `${baseUrl}/api/trpc/tasks.create`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                    //'Cookie': cookie // Forward the session cookie for authentication
+                },
+                body: JSON.stringify(requestBody)
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                return ("error creating task, please ask user what to do next")
             }
 
             return ("success creating task"); // Return the tasks from your API

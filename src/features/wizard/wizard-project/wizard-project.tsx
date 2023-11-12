@@ -21,9 +21,10 @@ export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
         fetchDataPromise.then(() => {
             const updatedChatHistory = chatHistory + `**You:** ${inputValue}\n\n`;
             setChatHistory(updatedChatHistory);
+            setInputValue('');
         }).catch(error => {
             console.error('Error fetching data:', error);
-            // Handle error
+            setInputValue('');
         });
     }
 
@@ -55,6 +56,7 @@ export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     className="w-full p-2 border rounded-md resize-none"
+                    disabled={loading}
                     rows={3}
                 ></textarea>
 

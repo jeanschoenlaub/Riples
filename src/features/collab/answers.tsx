@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 
 import { useCollabMutation } from './collab-apis';
 import { useSession } from 'next-auth/react';
-import { RouterOutputs, api } from '~/utils/api';
+import type { RouterOutputs } from '~/utils/api';
 import { NavBarSignInModal } from '../navbar/signinmodal';
 import { ProfileImage } from '~/components';
 import dayjs from "dayjs";
