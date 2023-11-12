@@ -85,7 +85,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         const functionArguments = JSON.parse(functionDetails.arguments) as functionArguments;
             
                         // Execute the required function 
-                        const result = await executeFunction(functionName, functionArguments, projectId,  req.headers.cookie);
+                        const result = await executeFunction(functionName, functionArguments, projectId);
             
                         return {
                             "tool_call_id": toolCallId,
@@ -129,7 +129,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-async function executeFunction(functionName:string, functionArguments: functionArguments, projectId:string, cookie: string, session: Session) {
+async function executeFunction(functionName:string, functionArguments: functionArguments, projectId:string) {
     
     
     const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'; //If vercel deployment take that otherwise localhos
@@ -149,7 +149,7 @@ async function executeFunction(functionName:string, functionArguments: functionA
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Cookie': cookie // Forward the session cookie for authentication
+                    //'Cookie': cookie // Forward the session cookie for authentication
                 },
                 body: JSON.stringify(requestBody)
             });

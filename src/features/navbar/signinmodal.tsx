@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { signIn } from 'next-auth/react';
 import { Modal} from "~/components/modal-template";
-import { GithubSVG, GoogleSVG } from '~/components';
+import { GithubSVG } from '~/components';
 
 interface SignInModalProps {
   showModal: boolean;
