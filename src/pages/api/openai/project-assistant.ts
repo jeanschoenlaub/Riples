@@ -2,7 +2,9 @@ import { TRPCError } from '@trpc/server';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI, { ClientOptions } from "openai";
 import { MessageContentText } from 'openai/resources/beta/threads/messages/messages';
+import { appRouter } from '~/server/api/root';
 import { getServerAuthSession } from '~/server/auth';
+import { prisma } from '~/server/db';
 import { RouterOutputs } from '~/utils/api';
 
 const options: ClientOptions = {
@@ -29,6 +31,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const ASSISTANT_ID = 'asst_AuMgUlkhbiRl0vsW4KjWO4bC'; // Your hardcoded assistant ID
 
     const session = await getServerAuthSession({ req, res });
+    const caller = appRouter.createCaller({
+        session: session,
+        revalidateSSG: null, // adjust this if you have a method to revalidate SSG
+        prisma
+    });
+
+    
     if (!session || !session.user) {
       throw new TRPCError({ code: 'UNAUTHORIZED' });
     }
@@ -85,7 +94,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         const functionArguments = JSON.parse(functionDetails.arguments) as functionArguments;
             
                         // Execute the required function 
-                        const result = await executeFunction(functionName, functionArguments, projectId);
+                        const result = await executeFunction(functionName, functionArguments, projectId, caller);
             
                         return {
                             "tool_call_id": toolCallId,
@@ -129,64 +138,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-async function executeFunction(functionName:string, functionArguments: functionArguments, projectId:string) {
-    
-    
-    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'; //If vercel deployment take that otherwise localhos
-    
+async function executeFunction(functionName:string, functionArguments: functionArguments, projectId:string, caller:any) {
+
     if (functionName === 'createTask') {
         try {
-            // Will need to figure out protected routes with AI and sending status and projectId
-            const requestBody = {
-                title: functionArguments.projectTitle,
-                content: functionArguments.projectContent,
-                projectId: projectId,
-                status: 'To-Do' // Include other required fields
-            };
-            
-            const url = `${baseUrl}/api/trpc/tasks.create`;
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    //'Cookie': cookie // Forward the session cookie for authentication
-                },
-                body: JSON.stringify(requestBody)
+            // Use the tRPC caller to call the procedure directly
+            const result = await caller.tasks.create({
+              title: functionArguments.projectTitle,
+              content: functionArguments.projectContent,
+              projectId: projectId,
+              status: 'To-Do' // Include other required fields
             });
-
-            if (!response.ok) {
-                return ("error creating task, please ask user what to do next")
-            }
-
-            return ("success creating task"); // Return the tasks from your API
+            return("success creating task");
         } catch (error) {
-            console.error('Error creating tasks:', error);
-            throw error;
+            console.error('Error OpenAI Assistant creting task:', error);
+            return("error creating tasks") // provides the error msg back to OpenAI assistant -> handy for providing more context on the error to user
         }
     } else if (functionName === 'getTasks') {
         try {
-            // Construct the query parameter
-            const queryParams = new URLSearchParams({
-                batch: '1',
-                input: JSON.stringify({"0": { json: { projectId: projectId } }})
-            }).toString();
-
-            const url = `${baseUrl}/api/trpc/tasks.getTasksByProjectId?${queryParams}`;
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+            const result = await caller.tasks.getTasksByProjectId({
+                projectId: projectId,
             });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const tasks = await response.json() as TaskFromGetAll;
-            return JSON.stringify(tasks); // Return the tasks from your API
+            return JSON.stringify(result); 
         } catch (error) {
-            console.error('Error fetching tasks:', error);
+            console.error('Error OpenAI Assistant  getTask:', error);
             throw error;
         }
     }

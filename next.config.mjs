@@ -7,7 +7,12 @@ await import("./src/env.mjs");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
-  images: { domains: ["t3-portofolio.s3.us-east-2.amazonaws.com","riples-public-images-08453786.s3.us-west-2.amazonaws.com","lh3.googleusercontent.com"] },
+  images: { domains: [
+    "t3-portofolio.s3.us-east-2.amazonaws.com",
+    "riples-public-images-08453786.s3.us-west-2.amazonaws.com",
+    "lh3.googleusercontent.com",
+    "avatars.githubusercontent.com", //To be able to get github user profile pictures
+  ] },
 
   /**
    * If you are using `appDir` then you must comment the below `i18n` config out.

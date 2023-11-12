@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface useProjectAssistantParameters {
     prompt: string;
@@ -16,6 +16,23 @@ export const useProjectAssistant = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [threadId, setThreadId] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+
+    const pollInterval = useRef<NodeJS.Timeout | null>(null);
+
+    const stopPolling = () => {
+        if (pollInterval.current) {
+            clearInterval(pollInterval.current);
+            pollInterval.current = null;
+        }
+    };
+
+    const startPolling = () => {
+        stopPolling(); // Ensure no existing polls are running
+        pollInterval.current = setInterval(async () => {
+            // Implement the logic to check for updates from the server
+            // For example, fetching status updates or user approvals
+        }, 3000); // Poll every 3 seconds, adjust as needed
+    };
 
     const fetchData = async ({ prompt, projectId, existingThreadId }: useProjectAssistantParameters) => {
         const bodyData = threadId ? { prompt, projectId, existingThreadId } : { prompt, projectId };
@@ -43,8 +60,16 @@ export const useProjectAssistant = () => {
             setError("error sending or receiving data from project assistant");
         } finally {
             setLoading(false);
+            stopPolling(); // Stop polling when fetching is complete
         }
     };
+
+    useEffect(() => {
+        // Cleanup on unmount
+        return () => {
+            stopPolling();
+        };
+    }, []);
 
     return { data, threadId, loading, error, fetchData };
 };
