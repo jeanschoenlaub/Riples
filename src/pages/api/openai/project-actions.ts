@@ -12,11 +12,11 @@ const options: ClientOptions = {
 }
 
 type FunctionArguments= {
-    projectTitle: string;
-    projectContent: string;
+    taskTitle: string;
+    taskContent: string;
 };
 
-interface RequestBody {
+export interface RequestBody {
     prompt: string;
     projectId: string;
     existingThreadId: string;
@@ -108,16 +108,17 @@ async function executeFunction(functionName:string, functionArguments: FunctionA
     if (functionName === 'createTask') {
         try {
             // Use the tRPC caller to call the procedure directly
+            console.log(functionArguments)
             await caller.tasks.create({
-            title: functionArguments.projectTitle,
-            content: functionArguments.projectContent,
-            projectId: projectId,
-            status: 'To-Do' // Include other required fields
+                title: functionArguments.taskTitle,
+                content: functionArguments.taskContent || "",
+                projectId: projectId,
+                status: 'To-Do' // Include other required fields
             });
             return("success creating task");
         } catch (error) {
-            console.error('Error OpenAI Assistant creting task:', error);
-            return("error creating tasks") // provides the error msg back to OpenAI assistant -> handy for providing more context on the error to user
+            console.error('Error OpenAI Assistant creating task:', error);
+            return("error creating tasks, here are the logs"+error) // provides the error msg back to OpenAI assistant -> handy for providing more context on the error to user
         }
     } else if (functionName === 'getTasks') {
         try {
