@@ -1,27 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { useProjectAssistant } from "~/hooks/use-project-assistant";
+import { useProjectAssistant } from "~/features/wizard/wizard-project/use-project-assistant";
 import ReactMarkdown from "react-markdown";
 import { LoadingSpinner } from "~/components";
-
-export type WizardAboutProps = {
-    projectId: string;
-};
-
-export interface ApprovalRequest {
-    id: string;
-    name: string;
-    arguments: string; // Assuming arguments are stored as a JSON string
-    approved: boolean | null; // null indicates awaiting approval, boolean for user's response
-}
-
-export type ApprovalRequestsState = ApprovalRequest[];
+import { ApprovalToolCallState, WizardAboutProps } from "./wizard-project-types";
 
 export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
     const [inputValue, setInputValue] = useState('');
     const [chatHistory, setChatHistory] = useState<string>('');
-    const [approvalRequests, setApprovalRequests] = useState<ApprovalRequestsState>([]);
+    const [approvalRequests, setApprovalRequests] = useState<ApprovalToolCallState>([]);
     const approvalRequestsRef = useRef(approvalRequests);
-
 
     const { data: chatResponse, threadId, loading, error, fetchData } = useProjectAssistant();
 
@@ -29,7 +16,7 @@ export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
      const handleApproval = (id: string , approval: boolean) => {
         setApprovalRequests(prevRequests => 
             prevRequests.map(req => 
-                req.id === id ? { ...req, approved: approval } : req
+                req.toolCallId === id ? { ...req, approved: approval } : req
             )
         );
         console.log(approvalRequests)
@@ -42,8 +29,6 @@ export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
             const currentApprovalRequests = approvalRequestsRef.current;
             if (currentApprovalRequests && currentApprovalRequests.length > 0) {
                 const result = currentApprovalRequests.some(request => request.approved === null);
-                console.log("Current approval requests:", currentApprovalRequests);
-                console.log("Approval status result:", result);
                 resolve(result);
             } else {
                 resolve(true); // Resolve with true if there are no approval requests
@@ -95,7 +80,6 @@ export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
                     </div>
                 )}
 
-
                 <textarea
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
@@ -106,14 +90,14 @@ export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
 
                 {approvalRequests.map(request => (
                     request.approved === null && (
-                        <div key={request.id}>
-                            <p>Approve action: {request.name} with args {request.arguments} ?</p>
+                        <div key={request.toolCallId}>
+                            <p>Approve action: {request.functionName} with args {request.functionArguments} ?</p>
                             <button 
                                 className="bg-blue-500 text-white rounded px-4 mt-2 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200"
-                                onClick={() => handleApproval(request.id, true)}>Yes</button>
+                                onClick={() => handleApproval(request.toolCallId, true)}>Yes</button>
                             <button 
                                 className="bg-blue-500 text-white rounded px-4 mt-2 py-1 justify-center focus:outline-none focus:ring focus:ring-blue-200"
-                                onClick={() => handleApproval(request.id, false)}>No</button>
+                                onClick={() => handleApproval(request.toolCallId, false)}>No</button>
                         </div>
                     )
                 ))}

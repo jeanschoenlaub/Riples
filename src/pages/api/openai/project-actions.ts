@@ -1,11 +1,13 @@
 import { TRPCError } from '@trpc/server';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI, { ClientOptions } from "openai";
-import { appRouter } from '~/server/api/root';
+import { type AppRouter, appRouter } from '~/server/api/root';
 import { getServerAuthSession } from '~/server/auth';
 import { prisma } from '~/server/db';
 import { Messages, processAssistantMessages } from './utils';
 import { RouterOutputs } from '~/utils/api';
+import { TRPCClient } from '@trpc/client';
+import { DecoratedProcedureRecord } from '@trpc/react-query/dist/createTRPCReact';
 
 const options: ClientOptions = {
   apiKey: process.env.OPENAI_API_KEY, 
@@ -26,12 +28,12 @@ export interface RequestBody {
 
 const openai = new OpenAI(options);
 
-type Task = RouterOutputs["tasks"]["getTasksByProjectId"]
+type Task = RouterOutputs["tasks"]["getTasksByProjectId"];
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const session = await getServerAuthSession({ req, res });
-    const caller = appRouter.createCaller({
+    const caller  = appRouter.createCaller({
         session: session,
         revalidateSSG: null, // adjust this if you have a method to revalidate SSG
         prisma
@@ -81,7 +83,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(500).json({ error: 'An error occurred with the OpenAI Assistant service' });
     }
 }   
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function handleRequiresAction(toolCalls: OpenAI.Beta.Threads.Runs.RequiredActionFunctionToolCall[], projectId: string, caller:any) {
     const toolOutputs = await Promise.all(
         toolCalls.map(async (toolCall) => {
@@ -90,7 +92,7 @@ async function handleRequiresAction(toolCalls: OpenAI.Beta.Threads.Runs.Required
             const functionName = functionDetails.name;
             const functionArguments = JSON.parse(functionDetails.arguments) as FunctionArguments
             
-            const result = await executeFunction(functionName, functionArguments, projectId, caller);
+            const result: string = await executeFunction(functionName, functionArguments, projectId, caller);
             
             return {
                 "tool_call_id": toolCallId,
@@ -102,26 +104,27 @@ async function handleRequiresAction(toolCalls: OpenAI.Beta.Threads.Runs.Required
     return toolOutputs;
 }
 
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function executeFunction(functionName:string, functionArguments: FunctionArguments, projectId:string, caller:any) {
 
     if (functionName === 'createTask') {
         try {
-            // Use the tRPC caller to call the procedure directly
-            console.log(functionArguments)
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             await caller.tasks.create({
                 title: functionArguments.taskTitle,
-                content: functionArguments.taskContent || "",
+                content: functionArguments.taskContent ,
                 projectId: projectId,
-                status: 'To-Do' // Include other required fields
+                status: 'To-Do' 
             });
             return("success creating task");
         } catch (error) {
             console.error('Error OpenAI Assistant creating task:', error);
-            return("error creating tasks, here are the logs"+error) // provides the error msg back to OpenAI assistant -> handy for providing more context on the error to user
+            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+            return("error creating task"+error) // provides the error msg back to OpenAI assistant -> handy for providing more context on the error to user
         }
     } else if (functionName === 'getTasks') {
         try {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
             const result: Task = await caller.tasks.getTasksByProjectId({
                 projectId: projectId,
             });

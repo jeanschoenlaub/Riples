@@ -1,25 +1,5 @@
-import type OpenAI from "openai";
-import { SetStateAction, useState, Dispatch } from "react";
-import { ApprovalRequest, ApprovalRequestsState } from "~/features/wizard/wizard-project/wizard-project";
-
-type CheckApprovalStatus = () => Promise<boolean>;
-interface useProjectAssistantParameters {
-    prompt: string;
-    projectId: string;
-    existingThreadId?: string; // Optional threadId
-    approvalRequests: ApprovalRequest[];
-    setApprovalRequests: Dispatch<SetStateAction<ApprovalRequestsState>>;
-    checkApprovalStatus: CheckApprovalStatus;
-}
-
-interface AssistantResponse {
-    response: string;
-    threadId?: string; // Assuming the API returns the thread ID in this format
-    runId: string;
-    toolCalls:  OpenAI.Beta.Threads.Runs.RequiredActionFunctionToolCall[];
-}
-
-
+import { useState } from "react";
+import { ApprovalToolCall, AssistantResponse, useProjectAssistantParameters } from "./wizard-project-types";
 
 export const useProjectAssistant = () => {
     const [data, setData] = useState<string>('');
@@ -43,16 +23,15 @@ export const useProjectAssistant = () => {
                 throw new Error(`Server error: ${response.status}`);
             }
 
-            const assistantResponseData: AssistantResponse = await response.json();
-            console.log(assistantResponseData)
+            const assistantResponseData: AssistantResponse = await response.json() as AssistantResponse;
             
             if (assistantResponseData.threadId) {
                 setThreadId(assistantResponseData.threadId);
             }
 
             if (assistantResponseData.toolCalls){
-                console.log("approval rwrequried")
                 let approvalRequired = false;
+                let newApprovalRequests: ApprovalToolCall[] | [] = [] 
 
                 // Filter tool calls that require user approval
                 const toolCallsRequiringApproval = assistantResponseData.toolCalls.filter(toolCall => 
@@ -60,36 +39,39 @@ export const useProjectAssistant = () => {
                 );
 
                 if (toolCallsRequiringApproval.length > 0) {
-                    const newApprovalRequests = toolCallsRequiringApproval.map(toolCall => ({
-                        id: toolCall.id,
-                        name: toolCall.function.name,
-                        arguments: toolCall.function.arguments,
+                    newApprovalRequests = toolCallsRequiringApproval.map(toolCall => ({
+                        toolCallId: toolCall.id,
+                        functionName: toolCall.function.name,
+                        functionArguments: toolCall.function.arguments,
                         approved: null // Null indicates awaiting approval
                     }));
 
                     setApprovalRequests(newApprovalRequests);
-                    console.log(approvalRequests)
                     approvalRequired = true;
 
                     while (await checkApprovalStatus()) {
-                        console.log("waiting approval")
                         await new Promise(resolve => setTimeout(resolve, 1000));
                     }
                 }
 
                 // Make the API call to /api/openai/project-actions if no approval is needed or after approval 
                 if (!approvalRequired || !(await checkApprovalStatus())) {
-                    
+
+                    const approvedToolCallIds = newApprovalRequests
+                        .filter(request => request.approved === true)
+                        .map(request => request.toolCallId);
+
+                    // Filter assistantResponseData.toolCalls to include only those with IDs in approvedToolCallIds
+                    const filteredToolCalls = assistantResponseData.toolCalls.filter(toolCall => 
+                        approvedToolCallIds.includes(toolCall.id)
+                    );     
+
                     const bodyDataAction = {
                         existingThreadId: assistantResponseData.threadId,
                         runId: assistantResponseData.runId,
-                        toolCalls: assistantResponseData.toolCalls,
+                        toolCalls: filteredToolCalls,
                         projectId: projectId,
                     };
-
-                    console.log(approvalRequests)
-                    console.log("making call")
-                    console.log(bodyDataAction)
 
                     const actionResponse = await fetch('/api/openai/project-actions', {
                         method: 'POST',
@@ -99,7 +81,7 @@ export const useProjectAssistant = () => {
                         body: JSON.stringify(bodyDataAction),
                     });
 
-                    const actionResponseData: AssistantResponse = await actionResponse.json();
+                    const actionResponseData: AssistantResponse = await actionResponse.json() as AssistantResponse;
                     setData(actionResponseData.response);
                 }
             }else{

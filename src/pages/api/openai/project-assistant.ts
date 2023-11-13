@@ -54,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         //Loop while waiting for the run execution - either sets messageContent OR toolCalls
-        let messageContent: string = ""; 
+        let messageContent = ""; 
         let toolCalls: OpenAI.Beta.Threads.Runs.RequiredActionFunctionToolCall[] | undefined = undefined;
         while (true) {
             const runResponse = await openai.beta.threads.runs.retrieve(threadId, run.id);
