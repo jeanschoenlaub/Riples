@@ -1,3 +1,4 @@
+import type OpenAI from "openai";
 import { useState } from "react";
 
 interface useProjectAssistantParameters {
@@ -9,7 +10,10 @@ interface useProjectAssistantParameters {
 interface AssistantResponse {
     response: string;
     threadId?: string; // Assuming the API returns the thread ID in this format
+    runId: string;
+    toolCalls:  OpenAI.Beta.Threads.Runs.RequiredActionFunctionToolCall[];
 }
+
 
 export const useProjectAssistant = () => {
     const [data, setData] = useState<string>('');
@@ -20,7 +24,6 @@ export const useProjectAssistant = () => {
    
     const fetchData = async ({ prompt, projectId, existingThreadId }: useProjectAssistantParameters) => {
         const bodyData = threadId ? { prompt, projectId, existingThreadId } : { prompt, projectId };
-        console.log(bodyData)
         try {
             setLoading(true)
             const response = await fetch('/api/openai/project-assistant', {
@@ -35,11 +38,32 @@ export const useProjectAssistant = () => {
                 throw new Error(`Server error: ${response.status}`);
             }
 
-            const responseData: AssistantResponse = await response.json() as AssistantResponse;
-            setData(responseData.response);
-            if (responseData.threadId) {
-                setThreadId(responseData.threadId);
+            const assistantResponseData: AssistantResponse = await response.json();
+            
+            if (assistantResponseData.threadId) {
+                setThreadId(assistantResponseData.threadId);
             }
+
+            if (assistantResponseData.toolCalls){
+                const bodyDataAction = {
+                    existingThreadId: assistantResponseData.threadId,
+                    runId: assistantResponseData.runId,
+                    toolCalls:  assistantResponseData.toolCalls,
+                    projectId: projectId,
+                }
+                const response = await fetch('/api/openai/project-actions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(bodyDataAction),
+                });
+                const actionResponseData: AssistantResponse = await response.json();
+                setData(actionResponseData.response); // We take the fisrt response Data
+            }else{
+                setData(assistantResponseData.response); // We take the fisrt response Data
+            }
+
         } catch (err) {
             setError("error sending or receiving data from project assistant");
         } finally {
