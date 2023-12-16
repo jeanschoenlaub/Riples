@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { LoadingSpinner } from '~/components';
 import toast from 'react-hot-toast';
 import { SubTaskModal } from '~/features/task/subtask/subtask-modal/subtask-modal';
@@ -21,6 +21,13 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
         setSubTaskTitle('');
     };
 
+    const audioRefSubtaskDone = useRef(new Audio('/sounds/subtask_done.mp3'));
+
+    audioRefSubtaskDone.current.addEventListener('loadeddata', () => {
+      console.log('Audio loaded');
+      // Now safe to play
+    });
+
     const handleChangeSubTaskStatus = (subTaskId: string, newStatus: boolean) => {
       setLoadingSubTaskId(subTaskId);
   
@@ -28,6 +35,13 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
         id: subTaskId,
         status: newStatus
       };
+
+      if (newStatus) {
+        console.log("plau")
+        audioRefSubtaskDone.current.play();
+      }
+
+      
   
       editStatus(payload)
         .then(() => {
