@@ -44,8 +44,8 @@ export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
     // Function to handle chat
     function handleChat() {
         const fetchDataPromise = threadId 
-            ? fetchData({ prompt: inputValue, projectId: projectId, existingThreadId: threadId, approvalRequests, setApprovalRequests, checkApprovalStatus })
-            : fetchData({ prompt: inputValue, projectId: projectId, approvalRequests, setApprovalRequests, checkApprovalStatus });
+            ? fetchData({ prompt: inputValue, projectId: projectId, existingThreadId: threadId, approvalRequestsRef, setApprovalRequests, checkApprovalStatus })
+            : fetchData({ prompt: inputValue, projectId: projectId, approvalRequestsRef, setApprovalRequests, checkApprovalStatus });
 
         fetchDataPromise.then(() => {
             const updatedChatHistory = chatHistory + `**You:** ${inputValue}\n\n`;

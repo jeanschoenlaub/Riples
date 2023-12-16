@@ -7,7 +7,7 @@ export const useProjectAssistant = () => {
     const [threadId, setThreadId] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
    
-    const fetchData = async ({ prompt, projectId, existingThreadId, approvalRequests, setApprovalRequests, checkApprovalStatus }: useProjectAssistantParameters) => {
+    const fetchData = async ({ prompt, projectId, existingThreadId, approvalRequestsRef, setApprovalRequests, checkApprovalStatus }: useProjectAssistantParameters) => {
         const bodyData = threadId ? { prompt, projectId, existingThreadId } : { prompt, projectId };
         try {
             setLoading(true)
@@ -57,19 +57,19 @@ export const useProjectAssistant = () => {
                 // Make the API call to /api/openai/project-actions if no approval is needed or after approval 
                 if (!approvalRequired || !(await checkApprovalStatus())) {
 
-                    const approvedToolCallIds = newApprovalRequests
-                        .filter(request => request.approved === true)
-                        .map(request => request.toolCallId);
+                    console.log(approvalRequestsRef.current)
+                    //We will use on the backend to run the approved and send user not apporved message back to OpenIA on the other ones
+                    const notApprovedToolCallIds = approvalRequestsRef.current
+                        ?.filter(request => request.approved === false)
+                        .map(request => request.toolCallId) || [];
 
-                    // Filter assistantResponseData.toolCalls to include only those with IDs in approvedToolCallIds
-                    const filteredToolCalls = assistantResponseData.toolCalls.filter(toolCall => 
-                        approvedToolCallIds.includes(toolCall.id)
-                    );     
+                    console.log(notApprovedToolCallIds)
 
                     const bodyDataAction = {
                         existingThreadId: assistantResponseData.threadId,
                         runId: assistantResponseData.runId,
-                        toolCalls: filteredToolCalls,
+                        toolCalls: assistantResponseData.toolCalls,
+                        notApprovedToolCallIds: notApprovedToolCallIds,
                         projectId: projectId,
                     };
 

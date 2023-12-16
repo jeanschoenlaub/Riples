@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, RefObject, SetStateAction } from "react";
 
 export type WizardAboutProps = {
     projectId: string;
@@ -20,7 +20,7 @@ export interface useProjectAssistantParameters {
     prompt: string;
     projectId: string;
     existingThreadId?: string; // Optional threadId
-    approvalRequests: ApprovalToolCall[];
+    approvalRequestsRef: RefObject<ApprovalToolCallState>;
     setApprovalRequests: Dispatch<SetStateAction<ApprovalToolCallState>>;
     checkApprovalStatus: CheckApprovalStatus;
 }

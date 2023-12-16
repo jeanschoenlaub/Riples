@@ -6,8 +6,7 @@ import { getServerAuthSession } from '~/server/auth';
 import { prisma } from '~/server/db';
 import { Messages, processAssistantMessages } from './utils';
 import { RouterOutputs } from '~/utils/api';
-import { TRPCClient } from '@trpc/client';
-import { DecoratedProcedureRecord } from '@trpc/react-query/dist/createTRPCReact';
+import RequiredActionFunctionToolCall from "openai"
 
 const options: ClientOptions = {
   apiKey: process.env.OPENAI_API_KEY, 
@@ -24,6 +23,12 @@ export interface RequestBody {
     existingThreadId: string;
     runId: string;
     toolCalls:  OpenAI.Beta.Threads.Runs.RequiredActionFunctionToolCall[];
+    notApprovedToolCallIds: string[];
+}
+
+
+interface ExtendedToolCall extends RequiredActionFunctionToolCall {
+    approved: boolean;
 }
 
 const openai = new OpenAI(options);
@@ -47,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).end('Method Not Allowed');
     }
 
-    const { projectId, existingThreadId, runId, toolCalls } = req.body as RequestBody;
+    const { projectId, existingThreadId, runId, toolCalls, notApprovedToolCallIds } = req.body as RequestBody;
 
     let messageContent
     try {
@@ -62,17 +67,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             } 
 
             if (runResponse.status === "requires_action") {
-                const toolCalls = runResponse.required_action?.submit_tool_outputs.tool_calls ?? [];
-                
-                const toolOutputs = await handleRequiresAction(toolCalls, projectId, caller);
+                console.log("a")
+                console.log(notApprovedToolCallIds)
+                // For Not User Approved approved tool calls, we still send the answer back to OpenAI with message
+                const notApprovedToolCalls = toolCalls.filter(tc => notApprovedToolCallIds.includes(tc.id));
+                const notApprovedToolOutputs = notApprovedToolCalls.map(tc => ({
+                    "tool_call_id": tc.id,
+                    "output": "User did not approve running this tool"
+                }));
+
             
-                // Submit tool outputs for all calls
-                if (toolOutputs.length > 0) {
+                // For User Approved tool calls we handle them based on the function in handleRequiresAction
+                const approvedToolCalls = toolCalls.filter(tc => !notApprovedToolCallIds.includes(tc.id));
+                console.log(approvedToolCalls)
+                const approvedToolOutputs = await handleRequiresAction(approvedToolCalls, projectId, caller);
+            
+                // Combine outputs and submit
+                const combinedToolOutputs = [...approvedToolOutputs, ...notApprovedToolOutputs];
+                console.log(combinedToolOutputs)
+                if (combinedToolOutputs.length > 0) {
                     await openai.beta.threads.runs.submitToolOutputs(existingThreadId, runId, {
-                        tool_outputs: toolOutputs
+                        tool_outputs: combinedToolOutputs
                     });
                 }
-            
             }
 
             await new Promise(resolve => setTimeout(resolve, 500)); // Wait for a short period before polling again
@@ -112,7 +129,7 @@ async function executeFunction(functionName:string, functionArguments: FunctionA
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             await caller.tasks.create({
                 title: functionArguments.taskTitle,
-                content: functionArguments.taskContent ,
+                content: functionArguments.taskContent || "",
                 projectId: projectId,
                 status: 'To-Do' 
             });
