@@ -164,6 +164,7 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
                         onChange={(e) => setProjectSummary(e.target.value)}
                         className={`flex-grow w-full rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
                         maxLength={5000}
+                        rows={4}
                         disabled={!isEditMode }
                     />
             </div>

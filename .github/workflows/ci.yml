@@ -24,7 +24,15 @@ jobs:
       NEXT_PUBLIC_S3_PUBLIC_IMAGES_BUCKET:  ${{ secrets.NEXT_PUBLIC_S3_PUBLIC_IMAGES_BUCKET }}
       S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_ID:  ${{ secrets.S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_ID }}
       S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_SECRET:  ${{ secrets.S3_PUBLIC_IMAGES_BUCKET_ACCESS_KEY_SECRET }}
-
+      FACEBOOK_CLIENT_ID: ${{ secrets.FACEBOOK_CLIENT_ID }}
+      FACEBOOK_CLIENT_SECRET: ${{ secrets.FACEBOOK_CLIENT_SECRET }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      GITHUB_ID: ${{ secrets.X_GITHUB_ID }}
+      GITHUB_SECRET: ${{ secrets.X_GITHUB_SECRET }}
+      LINKEDIN_CLIENT_ID: ${{ secrets.LINKEDIN_CLIENT_ID }}
+      LINKEDIN_CLIENT_SECRET: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
+      
     strategy:
       matrix:
         node-version: [16.x] # Adjust this if you're using a different version of Node.js
