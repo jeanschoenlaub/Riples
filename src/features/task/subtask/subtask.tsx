@@ -37,8 +37,7 @@ export const SubTasksRows: React.FC<SubTasksRowsProps> = ({ taskData }) => {
       };
 
       if (newStatus) {
-        console.log("plau")
-        audioRefSubtaskDone.current.play();
+        void audioRefSubtaskDone.current.play().catch(e => console.error('Error playing audio:', e));
       }
 
       

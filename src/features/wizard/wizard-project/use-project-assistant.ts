@@ -61,7 +61,7 @@ export const useProjectAssistant = () => {
                     //We will use on the backend to run the approved and send user not apporved message back to OpenIA on the other ones
                     const notApprovedToolCallIds = approvalRequestsRef.current
                         ?.filter(request => request.approved === false)
-                        .map(request => request.toolCallId) || [];
+                        .map(request => request.toolCallId) ?? [];
 
                     console.log(notApprovedToolCallIds)
 
