@@ -64,14 +64,12 @@ export const taskRouter = createTRPCRouter({
         title: z.string().min(5, { message: "Task title must be 5 or more characters long" }).max(255, { message: "Task title must be 255 or less characters long" }),
         content: z.string().max(10000, { message: "Task title must be 10,000 or less characters long" }),
         status: z.string(),
+        due: z.date(),
         projectId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const createdById = ctx.session.user?.id;
-      
-
-      console.log("username"+ctx.session.user?.name)
   
       if (!createdById) {
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Could not access session id" });
@@ -83,6 +81,7 @@ export const taskRouter = createTRPCRouter({
           title: input.title,
           content: input.content,
           status: input.status,
+          due: input.due,
           projectId: input.projectId,
         },
       });
@@ -97,10 +96,11 @@ export const taskRouter = createTRPCRouter({
         title: z.string().min(5, { message: "Task title must be 5 or more characters long" }).max(255, { message: "Task title must be 255 or less characters long" }),
         content: z.string().max(10000, { message: "Task title must be 10,000 or less characters long" }),
         projectId: z.string(),
+        due: z.date(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, title, content, projectId } = input;
+      const { id, title, content, projectId, due } = input;
       // const updatedById = ctx.session.user.id; not used for now
 
       const task = await ctx.prisma.tasks.update({
@@ -109,6 +109,7 @@ export const taskRouter = createTRPCRouter({
           title,
           content,
           projectId,
+          due,
           editedAt: new Date() // This updates the editedAt field to the current date and time
         },
       });
