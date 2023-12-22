@@ -12,7 +12,7 @@ import type { CreateTaskPayload, EditTaskPayload, TaskModalProps } from './task-
 import { useTaskMutation } from './task-modal-api';
 
 // Main React Functional Component
-export const TaskModal: React.FC<TaskModalProps> = ({ project, projectId, projectType, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
+export const TaskModal: React.FC<TaskModalProps> = ({ projectId, projectType, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
   
   // Initialize state with values from props if taskToEdit is present (for edit mode vs create mode)
   const defaultTemplate = ``
@@ -71,8 +71,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, projectId, projec
     }
   
     const payload = isOwner 
-      ? { id: taskToEdit!.id, projectId: project.id, userId: "" }
-      : { id: taskToEdit!.id, projectId: project.id, userId: session!.user.id };
+      ? { id: taskToEdit!.id, projectId: projectId, userId: "" }
+      : { id: taskToEdit!.id, projectId: projectId, userId: session!.user.id };
   
     changeTaskOwner(payload)
       .then(() => {
@@ -101,7 +101,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, projectId, projec
 
   // Helper function to generate edit payload
   const generateEditPayload = (): EditTaskPayload => ({
-    projectId: project.id,
+    projectId: projectId,
     title: taskTitle,
     status: taskStatus,
     content: taskContent,
@@ -111,7 +111,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, projectId, projec
 
   // Helper function to generate create payload
   const generateCreatePayload = (): CreateTaskPayload => ({
-    projectId: project.id,
+    projectId: projectId,
     title: taskTitle,
     status: taskStatus,
     due: taskDate,
@@ -140,7 +140,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, projectId, projec
 
   const handleDelete = () => {
     if (taskToEdit) {
-      deleteTask({ id: taskToEdit.id, projectId: project.id, userId: session!.user.id })
+      deleteTask({ id: taskToEdit.id, projectId: projectId, userId: session!.user.id })
         .then(() => {
           toast.success('Task deleted successfully!');
           enhancedOnClose();
@@ -230,7 +230,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, projectId, projec
 
 
         <div id="task-modal-owner-info" className="flex flex-wrap items-center space-x-5 mb-2 md:flex-nowrap">
-        {(taskToEdit && project.projectType === "collab") && ( // If taskToEdit exists (in edit mode)
+        {(taskToEdit && projectType === "collab") && ( // If taskToEdit exists (in edit mode)
           <span className="text-sm flex items-center space-x-4 w-auto" aria-label="Task Title">Task Owner:
             {taskOwnerId ? (
               <Link href={`/users/${taskOwnerId}`} className="flex items-center space-x-4">

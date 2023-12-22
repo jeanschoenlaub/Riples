@@ -8,7 +8,7 @@ import { SubTasksRows } from './subtask/subtask';
 
 
 interface TaskListProps {
-  project: ProjectData["project"];
+  taskData: TaskData;
   projectId: string, //Prepping for project -> task prop change
   projectType: string, //Prepping for project -> task prop change
   isMember: boolean,
@@ -16,11 +16,11 @@ interface TaskListProps {
   isProjectLead: boolean
 }
 
-type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"];
-type TaskData = RouterOutputs["tasks"]["edit"];
+type TaskData = RouterOutputs["tasks"]["getTasksByProjectId"];
+type TaskEditData = RouterOutputs["tasks"]["edit"];
 
-export const TaskList: React.FC<TaskListProps> = ({ project, projectId, projectType, isMember, isProjectLead}) => {
-  const [selectedTask, setSelectedTask] = useState<TaskData | null>(null);
+export const TaskList: React.FC<TaskListProps> = ({ taskData, projectId, projectType, isMember, isProjectLead}) => {
+  const [selectedTask, setSelectedTask] = useState<TaskEditData | null>(null);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [displaySubtasks, setDisplaySubtasks] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
@@ -29,7 +29,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, projectId, projectT
   //  { taskId: taskIdToFetch ?? "" },
   //  { enabled: taskIdToFetch !== null }
   //);
-  const { data: taskData, isLoading: isLoadingTasks, isError } = api.tasks.getTasksByProjectId.useQuery({ projectId: project.id });
+  // const { data: taskData, isLoading: isLoadingTasks, isError } = api.tasks.getTasksByProjectId.useQuery({ projectId: projectId});
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);  // Assuming mobile devices have a width of 768px or less
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, projectId, projectT
 
   let headers = isMobile ? ["Sub", "Task"] : ["Sub", "Task Title", "Status", "Owner"];
   let columnWidths = isMobile ? ["15%", "50%"] : ["6%", "30%", "8%", "8%"];
-  if (project.projectType === "solo") {
+  if (projectType === "solo") {
     headers = headers.filter(header => header !== "Owner");
     isMobile ? columnWidths =["15%","50%"] :columnWidths =["6%","50%","8%"]
   }
@@ -66,15 +66,15 @@ export const TaskList: React.FC<TaskListProps> = ({ project, projectId, projectT
     }
   };
 
-  const openEditModal = (task: TaskData | null) => {
+  const openEditModal = (task: TaskEditData | null) => {
     setSelectedTask(task);
     setShowTaskModal(true);
   };
 
-  const isLoading = isLoadingTasks 
+  // const isLoading = isLoadingTasks 
 
-  if (isLoading) return <div className="flex justify-center"><LoadingRiplesLogo isLoading={isLoading}/></div>;
-  if (isError || !taskData) return <p>Error loading tasks.</p>;
+  // if (isLoading) return <div className="flex justify-center"><LoadingRiplesLogo isLoading={isLoading}/></div>;
+  // if (isError || !taskData) return <p>Error loading tasks.</p>;
 
   return (
     <div className='mb-10'>
@@ -166,7 +166,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, projectId, projectT
                   {taskDetail.task.status}
                 </div>
               </td>
-              {(project.projectType != "solo") ? (
+              {(projectType != "solo") ? (
               <td className="px-6 py-4 hidden md:table-cell" style={{ textAlign: 'center', verticalAlign: 'middle',   width: columnWidths[3]  }}>
                 {taskDetail.owner ? (
                   <Link href={`/users/${taskDetail.owner.id}`} className="flex items-center justify-center space-x-2">
@@ -192,9 +192,8 @@ export const TaskList: React.FC<TaskListProps> = ({ project, projectId, projectT
         
       </div>
         <TaskModal 
-          project={project}
-          projectId={project.id} 
-          projectType={project.projectType} 
+          projectId={projectId} 
+          projectType={projectType} 
           inputValue = {inputValue}
           taskToEdit={selectedTask}
           isMember={isMember} 
