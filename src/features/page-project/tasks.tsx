@@ -14,7 +14,7 @@ export const TaskTab: React.FC<TaskTabProps> = ({ project, isMember, isPending, 
     return (
         <div id="project-collab-task-table" className="border-r-2 border-l-2 border-b-2 border-gray-200 ">
                 { (project.projectPrivacy === "public" || isMember || isProjectLead) && ( 
-                    <TaskList project={project} isMember={isMember} isProjectLead={isProjectLead} isPending={isPending}/>
+                    <TaskList project={project} projectId={project.id} projectType={project.projectType} isMember={isMember} isProjectLead={isProjectLead} isPending={isPending}/>
                  )} 
         </div>
     )

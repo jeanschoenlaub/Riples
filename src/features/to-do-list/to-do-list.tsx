@@ -67,6 +67,8 @@ export const ToDoList = () => {
               {visibleTaskListIds.has(item.project.id) && (
                 <TaskList
                   project={item.project}
+                  projectId={item.project.id} 
+                  projectType={item.project.projectType}
                   isMember={true}
                   isProjectLead={true}
                   isPending={true}

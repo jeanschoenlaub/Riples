@@ -12,7 +12,7 @@ import type { CreateTaskPayload, EditTaskPayload, TaskModalProps } from './task-
 import { useTaskMutation } from './task-modal-api';
 
 // Main React Functional Component
-export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
+export const TaskModal: React.FC<TaskModalProps> = ({ project, projectId, projectType, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
   
   // Initialize state with values from props if taskToEdit is present (for edit mode vs create mode)
   const defaultTemplate = ``
@@ -26,13 +26,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     ((isMember && (
     session?.user.id === taskToEdit?.ownerId || 
     session?.user.id === taskToEdit?.createdById || 
-    session?.user.id === project.authorID ||
     taskToEdit === null)) || isProjectLead)
 
   const allowedToDelete =  
-   (isMember || isProjectLead) && (
-    session?.user.id === taskToEdit?.createdById || 
-    session?.user.id === project.authorID) && taskToEdit
+   (isProjectLead || (isMember && session?.user.id === taskToEdit?.createdById))  && taskToEdit
 
   // States and useEffects
   const [taskTitle, setTaskTitle] = useState(() => taskToEdit ? taskToEdit.title : inputValue)

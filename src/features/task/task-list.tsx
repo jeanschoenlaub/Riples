@@ -9,6 +9,8 @@ import { SubTasksRows } from './subtask/subtask';
 
 interface TaskListProps {
   project: ProjectData["project"];
+  projectId: string, //Prepping for project -> task prop change
+  projectType: string, //Prepping for project -> task prop change
   isMember: boolean,
   isPending: boolean
   isProjectLead: boolean
@@ -17,7 +19,7 @@ interface TaskListProps {
 type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"];
 type TaskData = RouterOutputs["tasks"]["edit"];
 
-export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProjectLead}) => {
+export const TaskList: React.FC<TaskListProps> = ({ project, projectId, projectType, isMember, isProjectLead}) => {
   const [selectedTask, setSelectedTask] = useState<TaskData | null>(null);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [displaySubtasks, setDisplaySubtasks] = useState<string | null>(null);
@@ -190,7 +192,9 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
         
       </div>
         <TaskModal 
-          project={project} 
+          project={project}
+          projectId={project.id} 
+          projectType={project.projectType} 
           inputValue = {inputValue}
           taskToEdit={selectedTask}
           isMember={isMember} 
