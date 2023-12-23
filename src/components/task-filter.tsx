@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { MultiSelect, OptionType } from '~/components/multi-select';
+import { MultiSelect, type OptionType } from '~/components/multi-select';
 import { taskStatus } from "~/utils/constants/dbValuesConstants";
 import { RangeDatepicker } from "chakra-dayzed-datepicker";
 
@@ -18,13 +18,13 @@ const TaskFilter = ({ onFilterChange }: TaskFilterProps) => {
     const [selectedDates, setSelectedDates] = useState<Date[]>([oneMonthAgo, oneMonthFromNow]);
 
     const handleStatusChange = (selectedOptions: OptionType[] | null) => {
-        const statusValues = selectedOptions?.map(option => option.value) || [];
-        setSelectedStatuses(selectedOptions || []);
+        const statusValues = selectedOptions?.map(option => option.value) ?? [];
+        setSelectedStatuses(selectedOptions ?? []);
         applyFilters(statusValues, selectedDates);
     };
 
     const handleDateChange = (dates: Date[] | null) => {
-        setSelectedDates(dates || [new Date(), new Date()]);
+        setSelectedDates(dates ?? [new Date(), new Date()]);
         applyFilters(selectedStatuses.map(option => option.value), dates);
     };
 
@@ -40,17 +40,29 @@ const TaskFilter = ({ onFilterChange }: TaskFilterProps) => {
     }));
 
     return (
-        <div className="filter-bar">
-            <label htmlFor="task-status-filter">Filter by Status:</label>
-            <MultiSelect
-                options={statusOptions}
-                value={selectedStatuses}
-                onChange={handleStatusChange}
-                placeholder="Select statuses..."
-            />
-            <div id="task-modal-due-date" className="flex items-center space-x-5 mb-2 flex-nowrap">
-                <span className="text-base flex flex-shrink items-center space-x-4 w-auto" aria-label="Task Title">
-                    <div className='flex-shrink-0'>Due date:</div>
+        <div id="to-do-list-filter-bar" className="p-3 bg-gray-200 rounded-lg shadow-md mb-4">
+          <div className="flex justify-between">
+            {/* Filter dropdown */}
+            <div className="flex flex-grow mr-4 items-center">
+                <label htmlFor="filter" className="mr-2 text-gray-600 text-xs md:text-base font-medium">
+                   Task Status:
+                </label>
+                <div className='w-3/4'>
+                    <MultiSelect
+                        options={statusOptions}
+                        value={selectedStatuses}
+                        onChange={handleStatusChange}
+                        placeholder="Select statuses..."
+                    />
+                </div> 
+            </div>
+
+            {/* Order by dropdown */}
+            <div className="flex flex-grow items-center">
+              <label htmlFor="order" className="mr-2 flex-shrink-0 text-xs md:text-base  text-gray-600 font-medium">
+                Due Date:
+              </label>
+              <div className='w-3/4 bg-white rounded-lg'>
                     <RangeDatepicker
                         selectedDates={selectedDates}
                         onDateChange={handleDateChange}
@@ -59,11 +71,16 @@ const TaskFilter = ({ onFilterChange }: TaskFilterProps) => {
                                 popoverBodyProps: {
                                     fontSize: "xs",
                                 },
-                            },
+                                popoverContentProps: {
+                                  background: "white",
+                                  color: "black",
+                                },
+                              },
                         }}
                     />
-                </span>
+                </div>
             </div>
+          </div>
         </div>
     );
 };

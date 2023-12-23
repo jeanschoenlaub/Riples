@@ -4,10 +4,16 @@ import { TaskList } from "../task/task-list";
 import { RouterOutputs, api } from "~/utils/api";
 import { DownArrowSVG, LoadingPage, UpArrowSVG } from "~/components";
 import TaskFilter from "~/components/task-filter";
+import Link from "next/link";
 
 type TaskData = RouterOutputs["tasks"]["getTasksByCreatedOrOwnerId"];
-type MappedTasksType = {[projectId: string]: TaskData;};
+type MappedTasksType = Record<string, TaskData>;
 
+//To-DO
+// - Refresh data on change task list
+// - Make pretty
+// - Date picker clear and single days
+// - Clean up code
 
 export const ToDoList = () => {
     const { data: session } = useSession();
@@ -52,7 +58,7 @@ export const ToDoList = () => {
             mappedTasks[project.project.id] = tasks?.filter(task => {
                 const isStatusMatch = selectedFilterStatuses.length === 0 || selectedFilterStatuses.includes('All') || selectedFilterStatuses.includes(task.task.status);
                 let isDateMatch = true; // Default to true if no date filter is applied
-                if (selectedDates && selectedDates[0] && selectedDates[1]) {
+                if (selectedDates?.[0] && selectedDates?.[1]) {
                     // Set time to start of the day for comparison
                     const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
     
@@ -66,7 +72,7 @@ export const ToDoList = () => {
                 }
 
                 return task.task.projectId === project.project.id && isStatusMatch && isDateMatch;
-            }) || [];
+            }) ?? [];
         });
         return mappedTasks;
     }, [projectLead, tasks, selectedFilterStatuses, selectedDates]);
@@ -79,34 +85,52 @@ export const ToDoList = () => {
     if (projectLeadLoading) return <LoadingPage isLoading={projectLeadLoading} />;
 
     return (
-        <div id="todolist">
+        <div id="todolist" className="p-3 mt-2 mr-2 space-y-2 ml-2 md:mr-5 md:ml-5">
             <TaskFilter onFilterChange={handleFilterChange} />
             {projectLead && tasksData && projectLead.map(item => {
                 const taskCount = tasksData[item.project.id]?.length ?? 0;
+                const taskStatus = item.project.status;
                 return taskCount > 0 && (
-                    <div key={item.project.id}>
-                        <button onClick={() => toggleTaskListVisibility(item.project.id)} className="flex items-center text-blue-600">
-                            <div className="flex flex-col items-center mr-2">
-                                <div className="text-sm">{taskCount}</div>
-                                {visibleTaskListIds.has(item.project.id) ? (
-                                    <UpArrowSVG width='5' height='5' />
-                            ) : (
-                                <DownArrowSVG width='5' height='5' />
-                            )}
+                    <div key={item.project.id} className="p-2 border-2 rounded-lg border-gray-200">
+                        <div className="flex">
+                            <button onClick={() => toggleTaskListVisibility(item.project.id)} className="flex items-center text-blue-500">
+                                <div className="flex flex-col items-center mr-2">
+                                    <div className="text-sm font-semibold">{taskCount}</div>
+                                        {visibleTaskListIds.has(item.project.id) ? (
+                                            <UpArrowSVG width='5' height='5' />
+                                        ) : (
+                                            <DownArrowSVG width='5' height='5' />
+                                        )}
+                                    </div>
+                            </button>
+                            <div className="flex flex-grow justify-between items-center">
+                                    <div className="text-lg ml-2 text-black">
+                                        <Link href={`/projects/${item.project.id}`}>
+                                            {item.project.title}
+                                        </Link>
+                                    </div>
+                                    <div className={`text-white text-base font-base text-center items-center rounded px-2 py-1 ${
+                                        taskStatus === "Doing" ? "bg-yellow-500" : 
+                                        taskStatus === "To-Do" ? "bg-gray-500" : 
+                                        taskStatus === "Done" ? "bg-green-500" : ""
+                                    }`}>
+                                         <Link href={`/projects/${item.project.id}`}>
+                                         {taskStatus}
+                                        </Link>
+                                    </div>
+                            </div>
                         </div>
-                        <div className="text-xl mr-2">{item.project.title}</div>
-                    </button>
-                    {visibleTaskListIds.has(item.project.id) && (
-                        <TaskList
-                            taskData={tasksData[item.project.id] || []}
-                            projectId={item.project.id} 
-                            projectType={item.project.projectType}
-                            isMember={true}
-                            isProjectLead={true}
-                            isPending={true}
-                        />
-                    )}
-                </div>
+                        {visibleTaskListIds.has(item.project.id) && (
+                            <TaskList
+                                taskData={tasksData[item.project.id] ?? []}
+                                projectId={item.project.id} 
+                                projectType={item.project.projectType}
+                                isMember={true}
+                                isProjectLead={true}
+                                isPending={true}
+                            />
+                        )}
+                    </div>
                 )
             })}
         </div>
