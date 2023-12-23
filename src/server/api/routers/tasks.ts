@@ -58,6 +58,53 @@ export const taskRouter = createTRPCRouter({
     });
   }),
 
+  getTasksByCreatedOrOwnerId: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const tasks = await ctx.prisma.tasks.findMany({
+        where: {
+          OR: [
+            { ownerId: input.userId },
+            { createdById: input.userId }
+          ]
+        },
+        orderBy: { editedAt: 'desc' },
+        include: { subTasks: true }
+      });
+
+      const fetchUserData = async (userIds: string[]) => {
+        return await ctx.prisma.user.findMany({
+          where: { id: { in: userIds } },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            emailVerified: true,
+            image: true,
+            username: true,
+            createdAt: true,
+            description: true,
+            onBoardingFinished: true,
+            productTourFinished: true,
+            tags: {
+              select: {
+                tag: true  // Select the tag field inside the UserInterestTags model
+              }
+            },
+          }
+        });
+      };
+
+      const ownerUser = await fetchUserData(tasks.map(task => task.ownerId));
+      const createdByUser = await fetchUserData(tasks.map(task => task.createdById));
+
+      return tasks.map(task => {
+        const owner = ownerUser.find(o => o.id === task.ownerId);
+        const createdBy = createdByUser.find(c => c.id === task.createdById);
+        return { task, owner, createdBy };
+      });
+    }),
+
   create: protectedProcedure
     .input(
       z.object({
