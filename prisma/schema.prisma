@@ -72,6 +72,7 @@ model Tasks {
   createdById  String  //userId
   createdAt    DateTime @default(now())
   editedAt     DateTime @default(now())
+  due          DateTime @default(now())
   openSource   Boolean  @default(false)
 
   // Relations
@@ -102,10 +103,10 @@ model Goals {
 }
 
 model Tag {
-    id       String        @id @default(cuid())
-    name     String        @unique
-    projects ProjectTags[]
-    users    UserInterestTags[]
+  id       String        @id @default(cuid())
+  name     String        @unique
+  projects ProjectTags[]
+  users    UserInterestTags[]
 }
 
 
@@ -143,7 +144,7 @@ model Comment {
   
   //Relations
   ripleId   String
-  riple     Riple @relation(fields: [ripleId], references: [id],  onDelete: Cascade)
+  riple     Riple    @relation(fields: [ripleId], references: [id],  onDelete: Cascade)
   authorID  String?  // Making this field nullable
   author    User?    @relation(fields: [authorID], references: [id], onDelete: SetNull)
   @@index([ripleId])
@@ -322,35 +323,35 @@ model Like {
 }
 
 model ForumQuestion {
-    id          String   @id @default(cuid())
-    content     String   @db.VarChar(255)@default("")
-    createdAt   DateTime @default(now())
+  id          String   @id @default(cuid())
+  content     String   @db.VarChar(255)@default("")
+  createdAt   DateTime @default(now())
 
-    //Relations
-    projectId   String
-    project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-    userId      String
-    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    answers     ForumAnswers[]
+  //Relations
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers     ForumAnswers[]
 }
 
 model ForumAnswers {
-    id          String   @id @default(cuid())
-    content     String   @db.VarChar(10000)@default("")
-    createdAt   DateTime @default(now())
+  id          String   @id @default(cuid())
+  content     String   @db.VarChar(10000)@default("")
+  createdAt   DateTime @default(now())
 
-    //Relations
-    questionId  String
-    question    ForumQuestion @relation(fields: [questionId], references: [id],  onDelete: Cascade)
-    userId      String
-    user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  //Relations
+  questionId  String
+  question    ForumQuestion @relation(fields: [questionId], references: [id],  onDelete: Cascade)
+  userId      String
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model AIUsageLog {
-    id          String   @id @default(cuid())
-    features    String
-    userId      String 
-    timeStamp   DateTime @default(now())
+  id          String   @id @default(cuid())
+  features    String
+  userId      String 
+  timeStamp   DateTime @default(now())
 
-    user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

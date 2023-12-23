@@ -3,22 +3,24 @@ import type { RouterOutputs} from "~/utils/api";
 import { api } from "~/utils/api";
 import Link from 'next/link'; 
 import { TaskModal } from '~/features/task/task-modal/task-modal';
-import { ProfileImage, LoadingRiplesLogo, StyledTable, DownArrowSVG, UpArrowSVG, RocketSVG } from '~/components';
+import { ProfileImage, LoadingRiplesLogo, StyledTable, DownArrowSVG, UpArrowSVG, RocketSVG, TaskSVG, TaskEditSVG } from '~/components';
 import { SubTasksRows } from './subtask/subtask';
 
 
 interface TaskListProps {
-  project: ProjectData["project"];
+  taskData: TaskData;
+  projectId: string, //Prepping for project -> task prop change
+  projectType: string, //Prepping for project -> task prop change
   isMember: boolean,
   isPending: boolean
   isProjectLead: boolean
 }
 
-type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"];
-type TaskData = RouterOutputs["tasks"]["edit"];
+type TaskData = RouterOutputs["tasks"]["getTasksByProjectId"];
+type TaskEditData = RouterOutputs["tasks"]["edit"];
 
-export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProjectLead}) => {
-  const [selectedTask, setSelectedTask] = useState<TaskData | null>(null);
+export const TaskList: React.FC<TaskListProps> = ({ taskData, projectId, projectType, isMember, isProjectLead}) => {
+  const [selectedTask, setSelectedTask] = useState<TaskEditData | null>(null);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [displaySubtasks, setDisplaySubtasks] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
@@ -27,7 +29,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
   //  { taskId: taskIdToFetch ?? "" },
   //  { enabled: taskIdToFetch !== null }
   //);
-  const { data: taskData, isLoading: isLoadingTasks, isError } = api.tasks.getTasksByProjectId.useQuery({ projectId: project.id });
+  // const { data: taskData, isLoading: isLoadingTasks, isError } = api.tasks.getTasksByProjectId.useQuery({ projectId: projectId});
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);  // Assuming mobile devices have a width of 768px or less
 
   useEffect(() => {
@@ -46,7 +48,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
 
   let headers = isMobile ? ["Sub", "Task"] : ["Sub", "Task Title", "Status", "Owner"];
   let columnWidths = isMobile ? ["15%", "50%"] : ["6%", "30%", "8%", "8%"];
-  if (project.projectType === "solo") {
+  if (projectType === "solo") {
     headers = headers.filter(header => header !== "Owner");
     isMobile ? columnWidths =["15%","50%"] :columnWidths =["6%","50%","8%"]
   }
@@ -64,15 +66,15 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
     }
   };
 
-  const openEditModal = (task: TaskData | null) => {
+  const openEditModal = (task: TaskEditData | null) => {
     setSelectedTask(task);
     setShowTaskModal(true);
   };
 
-  const isLoading = isLoadingTasks 
+  // const isLoading = isLoadingTasks 
 
-  if (isLoading) return <div className="flex justify-center"><LoadingRiplesLogo isLoading={isLoading}/></div>;
-  if (isError || !taskData) return <p>Error loading tasks.</p>;
+  // if (isLoading) return <div className="flex justify-center"><LoadingRiplesLogo isLoading={isLoading}/></div>;
+  // if (isError || !taskData) return <p>Error loading tasks.</p>;
 
   return (
     <div className='mb-10'>
@@ -148,9 +150,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
               <td className="px-6 py-2 overflow-x-auto whitespace-nowrap font-medium text-gray-900 no-scrollbar" style={{ width: columnWidths[1]}}>
                 <button onClick={() => openEditModal(taskDetail.task)} className="text-blue-600  hover:underline">
                   <div className="flex items-center">
-                    <svg className="w-5 h-5 mr-2 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17v1a.97.97 0 0 1-.933 1H1.933A.97.97 0 0 1 1 18V5.828a2 2 0 0 1 .586-1.414l2.828-2.828A2 2 0 0 1 5.828 1h8.239A.97.97 0 0 1 15 2M6 1v4a1 1 0 0 1-1 1H1m13.14.772 2.745 2.746M18.1 5.612a2.086 2.086 0 0 1 0 2.953l-6.65 6.646-3.693.739.739-3.692 6.646-6.646a2.087 2.087 0 0 1 2.958 0Z"/>
-                    </svg>
+                    <TaskEditSVG width='5' height='5' marginRight='2' colorStrokeHex='#1e293b' colorFill='white'></TaskEditSVG>
                     {taskDetail.task.title}
                   </div>
                 </button>
@@ -164,7 +164,7 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
                   {taskDetail.task.status}
                 </div>
               </td>
-              {(project.projectType != "solo") ? (
+              {(projectType != "solo") ? (
               <td className="px-6 py-4 hidden md:table-cell" style={{ textAlign: 'center', verticalAlign: 'middle',   width: columnWidths[3]  }}>
                 {taskDetail.owner ? (
                   <Link href={`/users/${taskDetail.owner.id}`} className="flex items-center justify-center space-x-2">
@@ -190,7 +190,8 @@ export const TaskList: React.FC<TaskListProps> = ({ project, isMember, isProject
         
       </div>
         <TaskModal 
-          project={project} 
+          projectId={projectId} 
+          projectType={projectType} 
           inputValue = {inputValue}
           taskToEdit={selectedTask}
           isMember={isMember} 

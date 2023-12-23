@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
+import { SingleDatepicker } from "chakra-dayzed-datepicker";
 
 // Local Imports
 import { api } from "~/utils/api";
@@ -11,11 +12,13 @@ import type { CreateTaskPayload, EditTaskPayload, TaskModalProps } from './task-
 import { useTaskMutation } from './task-modal-api';
 
 // Main React Functional Component
-export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
+export const TaskModal: React.FC<TaskModalProps> = ({ projectId, projectType, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
   
   // Initialize state with values from props if taskToEdit is present (for edit mode vs create mode)
   const defaultTemplate = ``
   const initialContent = taskToEdit ? taskToEdit.content : defaultTemplate;
+
+  
 
   //Is the logged in user allowed to edit ?
   const { data: session } = useSession();
@@ -23,13 +26,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     ((isMember && (
     session?.user.id === taskToEdit?.ownerId || 
     session?.user.id === taskToEdit?.createdById || 
-    session?.user.id === project.authorID ||
     taskToEdit === null)) || isProjectLead)
 
   const allowedToDelete =  
-   (isMember || isProjectLead) && (
-    session?.user.id === taskToEdit?.createdById || 
-    session?.user.id === project.authorID) && taskToEdit
+   (isProjectLead || (isMember && session?.user.id === taskToEdit?.createdById))  && taskToEdit
 
   // States and useEffects
   const [taskTitle, setTaskTitle] = useState(() => taskToEdit ? taskToEdit.title : inputValue)
@@ -38,6 +38,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   const [isOwner, setIsOwner] = useState(session?.user.id === taskToEdit?.ownerId);
   const [taskStatus, setTaskStatus] = useState(taskToEdit ? taskToEdit.status : 'To-Do');
   const [taskOwnerId, setTaskOwnerId] = useState(taskToEdit ? taskToEdit.ownerId: null);
+  const [taskDate, setTaskDate] = useState(new Date());
 
   // Conditional query using tRPC if task owner to display profile image
   const shouldExecuteQuery = !!taskToEdit?.ownerId // Run query only if there is a task owner
@@ -52,6 +53,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
       setTaskStatus(taskToEdit.status);
       setTaskContent(taskToEdit.content);
       setTaskOwnerId(taskToEdit.ownerId);
+      setTaskDate(taskToEdit.due)
       setIsOwner(session?.user.id === taskToEdit.ownerId);
       if (allowedToEdit) {
         setIsEditMode(true); // If the task already exists + the user has the right to edit, we are editing vs creating
@@ -69,8 +71,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     }
   
     const payload = isOwner 
-      ? { id: taskToEdit!.id, projectId: project.id, userId: "" }
-      : { id: taskToEdit!.id, projectId: project.id, userId: session!.user.id };
+      ? { id: taskToEdit!.id, projectId: projectId, userId: "" }
+      : { id: taskToEdit!.id, projectId: projectId, userId: session!.user.id };
   
     changeTaskOwner(payload)
       .then(() => {
@@ -91,6 +93,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
     setTaskTitle("");
     setIsEditMode(false)
     setTaskStatus("To-Do");
+    setTaskDate(new Date())
     setTaskOwnerId(null)
     setTaskContent(defaultTemplate);
   }
@@ -98,18 +101,20 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
 
   // Helper function to generate edit payload
   const generateEditPayload = (): EditTaskPayload => ({
-    projectId: project.id,
+    projectId: projectId,
     title: taskTitle,
     status: taskStatus,
     content: taskContent,
+    due: taskDate,
     id: taskToEdit!.id
   });
 
   // Helper function to generate create payload
   const generateCreatePayload = (): CreateTaskPayload => ({
-    projectId: project.id,
+    projectId: projectId,
     title: taskTitle,
     status: taskStatus,
+    due: taskDate,
     content: taskContent
   });
 
@@ -135,7 +140,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
 
   const handleDelete = () => {
     if (taskToEdit) {
-      deleteTask({ id: taskToEdit.id, projectId: project.id, userId: session!.user.id })
+      deleteTask({ id: taskToEdit.id, projectId: projectId, userId: session!.user.id })
         .then(() => {
           toast.success('Task deleted successfully!');
           enhancedOnClose();
@@ -170,11 +175,11 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
   return (
     <div>
       <Modal showModal={showModal} isLoading={isLoading} size="medium" onClose={enhancedOnClose}>
-      <span className="text-lg flex justify-center items-center space-x-4 mb-2w-auto">
+      <span className="text-lg font-semibold flex justify-center items-center space-x-4 mb-2w-auto">
         {taskToEdit ? (isEditMode ? "Edit Task" : "View Task") : "Create New Task"}
       </span>
 
-        <label className="block text-sm mb-3 justify-br" aria-label="Task Content">
+        <label className="block text-base mb-3 justify-br" aria-label="Task Content">
           Task Title:
             <input
               type="text"
@@ -185,9 +190,32 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
               disabled={!allowedToEdit || isLoading}
             />
         </label>
+
+        {/* DUE DATE */}
+        <div id="task-modal-due-date" className="flex items-center space-x-5 mb-2 flex-nowrap">
+          <span className="text-base flex flex-shrink items-center space-x-4 w-auto" aria-label="Task Title">
+              <div className='flex-shrink-0'>Due date:</div>
+              
+  
+          <SingleDatepicker
+                name="date-input"
+                date={taskDate}
+                onDateChange={setTaskDate}
+                propsConfigs={{
+                  popoverCompProps: {
+                    popoverBodyProps: {
+                      fontSize: "xs", // Adjust font size doesn't work
+                    },
+                  },
+                  // ... other props
+                }}
+                
+              />
+            </span>
+        </div>
    
         <div id="task-modal-status" className="flex flex-wrap items-center space-x-5 mb-2 md:flex-nowrap">
-            <span className="text-sm flex items-center space-x-4 w-auto mr-2" aria-label="Task Title">Task Status:
+            <span className="text-base flex items-center space-x-4 w-auto mr-2" aria-label="Task Title">Task Status:
               <select 
                 value={taskStatus} 
                 onChange={handleStatusChange}
@@ -202,7 +230,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
 
 
         <div id="task-modal-owner-info" className="flex flex-wrap items-center space-x-5 mb-2 md:flex-nowrap">
-        {(taskToEdit && project.projectType === "collab") && ( // If taskToEdit exists (in edit mode)
+        {(taskToEdit && projectType === "collab") && ( // If taskToEdit exists (in edit mode)
           <span className="text-sm flex items-center space-x-4 w-auto" aria-label="Task Title">Task Owner:
             {taskOwnerId ? (
               <Link href={`/users/${taskOwnerId}`} className="flex items-center space-x-4">
@@ -245,13 +273,15 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
         )}
       </div>
 
-        <label className="block text-sm mb-2" aria-label="Task Content">
+      
+
+        <label className="block text-base mb-2" aria-label="Task Content">
           Notes:
             <textarea
                 value={taskContent}
                 onChange={(e) => setTaskContent(e.target.value)}
                 className={`w-full p-2 mt-1 rounded border ${isLoading ? 'cursor-not-allowed' : ''}`}
-                rows={5}
+                rows={7}
                 maxLength={10000}
                 disabled={!allowedToEdit || isLoading}
               />
@@ -262,7 +292,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
           {allowedToEdit &&
               <button 
                 onClick={handleSave}
-                className="bg-green-500 text-white rounded px-4 py-2 mr-2  flex items-center justify-center w-auto"
+                className="bg-green-500 text-white text-lg rounded px-4 py-2 mr-2  flex items-center justify-center w-auto"
                 disabled={isLoading}
               >
               <span>Save Task</span>
@@ -271,7 +301,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ project, taskToEdit, showM
           {allowedToDelete && (
             <button 
             onClick={handleDelete} 
-            className="bg-red-500 text-white rounded px-4 py-2 mr-2 flex items-center justify-center w-auto"
+            className="bg-red-500 text-white rounded text-lg px-4 py-2 mr-2 flex items-center justify-center w-auto"
             disabled={isLoading || isDeleting}
           >
             <span>Delete Task</span>

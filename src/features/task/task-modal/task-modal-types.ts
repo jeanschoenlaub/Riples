@@ -1,8 +1,11 @@
 import type { RouterOutputs } from "~/utils/api";
 
+type TaskData = RouterOutputs["tasks"]["edit"];
+
 export interface TaskModalProps {
-    project: ProjectData["project"];
     taskToEdit: TaskData | null; 
+    projectId: string, //Prepping for project -> task prop change
+    projectType: string, //Prepping for project -> task prop change
     showModal: boolean;
     isMember: boolean;
     isProjectLead: boolean;
@@ -15,6 +18,7 @@ export  interface CreateTaskPayload {
     title: string;
     status: string;
     content: string;
+    due: Date;
 }
   
 export  interface ChangeTaskOwnerPayload {
@@ -38,7 +42,3 @@ export  interface EditStatusPayload {
 export interface EditTaskPayload extends CreateTaskPayload {
     id: string;
 }
-  
-  
-type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"];
-type TaskData = RouterOutputs["tasks"]["edit"];

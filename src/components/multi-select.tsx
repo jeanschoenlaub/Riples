@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 
-interface OptionType {
+export interface OptionType {
     value: string;
     label: string;
 }

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { NavBarSignInModal } from "../navbar/signinmodal";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import { ToDoList } from "../to-do-list/to-do-list";
 
 export const CreateFeed = () => {
   //const { data: projectData, isLoading: projectLoading } = api.projects.getAll.useQuery();
@@ -51,7 +52,7 @@ export const CreateFeed = () => {
         </button>
       </div>
 
-      {/* Project Cards */}
+      
       <div className="flex mt-6 justify-center">
         <a href="https://forms.gle/WPq2stK3YBDcggHw5" target="_blank" rel="noopener noreferrer">
               <button className="bg-green-500 text-white rounded py-1 px-2 text-center text-sm">
@@ -59,6 +60,10 @@ export const CreateFeed = () => {
               </button>
             </a>
       </div>
+
+      {/* To do list */}
+      <ToDoList></ToDoList>
+
 
       {/*  Modals Opening on logic */}
       <div>
