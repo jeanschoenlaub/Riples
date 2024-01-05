@@ -8,6 +8,7 @@ export const useSubTaskMutation = (taskId: string, { onSuccess }: { onSuccess: (
     
     const handleSuccess = async () => {
       await apiContext.tasks.getTasksByProjectId.invalidate();
+      await apiContext.tasks.getTasksByCreatedOrOwnerId.invalidate();//For the create feed page custom grid components
       onSuccess();
     };
     

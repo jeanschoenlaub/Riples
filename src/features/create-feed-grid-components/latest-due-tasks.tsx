@@ -1,10 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import { LoadingPage } from "~/components";
+import { DownArrowSVG, LoadingPage, UpArrowSVG } from "~/components";
 import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
+import { SubTasksRows } from "../task/subtask/subtask";
 dayjs.extend(relativeTime);
 
 export const DueTasks = () => {
@@ -30,6 +31,16 @@ export const DueTasks = () => {
                 return dateATimestamp - dateBTimestamp;
             });
     }, [tasks]);
+
+    const [displaySubtasks, setDisplaySubtasks] = useState<string | null>(null);
+    const toggleSubtasks = (taskId: string) => {
+        if (displaySubtasks === taskId) {
+        setDisplaySubtasks(null); // If the clicked task is already open, close it
+        } else {
+        setDisplaySubtasks(taskId); // Show subtasks for the clicked task
+        }
+    };
+
     
 
     if (!session) {
@@ -47,7 +58,41 @@ export const DueTasks = () => {
                     <div key={item.task.id} className="p-2 border-2 rounded-lg border-gray-200">
                         <div className="flex">
                             <div className="flex flex-grow justify-between items-center">
-                                <div className="font-medium md:font-medium text-xs md:text-base text-sky-500 ml-1">
+                                <div className="flex items-center font-medium md:font-medium text-xs md:text-base text-sky-500 ml-1">
+                                    <button onClick={() => toggleSubtasks(item.task.id)} className="flex mr-4 text-blue-600 ">
+                                        {displaySubtasks === item.task.id ? (
+                                        <div className='flex flex-col items-center'>
+                                        {(() => {
+                                            const totalSubtasks = item.task.subTasks.length;
+                                            const doneSubtasks = item.task.subTasks.filter(subtask => subtask.status).length;
+
+                                            // Display these numbers in a badge
+                                            return (
+                                            <div className="text-sm">
+                                                {`${doneSubtasks}/${totalSubtasks}`}
+                                            </div>
+                                            );
+                                        })()}
+                                        <UpArrowSVG width='5' height='5'></UpArrowSVG>
+                                        </div>
+                                        ) : (
+                        
+                                        <div className='flex flex-col items-center'>
+                                            {(() => {
+                                            const totalSubtasks = item.task.subTasks.length;
+                                            const doneSubtasks = item.task.subTasks.filter(subtask => subtask.status).length;
+
+                                            // Display these numbers in a badge
+                                            return (
+                                                <div className="text-sm">
+                                                    {`${doneSubtasks}/${totalSubtasks}`}
+                                                </div>
+                                            );
+                                            })()}
+                                            <DownArrowSVG width='5' height='5'></DownArrowSVG>
+                                        </div>
+                                        )}
+                                    </button>
                                     <Link href={`/projects/${item.task.projectId}`}>
                                         {item.task.title}
                                     </Link>
@@ -66,7 +111,14 @@ export const DueTasks = () => {
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
+                        {/* Conditional Subtask Rows */}
+                        {displaySubtasks === item.task.id && (
+                                <div className="bg-white border-b">
+                                    <SubTasksRows taskData={item} />
+                                </div>
+                            )}
                     </div>
                 );
             })}
