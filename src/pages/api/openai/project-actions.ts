@@ -1,12 +1,11 @@
 import { TRPCError } from '@trpc/server';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import OpenAI, { ClientOptions } from "openai";
-import { type AppRouter, appRouter } from '~/server/api/root';
+import OpenAI, { type ClientOptions } from "openai";
+import { appRouter } from '~/server/api/root';
 import { getServerAuthSession } from '~/server/auth';
 import { prisma } from '~/server/db';
-import { Messages, processAssistantMessages } from './utils';
-import { RouterOutputs } from '~/utils/api';
-import RequiredActionFunctionToolCall from "openai"
+import { type Messages, processAssistantMessages } from './utils';
+import type { RouterOutputs } from '~/utils/api';
 
 const options: ClientOptions = {
   apiKey: process.env.OPENAI_API_KEY, 
@@ -24,11 +23,6 @@ export interface RequestBody {
     runId: string;
     toolCalls:  OpenAI.Beta.Threads.Runs.RequiredActionFunctionToolCall[];
     notApprovedToolCallIds: string[];
-}
-
-
-interface ExtendedToolCall extends RequiredActionFunctionToolCall {
-    approved: boolean;
 }
 
 const openai = new OpenAI(options);

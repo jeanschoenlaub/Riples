@@ -89,6 +89,7 @@ export const authOptions: NextAuthOptions = {
       },
       issuer: 'https://www.linkedin.com',
       jwks_endpoint: 'https://www.linkedin.com/oauth/openid/jwks',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       profile(profile, tokens) {
         const defaultImage =
           'https://cdn-icons-png.flaticon.com/512/174/174857.png';

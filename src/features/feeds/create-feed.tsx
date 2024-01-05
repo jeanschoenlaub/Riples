@@ -3,7 +3,8 @@ import { useState } from "react";
 import { NavBarSignInModal } from "../navbar/signinmodal";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-import { ToDoList } from "../to-do-list/to-do-list";
+import { ToDoList } from "../create-feed-grid-components/to-do-list";
+import { DueTasks } from "../create-feed-grid-components/latest-due-tasks";
 
 export const CreateFeed = () => {
   //const { data: projectData, isLoading: projectLoading } = api.projects.getAll.useQuery();
@@ -62,8 +63,8 @@ export const CreateFeed = () => {
       </div>
 
       {/* To do list */}
+      <DueTasks></DueTasks>
       <ToDoList></ToDoList>
-
 
       {/*  Modals Opening on logic */}
       <div>

@@ -13,6 +13,7 @@ export type WizardRipleProps = {
     modalStep: string;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const WizardProjectRiples: React.FC<WizardRipleProps> = ({ projectTitle, projectSummary, ripleContent, modalStep, userId }) => {
 
     const [inputValue, setInputValue] = useState('');

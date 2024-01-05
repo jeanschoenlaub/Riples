@@ -207,7 +207,7 @@ export const ripleRouter = createTRPCRouter({
     }),
 
     createRipleImagePresignedUrl: protectedProcedure
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx }) => {
 
       const imageId = uuidv4();
 

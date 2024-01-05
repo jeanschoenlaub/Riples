@@ -8,6 +8,7 @@ export type WizardChatProps = {
     modalStep: string;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const WizardChat: React.FC<WizardChatProps> = ({ projectTitle, projectSummary, ripleContent, modalStep }) => {
 
     const [inputValue, setInputValue] = useState('');
@@ -33,6 +34,7 @@ export const WizardChat: React.FC<WizardChatProps> = ({ projectTitle, projectSum
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     className="w-full p-2 border rounded-md resize-none"
+                    disabled= {isLoading}
                     rows={3}
                 ></textarea>
 

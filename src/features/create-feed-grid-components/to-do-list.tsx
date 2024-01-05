@@ -1,19 +1,13 @@
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { TaskList } from "../task/task-list";
-import { RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/utils/api";
 import { DownArrowSVG, LoadingPage, UpArrowSVG } from "~/components";
 import TaskFilter from "~/components/task-filter";
 import Link from "next/link";
 
 type TaskData = RouterOutputs["tasks"]["getTasksByCreatedOrOwnerId"];
 type MappedTasksType = Record<string, TaskData>;
-
-//To-DO
-// - Refresh data on change task list
-// - Make pretty
-// - Date picker clear and single days
-// - Clean up code
 
 export const ToDoList = () => {
     const { data: session } = useSession();
@@ -85,7 +79,7 @@ export const ToDoList = () => {
     if (projectLeadLoading) return <LoadingPage isLoading={projectLeadLoading} />;
 
     return (
-        <div id="todolist" className="p-3 mt-2 mr-2 space-y-2 ml-2 md:mr-5 md:ml-5">
+        <div id="todolist" className="p-3 mt-2 mr-2 bg-white rounded-lg border-slate-300 border space-y-2 ml-2 md:mr-5 md:ml-5">
             <TaskFilter onFilterChange={handleFilterChange} />
             {projectLead && tasksData && projectLead.map(item => {
                 const taskCount = tasksData[item.project.id]?.length ?? 0;

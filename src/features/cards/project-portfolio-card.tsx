@@ -26,9 +26,9 @@ export const ProjectCardPortofolio = (props: PortofolioProjectCardProps) => {
   //const completedSubtasksCount = allSubtasks.filter(subtask => subtask?.status === true).length;
 
   const renderTags = () => {
-    return project.tags.map((tag, index) => (
+    return project.projectTags.map((tag, index) => (
         <span key={index} className="inline-block bg-gray-200 rounded-full px-2 py-1 text-xs font-semibold text-gray-700 mr-2 mb-2">
-            #{tag.tag.name}
+            #{tag.name}
         </span>
     ));
 }

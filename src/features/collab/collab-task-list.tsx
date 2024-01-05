@@ -177,7 +177,8 @@ export const CollabTaskList: React.FC<CollabTaskListProps> = ({ project, isMembe
         
       </div>
         <TaskModal 
-          project={project} 
+          projectId={project.id} 
+          projectType={project.projectType}
           inputValue = {inputValue}
           taskToEdit={selectedTask}
           isMember={isMember} 

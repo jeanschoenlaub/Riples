@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ApprovalToolCall, AssistantResponse, useProjectAssistantParameters } from "./wizard-project-types";
+import type { ApprovalToolCall, AssistantResponse, useProjectAssistantParameters } from "./wizard-project-types";
 
 export const useProjectAssistant = () => {
     const [data, setData] = useState<string>('');

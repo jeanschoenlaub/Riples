@@ -9,7 +9,7 @@ export const adminStatsRouter = createTRPCRouter({
     .input(z.object({
       selectedDate: z.string(), 
     }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
         const inputDate = new Date(input.selectedDate);
         inputDate.setHours(0, 0, 0, 0);
   

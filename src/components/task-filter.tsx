@@ -66,6 +66,9 @@ const TaskFilter = ({ onFilterChange }: TaskFilterProps) => {
                     <RangeDatepicker
                         selectedDates={selectedDates}
                         onDateChange={handleDateChange}
+                        configs={{
+                            dateFormat: 'dd/MM/yy'
+                        }}
                         propsConfigs={{
                             popoverCompProps: {
                                 popoverBodyProps: {
