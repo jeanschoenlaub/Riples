@@ -1,6 +1,6 @@
 import { api } from "~/utils/api";
-import { SocialFeed } from "~/features/feeds/social-feed";  // Rename to avoid naming conflicts
-import { CreateFeed } from "~/features/feeds/create-feed"; // Assume you have a CreateFeed component
+import { SocialFeed } from "~/pages/feeds/social-feed";  // Rename to avoid naming conflicts
+import { CreateFeed } from "~/pages/feeds/create-feed"; // Assume you have a CreateFeed component
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { FeedLayout } from "~/layout/feed-layout";

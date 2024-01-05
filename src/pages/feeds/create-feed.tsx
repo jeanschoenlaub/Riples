@@ -1,9 +1,10 @@
-import { CreateProjectModal } from "../create-project/create-project";
+import { CreateProjectModal } from "../../features/create-project/create-project";
 import { useState } from "react";
-import { NavBarSignInModal } from "../navbar/signinmodal";
+import { NavBarSignInModal } from "../../features/navbar/signinmodal";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-import { ToDoList } from "../to-do-list/to-do-list";
+import { ToDoList } from "../../features/to-do-list/to-do-list";
+import { DueTasks } from "../../features/to-do-list/latest-due-tasks";
 
 export const CreateFeed = () => {
   //const { data: projectData, isLoading: projectLoading } = api.projects.getAll.useQuery();
@@ -62,8 +63,8 @@ export const CreateFeed = () => {
       </div>
 
       {/* To do list */}
+      <DueTasks></DueTasks>
       <ToDoList></ToDoList>
-
 
       {/*  Modals Opening on logic */}
       <div>
