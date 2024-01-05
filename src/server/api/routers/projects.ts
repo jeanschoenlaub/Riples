@@ -267,7 +267,6 @@ export const projRouter = createTRPCRouter({
   getProjectByMemberId: publicProcedure
   .input(z.object({ memberId: z.string() }))
   .query(async ({ ctx, input }) => {
-    // Fetching all projects where the member with the provided memberId is a part of
     const projects = await ctx.prisma.project.findMany({
       where: {
         members: {
@@ -298,9 +297,18 @@ export const projRouter = createTRPCRouter({
       orderBy: [{ createdAt: "desc" }],
     });
 
-    // Since projects already have an authorID, and assuming each project has one author,
-    // We'll fetch author data for each project and map them together
-    return Promise.all(projects.map(async (project) => {
+    // Flatten tags and remove the original tags structure
+    const projectsWithFlattenedTags = projects.map(proj => {
+      const projectTags = proj.tags.map(rel => rel.tag);
+      return {
+        ...proj,
+        projectTags, // Add the flattened tags array
+        tags: undefined // Remove the original tags structure
+      };
+    });
+
+    // Fetch author for each project (or fetch once and apply to all, depending on the chosen approach)
+    return Promise.all(projectsWithFlattenedTags.map(async (project) => {
       const author = await ctx.prisma.user.findUnique({
         where: { id: project.authorID },
       });
@@ -315,6 +323,7 @@ export const projRouter = createTRPCRouter({
       };
     }));
   }),
+
 
 
   create: protectedProcedure
