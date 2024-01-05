@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { TaskList } from "../task/task-list";
-import { RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/utils/api";
 import { DownArrowSVG, LoadingPage, UpArrowSVG } from "~/components";
 import TaskFilter from "~/components/task-filter";
 import Link from "next/link";

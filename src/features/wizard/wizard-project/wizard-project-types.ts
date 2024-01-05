@@ -1,5 +1,5 @@
-import OpenAI from "openai";
-import { Dispatch, RefObject, SetStateAction } from "react";
+import type OpenAI from "openai";
+import type { Dispatch, RefObject, SetStateAction } from "react";
 
 export type WizardAboutProps = {
     projectId: string;

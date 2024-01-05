@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useProjectAssistant } from "~/features/wizard/wizard-project/use-project-assistant";
 import ReactMarkdown from "react-markdown";
 import { LoadingSpinner } from "~/components";
-import { ApprovalToolCallState, WizardAboutProps } from "./wizard-project-types";
+import type { ApprovalToolCallState, WizardAboutProps } from "./wizard-project-types";
 
 export const WizardAbout: React.FC<WizardAboutProps> = ({ projectId }) => {
     const [inputValue, setInputValue] = useState('');

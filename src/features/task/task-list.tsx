@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import type { RouterOutputs} from "~/utils/api";
-import { api } from "~/utils/api";
 import Link from 'next/link'; 
 import { TaskModal } from '~/features/task/task-modal/task-modal';
-import { ProfileImage, LoadingRiplesLogo, StyledTable, DownArrowSVG, UpArrowSVG, RocketSVG, TaskSVG, TaskEditSVG } from '~/components';
+import { ProfileImage, StyledTable, DownArrowSVG, UpArrowSVG, RocketSVG, TaskEditSVG } from '~/components';
 import { SubTasksRows } from './subtask/subtask';
 
 

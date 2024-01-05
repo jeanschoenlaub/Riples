@@ -10,6 +10,7 @@ export const useTaskMutation = () => {
 
     const handleSuccess = async () => {
       await apiContext.tasks.getTasksByProjectId.invalidate();
+      await apiContext.tasks.getTasksByCreatedOrOwnerId.invalidate();
     };
 
     // Create Task Mutation

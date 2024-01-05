@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import OpenAI, { ClientOptions } from "openai";
-import { Messages, processAssistantMessages } from './utils';
-import { RouterOutputs } from '~/utils/api';
+import OpenAI, { type ClientOptions } from "openai";
+import { type Messages, processAssistantMessages } from './utils';
 
 const options: ClientOptions = {
   apiKey: process.env.OPENAI_API_KEY, 
@@ -15,8 +14,6 @@ interface RequestBody {
 
 const openai = new OpenAI(options);
 
-type Task = RouterOutputs["tasks"]["getTasksByProjectId"]
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const ASSISTANT_ID = 'asst_AuMgUlkhbiRl0vsW4KjWO4bC'; // Your hardcoded assistant ID
 
@@ -25,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).end('Method Not Allowed');
     }
 
-    const { prompt, projectId, existingThreadId } = req.body as RequestBody;
+    const { prompt, existingThreadId } = req.body as RequestBody;
     if (!prompt) {
         return res.status(400).end('Bad Request: Prompt is required');
     }
