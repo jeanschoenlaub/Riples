@@ -1,10 +1,10 @@
-import { CreateProjectModal } from "../../features/create-project/create-project";
+import { CreateProjectModal } from "../create-project/create-project";
 import { useState } from "react";
-import { NavBarSignInModal } from "../../features/navbar/signinmodal";
+import { NavBarSignInModal } from "../navbar/signinmodal";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-import { ToDoList } from "../../features/create-feed-grid-components/to-do-list";
-import { DueTasks } from "../../features/create-feed-grid-components/latest-due-tasks";
+import { ToDoList } from "../create-feed-grid-components/to-do-list";
+import { DueTasks } from "../create-feed-grid-components/latest-due-tasks";
 
 export const CreateFeed = () => {
   //const { data: projectData, isLoading: projectLoading } = api.projects.getAll.useQuery();

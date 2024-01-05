@@ -3,7 +3,7 @@ import { ArrowLeftSVG, ArrowRightSVG, LoadingPage, Tooltip } from "~/components"
 import { RipleCard } from "~/features/cards/riple-card";
 import { useState } from "react";
 import React from "react";
-import { ProjectFollowCarousel } from "../../features/cards/project-follow-carroussel";
+import { ProjectFollowCarousel } from "../cards/project-follow-carroussel";
 
 
 type FullRiple = RouterOutputs["riples"]["getAll"][number]
