@@ -6,6 +6,7 @@ import type { ProjectAboutInfoProps, EditProjectPayload} from './project-info-ty
 import { sortedProjectClassifications } from '~/utils/constants/projectclassifications';
 
 import {LoadingSpinner, MultiSelect, Tooltip, ProfileImage, EditSVG, MultiUserSVG, PrivateSVG, PublicSVG, SingleUserSVG } from '~/components';
+import { PROJECT_STATUS_VALUES, getProjectStatusColor } from '~/utils/constants/dbValuesConstants';
 
 
 interface OptionType {
@@ -175,13 +176,9 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
                 <label htmlFor="project-status" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="Project Status">
                 Project Status:
                 </label>
-                
+
                 {!isEditMode ? (
-                    <span className={`inline-block ml-2 px-2 py-1 text-base font-semibold rounded ${
-                        project.project.status === "Doing" ? "text-yellow-500" : 
-                        project.project.status === "To-Do" ? "text-black" : 
-                        project.project.status === "Done" ? "text-green-500" : ""
-                    }`}>
+                    <span className={`inline-block text-white ml-2 px-2 py-1 text-base font-semibold rounded ${getProjectStatusColor(project.project.status)}`}>
                         {project.project.status}
                     </span>
                 ) : (
@@ -191,9 +188,9 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
                         className={`w-auto ml-2 p-2 mt-1 rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
                         disabled={isEditing}
                     >
-                        <option value="To-Do">To-Do</option>
-                        <option value="Doing">Doing</option>
-                        <option value="Done">Done</option>
+                        {PROJECT_STATUS_VALUES.map((status, index) => (
+                            <option key={index} value={status}>{status}</option>
+                        ))}
                     </select>
                 )}
             </div>

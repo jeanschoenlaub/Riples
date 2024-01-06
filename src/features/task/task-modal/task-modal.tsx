@@ -10,6 +10,7 @@ import { api } from "~/utils/api";
 import { LoadingSpinner, Modal, ProfileImage } from '~/components';
 import type { CreateTaskPayload, EditTaskPayload, TaskModalProps } from './task-modal-types';
 import { useTaskMutation } from './task-modal-api';
+import { TASK_STATUS_VALUES } from '~/utils/constants/dbValuesConstants';
 
 // Main React Functional Component
 export const TaskModal: React.FC<TaskModalProps> = ({ projectId, projectType, taskToEdit, showModal, isMember, isProjectLead, inputValue, onClose }) => {
@@ -221,9 +222,9 @@ export const TaskModal: React.FC<TaskModalProps> = ({ projectId, projectType, ta
                 onChange={handleStatusChange}
                 disabled={!allowedToEdit || isLoading}
               >
-                <option value="To-Do">To-Do</option>
-                <option value="Doing">Doing</option>
-                <option value="Done">Done</option>
+                {TASK_STATUS_VALUES.map((status, index) => (
+                    <option key={index} value={status}>{status}</option>
+                ))}
               </select>
             </span>
         </div>

@@ -6,6 +6,7 @@ dayjs.extend(relativeTime);
 import type { RouterOutputs } from "~/utils/api";
 import { buildProjectCoverImageUrl } from '~/utils/s3';
 import { ProfileImage } from '~/components';
+import { getProjectStatusColor } from '~/utils/constants/dbValuesConstants';
 
 
 type FullProjectWithUser = RouterOutputs["projects"]["getProjectByAuthorId"][number]
@@ -19,11 +20,6 @@ export const ProjectCardPortofolio = (props: PortofolioProjectCardProps) => {
   const {project, author} = props;
 
   const opacityStyle = props.isPrivate ? "opacity-60" : "";
-
-
-  //const completedTasksCount = project.tasks.filter(task => task.status === "Done").length;
-  //const allSubtasks = project.tasks.flatMap(task => task.subTasks);
-  //const completedSubtasksCount = allSubtasks.filter(subtask => subtask?.status === true).length;
 
   const renderTags = () => {
     return project.projectTags.map((tag, index) => (
@@ -53,11 +49,7 @@ export const ProjectCardPortofolio = (props: PortofolioProjectCardProps) => {
             {/* Status and Accessibility */}
             <div className="flex space-x-2 items-center">
                 <div className="text-sm flex items-center space-x-2">
-                    <span className={` px-2 py-0.5 rounded-lg ${
-                        project.status === "Doing" ? "bg-yellow-500" : 
-                        project.status === "To-Do" ? "bg-gray-400" : 
-                        project.status === "Done" ? "bg-green-500" : "text-gray-500"
-                    }`}>
+                    <span className={` px-2 py-0.5 rounded-lg ${getProjectStatusColor(project.status)}`}>
                         {project.status.toLowerCase()}
                     </span>
                 </div>

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { MultiSelect, type OptionType } from '~/components/multi-select';
-import { taskStatus } from "~/utils/constants/dbValuesConstants";
+import { TASK_STATUS_VALUES } from "~/utils/constants/dbValuesConstants";
 import { RangeDatepicker } from "chakra-dayzed-datepicker";
 
 type TaskFilterProps = {
@@ -34,7 +34,7 @@ const TaskFilter = ({ onFilterChange }: TaskFilterProps) => {
         };
     }, [onFilterChange]);
 
-    const statusOptions: OptionType[] = taskStatus.map(status => ({
+    const statusOptions: OptionType[] = TASK_STATUS_VALUES.map(status => ({
         value: status,
         label: status
     }));

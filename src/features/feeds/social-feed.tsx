@@ -1,4 +1,4 @@
-import { RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/utils/api";
 import { ArrowLeftSVG, ArrowRightSVG, LoadingPage, Tooltip } from "~/components";
 import { RipleCard } from "~/features/cards/riple-card";
 import { useState } from "react";

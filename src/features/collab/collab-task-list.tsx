@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { TaskModal } from '~/features/task/task-modal/task-modal';
 import { ProfileImage, LoadingRiplesLogo, StyledTable } from '~/components';
 import { SubTasksRows } from '../task/subtask/subtask';
+import { getTaskStatusColor } from '~/utils/constants/dbValuesConstants';
 
 
 interface CollabTaskListProps {
@@ -140,10 +141,7 @@ export const CollabTaskList: React.FC<CollabTaskListProps> = ({ project, isMembe
                     </button>
                 </td>
                 <td className="px-6 justify-center py-2 hidden md:table-cell" style={{  width: columnWidths[2] }}>
-                    <div onClick={() => openEditModal(taskDetail.task)} style={{ cursor: 'pointer' }} className={`text-white text-center items-center rounded w-auto px-2 py-2 ${
-                    taskDetail.task.status === "Doing" ? "bg-yellow-500" : 
-                    taskDetail.task.status === "To-Do" ? "bg-gray-500" : 
-                    taskDetail.task.status === "Done" ? "bg-green-500" : ""
+                    <div onClick={() => openEditModal(taskDetail.task)} style={{ cursor: 'pointer' }} className={`text-white text-center items-center rounded w-auto px-2 py-2 ${getTaskStatusColor(taskDetail.task.status)}
                     }`}>
                     {taskDetail.task.status}
                     </div>

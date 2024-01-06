@@ -1,12 +1,16 @@
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
-import { api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/utils/api";
 import { DownArrowSVG, LoadingPage, UpArrowSVG } from "~/components";
-import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import { SubTasksRows } from "../task/subtask/subtask";
+import { TASK_STATUS_VALUES, getTaskStatusColor } from "~/utils/constants/dbValuesConstants";
+import { TaskModal } from "../task/task-modal/task-modal";
 dayjs.extend(relativeTime);
+
+
+type TaskEditData = RouterOutputs["tasks"]["edit"];
 
 export const DueTasks = () => {
     const { data: session } = useSession();
@@ -21,16 +25,19 @@ export const DueTasks = () => {
     const { data: tasks } = api.tasks.getTasksByCreatedOrOwnerId.useQuery({ userId });
 
     const filteredAndSortedTasks = useMemo(() => {
-        return tasks?.filter(task => task.task.status !== "Done") // Filter tasks not done
+        return tasks?.filter(task => task.task.status === TASK_STATUS_VALUES[1] || task.task.status === TASK_STATUS_VALUES[2])
+            .map(task => {
+                // Find the project that this task belongs to
+                const project = projectLead?.find(p => p.project.id === task.task.projectId);
+                // Return a new object containing both task and project details
+                return { task: task, project: project?.project };
+            })
             .sort((a, b) => {
-                // Convert due dates to timestamps, default to a large number for invalid dates
-                const dateATimestamp = new Date(a.task.due).getTime() || Number.MAX_VALUE;
-                const dateBTimestamp = new Date(b.task.due).getTime() || Number.MAX_VALUE;
-    
-                // Subtract timestamps for sorting
+                const dateATimestamp = new Date(a.task.task.due).getTime() || Number.MAX_VALUE;
+                const dateBTimestamp = new Date(b.task.task.due).getTime() || Number.MAX_VALUE;
                 return dateATimestamp - dateBTimestamp;
             });
-    }, [tasks]);
+    }, [tasks, projectLead]);
 
     const [displaySubtasks, setDisplaySubtasks] = useState<string | null>(null);
     const toggleSubtasks = (taskId: string) => {
@@ -41,7 +48,15 @@ export const DueTasks = () => {
         }
     };
 
-    
+
+    const [inputValue, setInputValue] = useState('');
+    const [showTaskModal, setShowTaskModal] = useState(false);
+    const [selectedTask, setSelectedTask] = useState<TaskEditData | null>(null); // State to hold the selected task
+
+    const openEditModal = (task: TaskEditData | null) => {
+        setSelectedTask(task); // Update the selected task
+        setShowTaskModal(true); // Show the modal
+    };    
 
     if (!session) {
         return <div> Log in to see your projects </div>;
@@ -52,19 +67,19 @@ export const DueTasks = () => {
     return (
         <div id="todolist" className="p-3 mt-2 mr-2 bg-white rounded-lg border-slate-300 border space-y-2 ml-2 md:mr-5 md:ml-5">
             {filteredAndSortedTasks?.map((item) => {
-                const taskStatus = item.task.status; 
+                const taskStatus = item.task.task.status; 
 
                 return (
-                    <div key={item.task.id} className="p-2 border-2 rounded-lg border-gray-200">
+                    <div key={item.task.task.id} className="p-2 border-2 rounded-lg border-gray-200">
                         <div className="flex">
                             <div className="flex flex-grow justify-between items-center">
                                 <div className="flex items-center font-medium md:font-medium text-xs md:text-base text-sky-500 ml-1">
-                                    <button onClick={() => toggleSubtasks(item.task.id)} className="flex mr-4 text-blue-600 ">
-                                        {displaySubtasks === item.task.id ? (
+                                    <button onClick={() => toggleSubtasks(item.task.task.id)} className="flex mr-4 text-blue-600 ">
+                                        {displaySubtasks === item.task.task.id ? (
                                         <div className='flex flex-col items-center'>
                                         {(() => {
-                                            const totalSubtasks = item.task.subTasks.length;
-                                            const doneSubtasks = item.task.subTasks.filter(subtask => subtask.status).length;
+                                            const totalSubtasks = item.task.task.subTasks.length;
+                                            const doneSubtasks = item.task.task.subTasks.filter(subtask => subtask.status).length;
 
                                             // Display these numbers in a badge
                                             return (
@@ -79,8 +94,8 @@ export const DueTasks = () => {
                         
                                         <div className='flex flex-col items-center'>
                                             {(() => {
-                                            const totalSubtasks = item.task.subTasks.length;
-                                            const doneSubtasks = item.task.subTasks.filter(subtask => subtask.status).length;
+                                            const totalSubtasks = item.task.task.subTasks.length;
+                                            const doneSubtasks = item.task.task.subTasks.filter(subtask => subtask.status).length;
 
                                             // Display these numbers in a badge
                                             return (
@@ -93,35 +108,50 @@ export const DueTasks = () => {
                                         </div>
                                         )}
                                     </button>
-                                    <Link href={`/projects/${item.task.projectId}`}>
-                                        {item.task.title}
-                                    </Link>
+                                    <button onClick={() => openEditModal(item.task.task)} className="text-blue-600  hover:underline">
+                                        {item.task.task.title}
+                                    </button>
+                                    
                                 </div>
                                 <div className="flex items-center">
                                     <div className="mr-2">
-                                        {`due ${dayjs(item.task.due).fromNow()}`}
+                                        {`due ${dayjs(item.task.task.due).fromNow()}`}
                                     </div>
-                                    <div className={`text-white text-base font-base text-center items-center rounded px-2 py-1 ${
-                                        taskStatus === "Doing" ? "bg-yellow-500" : 
-                                        taskStatus === "To-Do" ? "bg-gray-500" : "" // Make sure you handle all possible statuses here
-                                    }`}>
-                                        <Link href={`/projects/${item.task.projectId}`}>
+                                    <div className={`text-white text-base font-base text-center items-center rounded px-2 py-1 ${getTaskStatusColor(taskStatus) }`}>
+                                        <button onClick={() => openEditModal(item.task.task)}>
                                             {taskStatus}
-                                        </Link>
+                                        </button>
                                     </div>
                                 </div>
+    
                             </div>
-                            
                         </div>
                         {/* Conditional Subtask Rows */}
-                        {displaySubtasks === item.task.id && (
+                        {displaySubtasks === item.task.task.id && (
                                 <div className="bg-white border-b">
-                                    <SubTasksRows taskData={item} />
+                                    <SubTasksRows taskData={item.task} />
                                 </div>
-                            )}
+                        )}
+                        
                     </div>
                 );
             })}
+            {selectedTask && (
+                <TaskModal 
+                    projectId={selectedTask.projectId} 
+                    projectType="private" // TO-DO maake sure these values are correct (otherwise user might be able to modify tasks)
+                    inputValue={inputValue}
+                    taskToEdit={selectedTask}
+                    isMember={true} // If the user is owner of the task he must ba a member
+                    isProjectLead={true} // TO-DO maake sure these values are correct (otherwise user might be able to modify tasks)
+                    showModal={showTaskModal}
+                    onClose={() => {
+                        setSelectedTask(null);
+                        setInputValue('');
+                        setShowTaskModal(false);
+                    }}
+                />
+        )}
         </div>
     );
 };
