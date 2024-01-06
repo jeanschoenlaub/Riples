@@ -5,6 +5,7 @@ import { ProjectCard } from "../features/cards/project-card";
 import { useSession } from "next-auth/react";
 import styles from './layout.module.css';
 import Link from "next/link";
+import { PROJECT_STATUS_VALUES } from "~/utils/constants/dbValuesConstants";
 
 interface SideNavProjectProps {
   onClose?: () => void; // `onClose` is an optional prop, which if provided, should be a function returning void.
@@ -31,8 +32,8 @@ export const SideNavProject = ({ onClose }: SideNavProjectProps) => {
       { enabled: shouldExecuteQuery }
     )
 
-    const filteredProjectLead = projectLead?.filter(project => project.project.status !== "Done") ?? [];
-    const filteredProjectMember = projectMember?.filter(member => member.project.status !== "Done") ?? [];
+    const filteredProjectLead = projectLead?.filter(project => project.project.status !== PROJECT_STATUS_VALUES[0]) ?? []; //Done
+    const filteredProjectMember = projectMember?.filter(member => member.project.status !== PROJECT_STATUS_VALUES[0]) ?? []; //Done
 
     const combinedProjectsForWorking = [...filteredProjectLead, ...filteredProjectMember];
     

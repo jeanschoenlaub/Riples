@@ -6,6 +6,7 @@ import type { ProjectAboutInfoProps, EditProjectPayload} from './project-info-ty
 import { sortedProjectClassifications } from '~/utils/constants/projectclassifications';
 
 import {LoadingSpinner, MultiSelect, Tooltip, ProfileImage, EditSVG, MultiUserSVG, PrivateSVG, PublicSVG, SingleUserSVG } from '~/components';
+import { PROJECT_STATUS_VALUES } from '~/utils/constants/dbValuesConstants';
 
 
 interface OptionType {
@@ -177,10 +178,11 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
                 </label>
                 
                 {!isEditMode ? (
-                    <span className={`inline-block ml-2 px-2 py-1 text-base font-semibold rounded ${
-                        project.project.status === "Doing" ? "text-yellow-500" : 
-                        project.project.status === "To-Do" ? "text-black" : 
-                        project.project.status === "Done" ? "text-green-500" : ""
+                    <span className={`inline-block text-white ml-2 px-2 py-1 text-base font-semibold rounded ${
+                        project.project.status === PROJECT_STATUS_VALUES[0] ? "bg-green-500" : //Done
+                        project.project.status === PROJECT_STATUS_VALUES[1] ? "bg-yellow-500" :  //Doing
+                        project.project.status === PROJECT_STATUS_VALUES[2] ?  "bg-orange-400": //To-Do
+                        "bg-gray-500" //Backlog
                     }`}>
                         {project.project.status}
                     </span>
@@ -191,9 +193,10 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
                         className={`w-auto ml-2 p-2 mt-1 rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
                         disabled={isEditing}
                     >
-                        <option value="To-Do">To-Do</option>
-                        <option value="Doing">Doing</option>
-                        <option value="Done">Done</option>
+                        <option value={PROJECT_STATUS_VALUES[0]}>{PROJECT_STATUS_VALUES[0]}</option>
+                        <option value={PROJECT_STATUS_VALUES[1]}>{PROJECT_STATUS_VALUES[1]}</option>
+                        <option value={PROJECT_STATUS_VALUES[2]}>{PROJECT_STATUS_VALUES[2]}</option>
+                        <option value={PROJECT_STATUS_VALUES[3]}>{PROJECT_STATUS_VALUES[3]}</option>
                     </select>
                 )}
             </div>

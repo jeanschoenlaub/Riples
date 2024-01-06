@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import type { RouterOutputs } from '~/utils/api';
 import { ProjectAboutInfo } from './project-info/project-info';
 import { ProjectAboutGoal } from '~/features/goals/goals';
+import { TASK_STATUS_VALUES } from '~/utils/constants/dbValuesConstants';
 
 export type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"] 
 export interface AboutTabProps {
@@ -18,7 +19,7 @@ export interface AboutTabProps {
 
 export const AboutTab : React.FC<AboutTabProps> = ({ project, projectTags, isMember, isPending, isProjectLead, userId,username }) => {
     const tasks = project.project.tasks;
-    const completedTasksCount = tasks.filter(task => task.status === "Done").length;
+    const completedTasksCount = tasks.filter(task => task.status === TASK_STATUS_VALUES[0]).length;
     const allSubtasks = project.project.tasks.flatMap(task => task.subTasks);
     const completedSubtasksCount = allSubtasks.filter(subtask => subtask?.status).length;
     return (

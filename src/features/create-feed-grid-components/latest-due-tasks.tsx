@@ -6,6 +6,7 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import { SubTasksRows } from "../task/subtask/subtask";
+import { TASK_STATUS_VALUES } from "~/utils/constants/dbValuesConstants";
 dayjs.extend(relativeTime);
 
 export const DueTasks = () => {
@@ -21,7 +22,7 @@ export const DueTasks = () => {
     const { data: tasks } = api.tasks.getTasksByCreatedOrOwnerId.useQuery({ userId });
 
     const filteredAndSortedTasks = useMemo(() => {
-        return tasks?.filter(task => task.task.status !== "Done") // Filter tasks not done
+        return tasks?.filter(task => (task.task.status == TASK_STATUS_VALUES[1] || task.task.status == TASK_STATUS_VALUES[2])) // Filter tasks with doing or to-do status
             .sort((a, b) => {
                 // Convert due dates to timestamps, default to a large number for invalid dates
                 const dateATimestamp = new Date(a.task.due).getTime() || Number.MAX_VALUE;
@@ -103,7 +104,7 @@ export const DueTasks = () => {
                                     </div>
                                     <div className={`text-white text-base font-base text-center items-center rounded px-2 py-1 ${
                                         taskStatus === "Doing" ? "bg-yellow-500" : 
-                                        taskStatus === "To-Do" ? "bg-gray-500" : "" // Make sure you handle all possible statuses here
+                                        taskStatus === "To-Do" ? "bg-gray-500" : "" 
                                     }`}>
                                         <Link href={`/projects/${item.task.projectId}`}>
                                             {taskStatus}
