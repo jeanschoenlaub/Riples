@@ -6,7 +6,7 @@ dayjs.extend(relativeTime);
 import type { RouterOutputs } from "~/utils/api";
 import { buildProjectCoverImageUrl } from '~/utils/s3';
 import { ProfileImage } from '~/components';
-import { PROJECT_STATUS_VALUES } from '~/utils/constants/dbValuesConstants';
+import { getProjectStatusColor } from '~/utils/constants/dbValuesConstants';
 
 
 type FullProjectWithUser = RouterOutputs["projects"]["getProjectByAuthorId"][number]
@@ -49,12 +49,7 @@ export const ProjectCardPortofolio = (props: PortofolioProjectCardProps) => {
             {/* Status and Accessibility */}
             <div className="flex space-x-2 items-center">
                 <div className="text-sm flex items-center space-x-2">
-                    <span className={` px-2 py-0.5 rounded-lg ${
-                        project.status === PROJECT_STATUS_VALUES[0] ? "bg-green-500" : //Done
-                        project.status === PROJECT_STATUS_VALUES[1] ? "bg-yellow-500" :  //Doing
-                        project.status === PROJECT_STATUS_VALUES[2] ?  "bg-orange-400": //To-Do
-                        "bg-gray-500" //Backlog
-                    }`}>
+                    <span className={` px-2 py-0.5 rounded-lg ${getProjectStatusColor(project.status)}`}>
                         {project.status.toLowerCase()}
                     </span>
                 </div>

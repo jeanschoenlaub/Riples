@@ -5,7 +5,7 @@ import { type RouterOutputs, api } from "~/utils/api";
 import { DownArrowSVG, LoadingPage, UpArrowSVG } from "~/components";
 import TaskFilter from "~/components/task-filter";
 import Link from "next/link";
-import { TASK_STATUS_VALUES } from "~/utils/constants/dbValuesConstants";
+import { getTaskStatusColor } from "~/utils/constants/dbValuesConstants";
 
 type TaskData = RouterOutputs["tasks"]["getTasksByCreatedOrOwnerId"];
 type MappedTasksType = Record<string, TaskData>;
@@ -104,14 +104,9 @@ export const ToDoList = () => {
                                             {item.project.title}
                                         </Link>
                                     </div>
-                                    <div className={`text-white text-base font-base text-center items-center rounded px-2 py-1 ${
-                                        taskStatus === TASK_STATUS_VALUES[0] ? "bg-green-500" : //Done
-                                        taskStatus === TASK_STATUS_VALUES[1] ? "bg-yellow-500" :  //Doing
-                                        taskStatus === TASK_STATUS_VALUES[2] ?  "bg-orange-400": //To-Do
-                                        "bg-gray-500" //Backlog
-                                    }`}>
+                                    <div className={`text-white text-base font-base text-center items-center rounded px-2 py-1 ${getTaskStatusColor(taskStatus)}`}>
                                          <Link href={`/projects/${item.project.id}`}>
-                                         {taskStatus}
+                                            {taskStatus}
                                         </Link>
                                     </div>
                             </div>

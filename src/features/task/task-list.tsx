@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { TaskModal } from '~/features/task/task-modal/task-modal';
 import { ProfileImage, StyledTable, DownArrowSVG, UpArrowSVG, RocketSVG, TaskEditSVG } from '~/components';
 import { SubTasksRows } from './subtask/subtask';
-import { TASK_STATUS_VALUES } from '~/utils/constants/dbValuesConstants';
+import { getTaskStatusColor } from '~/utils/constants/dbValuesConstants';
 
 
 interface TaskListProps {
@@ -70,11 +70,6 @@ export const TaskList: React.FC<TaskListProps> = ({ taskData, projectId, project
     setSelectedTask(task);
     setShowTaskModal(true);
   };
-
-  // const isLoading = isLoadingTasks 
-
-  // if (isLoading) return <div className="flex justify-center"><LoadingRiplesLogo isLoading={isLoading}/></div>;
-  // if (isError || !taskData) return <p>Error loading tasks.</p>;
 
   return (
     <div className='mb-10'>
@@ -156,14 +151,9 @@ export const TaskList: React.FC<TaskListProps> = ({ taskData, projectId, project
                 </button>
               </td>
               <td className="px-6 justify-center py-2 hidden md:table-cell" style={{  width: columnWidths[2] }}>
-                <div onClick={() => openEditModal(taskDetail.task)} style={{ cursor: 'pointer' }} className={`text-white text-center items-center rounded w-auto px-2 py-2 ${
-                  taskDetail.task.status === TASK_STATUS_VALUES[0] ? "bg-green-500" : //Done
-                  taskDetail.task.status === TASK_STATUS_VALUES[1] ? "bg-yellow-500" :  //Doing
-                  taskDetail.task.status === TASK_STATUS_VALUES[2] ?  "bg-orange-400": //To-Do
-                  "bg-gray-500" //Backlog
-                }`}>
-                  {taskDetail.task.status}
-                </div>
+                  <div onClick={() => openEditModal(taskDetail.task)} style={{ cursor: 'pointer' }} className={`text-white text-center items-center rounded w-auto px-2 py-2 ${getTaskStatusColor(taskDetail.task.status)}`}>
+                      {taskDetail.task.status}
+                  </div>
               </td>
               {(projectType != "solo") ? (
               <td className="px-6 py-4 hidden md:table-cell" style={{ textAlign: 'center', verticalAlign: 'middle',   width: columnWidths[3]  }}>

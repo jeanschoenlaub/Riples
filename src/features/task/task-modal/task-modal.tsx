@@ -222,10 +222,9 @@ export const TaskModal: React.FC<TaskModalProps> = ({ projectId, projectType, ta
                 onChange={handleStatusChange}
                 disabled={!allowedToEdit || isLoading}
               >
-                <option value={TASK_STATUS_VALUES[0]}>{TASK_STATUS_VALUES[0]}</option>
-                <option value={TASK_STATUS_VALUES[1]}>{TASK_STATUS_VALUES[1]}</option>
-                <option value={TASK_STATUS_VALUES[2]}>{TASK_STATUS_VALUES[2]}</option>
-                <option value={TASK_STATUS_VALUES[3]}>{TASK_STATUS_VALUES[3]}</option>
+                {TASK_STATUS_VALUES.map((status, index) => (
+                    <option key={index} value={status}>{status}</option>
+                ))}
               </select>
             </span>
         </div>
