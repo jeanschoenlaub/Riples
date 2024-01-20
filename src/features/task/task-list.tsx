@@ -44,8 +44,6 @@ export const TaskList: React.FC<TaskListProps> = ({ taskData, projectId, project
     }
   }, []);
 
-  
-
   let headers = isMobile ? ["Sub", "Task"] : ["Sub", "Task Title", "Status", "Owner"];
   let columnWidths = isMobile ? ["15%", "50%"] : ["6%", "30%", "8%", "8%"];
   if (projectType === "solo") {

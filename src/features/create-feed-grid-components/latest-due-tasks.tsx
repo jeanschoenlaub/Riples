@@ -109,7 +109,7 @@ export const DueTasks = () => {
                                         )}
                                     </button>
                                     <button onClick={() => openEditModal(item.task.task)} className="text-blue-600  hover:underline">
-                                        {item.task.task.title}
+                                        {item.project?.title} / {item.task.task.title}
                                     </button>
                                     
                                 </div>
