@@ -11,7 +11,6 @@ import type { RootState } from '~/redux/store';
 import { Modal,LoadingSpinner, ArrowLeftSVG, ArrowRightSVG, RocketSVG } from "~/components";
 import { useWizard } from "~/features/wizard";
 
-
 type NewProjecResponse  = RouterOutputs["projects"]["create"] 
 export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ showModal, inputValue, onClose }) => {
   const wizardContext = useWizard();
