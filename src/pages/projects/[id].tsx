@@ -19,6 +19,7 @@ import ProjectCoverImage from "~/features/page-project/cover-image";
 import { useWizard} from "~/features/wizard";
 import { FocusLayout } from "~/layout/focus-layout";
 import { TaskTab } from "~/features/page-project/tasks";
+import { NoteTab } from "~/features/page-project/notes";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -112,6 +113,10 @@ export default function Project(
   const displayTasksTab = 
     isProjectLead || isMember ||
     (projectData?.project.projectType === "collab" && projectData?.project.projectPrivacy === "public")
+  
+  const displayNotesTab = 
+    isProjectLead || isMember ||
+    (projectData?.project.projectType === "collab" && projectData?.project.projectPrivacy === "public")
 
 
   return (
@@ -133,6 +138,7 @@ export default function Project(
                     riples="y"
                     admin={isProjectLead} 
                     tasks={displayTasksTab}
+                    notes={displayNotesTab}
                     collab={displayCollabTab}
                   />
                 </div>
@@ -146,6 +152,11 @@ export default function Project(
                 {activeTab === 'riples' && (
                     <RiplesTab ripleData={ripleData} projectId={projectId} projectTitle={projectData.project.title}  projectSummary={projectData.project.summary} projectCoverImageId={projectData.project.coverImageId}  isMember={isMember} isProjectLead={isProjectLead}></RiplesTab>
                 )}
+
+                {/* SHOWN IF Notes */}
+                {activeTab === 'notes' && <NoteTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} />}
+                 {/* <AdminTab project={projectData.project} members={projectMemberData} isProjectLead={isProjectLead} ></AdminTab>} */}
+
 
                 {/* SHOWN IF TASK*/}
                 {activeTab === 'tasks' && <TaskTab project={projectData.project} isMember={isMember} isPending={isPending} isProjectLead={isProjectLead} />}

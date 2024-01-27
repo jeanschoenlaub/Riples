@@ -14,6 +14,7 @@ import { commentRouter } from "./routers/comment";
 import { feedRouter } from "./routers/feed";
 import { forumRouter } from "./routers/forum";
 import { adminStatsRouter } from "./routers/admin";
+import { noteRouter } from "./routers/notes";
 
 
 /**
@@ -35,6 +36,7 @@ export const appRouter = createTRPCRouter({
   projectMembers: projMemberRouter,
   projectFollowers: projFollowerRouter,
   tasks : taskRouter,
+  notes : noteRouter,
   users : userRouter,
   userOnboarding: userOnboardingRouter,
   goals: goalRouter,

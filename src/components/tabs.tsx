@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { AboutSVG, AdminSVG, ProjectsSVG, RiplesSVG } from './svg';
-import { GiftSVG, GlobeSVG, TaskSVG } from './svg-stroke';
+import { GiftSVG, GlobeSVG, NotesSVG, TaskSVG } from './svg-stroke';
 
 interface TabsProps {
   activeTab: string;
@@ -10,10 +10,11 @@ interface TabsProps {
   projects? : string;
   collab?: boolean; 
   tasks?: boolean;
+  notes?: boolean;
   admin?: boolean; 
 }
 
-export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, projects, tasks, collab, admin}) => {
+export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, projects, tasks, notes, collab, admin}) => {
   return (
     <div id="project-main-tabs" className="border-b border-gray-200 ">
        <ul className="flex whitespace-nowrap overflow-x-auto -mb-px text-sm font-medium text-center text-gray-500 ">
@@ -70,6 +71,22 @@ export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, pro
                       :<TaskSVG width="4" height="4" marginRight='2' colorStrokeHex='#9CA3AF'></TaskSVG>  // Gray colors
                   }
                   Tasks
+              </button>
+              </li>
+        )}
+
+        {/* CONDITIONAL TASK TAB */}
+        {notes && (
+            <li className="mr-1">
+                <button
+                      id="project-main-tabs-notes"
+                      onClick={() => setActiveTab('notes')}
+                      className={`inline-flex items-center justify-center p-3 border-b-2 rounded-t-xl ${activeTab === 'notes' ? 'text-blue-600 bg-sky-200 border-blue-300' : 'text-gray-500 bg-gray-200 border-transparent'}`}>
+                  {activeTab === 'notes' ? 
+                      <NotesSVG width="4" height="4" marginRight='2' colorStrokeHex='#2563eb'></NotesSVG> // Blue
+                      :<NotesSVG width="4" height="4" marginRight='2' colorStrokeHex='#9CA3AF'></NotesSVG>  // Gray colors
+                  }
+                  notes
               </button>
               </li>
         )}

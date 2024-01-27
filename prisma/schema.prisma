@@ -31,12 +31,14 @@ model Project {
   coverImageId    String   @default("default/Riple_bannner.png") @db.VarChar(255)
   
   coverImageUrl   String   @default("https://t3-portofolio.s3.us-east-2.amazonaws.com/mvp_riples/Riple_bannner.png") @db.VarChar(255)
+  
   //Relations
   authorID        String
   riples          Riple[]  
   owner           User    @relation("ProjectOwner", fields: [authorID], references: [id], onDelete: Cascade)
   members         ProjectMembers[] 
   tasks           Tasks[] 
+  notes           Notes[] 
   goals           Goals[] 
   followers       ProjectFollowers[] 
   tags            ProjectTags[]
@@ -57,7 +59,7 @@ model ProjectTags {
 model UserInterestTags {
   tag       Tag     @relation(fields: [tagId], references: [id])
   tagId     String
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 
   @@id([tagId, userId])
@@ -80,6 +82,24 @@ model Tasks {
   projectId    String  
   project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   subTasks     SubTasks[]
+
+  @@index([projectId])
+}
+
+
+
+model Notes {
+  id           String  @id @default(cuid())
+  title        String  @db.VarChar(255)
+  content      String  @db.VarChar(10000)
+  createdById  String  //userId
+  createdAt    DateTime @default(now())
+  editedAt     DateTime @default(now())
+
+  // Relations
+  ownerId      String  @default("")
+  projectId    String  
+  project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@index([projectId])
 }

@@ -39,7 +39,7 @@ export const GlobalNavBar: React.FC<GlobalNavBarProps> = ({ activeTab, setActive
   }, []);
 
   return ( 
-    <div id="global-nav-container" className="flex justify-center w-full h-15">
+    <div id="global-nav-container" className="flex justify-center w-full">
       {/* LEFT NAV */}
       {/* Show on large screens */}
       <div id="global-nav-left-large-screen" className="hidden md:flex w-1/4 gap-3 justify-center items-center p-2 ">

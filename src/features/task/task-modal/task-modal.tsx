@@ -19,8 +19,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ projectId, projectType, ta
   const defaultTemplate = ``
   const initialContent = taskToEdit ? taskToEdit.content : defaultTemplate;
 
-  
-
   //Is the logged in user allowed to edit ?
   const { data: session } = useSession();
   const allowedToEdit =  
