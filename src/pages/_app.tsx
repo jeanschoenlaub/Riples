@@ -56,7 +56,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <link rel="manifest" href="./manifest.json" />
             <link rel="apple-touch-icon" href="/images/logo-180x180.png"/>
             <meta name="apple-mobile-web-app-capable" content="yes"></meta>
-            <meta name="apple-mobile-web-app-status-bar-style" content="black"></meta>
+            <meta name="apple-mobile-web-app-status-bar-style" content="white"></meta>
         </Head>
         <Toaster />
         <Provider store={store}>
