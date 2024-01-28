@@ -114,7 +114,6 @@ export const ProjectCardPortofolio = (props: PortofolioProjectCardProps) => {
                     </Link>
                 </span>
             </div>
-            
         </div>
     </div>
   );
