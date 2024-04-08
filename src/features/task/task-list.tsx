@@ -52,9 +52,11 @@ export const TaskList: React.FC<TaskListProps> = ({ taskData, projectId, project
   }
 
   const handleCreateClick = () => {
-    setSelectedTask(null); //Notna task to edit 
+    setSelectedTask(null); //Not a task to edit 
     setShowTaskModal(true);
   };
+
+
 
   const toggleSubtasks = (taskId: string) => {
     if (displaySubtasks === taskId) {

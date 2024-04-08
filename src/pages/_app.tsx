@@ -51,6 +51,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
             />
             <meta name="author" content="Riples Team" />
             <link rel="icon" href="/images/favicon.ico" />
+
+            <title>Your PWA Title</title>
+            <link rel="manifest" href="./manifest.json" />
+            <link rel="apple-touch-icon" href="/images/apple-icon-180x180.png"/>
+            <meta name="apple-mobile-web-app-capable" content="yes"></meta>
+            <meta name="apple-mobile-web-app-status-bar-style" content="white"></meta>
         </Head>
         <Toaster />
         <Provider store={store}>
