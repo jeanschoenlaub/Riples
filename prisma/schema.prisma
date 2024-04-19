@@ -18,6 +18,7 @@ model Project {
   id              String   @id @default(cuid())
   title           String   @db.VarChar(255)
   summary         String   @db.VarChar(5000)
+  link            String   @default("")@db.VarChar(255)
   
   projectType     String   @db.VarChar(6) @default("solo")
   projectPrivacy  String   @db.VarChar(10) @default("private")
@@ -29,7 +30,6 @@ model Project {
 
   
   coverImageId    String   @default("default/Riple_bannner.png") @db.VarChar(255)
-  
   coverImageUrl   String   @default("https://t3-portofolio.s3.us-east-2.amazonaws.com/mvp_riples/Riple_bannner.png") @db.VarChar(255)
   
   //Relations

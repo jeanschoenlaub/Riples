@@ -426,6 +426,8 @@ export const projRouter = createTRPCRouter({
 editInfo: protectedProcedure
 .input(z.object({
   projectId: z.string(),
+  link: z.string()
+    .max(255, { message: "Project link must be 255 or less characters long" }),
   title: z.string()
     .min(5, { message: "Project title must be 5 or more characters long" })
     .max(255, { message: "Project title must be 255 or less characters long" }),
@@ -492,6 +494,7 @@ editInfo: protectedProcedure
     data: {
       title: input.title,
       summary: input.summary,
+      link: input.link,
       status: input.status,
     },
   });

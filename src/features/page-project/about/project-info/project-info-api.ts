@@ -43,7 +43,7 @@ export const useProjectInfoMutation = () => {
             createNotificationMutation({
                 userId: payload.projectLeadId, 
                 content: notificationContent,
-                link: `/projects/${payload.projectId}?activeTab=admin` // This is just an example. You can set it according to your routing structure.
+                link: `/projects/${payload.projectId}?activeTab=admin` 
             });
 
             resolve();
