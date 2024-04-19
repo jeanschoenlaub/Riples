@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useProjectInfoMutation } from './project-info-api';
 import Link from 'next/link';
@@ -27,6 +27,15 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
     const [projectStatus, setProjectStatus] = useState(project.project.status);
     const [projectTitle, setProjectTitle] = useState(project.project.title);
     const [projectLink, setProjectLink] = useState(project.project.link);
+
+    // Update state when the project prop changes such as navigating between projects
+    useEffect(() => {
+        setProjectSummary(project.project.summary);
+        setProjectStatus(project.project.status);
+        setProjectTitle(project.project.title);
+        setProjectLink(project.project.link);
+    }, [project.project.summary, project.project.status, project.project.title, project.project.link]);
+
 
     const [isEditMode, setIsEditMode] = useState(false);
     const toggleEditMode = () => {
