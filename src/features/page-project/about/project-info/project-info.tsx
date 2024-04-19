@@ -172,31 +172,31 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
                     />
             </div>
 
-            {/* Project Link */}
-            <div className="block md:flex items-center ml-2 mr-4 mt-6 mb-3 space-x-2">
-                <label htmlFor="project-link" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="Project Link">
-                    Project Link:
-                </label>
+            {/* Project Link, only displayed if there is a link */}
+            {(isEditMode || project.project.link !== "") &&
+                <div className="block md:flex items-center ml-2 mr-4 mt-6 mb-3 space-x-2">
+                    <label htmlFor="project-link" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="Project Link">
+                        Project Link:
+                    </label>
 
-                {!isEditMode ? (
-                    <Link href={project.project.link}
-                        className={`inline-block text-blue-500 underline ml-2 text-base font-semibold`}>
-                        {project.project.link}
-                    </Link>
-                ) : (
-                <textarea
-                        id="project-link"
-                        value={projectLink}
-                        onChange={(e) => setProjectLink(e.target.value)}
-                        className={`flex-grow w-full rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
-                        maxLength={5000}
-                        rows={1}
-                        disabled={!isEditMode }
-                    />
-                )}
-
-               
-            </div>
+                    {!isEditMode ? (
+                        <Link href={project.project.link}
+                            className={`inline-block text-blue-500 underline ml-2 text-base font-semibold`}>
+                            {project.project.link}
+                        </Link>
+                    ) : (
+                    <textarea
+                            id="project-link"
+                            value={projectLink}
+                            onChange={(e) => setProjectLink(e.target.value)}
+                            className={`flex-grow w-full rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
+                            maxLength={5000}
+                            rows={1}
+                            disabled={!isEditMode }
+                        />
+                    )}
+                </div>
+            }
 
 
             {/* Project Status */}
