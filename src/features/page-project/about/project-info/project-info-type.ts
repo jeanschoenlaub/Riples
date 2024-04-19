@@ -24,6 +24,7 @@ export interface ProjectAboutInfoProps {
 export type EditProjectPayload = {
     projectId: string;
     title: string;
+    link: string;
     summary: string;
     tags: string[];
     status: string;

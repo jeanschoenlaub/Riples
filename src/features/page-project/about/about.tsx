@@ -6,6 +6,7 @@ import { ProjectAboutGoal } from '~/features/goals/goals';
 import { TASK_STATUS_VALUES } from '~/utils/constants/dbValuesConstants';
 
 export type ProjectData = RouterOutputs["projects"]["getProjectByProjectId"] 
+
 export interface AboutTabProps {
   project: ProjectData;
   isMember: boolean;
@@ -15,7 +16,6 @@ export interface AboutTabProps {
   userId: string | undefined;
   username: string | undefined;
 }
-
 
 export const AboutTab : React.FC<AboutTabProps> = ({ project, projectTags, isMember, isPending, isProjectLead, userId,username }) => {
     const tasks = project.project.tasks;

@@ -26,6 +26,7 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
     const [projectSummary, setProjectSummary] = useState(project.project.summary);
     const [projectStatus, setProjectStatus] = useState(project.project.status);
     const [projectTitle, setProjectTitle] = useState(project.project.title);
+    const [projectLink, setProjectLink] = useState(project.project.link);
 
     const [isEditMode, setIsEditMode] = useState(false);
     const toggleEditMode = () => {
@@ -81,6 +82,7 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
     const generateEditPayload = (): EditProjectPayload => ({
         projectId: project.project.id,
         title: projectTitle,
+        link: projectLink,
         summary: projectSummary,
         status: projectStatus,
         tags: interestTags,
@@ -168,6 +170,32 @@ export const ProjectAboutInfo: React.FC<ProjectAboutInfoProps> = ({
                         rows={4}
                         disabled={!isEditMode }
                     />
+            </div>
+
+            {/* Project Link */}
+            <div className="block md:flex items-center ml-2 mr-4 mt-6 mb-3 space-x-2">
+                <label htmlFor="project-link" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="Project Link">
+                    Project Link:
+                </label>
+
+                {!isEditMode ? (
+                    <Link href={project.project.link}
+                        className={`inline-block text-blue-500 underline ml-2 text-base font-semibold`}>
+                        {project.project.link}
+                    </Link>
+                ) : (
+                <textarea
+                        id="project-link"
+                        value={projectLink}
+                        onChange={(e) => setProjectLink(e.target.value)}
+                        className={`flex-grow w-full rounded border ${isEditing ? 'cursor-not-allowed' : ''}`}
+                        maxLength={5000}
+                        rows={1}
+                        disabled={!isEditMode }
+                    />
+                )}
+
+               
             </div>
 
 
