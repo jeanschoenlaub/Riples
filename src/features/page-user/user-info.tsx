@@ -38,7 +38,6 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
 
     const [isEditMode, setIsEditMode] = useState(false);
     const toggleEditMode = () => {
-        console.log(user)
         setIsEditMode(!isEditMode);
     }
 
@@ -56,51 +55,55 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
             toggleEditMode();
         })
         .catch((error) => {
-            // Assuming the error toast is already handled inside the `editUserInfo` function.
-            // If you want additional error handling, you can add it here.
+            // Error toast is already handled inside the `editUserInfo` function.
             toggleEditMode();
         });
     };
     
 
     return (
-        <div>
-            <div id="user-page-public-profile-section" className="flex items-center space-x-4 ml-2">
-                <div className='text-lg mt-2 font-semibold'>Public Profile</div>
+        <div id="user-page-about-tab">
+            <div id="user-page-about-tab-edit-section" className="flex items-center space-x-4 ml-2">
+                <div className='text-lg mt-2 font-semibold'>
+                    Public Profile
+                </div>
                 
-                {(isUserOwner && !isEditMode) && (
-                    <button 
-                        onClick={toggleEditMode}
-                        className="bg-blue-500 mt-2 text-white text-sm rounded px-4 py-1 flex items-center justify-center w-auto"
-                    >
-                        <span className='flex items-center'>
-                            Edit 
-                            <EditSVG width='4' height='4' marginLeft='2'/>
-                        </span>
-                    </button>
-                )}
-                
-                {(isUserOwner && isEditMode) && (
-                    <>
-                        <button 
-                            onClick={handleSave}
-                            className="bg-green-500 mt-2 text-white text-sm rounded px-4 py-1 flex items-center justify-center w-auto"
-                        >
-                            <span className='flex items-center space-x-2'>
-                                Save 
-                                {isEditing && (<LoadingSpinner size={16} />) }
-                            </span>
-                        </button>
+                {isUserOwner && (
+
+                    !isEditMode ? (
                         <button 
                             onClick={toggleEditMode}
-                            className="bg-red-500 mt-2 text-white text-sm rounded px-4 py-1 flex items-center justify-center w-auto"
+                            className="bg-blue-500 mt-2 text-white text-sm rounded px-4 py-1 flex items-center justify-center w-auto"
                         >
-                            Cancel
+                            <span className='flex items-center'>
+                                Edit 
+                                <EditSVG width='4' height='4' marginLeft='2'/>
+                            </span>
                         </button>
-                    </>
+                    ) 
+                    : 
+                    (
+                        <>
+                            <button 
+                                onClick={handleSave}
+                                className="bg-green-500 mt-2 text-white text-sm rounded px-4 py-1 flex items-center justify-center w-auto"
+                            >
+                                <span className='flex items-center space-x-2'>
+                                    Save 
+                                    {isEditing && (<LoadingSpinner size={16} />) }
+                                </span>
+                            </button>
+                            <button 
+                                onClick={toggleEditMode}
+                                className="bg-red-500 mt-2 text-white text-sm rounded px-4 py-1 flex items-center justify-center w-auto"
+                            >
+                                Cancel
+                            </button>
+                        </>
+                    )
                 )}
             </div>
-
+            
             {/* User Name */}
             <div className="flex items-center ml-2 mr-2 mt-3 mb-3 space-x-2">
                 <label htmlFor="user-name" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="Username">
@@ -110,7 +113,7 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
                     {user.username}
                 </div>
                 <div>
-                {((isUserOwner && isEditMode) &&
+                {( isEditMode &&
                     <button 
                         className="bg-blue-500 text-white text-sm rounded px-4 py-2 flex items-center justify-center w-auto"
                         onClick={() => setShowUserNameModal(true)}>
@@ -136,21 +139,24 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
                     />
             </div>
 
-            {/* User Name */}
-            <div className="flex items-center ml-2 mr-2 mt-3 mb-3 space-x-2">
-                <label htmlFor="user-name" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="User Name">
-                    Name:
-                </label>
-                <input
-                    id="user-name"
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="flex-grow w-full p-2 rounded border"
-                    maxLength={50}
-                    disabled={!isEditMode}
-                />
-            </div>
+            {/* Name Can only be changed in edit mode */}
+            {( isEditMode &&
+                <div className="flex items-center ml-2 mr-2 mt-3 mb-3 space-x-2">
+                    <label htmlFor="user-name" className="text-sm text-gray-500 font-semibold justify-br flex-shrink-0 w-32" aria-label="User Name">
+                        Name:
+                    </label>
+                    <input
+                        id="user-name"
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="flex-grow w-full p-2 rounded border"
+                        maxLength={50}
+                        disabled={!isEditMode}
+                    />
+                </div>
+            )}
+            
 
             {/* User Interests */}
             <div className="flex items-center ml-2 mr-2 mt-3 mb-3 space-x-2">
@@ -158,22 +164,22 @@ export const UserAbout: React.FC<UserAboutInfoProps> = ({ user, isUserOwner }) =
                     Interests:
                 </label>
                 <div className="flex-grow w-full">
-                <MultiSelect
-                          options={sortedProjectClassifications}
-                          value={selectedTags}
-                          disabled={!isEditMode}
-                          onChange={(selected) => {
-                          // Convert OptionType[] back to string[] for onTagsChange
-                          if (selected) {
-                              handleTagsChange(selected.map(option => option.value));
-                          } else {
-                              handleTagsChange([]);
-                          }
-                          }}
-                          maxSelection={5}
-                          placeholder="Add tags..."
-                      />
-                    </div>
+                    <MultiSelect
+                        options={sortedProjectClassifications}
+                        value={selectedTags}
+                        disabled={!isEditMode}
+                        onChange={(selected) => {
+                        // Convert OptionType[] back to string[] for onTagsChange
+                        if (selected) {
+                            handleTagsChange(selected.map(option => option.value));
+                        } else {
+                            handleTagsChange([]);
+                        }
+                        }}
+                        maxSelection={5}
+                        placeholder="Add tags..."
+                    />
+                </div>
             </div>
             <NavBarUserNameModal showModal={showUserNameModal} onClose={() => setShowUserNameModal(false)} />
         </div>

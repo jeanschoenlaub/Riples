@@ -15,6 +15,7 @@ import { FocusLayout } from '~/layout/focus-layout';
 import { UserPortofolio } from '~/features/page-user/user-portofolio';
 import { UserAbout } from '~/features/page-user/user-info';
 import { UserStats } from '~/features/page-user/user-stats';
+import { UserLinks } from '~/features/page-user/user-links';
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>,
@@ -86,7 +87,7 @@ export default function UserPage(
                       {/* User Profile Image Hover buttons */}
                       <div className="group relative">
                           <ProfileImage username={user.user.username} email={user.user.email} image={user.user.image} name={user.user.name} size={80} />
-
+                          
                           {/* Hover buttons for user's profile image */}
                           <div className="absolute bottom-0 right-0 flex flex-col items-end mb-2 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                               <Tooltip content="The feature of uploading your own picture is coming." shiftRight={true} width="200px">
@@ -98,14 +99,19 @@ export default function UserPage(
                               </Tooltip>
                           </div>
                       </div>
+                       {/* User Name */}
+                      <div className="text-3xl tracking-tight font-semibold">
+                        {user.user.name}
+                      </div>
                   </span>
               </div>
 
               <div id="user-main-tabs" className="mt-3 ml-3 mr-3 md:mr-5 md:ml-5 border-b border-gray-200">
-                  <Tabs activeTab={activeTab} setActiveTab={setActiveTab} projects="y" />
+                  <Tabs activeTab={activeTab} setActiveTab={setActiveTab} projects="y" links="y" />
               </div>
 
               <div className="ml-3 mr-3 border-r-2 border-l-2 border-gray-20 md:mr-5 md:ml-5 space-y-2">
+                  
                   {/* SHOWN IF ABOUT TAB */}
                   {activeTab === 'about' && (
                       <>
@@ -124,14 +130,22 @@ export default function UserPage(
                                   id: user.user.id,
                                   createdAt: user.user.createdAt,
                                   onBoardingFinished: user.user.userOnboarding?.onBoardingFinished,
-                                }}></UserStats>
+                           }}></UserStats>
                       </>
                   )}
+
 
                   {/* SHOWN IF PROJECTS TAB */}
                   {activeTab === 'projects' && (
                     <UserPortofolio projectData={combinedProjects} isUserOwner={isUserOwner}  ></UserPortofolio>
+                  )}
+
+                  {/* SHOWN IF LINKS TAB */}
+                  {activeTab === 'links' && (
+                    <UserLinks projectData={projectsByAuthor} isUserOwner={isUserOwner}  ></UserLinks>
                 )}
+
+        
               </div>
           </div>
 

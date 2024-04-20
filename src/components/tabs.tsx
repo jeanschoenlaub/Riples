@@ -1,20 +1,21 @@
 import React from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { AboutSVG, AdminSVG, ProjectsSVG, RiplesSVG } from './svg';
-import { GiftSVG, GlobeSVG, NotesSVG, TaskSVG } from './svg-stroke';
+import { GiftSVG, GlobeSVG, LinksSVG, NotesSVG, TaskSVG } from './svg-stroke';
 
 interface TabsProps {
   activeTab: string;
   setActiveTab: Dispatch<SetStateAction<string>>;
   riples? : string;  // optional props
   projects? : string;
+  links? : string;
   collab?: boolean; 
   tasks?: boolean;
   notes?: boolean;
   admin?: boolean; 
 }
 
-export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, projects, tasks, notes, collab, admin}) => {
+export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, projects, links, tasks, notes, collab, admin}) => {
   return (
     <div id="project-main-tabs" className="border-b border-gray-200 ">
        <ul className="flex whitespace-nowrap overflow-x-auto -mb-px text-sm font-medium text-center text-gray-500 ">
@@ -34,9 +35,9 @@ export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, pro
         {/*  CONDITIONAL RIPLES TAB */}
         {riples && ( <li className="mr-1">
           <button
-            onClick={() => setActiveTab('riples')}
-            className={`inline-flex items-center justify-center p-3 border-b-2 rounded-t-xl ${activeTab === 'riples' ? 'text-blue-600 bg-sky-200 border-blue-300' : 'text-gray-500 bg-gray-200 border-transparent'}`}>
-            {activeTab === 'riples' ? 
+            onClick={() => setActiveTab('links')}
+            className={`inline-flex items-center justify-center p-3 border-b-2 rounded-t-xl ${activeTab === 'links' ? 'text-blue-600 bg-sky-200 border-blue-300' : 'text-gray-500 bg-gray-200 border-transparent'}`}>
+            {activeTab === 'links' ? 
                 <RiplesSVG width="4" height="4" marginRight='2' colorFillHex='#2563eb'></RiplesSVG> // Blue color
                 :<RiplesSVG width="4" height="4" marginRight='2' colorFillHex='#9CA3AF'></RiplesSVG>  // Gray color
             }
@@ -55,6 +56,20 @@ export const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab, riples, pro
                 :<ProjectsSVG width="4" height="4" marginRight='2' colorFillHex='#9CA3AF'></ProjectsSVG>  // Gray colors
             }
             Projects
+          </button>
+        </li>
+        )}
+
+         {/*  CONDITIONAL LINKS TAB */}
+         {links && ( <li className="mr-1">
+          <button
+            onClick={() => setActiveTab('links')}
+            className={`inline-flex items-center justify-center p-3 border-b-2 rounded-t-xl ${activeTab === 'links' ? 'text-blue-600 bg-sky-200 border-blue-300' : 'text-gray-500 bg-gray-200 border-transparent'}`}>
+            {activeTab === 'links' ? 
+                <LinksSVG width="5" height="5" marginRight='2' colorStrokeHex='#2563eb'></LinksSVG> // Blue
+                :<LinksSVG width="5" height="5" marginRight='2' colorStrokeHex='#9CA3AF'></LinksSVG>  // Gray colors
+            }
+            Links
           </button>
         </li>
         )}
